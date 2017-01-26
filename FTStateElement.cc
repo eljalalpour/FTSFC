@@ -16,16 +16,18 @@ int FTStateElement::configure(Vector<String> &conf, ErrorHandler *errh) {
 
 void FTStateElement::push(int source, Packet *p) {
     click_chatter("--------------------");
-    click_chatter("In FTStateElement:");
+    click_chatter("In FTStateElement %d:", _id);
     click_chatter("Receiving packet %llu from port %d", FTAppenderElement::getPacketId(p), source);
 
     if (source == INPUT_PORT_TO_PROCESS) {
         try {
             reset();
             FTPacketMBPiggyBackedState piggyBackedState;
-            WritablePacket *q = FTAppenderElement::decodeStatesRetPacket(p,piggyBackedState);
+            WritablePacket *q = FTAppenderElement::decodeStatesRetPacket(p, piggyBackedState);
             replicateStates(piggyBackedState);
             p->kill();
+            click_chatter("This is the state recieved from Milad");
+            FTAppenderElement::printState(piggyBackedState);
             output(OUTPUT_PORT_TO_MIDDLEBOX).push(q);
         }catch(...) {
             p->kill();
@@ -48,12 +50,18 @@ void FTStateElement::push(int source, Packet *p) {
         _log[packetId][_id] = primaryState;
         _temp[packetId][_id] = PBState;
 
+        click_chatter("This is the state going to buffer");
+        FTAppenderElement::printState(_temp);
         _packets[packetId] = p->uniqueify();
-
         WritablePacket *q = FTAppenderElement::encodeStates(p, _temp);
 
-        p->kill();
+//        FTPacketMBPiggyBackedState ttt;
+//        WritablePacket *r = FTAppenderElement::decodeStatesRetPacket(q, ttt);
+//        r->kill();
+
         output(OUTPUT_PORT_TO_NEXT_MIDDLEBOX).push(q);
+        p->kill();
+
     }//else if
     click_chatter("--------------------");
 }
@@ -70,7 +78,7 @@ void FTStateElement::replicateStates(FTPacketMBPiggyBackedState &piggyBackedStat
     for (auto it = piggyBackedState.begin(); it != piggyBackedState.end(); ++it) {
         auto packetId = it->first;
 
-        click_chatter("Replicating packet: %d", packetId);
+        click_chatter("Replicating packet: %llu", packetId);
 
         for (auto it2 = it->second.begin(); it2 != it->second.end(); /*no increment*/) {
             auto MBId = it2->first;

@@ -15,12 +15,13 @@ FTAppenderElement::FTAppenderElement() {};
 FTAppenderElement::~FTAppenderElement() {};
 
 void FTAppenderElement::push(int source, Packet *p) {
+    FTPacketId packetId = getPacketId(p);
     click_chatter("--------------------");
     click_chatter("In FTAppender element:");
-    click_chatter("Receiving packet %llu from port %d", getPacketId(p), source);
+    click_chatter("Receiving packet %llu from port %d", packetId, source);
 
     if (source == FROM_DUMP) {
-        click_chatter("state on the packet going to stateelement ");
+        click_chatter("state on the packet going to state-element");
         printState(_temp);
         WritablePacket *q = encodeStates(p, _temp);
         _temp.clear();
@@ -30,6 +31,7 @@ void FTAppenderElement::push(int source, Packet *p) {
     else if (source == FROM_TO_DEVICE) {
         try {
             FTPacketMBPiggyBackedState piggyBackedState;
+            click_chatter("Decoding the piggybacked state!");
             decodeStates(p, piggyBackedState);
             click_chatter("the size of piggybacked state: %d", piggyBackedState.size());
             _temp.insert(piggyBackedState.begin(), piggyBackedState.end());
@@ -81,6 +83,9 @@ int  FTAppenderElement::payloadOffset(Packet *p) {
     else if (ip->ip_p == IP_PROTO_UDP) {
         off = p->transport_header_offset() + sizeof(click_udp);
     }//else if
+    else {
+        off=p->transport_header_offset();
+    }
 
     return off;
 }
@@ -116,6 +121,7 @@ WritablePacket *FTAppenderElement::encodeStates(Packet *p, FTPacketMBPiggyBacked
 
 int FTAppenderElement::decodeStates(Packet *p, FTPacketMBPiggyBackedState &piggyBackedState) {
     auto ploff = payloadOffset(p);
+    click_chatter("Payload offset: %d", ploff);
 
     short stateLen;
     memcpy(&stateLen, p->data() + ploff, sizeof(short));
@@ -123,6 +129,7 @@ int FTAppenderElement::decodeStates(Packet *p, FTPacketMBPiggyBackedState &piggy
     string decompressed;
     decompress(states, decompressed);
 
+    click_chatter("Payload offset: %d", states.size());
     FTAppenderElement::deserializePiggyBacked(decompressed, piggyBackedState);
 
     return stateLen + sizeof(short);

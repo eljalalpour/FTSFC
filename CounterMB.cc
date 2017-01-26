@@ -1,12 +1,12 @@
 #include "FTStateElement.hh"
 
 #include <click/config.h>
-#include "CounterMB.hh"
 #include <click/router.hh>
 #include <clicknet/tcp.h>
+#include <click/args.hh>
+#include "CounterMB.hh"
 
 CLICK_DECLS
-
 
 CounterMB::CounterMB() : _counter(INIT_COUNTER) {};
 
@@ -44,7 +44,13 @@ Packet *CounterMB::simple_action(Packet *p) {
     _counter++;
 
     return p;
+}
 
+int CounterMB::configure(Vector<String> &conf, ErrorHandler *errh) {
+    if (Args(conf, this, errh).read_or_set("ID", _id, rand() % MB_ID_MAX).complete() < 0)
+        return -1;
+
+    return 0;
 }
 
 CLICK_ENDDECLS

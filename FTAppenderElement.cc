@@ -28,13 +28,17 @@ void FTAppenderElement::push(int source, Packet *p) {
         output(TO_FT_STATE).push(q);
     }//if
     else if (source == FROM_TO_DEVICE) {
-        FTPacketMBPiggyBackedState piggyBackedState;
-
-        decodeStates(p, piggyBackedState);
-        click_chatter("the size of piggybacked state: %d", piggyBackedState.size());
-        _temp.insert(piggyBackedState.begin(), piggyBackedState.end());
-        click_chatter("state on the packet comming from stateelement ");
-        printState(_temp);
+        try {
+            FTPacketMBPiggyBackedState piggyBackedState;
+            decodeStates(p, piggyBackedState);
+            click_chatter("the size of piggybacked state: %d", piggyBackedState.size());
+            _temp.insert(piggyBackedState.begin(), piggyBackedState.end());
+            click_chatter("state on the packet comming from stateelement ");
+            printState(_temp);
+        }//try
+        catch(...) {
+            click_chatter("Not valid packet for our protocol!");
+        }//catch
         p->kill();
     }//else if
 

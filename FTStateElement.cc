@@ -20,12 +20,17 @@ void FTStateElement::push(int source, Packet *p) {
     click_chatter("Receiving packet %llu from port %d", FTAppenderElement::getPacketId(p), source);
 
     if (source == INPUT_PORT_TO_PROCESS) {
-        reset();
-        FTPacketMBPiggyBackedState piggyBackedState;
-        WritablePacket *q = FTAppenderElement::decodeStatesRetPacket(p,piggyBackedState);
-        replicateStates(piggyBackedState);
-        p->kill();
-        output(OUTPUT_PORT_TO_MIDDLEBOX).push(q);
+        try {
+            reset();
+            FTPacketMBPiggyBackedState piggyBackedState;
+            WritablePacket *q = FTAppenderElement::decodeStatesRetPacket(p,piggyBackedState);
+            replicateStates(piggyBackedState);
+            p->kill();
+            output(OUTPUT_PORT_TO_MIDDLEBOX).push(q);
+        }catch(...) {
+            p->kill();
+            click_chatter("Not A valid packet for our protocol");
+        }
     }//if
     else if (source == INPUT_PORT_PROCESSED) {
         FTState primaryState;

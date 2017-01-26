@@ -51,7 +51,7 @@ public:
     };
 
     //TODO: Remove the _failureCount and _id initialization,
-    FTStateElement() : _failureCount(0), _id(0) {
+    FTStateElement() : _failureCount(1), _id(1) {
         click_chatter("In FTStateElement Constructor!");
         FTState tmp1, tmp2;
         _committed[_id] = tmp1;

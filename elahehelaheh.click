@@ -10,25 +10,34 @@ require(package "FTSFC");
 //IPPrint(Packet, CONTENTS ASCII, ID true, LENGTH true)->Discard
 
 
-FromDump(/Users/ejalalpo/Desktop/Test/frame.cap_len.pcap, STOP true)
-->CheckIPHeader(14)
-->ap::FTAppenderElement
-->CheckIPHeader(14)
-->se::FTStateElement
-->CheckIPHeader(14)
-->CounterMB
-->CheckIPHeader(14)
-->[1]se;
+//FromDump(/Users/ejalalpo/Desktop/Test/frame.cap_len.pcap, STOP true)
+//->CheckIPHeader(14)
+//ap::FTAppenderElement
+//->CheckIPHeader(14)
 //se[1]->ToDump(/Users/ejalalpo/Desktop/Test/test-1.pcap);
 
-se[1]
-->CheckIPHeader(14)
-->fb::FTBufferElement[1]
-->ToDevice(en0);
+
+
+
+
+
+
 
 FromDevice(en0)
-->CheckIPHeader
-->[1]ap;
+->MarkIPHeader(14)
+->se::FTStateElement
+->MarkIPHeader(14)
+->cmb::CounterMB;
 
-fb[0]
+cmb
+->MarkIPHeader(14)
+->[1]se;
+
+se[1]
+->MarkIPHeader(14)
+->fb::FTBufferElement[1]
+->Queue
+->ToDevice(en0);
+
+fb
 ->ToDump(/Users/ejalalpo/Desktop/Test/toOutSideWorld.pcap);

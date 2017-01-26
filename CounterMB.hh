@@ -28,6 +28,7 @@ public:
     const char *processing() const { return AGNOSTIC; }
 
     Packet *simple_action(Packet *p);
+
 };
 
 CLICK_ENDDECLS

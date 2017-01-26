@@ -4,6 +4,7 @@
 #include <boost/iostreams/device/back_inserter.hpp>
 #include <boost/iostreams/filter/zlib.hpp>
 #include <boost/iostreams/filtering_stream.hpp>
+#include <click/packet_anno.hh>
 
 CLICK_DECLS
 

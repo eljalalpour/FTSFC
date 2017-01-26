@@ -27,7 +27,7 @@ public:
     //TODO: Change PORTS_1_1 to PORTS_2_1
     const char *port_count() const { return PORTS_2_1; }
 
-    const char *processing() const { return PUSH; }
+    const char *processing() const { return AGNOSTIC; }
 
     void push(int source, Packet *p);
 

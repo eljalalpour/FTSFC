@@ -5,4 +5,4 @@ sudo ./configure
 sudo make elemlist
 sudo make
 sudo make install
-click elahehelaheh.click
+click elaheh.click

@@ -1,21 +1,19 @@
 #include "FTStateElement.hh"
 
 #include <click/config.h>
-#include "CounterMB.hh"
 #include <click/router.hh>
 #include <clicknet/tcp.h>
+#include <click/args.hh>
+#include "CounterMB.hh"
 
 CLICK_DECLS
-
 
 CounterMB::CounterMB() : _counter(INIT_COUNTER) {};
 
 CounterMB::~CounterMB() {};
 
 Packet *CounterMB::simple_action(Packet *p) {
-//    click_chatter("--------------------");
-//    click_chatter("In Counter MB");
-//    click_chatter("finding state element");
+    click_chatter("finding state element");
     Router *r = this->router();
 
 //    for (int i = 0; i < r->elements().size(); ++i) {
@@ -35,7 +33,7 @@ Packet *CounterMB::simple_action(Packet *p) {
         }//if
     }//if
 
-//    click_chatter("Packet counter is: %d", _counter);
+    click_chatter("Packet counter is: %d", _counter);
 
     stringstream ss2;
     ss2 << (_counter + 1);
@@ -45,8 +43,14 @@ Packet *CounterMB::simple_action(Packet *p) {
 
     _counter++;
 
-//    click_chatter("--------------------");
     return p;
+}
+
+int CounterMB::configure(Vector<String> &conf, ErrorHandler *errh) {
+    if (Args(conf, this, errh).read_or_set("ID", _id, rand() % MB_ID_MAX).complete() < 0)
+        return -1;
+
+    return 0;
 }
 
 CLICK_ENDDECLS

@@ -15,6 +15,7 @@ CLICK_DECLS
 class CounterMB : public Element {
 private:
     unsigned int _counter;
+    FTMBId _id;
 
 public:
     CounterMB();
@@ -29,6 +30,7 @@ public:
 
     Packet *simple_action(Packet *p);
 
+    int configure(Vector<String> &conf, ErrorHandler *errh);
 };
 
 CLICK_ENDDECLS

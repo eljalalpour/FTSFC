@@ -10,13 +10,22 @@ FTBufferElement::FTBufferElement() { }
 FTBufferElement::~FTBufferElement() { }
 
 void FTBufferElement::push(int, Packet *p) {
+    click_chatter("------------------------------");
+    click_chatter("This is Buffer");
+
     // Finding the packet id
     auto packetId = FTAppenderElement::getPacketId(p);
+
 
     // Writing the output of the last stage of the chain into the buffer
     FTPacketMBPiggyBackedState states;
     WritablePacket *q = FTAppenderElement::decodeStatesRetPacket(p,states);
+    FTAppenderElement::printState(states);
     _packets[packetId] = q;
+
+
+    // Send it to the beginning of the chain
+    output(TO_CHAIN_BEGIN).push(p);
 
     click_chatter("this is the size of output buffer %d", _packets.size());
     // Release the packets whose states have been committed
@@ -30,8 +39,8 @@ void FTBufferElement::push(int, Packet *p) {
         }//if
     }//for
 
-    // Send it to the beginning of the chain
-    output(TO_CHAIN_BEGIN).push(p);
+
+
 }
 
 CLICK_ENDDECLS

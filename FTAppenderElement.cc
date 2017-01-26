@@ -15,13 +15,14 @@ FTAppenderElement::FTAppenderElement() {};
 FTAppenderElement::~FTAppenderElement() {};
 
 void FTAppenderElement::push(int source, Packet *p) {
+    FTPacketId packetId = getPacketId(p);
     click_chatter("--------------------");
-    click_chatter("In FTAppender element");
-    click_chatter("Receiving packet %llu from port %d", getPacketId(p), source);
+    click_chatter("In FTAppender element:");
+    click_chatter("Receiving packet %llu from port %d", packetId, source);
 
     if (source == FROM_DUMP) {
-//        click_chatter("state on the packet going to state-element ");
-//        printState(_temp);
+        click_chatter("state on the packet going to state-element");
+        printState(_temp);
         WritablePacket *q = encodeStates(p, _temp);
         _temp.clear();
         p->kill();
@@ -30,21 +31,20 @@ void FTAppenderElement::push(int source, Packet *p) {
     else if (source == FROM_TO_DEVICE) {
         try {
             FTPacketMBPiggyBackedState piggyBackedState;
-            click_chatter("In appender-2");
-//            decodeStates(p, piggyBackedState);
-            decodeStatesRetPacket(p, piggyBackedState);
+            click_chatter("Decoding the piggybacked state!");
+            decodeStates(p, piggyBackedState);
             click_chatter("the size of piggybacked state: %d", piggyBackedState.size());
-            click_chatter("In appender-3");
             _temp.insert(piggyBackedState.begin(), piggyBackedState.end());
+            click_chatter("state on the packet comming from stateelement ");
             printState(_temp);
         }//try
         catch(...) {
-            click_chatter("In appender: Not valid packet for our protocol!");
+            click_chatter("Not valid packet for our protocol!");
         }//catch
         p->kill();
     }//else if
 
-//    click_chatter("--------------------");
+    click_chatter("--------------------");
 }
 
 void FTAppenderElement::serializePiggyBacked(FTPacketMBPiggyBackedState &pbStates, stringstream &ss) {
@@ -59,11 +59,8 @@ void FTAppenderElement::deserializePiggyBacked(stringstream &ss, FTPacketMBPiggy
 
 void FTAppenderElement::deserializePiggyBacked(string& states, FTPacketMBPiggyBackedState &piggyBackedStates) {
     stringstream ss(states);
-    click_chatter("Deserialize stringstream size is: %d", ss.str().size());
     boost::archive::binary_iarchive ia(ss);
-    click_chatter("Deserialize 1");
     ia >> piggyBackedStates;
-    click_chatter("Deserialize 2");
 }
 
 void FTAppenderElement::serialize(FTMBStates &state, stringstream &ss) {
@@ -87,52 +84,44 @@ int  FTAppenderElement::payloadOffset(Packet *p) {
         off = p->transport_header_offset() + sizeof(click_udp);
     }//else if
     else {
-        off = p->transport_header_offset();
-    }//else
+        off=p->transport_header_offset();
+    }
 
     return off;
 }
 
 WritablePacket *FTAppenderElement::encodeStates(Packet *p, FTPacketMBPiggyBackedState &piggyBackedState) {
-//    click_chatter("In encode state");
+    click_chatter("In encode state");
     stringstream stateSS;
-    WritablePacket *q;
+    serializePiggyBacked(piggyBackedState, stateSS);
 
-    try {
-        serializePiggyBacked(piggyBackedState, stateSS);
+    string compressed;
+    compress(stateSS.str(), compressed);
+    short stateLen = compressed.size();
 
-        string compressed;
-        compress(stateSS.str(), compressed);
-        short stateLen = compressed.size();
+    uint16_t newPacketSize = sizeof(short) + stateLen + p->length();
+    WritablePacket *q = Packet::make(newPacketSize);
+    auto ploff = payloadOffset(p);
 
-        uint16_t newPacketSize = sizeof(short) + stateLen + p->length();
-        q = Packet::make(newPacketSize);
-        auto ploff = payloadOffset(p);
+    memcpy(q->data(), p->data(), ploff);
+    memcpy(q->data() + ploff, &stateLen, sizeof(short));
+    memcpy(q->data() + ploff + sizeof(short), compressed.c_str(), stateLen);
+    if (ploff < p->length())
+        memcpy(q->data() + ploff + sizeof(short) + stateLen, p->data() + ploff, p->length() - ploff);
 
-        memcpy(q->data(), p->data(), ploff);
-        memcpy(q->data() + ploff, &stateLen, sizeof(short));
-        memcpy(q->data() + ploff + sizeof(short), compressed.c_str(), stateLen);
-        if (ploff < p->length())
-            memcpy(q->data() + ploff + sizeof(short) + stateLen, p->data() + ploff, p->length() - ploff);
+    click_ip* ip_header = reinterpret_cast<click_ip*>(q->data() + p->ip_header_offset());
+    ip_header->ip_len = htons(ntohs(p->ip_header()->ip_len) + sizeof(short) + stateLen);
+    ip_header->ip_sum = 0;
 
-
-        click_ip *ip_header = reinterpret_cast<click_ip *>(q->data() + p->ip_header_offset());
-        ip_header->ip_len = htons(ntohs(p->ip_header()->ip_len) + sizeof(short) + stateLen);
-        ip_header->ip_sum = 0;
-
-        int hlen = (ip_header->ip_hl) << 2;
-        ip_header->ip_sum = click_in_cksum((unsigned char *) ip_header, hlen);
-
-    }//try
-    catch(...) {
-        click_chatter("In encode state, in the catch block");
-    }//catch
+    int hlen = (ip_header->ip_hl) << 2;
+    ip_header->ip_sum = click_in_cksum((unsigned char *)ip_header, hlen);
 
     return q;
 }
 
 int FTAppenderElement::decodeStates(Packet *p, FTPacketMBPiggyBackedState &piggyBackedState) {
     auto ploff = payloadOffset(p);
+    click_chatter("Payload offset: %d", ploff);
 
     short stateLen;
     memcpy(&stateLen, p->data() + ploff, sizeof(short));
@@ -140,6 +129,7 @@ int FTAppenderElement::decodeStates(Packet *p, FTPacketMBPiggyBackedState &piggy
     string decompressed;
     decompress(states, decompressed);
 
+    click_chatter("Payload offset: %d", states.size());
     FTAppenderElement::deserializePiggyBacked(decompressed, piggyBackedState);
 
     return stateLen + sizeof(short);
@@ -148,23 +138,16 @@ int FTAppenderElement::decodeStates(Packet *p, FTPacketMBPiggyBackedState &piggy
 WritablePacket* FTAppenderElement::decodeStatesRetPacket(Packet *p, FTPacketMBPiggyBackedState &piggyBackedState) {
     auto ploff = payloadOffset(p);
 
-    click_chatter("Payload offset is: %d", ploff);
-
     short stateLen;
     memcpy(&stateLen, p->data() + ploff, sizeof(short));
-
-    click_chatter("State length is: %d", stateLen);
 
     string states(reinterpret_cast<const char*>(p->data()) + ploff + sizeof(short), reinterpret_cast<const char*>(p->data()) + ploff + sizeof(short) + stateLen);
     string decompressed;
     decompress(states, decompressed);
 
-    click_chatter("Decompressed size is: %d", decompressed.size());
-
     FTAppenderElement::deserializePiggyBacked(decompressed, piggyBackedState);
 
     int orgPayloadBegin = ploff + sizeof(short) + stateLen;
-    click_chatter("p->length() - stateLen - sizeof(short) is: %d", p->length() - stateLen - sizeof(short));
     WritablePacket *q = Packet::make(p->length() - stateLen - sizeof(short));
     memcpy(q->data(), p->data(), ploff);
     memcpy(q->data() + ploff, p->data() + orgPayloadBegin, p->length() - orgPayloadBegin);
@@ -175,7 +158,6 @@ WritablePacket* FTAppenderElement::decodeStatesRetPacket(Packet *p, FTPacketMBPi
     int hlen = (ip_header->ip_hl) << 2;
     ip_header->ip_sum = 0;
     ip_header->ip_sum = click_in_cksum((unsigned char *)ip_header, hlen);
-    click_chatter("Hlen is: %d", hlen);
 
     return q;
 }
@@ -222,7 +204,7 @@ void FTAppenderElement::printState(FTPacketMBPiggyBackedState &state) {
     for (auto i = state.begin(); i != state.end(); ++i) {
         click_chatter("State of packet %llu", i->first);
         for (auto j = i->second.begin(); j != i->second.end(); ++j) {
-            click_chatter("State of middlebox %d", (FTMBId)(j->first));
+            click_chatter("State of middlebox %u", (uint16_t)(j->first));
             printState(j->second);
         }//for
     }//for

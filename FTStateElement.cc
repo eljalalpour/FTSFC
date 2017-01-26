@@ -8,30 +8,31 @@ CLICK_DECLS
 const char *FTStateElement::GET_CALL_BACK = "GET_CALL_BACK";
 
 int FTStateElement::configure(Vector<String> &conf, ErrorHandler *errh) {
-//    if (Args(conf, this, errh).read_or_set("ID", _id, rand() % MB_ID_MAX).complete() < 0)
-//        return -1;
+    if (Args(conf, this, errh).read_or_set("ID", _id, rand() % MB_ID_MAX).complete() < 0)
+        return -1;
 
     return 0;
 }
 
 void FTStateElement::push(int source, Packet *p) {
-//    click_chatter("--------------------");
-//    click_chatter("In FTStateElement:");
-//    click_chatter("Receiving packet %llu from port %d", FTAppenderElement::getPacketId(p), source);
+    click_chatter("--------------------");
+    click_chatter("In FTStateElement %d:", _id);
+    click_chatter("Receiving packet %llu from port %d", FTAppenderElement::getPacketId(p), source);
 
     if (source == INPUT_PORT_TO_PROCESS) {
         try {
             reset();
             FTPacketMBPiggyBackedState piggyBackedState;
-            WritablePacket *q = FTAppenderElement::decodeStatesRetPacket(p,piggyBackedState);
+            WritablePacket *q = FTAppenderElement::decodeStatesRetPacket(p, piggyBackedState);
             replicateStates(piggyBackedState);
             p->kill();
+            click_chatter("This is the state recieved from Milad");
+            FTAppenderElement::printState(piggyBackedState);
             output(OUTPUT_PORT_TO_MIDDLEBOX).push(q);
-        }//try
-        catch(...) {
+        }catch(...) {
             p->kill();
-            click_chatter("In FTStateElement: Not A valid packet for our protocol");
-        }//catch
+            click_chatter("Not A valid packet for our protocol");
+        }
     }//if
     else if (source == INPUT_PORT_PROCESSED) {
         FTState primaryState;
@@ -49,14 +50,20 @@ void FTStateElement::push(int source, Packet *p) {
         _log[packetId][_id] = primaryState;
         _temp[packetId][_id] = PBState;
 
+        click_chatter("This is the state going to buffer");
+        FTAppenderElement::printState(_temp);
         _packets[packetId] = p->uniqueify();
-
         WritablePacket *q = FTAppenderElement::encodeStates(p, _temp);
 
-        p->kill();
+//        FTPacketMBPiggyBackedState ttt;
+//        WritablePacket *r = FTAppenderElement::decodeStatesRetPacket(q, ttt);
+//        r->kill();
+
         output(OUTPUT_PORT_TO_NEXT_MIDDLEBOX).push(q);
+        p->kill();
+
     }//else if
-//    click_chatter("--------------------");
+    click_chatter("--------------------");
 }
 
 void FTStateElement::add_handlers() {
@@ -65,12 +72,13 @@ void FTStateElement::add_handlers() {
 }
 
 void FTStateElement::replicateStates(FTPacketMBPiggyBackedState &piggyBackedState) {
-//    click_chatter("In state replication");
-//    click_chatter("this is the size of state: %d", piggyBackedState.size());
+    click_chatter("In state replication");
+
+    click_chatter("this is the size of state: %d", piggyBackedState.size());
     for (auto it = piggyBackedState.begin(); it != piggyBackedState.end(); ++it) {
         auto packetId = it->first;
 
-//        click_chatter("Replicating packet: %d", packetId);
+        click_chatter("Replicating packet: %llu", packetId);
 
         for (auto it2 = it->second.begin(); it2 != it->second.end(); /*no increment*/) {
             auto MBId = it2->first;
@@ -98,7 +106,7 @@ void FTStateElement::replicateStates(FTPacketMBPiggyBackedState &piggyBackedStat
             }//if
             else {
                 //replicating the secondary states here
-//                click_chatter("Replicating secondary state!");
+                click_chatter("Replicating secondary state!");
 
                 if (it2->second.ack != _failureCount + 1) {
                     _log[packetId][MBId] = it2->second.state;
@@ -122,10 +130,10 @@ void FTStateElement::replicateStates(FTPacketMBPiggyBackedState &piggyBackedStat
 }
 
 void FTStateElement::commit(FTPacketId packetId, FTMBId MBId) {
-//    click_chatter("Committing the state of the middlebox '%d' for the packet id '%d", MBId, packetId);
+    click_chatter("Committing the state of the middlebox '%d' for the packet id '%d", MBId, packetId);
     for (auto it = _log[packetId][MBId].begin(); it != _log[packetId][MBId].end(); ++it) {
         _committed[MBId][it->first] = it->second;
-//        click_chatter("'%s':'%s", it->first.c_str(), it->second.c_str());
+        click_chatter("'%s':'%s", it->first.c_str(), it->second.c_str());
     }//for
 //    _log[packetId].erase(MBId);
 //    if (_log[packetId].size() == 0) {
@@ -163,8 +171,8 @@ bool FTStateElement::getPrimaryState(string key, string &value) {
         }//if
     }//else
 
-//    if (!found)
-//        click_chatter("Key '%s' is not found!", key.c_str());
+    if (!found)
+        click_chatter("Key '%s' is not found!", key.c_str());
 
     return found;
 }

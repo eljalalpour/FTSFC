@@ -15,5 +15,6 @@ se[1]
 ->ToDevice(en0);
 
 FromDevice(en0)
+->IPPrint(Packet, PAYLOAD ASCII, LENGTH 1)
 ->CheckIPHeader(14)
 ->[1]ap;

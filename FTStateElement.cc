@@ -15,9 +15,9 @@ int FTStateElement::configure(Vector<String> &conf, ErrorHandler *errh) {
 }
 
 void FTStateElement::push(int source, Packet *p) {
-    click_chatter("--------------------");
-    click_chatter("In FTStateElement:");
-    click_chatter("Receiving packet %llu from port %d", FTAppenderElement::getPacketId(p), source);
+//    click_chatter("--------------------");
+//    click_chatter("In FTStateElement:");
+//    click_chatter("Receiving packet %llu from port %d", FTAppenderElement::getPacketId(p), source);
 
     if (source == INPUT_PORT_TO_PROCESS) {
         try {
@@ -29,7 +29,7 @@ void FTStateElement::push(int source, Packet *p) {
             output(OUTPUT_PORT_TO_MIDDLEBOX).push(q);
         }catch(...) {
             p->kill();
-            click_chatter("Not A valid packet for our protocol");
+            click_chatter("In FTStateElement: Not A valid packet for our protocol");
         }
     }//if
     else if (source == INPUT_PORT_PROCESSED) {
@@ -64,13 +64,12 @@ void FTStateElement::add_handlers() {
 }
 
 void FTStateElement::replicateStates(FTPacketMBPiggyBackedState &piggyBackedState) {
-    click_chatter("In state replication");
-
-    click_chatter("this is the size of state: %d", piggyBackedState.size());
+//    click_chatter("In state replication");
+//    click_chatter("this is the size of state: %d", piggyBackedState.size());
     for (auto it = piggyBackedState.begin(); it != piggyBackedState.end(); ++it) {
         auto packetId = it->first;
 
-        click_chatter("Replicating packet: %d", packetId);
+//        click_chatter("Replicating packet: %d", packetId);
 
         for (auto it2 = it->second.begin(); it2 != it->second.end(); /*no increment*/) {
             auto MBId = it2->first;
@@ -98,7 +97,7 @@ void FTStateElement::replicateStates(FTPacketMBPiggyBackedState &piggyBackedStat
             }//if
             else {
                 //replicating the secondary states here
-                click_chatter("Replicating secondary state!");
+//                click_chatter("Replicating secondary state!");
 
                 if (it2->second.ack != _failureCount + 1) {
                     _log[packetId][MBId] = it2->second.state;
@@ -122,10 +121,10 @@ void FTStateElement::replicateStates(FTPacketMBPiggyBackedState &piggyBackedStat
 }
 
 void FTStateElement::commit(FTPacketId packetId, FTMBId MBId) {
-    click_chatter("Committing the state of the middlebox '%d' for the packet id '%d", MBId, packetId);
+//    click_chatter("Committing the state of the middlebox '%d' for the packet id '%d", MBId, packetId);
     for (auto it = _log[packetId][MBId].begin(); it != _log[packetId][MBId].end(); ++it) {
         _committed[MBId][it->first] = it->second;
-        click_chatter("'%s':'%s", it->first.c_str(), it->second.c_str());
+//        click_chatter("'%s':'%s", it->first.c_str(), it->second.c_str());
     }//for
 //    _log[packetId].erase(MBId);
 //    if (_log[packetId].size() == 0) {
@@ -163,8 +162,8 @@ bool FTStateElement::getPrimaryState(string key, string &value) {
         }//if
     }//else
 
-    if (!found)
-        click_chatter("Key '%s' is not found!", key.c_str());
+//    if (!found)
+//        click_chatter("Key '%s' is not found!", key.c_str());
 
     return found;
 }

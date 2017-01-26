@@ -13,7 +13,9 @@ CounterMB::CounterMB() : _counter(INIT_COUNTER) {};
 CounterMB::~CounterMB() {};
 
 Packet *CounterMB::simple_action(Packet *p) {
-    click_chatter("finding state element");
+//    click_chatter("--------------------");
+//    click_chatter("In Counter MB");
+//    click_chatter("finding state element");
     Router *r = this->router();
 
 //    for (int i = 0; i < r->elements().size(); ++i) {
@@ -33,7 +35,7 @@ Packet *CounterMB::simple_action(Packet *p) {
         }//if
     }//if
 
-    click_chatter("Packet counter is: %d", _counter);
+//    click_chatter("Packet counter is: %d", _counter);
 
     stringstream ss2;
     ss2 << (_counter + 1);
@@ -43,8 +45,8 @@ Packet *CounterMB::simple_action(Packet *p) {
 
     _counter++;
 
+//    click_chatter("--------------------");
     return p;
-
 }
 
 CLICK_ENDDECLS

@@ -32,7 +32,6 @@ void FTBufferElement::push(int, Packet *p) {
 
     // Send it to the beginning of the chain
     output(TO_CHAIN_BEGIN).push(p);
-    click_chatter("KESAFAT");
 }
 
 CLICK_ENDDECLS

@@ -18,7 +18,7 @@ public:
     FTBufferElement();
     ~FTBufferElement();
 
-    const char *class_name() const { return FT_BUFFER_ELEMENT_CLASS_NAME; }
+    const char *class_name() const { return "FTBufferElement"; }
 
     const char *port_count() const { return PORTS_1_2; }
     const char *processing() const { return AGNOSTIC; }

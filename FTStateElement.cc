@@ -8,8 +8,8 @@ CLICK_DECLS
 const char *FTStateElement::GET_CALL_BACK = "GET_CALL_BACK";
 
 int FTStateElement::configure(Vector<String> &conf, ErrorHandler *errh) {
-    if (Args(conf, this, errh).read_or_set("ID", _id, rand() % MB_ID_MAX).complete() < 0)
-        return -1;
+//    if (Args(conf, this, errh).read_or_set("ID", _id, rand() % MB_ID_MAX).complete() < 0)
+//        return -1;
 
     return 0;
 }
@@ -27,10 +27,11 @@ void FTStateElement::push(int source, Packet *p) {
             replicateStates(piggyBackedState);
             p->kill();
             output(OUTPUT_PORT_TO_MIDDLEBOX).push(q);
-        }catch(...) {
+        }//try
+        catch(...) {
             p->kill();
             click_chatter("In FTStateElement: Not A valid packet for our protocol");
-        }
+        }//catch
     }//if
     else if (source == INPUT_PORT_PROCESSED) {
         FTState primaryState;
@@ -55,7 +56,7 @@ void FTStateElement::push(int source, Packet *p) {
         p->kill();
         output(OUTPUT_PORT_TO_NEXT_MIDDLEBOX).push(q);
     }//else if
-    click_chatter("--------------------");
+//    click_chatter("--------------------");
 }
 
 void FTStateElement::add_handlers() {

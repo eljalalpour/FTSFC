@@ -29,14 +29,16 @@ void FTAppenderElement::push(int source, Packet *p) {
         output(TO_FT_STATE).push(q);
     }//if
     else if (source == FROM_TO_DEVICE) {
+        click_chatter("state from Elaheh:");
         try {
-            FTPacketMBPiggyBackedState piggyBackedState;
-            click_chatter("Decoding the piggybacked state!");
-            decodeStates(p, piggyBackedState);
-            click_chatter("the size of piggybacked state: %d", piggyBackedState.size());
-            _temp.insert(piggyBackedState.begin(), piggyBackedState.end());
-            click_chatter("state on the packet comming from stateelement ");
-            printState(_temp);
+//            FTPacketMBPiggyBackedState piggyBackedState;
+//            click_chatter("Decoding the piggybacked state!");
+//            decodeStates(p, piggyBackedState);
+//            click_chatter("the size of piggybacked state: %d", piggyBackedState.size());
+//            _temp.insert(piggyBackedState.begin(), piggyBackedState.end());
+//            click_chatter("state on the packet coming from state-element ");
+//            printState(_temp);
+            output(1).push(p);
         }//try
         catch(...) {
             click_chatter("Not valid packet for our protocol!");
@@ -58,6 +60,8 @@ void FTAppenderElement::deserializePiggyBacked(stringstream &ss, FTPacketMBPiggy
 }
 
 void FTAppenderElement::deserializePiggyBacked(string& states, FTPacketMBPiggyBackedState &piggyBackedStates) {
+    click_chatter("In deserialize piggybacked. The state size is %d, and state itself is: %s",
+                  states.size(), states.c_str());
     stringstream ss(states);
     boost::archive::binary_iarchive ia(ss);
     ia >> piggyBackedStates;
@@ -141,7 +145,8 @@ WritablePacket* FTAppenderElement::decodeStatesRetPacket(Packet *p, FTPacketMBPi
     short stateLen;
     memcpy(&stateLen, p->data() + ploff, sizeof(short));
 
-    string states(reinterpret_cast<const char*>(p->data()) + ploff + sizeof(short), reinterpret_cast<const char*>(p->data()) + ploff + sizeof(short) + stateLen);
+    string states(reinterpret_cast<const char*>(p->data()) + ploff + sizeof(short),
+                  reinterpret_cast<const char*>(p->data()) + ploff + sizeof(short) + stateLen);
     string decompressed;
     decompress(states, decompressed);
 

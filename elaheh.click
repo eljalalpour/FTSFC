@@ -1,6 +1,6 @@
 require(package "FTSFC");
 
-FromDump(/Users/ejalalpo/Desktop/Test/ip.pcap, STOP true)
+FromDump(/Users/eghaznavi/Downloads/dumps/test.pcap)
 ->CheckIPHeader(14)
 ->ap::FTAppenderElement
 ->CheckIPHeader(14)
@@ -29,5 +29,5 @@ se2[1]
 ->[1]ap;
 
 be
-->ToDump(/Users/ejalalpo/Desktop/Test/naghi.pcap);
+->ToDump(/Users/eghaznavi/Desktop/naghi.pcap);
 

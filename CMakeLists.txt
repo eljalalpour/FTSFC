@@ -23,16 +23,16 @@ find_library(CLICK_LIB NAMES libclick.a PATHS ${CLICK_LIB_PATH})
 set(SOURCE_FILES
         FTTypes.cc
         FTTypes.hh
-        FTAppenderElement.cc
-        FTAppenderElement.hh
-        FTStateElement.cc
-        FTStateElement.hh
-        FTBufferElement.cc
-        FTBufferElement.hh
-        CounterMB.cc
-        CounterMB.hh
+#        FTAppenderElement.cc
+#        FTAppenderElement.hh
+#        FTStateElement.cc
+#        FTStateElement.hh
+#        FTBufferElement.cc
+#        FTBufferElement.hh
+#        CounterMB.cc
+#        CounterMB.hh
         main.cpp
-        )
+        Agent.h Agent.cpp)
 
 add_executable(FTSFC ${SOURCE_FILES})
 target_link_libraries(FTSFC ${CLICK_LIB})

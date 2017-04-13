@@ -26,7 +26,7 @@ void FTStateElement::push(int source, Packet *p) {
             WritablePacket *q = FTAppenderElement::decodeStatesRetPacket(p, piggyBackedState);
             replicateStates(piggyBackedState);
             p->kill();
-            click_chatter("This is the state recieved from Milad");
+            click_chatter("This is the state recieved from FTAppender");
             FTAppenderElement::printState(piggyBackedState);
             output(OUTPUT_PORT_TO_MIDDLEBOX).push(q);
         }catch(...) {
@@ -50,7 +50,7 @@ void FTStateElement::push(int source, Packet *p) {
         _log[packetId][_id] = primaryState;
         _temp[packetId][_id] = PBState;
 
-        click_chatter("This is the state going to buffer");
+        click_chatter("This is the state going to the next middlebox");
         FTAppenderElement::printState(_temp);
         _packets[packetId] = p->uniqueify();
         WritablePacket *q = FTAppenderElement::encodeStates(p, _temp);

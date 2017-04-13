@@ -49,7 +49,7 @@ public:
 
     template<class Archive>
     void serialize(Archive &ar, const unsigned int) {
-        ar & ack & commit & BOOST_SERIALIZATION_NVP(state);
+        ar & commit & ack & BOOST_SERIALIZATION_NVP(state);
     }
 
     void serialize(FTPiggyBackedState &pbState, stringstream &ss) {

@@ -5,10 +5,14 @@
 
 CLICK_DECLS
 
-const char *FTStateElement::GET_CALL_BACK = "GET_CALL_BACK";
+const char *FTStateElement::GET_CALL_BACK = "g";
+const char *FTStateElement::PUT_CALL_BACK = "p";
+//const char *FTStateElement::ROLLBACK_CALL_BACK = "r";
 
 int FTStateElement::configure(Vector<String> &conf, ErrorHandler *errh) {
-    if (Args(conf, this, errh).read_or_set("ID", _id, rand() % MB_ID_MAX).complete() < 0)
+    if (Args(conf, this, errh).read("ID", _id)
+                .read("FAILURE_COUNT", _failureCount)
+                .complete() < 0)
         return -1;
 
     return 0;
@@ -68,7 +72,15 @@ void FTStateElement::push(int source, Packet *p) {
 
 void FTStateElement::add_handlers() {
     //TODO: Make sure that the flags for the handler should be Handler::CALM
-    add_read_handler(GET_CALL_BACK, getStateCallback, GetCallBack, Handler::CALM);
+//    add_read_handler(GET_CALL_BACK, getStateCallback, GetCallBack, Handler::READ_PARAM);
+    for (int i = 0; i < this->_failureCount + 1; ++i) {
+        stringstream ss;
+        ss << GET_CALL_BACK << this->_failureCount;
+        add_read_handler(String(ss.str().c_str()), getStateCallback, i);
+    }//for
+//    set_handler(GET_CALL_BACK, Handler::READ_PARAM, getStateCallback);
+    add_write_handler(PUT_CALL_BACK, putStateCallback, PutCallBack, Handler::OP_WRITE);
+//    add_read_handler(GET_CALL_BACK, getStateCallback, RollbackCallBack, Handler::READ_PARAM);
 }
 
 void FTStateElement::replicateStates(FTPacketMBPiggyBackedState &piggyBackedState) {
@@ -148,6 +160,14 @@ void FTStateElement::reset() {
     }//for
 }
 
+void FTStateElement::rollback() {
+    // Clear the logs
+    this->_log.clear();
+
+    // Rollback the in-operation state to committed state
+    this->_operationState = _committed[this->_id];
+}
+
 bool FTStateElement::getPrimaryState(string key, string &value) {
 //    click_chatter("Get the state of key '%s'", key.c_str());
 
@@ -186,13 +206,18 @@ bool FTStateElement::putPrimaryState(string key, string value) {
 }
 
 bool FTStateElement::getCommittedState(FTMBId mbId, FTState &state) {
-    bool found = false;
-    auto item = _committed.find(mbId);
-    if (item != _committed.end()) {
-        state = item->second;
-        found = true;
-    }//if
-    return found;
+//    bool found = false;
+//    auto item = _committed.find(mbId);
+//    if (item != _committed.end()) {
+//        state = item->second;
+//        found = true;
+//    }//if
+//    return found;
+
+    state["khar"] = "gav";
+    state["sag"] = "gurba";
+
+    return true;
 }
 
 bool FTStateElement::putCommittedState(FTMBId mbId, const FTState &state) {
@@ -208,17 +233,69 @@ bool FTStateElement::putCommittedState(FTMBId mbId, const FTState &state) {
     return found;
 }
 
-String FTStateElement::getStateCallback(Element *e, void *vparam) {
+String FTStateElement::getStateCallback(Element *e, void *thunk) {
+//int FTStateElement::getStateCallback(int operation, String &data, Element *element,
+//                 const Handler *handler, ErrorHandler *errh) {
+    click_chatter("In get state callback!");
     FTStateElement *se = static_cast<FTStateElement *>(e);
+    int param = intptr_t(thunk);
 
-    if ((intptr_t) vparam != GetCallBack)
-        return "";
+    click_chatter("Parameter is ", param);
 
+    //TODO: set the middleboxId with a valid id from the input
+    FTMBId middleboxId = 0;
     stringstream ss;
-    FTAppenderElement::serialize(se->_committed, ss);
+    string buffer;
 
-    String res(ss.str().c_str());
-    return res;
+    // Find the requested state
+    FTState state;
+    se->getCommittedState(middleboxId, state);
+
+    FTAppenderElement::printState(state);
+
+    // Serialize and compress the state
+    FTAppenderElement::serialize(state, ss);
+    FTAppenderElement::compress(ss.str(), buffer);
+
+    std::cout << "Buffer: " << buffer << std::endl;
+
+    //TODO: Check the state of which replicas must be rollbacked, since the failed replica is in f + 1 replica-groups
+    // We assume that get-state handler is called when a failure happens
+    //so we need to rollback the states
+    se->rollback();
+
+    // Return the serialized and compressed state
+    return String(buffer.c_str(), buffer.size());
+}
+
+int FTStateElement::putStateCallback(const String &data, Element *e, void *user_data, ErrorHandler *errh) {
+    click_chatter("In rollback callback!");
+
+    int result = SUCCESS;
+
+    try {
+        FTStateElement *se = static_cast<FTStateElement *>(e);
+
+        FTMBId id = data[0];
+        stringstream ss((char *)(data.c_str() + sizeof(unsigned char)), std::ios_base::binary);
+
+        string buffer;
+        FTAppenderElement::decompress(ss.str(), buffer);
+
+        stringstream decSS(buffer, std::ios_base::binary);
+
+        FTState state;
+        FTAppenderElement::deserialize(decSS, state);
+
+        FTAppenderElement::printState(state);
+
+        se->putCommittedState(id, state);
+    }//try
+    catch(...){
+        result = FAILED;
+    }//catch
+
+    return result;
 }
 
 CLICK_ENDDECLS

@@ -39,7 +39,11 @@ public:
 
     static void serialize(FTMBStates &state, stringstream &ss);
 
+    static void serialize(FTState &state, stringstream &ss);
+
     static void deserialize(stringstream &ss, FTMBStates &state);
+
+    static void deserialize(stringstream &ss, FTState &state);
 
     static int  payloadOffset(Packet *p);
 

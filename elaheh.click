@@ -4,7 +4,7 @@ FromDump(/Users/eghaznavi/Downloads/dumps/test.pcap)
 ->CheckIPHeader(14)
 ->ap::FTAppenderElement
 ->CheckIPHeader(14)
-->se::FTStateElement(ID 1)
+->se::FTStateElement(ID 1, FAILURE_COUNT 2, STATE )
 ->CheckIPHeader(14)
 ->cmb::CounterMB(ID 1);
 
@@ -31,3 +31,4 @@ se2[1]
 be
 ->ToDump(/Users/eghaznavi/Desktop/naghi.pcap);
 
+ControlSocket(TCP, 10000, VERBOSE true);

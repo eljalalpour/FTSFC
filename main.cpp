@@ -17,21 +17,21 @@
 
 using namespace std;
 
-void compress(std::string data, std::string &buffer) {
-    buffer.clear();
-    boost::iostreams::filtering_streambuf<boost::iostreams::output> out;
-    out.push(boost::iostreams::zlib_compressor());
-    out.push(boost::iostreams::back_inserter(buffer));
-    boost::iostreams::copy(boost::make_iterator_range(data), out);
-}
-
-void decompress(std::string data, std::string &buffer) {
-    boost::iostreams::filtering_streambuf<boost::iostreams::input> in;
-    in.push(boost::iostreams::zlib_decompressor());
-    in.push(boost::make_iterator_range(data));
-    buffer.clear();
-    boost::iostreams::copy(in, boost::iostreams::back_inserter(buffer));
-}
+//void compress(std::string data, std::string &buffer) {
+//    buffer.clear();
+//    boost::iostreams::filtering_streambuf<boost::iostreams::output> out;
+//    out.push(boost::iostreams::zlib_compressor());
+//    out.push(boost::iostreams::back_inserter(buffer));
+//    boost::iostreams::copy(boost::make_iterator_range(data), out);
+//}
+//
+//void decompress(std::string data, std::string &buffer) {
+//    boost::iostreams::filtering_streambuf<boost::iostreams::input> in;
+//    in.push(boost::iostreams::zlib_decompressor());
+//    in.push(boost::make_iterator_range(data));
+//    buffer.clear();
+//    boost::iostreams::copy(in, boost::iostreams::back_inserter(buffer));
+//}
 
 void serializePiggyBacked(FTPacketMBPiggyBackedState &pbStates, stringstream &ss) {
     boost::archive::binary_oarchive oa(ss);
@@ -122,95 +122,105 @@ void printState(FTPacketMBPiggyBackedState &state) {
 //typedef map<FTMBId, FTPiggyBackedState> FTMBPiggyBackedState;
 
 int main() {
-    stringstream stateSS;
-    FTPiggyBackedState pbState1;
-    pbState1.ack = 10;
-    pbState1.state["khar"] = "olagh";
-    pbState1.state["gol"] = "Haibo";
-    pbState1.commit = false;
-
-    FTPiggyBackedState pbState2;
-    pbState2.ack = 9;
-    pbState2.state["gav"] = "sag";
-    pbState2.state["sag"] = "Eric";
-    pbState2.commit = true;
-
-    FTMBPiggyBackedState mbStates;
-    mbStates[0] = pbState1;
-    mbStates[1] = pbState2;
-
-    FTPacketMBPiggyBackedState _temp;
-    _temp[0] = mbStates;
-
-//    stringstream ss;
-//    serializePiggyBacked(_temp, ss);
-
-//    const unsigned char * buffer = reinterpret_cast<const unsigned char*>(ss.str().c_str());
-//    string states(reinterpret_cast<const char*>(buffer), ss.str().size());
-
-//    ofstream ofile("test.bin", ios::binary);
-//    serializePiggyBacked(_temp, ofile);
-//    ofile.close();
-
-//    ofstream ofile("test.bin", ios::binary);
-//    stringstream sss;
-//    serializePiggyBacked(_temp, sss);
-//    string buffer;
-//    compress(sss.str(), buffer);
-//    ofile << buffer;
-//    ofile.close();
-
-    std::ifstream input("test.bin", ios::binary);
-    std::vector<char> buffer2((std::istreambuf_iterator<char>(input)),
-                                (std::istreambuf_iterator<char>()));
-    string data (buffer2.begin(), buffer2.end());
-    string buffer3;
-    decompress(data, buffer3);
-    stringstream ss2(string(buffer3.begin(), buffer3.end()));
-    FTPacketMBPiggyBackedState _temp2;
-    deserializePiggyBacked(ss2, _temp2);
-    printState(_temp2);
-
+//    stringstream stateSS;
+//    FTPiggyBackedState pbState1;
+//
+//    pbState1.ack = 10;
+//    pbState1.state["khar"] = "olagh";
+//    pbState1.state["gol"] = "Haibo";
+//    pbState1.commit = false;
+//
+//    FTPiggyBackedState pbState2;
+//    pbState2.ack = 9;
+//    pbState2.state["gav"] = "sag";
+//    pbState2.state["sag"] = "Eric";
+//    pbState2.commit = true;
+//
+//    FTMBPiggyBackedState mbStates;
+//    mbStates[0] = pbState1;
+//    mbStates[1] = pbState2;
+//
+//    FTPacketMBPiggyBackedState _temp;
+//    _temp[0] = mbStates;
+//
+////    stringstream ss;
+////    serializePiggyBacked(_temp, ss);
+//
+////    const unsigned char * buffer = reinterpret_cast<const unsigned char*>(ss.str().c_str());
+////    string states(reinterpret_cast<const char*>(buffer), ss.str().size());
+//
+////    ofstream ofile("test.bin", ios::binary);
+////    serializePiggyBacked(_temp, ofile);
+////    ofile.close();
+//
+////    ofstream ofile("test.bin", ios::binary);
+////    stringstream sss;
+////    serializePiggyBacked(_temp, sss);
+////    string buffer;
+////    compress(sss.str(), buffer);
+////    ofile << buffer;
+////    ofile.close();
+//
 //    std::ifstream input("test.bin", ios::binary);
+//    std::vector<char> buffer2((std::istreambuf_iterator<char>(input)),
+//                                (std::istreambuf_iterator<char>()));
+//    string data (buffer2.begin(), buffer2.end());
+//    string buffer3;
+//    decompress(data, buffer3);
+//    stringstream ss2(string(buffer3.begin(), buffer3.end()));
 //    FTPacketMBPiggyBackedState _temp2;
-//    deserializePiggyBacked(input, _temp2);
+//    deserializePiggyBacked(ss2, _temp2);
 //    printState(_temp2);
+//
+////    std::ifstream input("test.bin", ios::binary);
+////    FTPacketMBPiggyBackedState _temp2;
+////    deserializePiggyBacked(input, _temp2);
+////    printState(_temp2);
+//
+////    Test piggyBackedState1, piggyBackedState2;
+////
+////    map<string, string> state1;
+////    state1["a"] = "Milad";
+////    state1["b"] = "Akbar";
+////
+////    piggyBackedState1.state = state1;
+////    piggyBackedState1.ack = 1;
+////    piggyBackedState1.commit = false;
+////
+////    stringstream ss;
+////    Test::serialize(piggyBackedState1, ss);
+////    const unsigned char * buffer = reinterpret_cast<const unsigned char*>(ss.str().c_str());
+////    string states(reinterpret_cast<const char*>(buffer), ss.str().size());
+////
+////    stringstream ss2;
+////    ss2 << states;
+////    Test::deserialize(ss2, piggyBackedState2);
+////
+////    string dd;
+////    ss >> dd;
+////
+////    string comp, decomp;
+////    compress(dd, comp);
+////
+////    unsigned char * buffer = new unsigned char[comp.size()];
+////    memcpy(buffer, comp.c_str(), comp.size());
+////
+////    string states(reinterpret_cast<const char*>(buffer), comp.size());
+////
+////    decompress(states, decomp);
+////
+////    stringstream decompSS;
+////    decompSS << decomp;
+////    Test::deserialize(decompSS, piggyBackedState2);
 
-//    Test piggyBackedState1, piggyBackedState2;
-//
-//    map<string, string> state1;
-//    state1["a"] = "Milad";
-//    state1["b"] = "Akbar";
-//
-//    piggyBackedState1.state = state1;
-//    piggyBackedState1.ack = 1;
-//    piggyBackedState1.commit = false;
-//
-//    stringstream ss;
-//    Test::serialize(piggyBackedState1, ss);
-//    const unsigned char * buffer = reinterpret_cast<const unsigned char*>(ss.str().c_str());
-//    string states(reinterpret_cast<const char*>(buffer), ss.str().size());
-//
-//    stringstream ss2;
-//    ss2 << states;
-//    Test::deserialize(ss2, piggyBackedState2);
-//
-//    string dd;
-//    ss >> dd;
-//
-//    string comp, decomp;
-//    compress(dd, comp);
-//
-//    unsigned char * buffer = new unsigned char[comp.size()];
-//    memcpy(buffer, comp.c_str(), comp.size());
-//
-//    string states(reinterpret_cast<const char*>(buffer), comp.size());
-//
-//    decompress(states, decomp);
-//
-//    stringstream decompSS;
-//    decompSS << decomp;
-//    Test::deserialize(decompSS, piggyBackedState2);
+    FTMBStates states;
+    FTState state1;
+    state1["a"] = "b";
+    states[0] = state1;
+    stringstream ss;
+    serialize(states, ss);
+
+    cout << ss.str().size() << endl;
 
     return 0;
 }

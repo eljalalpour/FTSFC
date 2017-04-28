@@ -31,8 +31,7 @@ set(SOURCE_FILES
 #        FTBufferElement.hh
 #        CounterMB.cc
 #        CounterMB.hh
-        main.cpp
-        Agent.h Agent.cpp)
+        main.cpp)
 
 add_executable(FTSFC ${SOURCE_FILES})
 target_link_libraries(FTSFC ${CLICK_LIB})

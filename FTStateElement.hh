@@ -46,8 +46,18 @@ public:
 
 public:
     static const char *GET_CALL_BACK;
+    static const char *PUT_CALL_BACK;
+//    static const char *ROLLBACK_CALL_BACK;
+
     enum {
-        GetCallBack
+        GetCallBack,
+        PutCallBack,
+        RollbackCallBack
+    };
+
+    enum CALL_BACK_RESULT {
+        FAILED = -1,
+        SUCCESS = 0
     };
 
     //TODO: Remove the _failureCount and _id initialization,
@@ -62,7 +72,7 @@ public:
 
     const char *class_name() const { return "FTStateElement"; }
 
-    const char *port_count() const { return PORTS_2_2; }
+    const char *port_count() const { return PORTS_0_0; }
 
     const char *processing() const { return AGNOSTIC; }
 
@@ -70,6 +80,8 @@ public:
 
     //TODO: make sure that the connection type is push
     void push(int source, Packet *p);
+
+    void rollback();
 
     void add_handlers();
 
@@ -100,10 +112,19 @@ public:
     bool putCommittedState(FTMBId mbId, const FTState &state);
 
     /// Returns the committed state as a string
-    /// \param e elm
+    /// \param e element object
     /// \param vparam
-    /// \return
-    static String getStateCallback(Element *e, void *vparam);
+    /// \return The state
+    static String getStateCallback(Element *e, void *user_data);
+//    static String getStateCallback(int flags, void* user_data, Element *e, );
+
+//    static int getStateCallback(int operation, String &data, Element *element,
+//                           const Handler *handler, ErrorHandler *errh);
+
+
+//    static int putStateCallback(void *user_data, Element *e, );
+
+    static int putStateCallback(const String &data, Element *element, void *user_data, ErrorHandler *errh);
 };
 
 CLICK_ENDDECLS

@@ -77,6 +77,18 @@ void FTAppenderElement::deserialize(stringstream &ss, FTMBStates &state) {
     ia >> state;
 }
 
+void FTAppenderElement::serialize(FTState &state, stringstream &ss) {
+    boost::archive::binary_oarchive oa(ss);
+    oa << state;
+}
+
+void FTAppenderElement::deserialize(stringstream &ss, FTState &state) {
+    boost::archive::binary_iarchive ia(ss);
+    ia >> state;
+}
+
+static void deserialize(stringstream &ss, FTState &state);
+
 int  FTAppenderElement::payloadOffset(Packet *p) {
     int off = -1;
 

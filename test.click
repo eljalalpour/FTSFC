@@ -1,5 +1,4 @@
-FromDump(/Users/eghaznavi/Downloads/dumps/test.pcap)
-->ToDevice(en0);
+require(package "FTSFC");
 
-FromDevice(en0)
-->ToDump(/Users/eghaznavi/Downloads/dumps/test_dump1.pcap);
+ControlSocket(TCP, 10001, VERBOSE true);
+se::FTStateElement(ID 1);

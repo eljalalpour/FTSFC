@@ -15,6 +15,9 @@ int FTStateElement::configure(Vector<String> &conf, ErrorHandler *errh) {
                 .complete() < 0)
         return -1;
 
+    std::cout << "id: " << _id << std::endl;
+    std::cout << "failure count: " << _failureCount << std::endl;
+
     return 0;
 }
 
@@ -71,16 +74,13 @@ void FTStateElement::push(int source, Packet *p) {
 }
 
 void FTStateElement::add_handlers() {
-    //TODO: Make sure that the flags for the handler should be Handler::CALM
-//    add_read_handler(GET_CALL_BACK, getStateCallback, GetCallBack, Handler::READ_PARAM);
     for (int i = 0; i < this->_failureCount + 1; ++i) {
         stringstream ss;
-        ss << GET_CALL_BACK << this->_failureCount;
+        ss << GET_CALL_BACK << i;
+        std::cout << "add handler" << ss.str().c_str() << std::endl;
         add_read_handler(String(ss.str().c_str()), getStateCallback, i);
     }//for
-//    set_handler(GET_CALL_BACK, Handler::READ_PARAM, getStateCallback);
     add_write_handler(PUT_CALL_BACK, putStateCallback, PutCallBack, Handler::OP_WRITE);
-//    add_read_handler(GET_CALL_BACK, getStateCallback, RollbackCallBack, Handler::READ_PARAM);
 }
 
 void FTStateElement::replicateStates(FTPacketMBPiggyBackedState &piggyBackedState) {
@@ -230,18 +230,27 @@ bool FTStateElement::putCommittedState(FTMBId mbId, const FTState &state) {
         _committed[mbId] = state;
     }//else
 
+    if (mbId == this->_id) {
+        this->_operationState = state;
+    }//if
+
     return found;
 }
 
+/**
+ * Get the state of a middlebox. The format of the result is as follows:
+ * 0  1 ...
+ * ID State
+ * @param e The element whose handler is called
+ * @param thunk The parameter that is specifies the middlebox
+ * @return The state of the middlebox
+ */
 String FTStateElement::getStateCallback(Element *e, void *thunk) {
-//int FTStateElement::getStateCallback(int operation, String &data, Element *element,
-//                 const Handler *handler, ErrorHandler *errh) {
     click_chatter("In get state callback!");
     FTStateElement *se = static_cast<FTStateElement *>(e);
     int param = intptr_t(thunk);
 
-    click_chatter("Parameter is ", param);
-
+    std::cout << "Parameter is " << param << std::endl;
     //TODO: set the middleboxId with a valid id from the input
     FTMBId middleboxId = 0;
     stringstream ss;
@@ -263,11 +272,22 @@ String FTStateElement::getStateCallback(Element *e, void *thunk) {
     // We assume that get-state handler is called when a failure happens
     //so we need to rollback the states
     se->rollback();
+    String str;
+    str.append(middleboxId);
+    str.append(buffer.c_str(), buffer.size());
 
     // Return the serialized and compressed state
-    return String(buffer.c_str(), buffer.size());
+    return str;
 }
 
+/**
+ * Receiving and putting the state of a middlebox. The format of the result is as follows
+ * @param data The state of the middlebox
+ * @param e The element
+ * @param user_data
+ * @param errh
+ * @return A zero or positive value for success, and a negative for the failure
+ */
 int FTStateElement::putStateCallback(const String &data, Element *e, void *user_data, ErrorHandler *errh) {
     click_chatter("In rollback callback!");
 

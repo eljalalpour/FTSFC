@@ -1,4 +1,6 @@
 require(package "FTSFC");
 
-ControlSocket(TCP, 10001, VERBOSE true);
-se::FTStateElement(ID 1, FAILURE_COUNT 1);
+FromDump(/Users/eghaznavi/Downloads/dumps/test-2.pcap, STOP true)
+->SetVLANAnno
+->FTFilterElement(VLAN_ID 15)
+->ToDump(/Users/eghaznavi/Downloads/dumps/test-3.pcap);

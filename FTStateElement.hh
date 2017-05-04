@@ -16,21 +16,24 @@
 
 #define FT_STATE_ELEMENT_CLASS_NAME "FTStateElement"
 
+#define CONF_ID            "ID"
+#define CONF_FAILURE_COUNT "F"
+#define CONF_VLAN_ID       "VLAN_ID"
+
 CLICK_DECLS
 
 class FTStateElement : public Element {
 public:
     //TODO: must be configured
     FTMBId _id;// Must be initialized during the configuration phase
+    VLANId _vlanId;// Must be initialized during the configuration phase
+    int _failureCount;
     FTState _operationState; // Does not to be initialized
     FTModified _modified;  // Does not to be initialized
     FTPacketMBState _log;  // Does not to be initialized
     FTMBStates _committed; // Must be initialized in the configuration phase
     FTPacketMBPiggyBackedState _temp; // Does not to be initialized
     map<FTPacketId, Packet *> _packets; // Does not to be initialized
-
-    //TODO we should set the following variables from the configuration file
-    int _failureCount;
 
     /// Replicate the states of other middleBoxes and increment the ack value
     /// \param piggyBackedState

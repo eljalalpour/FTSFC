@@ -31,7 +31,7 @@ set(SOURCE_FILES
 #        FTBufferElement.hh
 #        CounterMB.cc
 #        CounterMB.hh
-        main.cpp)
+        main.cpp FTFilterElement.cc FTFilterElement.hh)
 
 add_executable(FTSFC ${SOURCE_FILES})
 target_link_libraries(FTSFC ${CLICK_LIB})

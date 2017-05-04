@@ -25,6 +25,9 @@ using std::stringstream;
 typedef uint64_t FTPacketId;
 
 // FTMBId type identifies a MB uniquely
+typedef uint16_t VLANId;
+
+// FTMBId type identifies a MB uniquely
 typedef uint8_t FTMBId;
 
 // FTState type represents the state of a MB as a key value store

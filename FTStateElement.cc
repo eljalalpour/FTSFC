@@ -10,12 +10,15 @@ const char *FTStateElement::PUT_CALL_BACK = "p";
 //const char *FTStateElement::ROLLBACK_CALL_BACK = "r";
 
 int FTStateElement::configure(Vector<String> &conf, ErrorHandler *errh) {
-    if (Args(conf, this, errh).read("ID", _id)
-                .read("FAILURE_COUNT", _failureCount)
+    if (Args(conf, this, errh)
+                .read(CONF_ID, _id)
+                .read(CONF_VLAN_ID, _vlanId)
+                .read(CONF_FAILURE_COUNT, _failureCount)
                 .complete() < 0)
         return -1;
 
     std::cout << "id: " << _id << std::endl;
+    std::cout << "vlan id: " << _vlanId << std::endl;
     std::cout << "failure count: " << _failureCount << std::endl;
 
     return 0;

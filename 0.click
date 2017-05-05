@@ -1,6 +1,18 @@
 require(package "FTSFC");
 
-FromDump(/Users/eghaznavi/Downloads/dumps/test-2.pcap, STOP true)
+FromDevice(%s)
 ->SetVLANAnno
-->FTFilterElement(VLAN_ID 15)
-->ToDump(/Users/eghaznavi/Downloads/dumps/test-3.pcap);
+->FTFilterElement(VLAN_ID %d)
+->CheckIPHeader(14)
+->se::FTStateElement(ID %d, VLAN_ID %d, F %d)
+->CheckIPHeader(14)
+->%s
+->[1]se;
+
+se[1]
+->VLANEncap(VLAN_ID %d)
+->FTBufferElement
+->ToDevice(%s);
+
+FTBufferElement[1]
+->ToDevice(%s);

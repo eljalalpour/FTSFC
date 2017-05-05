@@ -2,19 +2,18 @@
 
 #include <click/config.h>
 #include <click/element.hh>
+#include <vector>
 #include "FTTypes.hh"
-
-#define CONF_VLAN_ID "VLAN_ID"
 
 CLICK_DECLS
 
 /**
- * This class filter the packets that do not match a given vlan_id.
- * The vlan_id is given in the click configuration file
+ * This class filter the packets that do not match given vlan_ids.
+ * The vlan_ids are given in the click configuration as a list of parameters.
  */
 class FTFilterElement: public Element {
 private:
-    VLANId _vlan_id;
+    std::vector<VLANId> _vlan_ids;
 
 public:
     FTFilterElement();

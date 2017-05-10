@@ -75,6 +75,18 @@ public:
     /// \param buffer Decompressed
     static void decompress(const std::string &data, std::string &buffer);
 
+    /// Serialize and compress state
+    /// \param state The state to be encoded
+    /// \param buffer The encoded byte stream
+    static void encode(FTState& state, string& buffer);
+
+    /// Deserialize and decompress state
+    /// \param data The compressed serialized state
+    /// \param state The state
+    static void decode(const string& data, FTState& state);
+
+    static void decode(const char* data, int size, FTState& state);
+
     /// Get a unique identifier for a packet
     /// \param p The packet
     /// \return The unique identifier

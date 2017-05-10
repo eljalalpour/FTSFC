@@ -227,6 +227,32 @@ void FTAppenderElement::printState(FTPacketMBPiggyBackedState &state) {
     }//for
 }
 
+void FTAppenderElement::encode(FTState& state, string& buffer) {
+    stringstream ss;
+
+    // Serialize and compress the state
+    FTAppenderElement::serialize(state, ss);
+    FTAppenderElement::compress(ss.str(), buffer);
+}
+
+void FTAppenderElement::decode(const string& buffer, FTState& state) {
+    string decompressed;
+    FTAppenderElement::decompress(buffer, decompressed);
+    click_chatter("Decompressed size is: %d", decompressed.size());
+    click_chatter("After decompress");
+
+    stringstream ss;
+    ss.str(decompressed);
+
+    click_chatter("Before deserialize");
+    FTAppenderElement::deserialize(ss, state);
+}
+
+void FTAppenderElement::decode(const char* data, int size, FTState& state) {
+    string buffer(data, size);
+    decode(buffer, state);
+}
+
 CLICK_ENDDECLS
 EXPORT_ELEMENT(FTAppenderElement)
 ELEMENT_LIBS(-L/usr/local/lib -lboost_iostreams -lboost_serialization)

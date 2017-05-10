@@ -2,7 +2,7 @@ require(package "FTSFC");
 
 FromDevice(%s)
 ->SetVLANAnno
-->FTFilterElement(VLAN_ID %d)
+->FTFilterElement(%d, %d)
 ->CheckIPHeader(14)
 ->se::FTStateElement(ID %d, VLAN_ID %d, F %d)
 ->CheckIPHeader(14)
@@ -11,8 +11,4 @@ FromDevice(%s)
 
 se[1]
 ->VLANEncap(VLAN_ID %d)
-->FTBufferElement
-->ToDevice(%s);
-
-FTBufferElement[1]
 ->ToDevice(%s);

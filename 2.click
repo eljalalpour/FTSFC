@@ -1,6 +1,18 @@
 require(package "FTSFC");
 
-FromDevice(en0)
+FromDevice(%s)
 ->SetVLANAnno
-->FTFilterElement(15, 2, 3)
-->ToDump(/Users/eghaznavi/Desktop/ttt.pcap);
+->FTFilterElement(%d)
+->CheckIPHeader(14)
+->se::FTStateElement(ID %d, VLAN_ID %d, F %d)
+->CheckIPHeader(14)
+->%s
+->[1]se;
+
+se[1]
+->VLANEncap(VLAN_ID %d)
+->FTBufferElement
+->ToDevice(%s);
+
+FTBufferElement[1]
+->ToDevice(%s);

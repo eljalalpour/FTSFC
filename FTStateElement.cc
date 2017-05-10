@@ -17,10 +17,6 @@ int FTStateElement::configure(Vector<String> &conf, ErrorHandler *errh) {
                 .complete() < 0)
         return -1;
 
-    std::cout << "id: " << _id << std::endl;
-    std::cout << "vlan id: " << _vlanId << std::endl;
-    std::cout << "failure count: " << _failureCount << std::endl;
-
     return 0;
 }
 
@@ -55,7 +51,7 @@ void FTStateElement::push(int source, Packet *p) {
         FTPiggyBackedState PBState;
         PBState.state = primaryState;
         PBState.ack = 1;
-        PBState.commit = false;
+        PBState.commit = (PBState.ack > this->_failureCount);
 
         _log[packetId][_id] = primaryState;
         _temp[packetId][_id] = PBState;
@@ -80,7 +76,6 @@ void FTStateElement::add_handlers() {
     for (int i = 0; i < this->_failureCount + 1; ++i) {
         stringstream ss;
         ss << GET_CALL_BACK << i;
-        std::cout << "add handler" << ss.str().c_str() << std::endl;
         add_read_handler(String(ss.str().c_str()), getStateCallback, i);
     }//for
     add_write_handler(PUT_CALL_BACK, putStateCallback, PutCallBack, Handler::OP_WRITE);
@@ -219,6 +214,8 @@ bool FTStateElement::getCommittedState(FTMBId mbId, FTState &state) {
 
     state["khar"] = "gav";
     state["sag"] = "gurba";
+    state["elaheh"] = "jalalpour";
+    state["Milad"] = "Ghaznavi";
 
     return true;
 }
@@ -254,27 +251,28 @@ String FTStateElement::getStateCallback(Element *e, void *thunk) {
     int param = intptr_t(thunk);
 
     std::cout << "Parameter is " << param << std::endl;
+
     //TODO: set the middleboxId with a valid id from the input
-    FTMBId middleboxId = 0;
+    FTMBId middleboxId = param;
     stringstream ss;
     string buffer;
 
     // Find the requested state
     FTState state;
-    se->getCommittedState(middleboxId, state);
+    if (se->getCommittedState(middleboxId, state)) {
 
-    FTAppenderElement::printState(state);
+        FTAppenderElement::printState(state);
 
-    // Serialize and compress the state
-    FTAppenderElement::serialize(state, ss);
-    FTAppenderElement::compress(ss.str(), buffer);
-
-    std::cout << "Buffer: " << buffer << std::endl;
+        // Serialize and compress the state
+        FTAppenderElement::serialize(state, ss);
+        FTAppenderElement::compress(ss.str(), buffer);
+    }//if
 
     //TODO: Check the state of which replicas must be rollbacked, since the failed replica is in f + 1 replica-groups
     // We assume that get-state handler is called when a failure happens
     //so we need to rollback the states
     se->rollback();
+
     String str;
     str.append(middleboxId);
     str.append(buffer.c_str(), buffer.size());

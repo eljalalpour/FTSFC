@@ -211,6 +211,10 @@ bool FTStateElement::getCommittedState(FTMBId mbId, FTState &state) {
         found = true;
     }//if
     return found;
+
+//    state["khar"] = "gav";
+//    state["sag"] = "gurba";
+//    return true;
 }
 
 bool FTStateElement::putCommittedState(FTMBId mbId, const FTState &state) {

@@ -49,8 +49,15 @@ void FTControlElement::put(FTStateElement* se, int conn_fd) {
 
     char buffer[size];
     read(conn_fd, &buffer, size);
+
+    click_chatter("State is (%d): ", size);
+    for(int i = 0; i < size; i++)
+        click_chatter("%d ", buffer[i]);
+
     FTState state;
     FTAppenderElement::decode(buffer, size, state);
+
+    FTAppenderElement::printState(state);
 
     se->putCommittedState(id, state);
 }
@@ -66,6 +73,11 @@ void FTControlElement::get(FTStateElement* se, int conn_fd) {
         int size = buffer.size();
         write(conn_fd, &size, sizeof(int));
         write(conn_fd, buffer.c_str(), size);
+
+        click_chatter("State is (%d): ", buffer.size());
+        FTAppenderElement::printState(state);
+        for(int i = 0; i < buffer.size(); i++)
+            click_chatter("%d ", buffer[i]);
     }//if
     else {
         // If there is some error in finding the state, return 0

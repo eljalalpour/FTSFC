@@ -204,20 +204,13 @@ bool FTStateElement::putPrimaryState(string key, string value) {
 }
 
 bool FTStateElement::getCommittedState(FTMBId mbId, FTState &state) {
-//    bool found = false;
-//    auto item = _committed.find(mbId);
-//    if (item != _committed.end()) {
-//        state = item->second;
-//        found = true;
-//    }//if
-//    return found;
-
-    state["khar"] = "gav";
-    state["sag"] = "gurba";
-    state["elaheh"] = "jalalpour";
-    state["Milad"] = "Ghaznavi";
-
-    return true;
+    bool found = false;
+    auto item = _committed.find(mbId);
+    if (item != _committed.end()) {
+        state = item->second;
+        found = true;
+    }//if
+    return found;
 }
 
 bool FTStateElement::putCommittedState(FTMBId mbId, const FTState &state) {

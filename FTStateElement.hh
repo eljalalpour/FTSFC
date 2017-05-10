@@ -119,13 +119,6 @@ public:
     /// \param vparam
     /// \return The state
     static String getStateCallback(Element *e, void *user_data);
-//    static String getStateCallback(int flags, void* user_data, Element *e, );
-
-//    static int getStateCallback(int operation, String &data, Element *element,
-//                           const Handler *handler, ErrorHandler *errh);
-
-
-//    static int putStateCallback(void *user_data, Element *e, );
 
     static int putStateCallback(const String &data, Element *element, void *user_data, ErrorHandler *errh);
 };

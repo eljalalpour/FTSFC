@@ -90,7 +90,7 @@ public:
 
     /// Get the value associated to @param key from the in-operation state or committed state by setting @param value.
     /// The function searches the in-operation state, and if the key is not found then the function searches
-    /// the committed state.
+    /// the committed state. If the state is found the function returns true, otherwise the function returns false. 
     /// \param key
     /// \param value
     /// \return true of @param key is found, otherwise false

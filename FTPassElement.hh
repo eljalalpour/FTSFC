@@ -11,9 +11,6 @@ CLICK_DECLS
  * This element recieves a packet from two input ports and pass packet to a single output
  */
 class FTPassElement: public Element {
-private:
-    std::vector<VLANId> _vlan_ids;
-
 public:
     FTPassElement();
     ~FTPassElement();

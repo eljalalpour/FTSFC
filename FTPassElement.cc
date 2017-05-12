@@ -13,4 +13,4 @@ void FTPassElement::push(int, Packet *p) {
 }
 
 CLICK_ENDDECLS
-EXPORT_ELEMENT(FTFilterElement)
+EXPORT_ELEMENT(FTPassElement)

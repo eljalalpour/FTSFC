@@ -7,6 +7,8 @@
 #include <boost/serialization/nvp.hpp>
 #include <string>
 #include <sstream>
+#include <iostream>
+
 
 using std::map;
 using std::vector;

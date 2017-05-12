@@ -75,7 +75,7 @@ public:
 
     const char *class_name() const { return "FTStateElement"; }
 
-    const char *port_count() const { return PORTS_0_0; }
+    const char *port_count() const { return PORTS_2_2; }
 
     const char *processing() const { return AGNOSTIC; }
 

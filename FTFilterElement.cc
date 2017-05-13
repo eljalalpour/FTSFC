@@ -5,7 +5,7 @@
 
 CLICK_DECLS
 
-FTFilterElement::FTFilterElement() { }
+FTFilterElement::FTFilterElement(): _all(0), _passed(0) { };
 
 FTFilterElement::~FTFilterElement() { }
 
@@ -15,13 +15,14 @@ int FTFilterElement::configure(Vector<String> &conf, ErrorHandler *errh) {
     for (int i = 0; i < conf.size(); ++i) {
         parser.parse(conf[i], vlanId);
         _vlan_ids.push_back(vlanId);
-        std::cout << "VLAN ID: " << vlanId << std::endl;
+        click_chatter("VLAN ID: %d", vlanId);
     }//for
 
     return 0;
 }
 
 Packet *FTFilterElement::simple_action(Packet *p) {
+    _all++;
     const click_ether_vlan *vlan = reinterpret_cast<const click_ether_vlan *>(p->data());
     VLANId vlan_id = (ntohs(vlan->ether_vlan_tci) & 0xFFF);
 
@@ -29,6 +30,11 @@ Packet *FTFilterElement::simple_action(Packet *p) {
     for (auto it = _vlan_ids.begin(); !found && it != _vlan_ids.end(); ++it) {
         found = ((*it) == vlan_id);
     }//for
+
+    if (found)
+        _passed++;
+
+    click_chatter("All packets: %d, passed packets: %d", _all, _passed);
 
     if (!found)
         return 0;

@@ -14,6 +14,8 @@ CLICK_DECLS
 class FTFilterElement: public Element {
 private:
     std::vector<VLANId> _vlan_ids;
+    int _all;
+    int _passed;
 
 public:
     FTFilterElement();

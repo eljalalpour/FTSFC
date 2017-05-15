@@ -54,12 +54,14 @@ void FTControlElement::put(FTStateElement* se, int conn_fd) {
     for(int i = 0; i < size; i++)
         click_chatter("%d ", buffer[i]);
 
-    FTState state;
-    FTAppenderElement::decode(buffer, size, state);
+    if (size > 0) {
+        FTState state;
+        FTAppenderElement::decode(buffer, size, state);
 
-    FTAppenderElement::printState(state);
+        FTAppenderElement::printState(state);
 
-    se->putCommittedState(id, state);
+        se->putCommittedState(id, state);
+    }//if
 }
 
 void FTControlElement::get(FTStateElement* se, int conn_fd) {

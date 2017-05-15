@@ -1,5 +1,5 @@
 #include "FTStateElement.hh"
-
+#include "FTAppenderElement.hh"
 #include <click/config.h>
 #include <click/router.hh>
 #include <clicknet/tcp.h>
@@ -33,6 +33,7 @@ Packet *CounterMB::simple_action(Packet *p) {
         }//if
     }//if
 
+    click_chatter("Packet id is: %d", FTAppenderElement::getPacketId(p));
     click_chatter("Packet counter is: %d", _counter);
 
     stringstream ss2;

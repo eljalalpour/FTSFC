@@ -1,5 +1,7 @@
 #include "FTAppenderElement.hh"
 #include <clicknet/udp.h>
+#include <clicknet/ether.h>
+#include <click/args.hh>
 #include <boost/iostreams/copy.hpp>
 #include <boost/iostreams/device/back_inserter.hpp>
 #include <boost/iostreams/filter/zlib.hpp>
@@ -14,39 +16,49 @@ FTAppenderElement::FTAppenderElement() {};
 
 FTAppenderElement::~FTAppenderElement() {};
 
+int FTAppenderElement::configure(Vector<String> &conf, ErrorHandler *errh) {
+    BoundedIntArg parser(0, 0xFFF);
+    parser.parse(conf[0], _first_vlan);
+    click_chatter("First VLAN ID: %d", _first_vlan);
+
+    return 0;
+}
+
 void FTAppenderElement::push(int source, Packet *p) {
     FTPacketId packetId = getPacketId(p);
     click_chatter("--------------------");
     click_chatter("In FTAppender element:");
     click_chatter("Receiving packet %llu from port %d", packetId, source);
 
-    if (source == FROM_DUMP) {
+    const click_ether_vlan *vlan = reinterpret_cast<const click_ether_vlan *>(p->data());
+    VLANId vlan_id = (ntohs(vlan->ether_vlan_tci) & 0xFFF);
+    if (vlan_id == _first_vlan) {
         click_chatter("state on the packet going to state-element");
+
+//        _mutex.lock();
         printState(_temp);
         WritablePacket *q = encodeStates(p, _temp);
         _temp.clear();
+//        _mutex.unlock();
+
         p->kill();
-        output(TO_FT_STATE).push(q);
+        output(0).push(q);
     }//if
-    else if (source == FROM_TO_DEVICE) {
-        click_chatter("state from Elaheh:");
-        try {
-            FTPacketMBPiggyBackedState piggyBackedState;
-            click_chatter("Decoding the piggybacked state!");
-            decodeStates(p, piggyBackedState);
-            click_chatter("the size of piggybacked state: %d", piggyBackedState.size());
-            _temp.insert(piggyBackedState.begin(), piggyBackedState.end());
-            click_chatter("state on the packet coming from state-element ");
-            printState(_temp);
-//            output(1).push(p);
-        }//try
-        catch(...) {
-            click_chatter("Not valid packet for our protocol!");
-        }//catch
+    else {
+        FTPacketMBPiggyBackedState pbState;
+        decodeStates(p, pbState);
+        append(pbState);
+
         p->kill();
-    }//else if
+    }//else
 
     click_chatter("--------------------");
+}
+
+void FTAppenderElement::append(FTPacketMBPiggyBackedState state) {
+//    _mutex.lock();
+    _temp.insert(state.begin(), state.end());
+//    _mutex.unlock();
 }
 
 void FTAppenderElement::serializePiggyBacked(FTPacketMBPiggyBackedState &pbStates, stringstream &ss) {

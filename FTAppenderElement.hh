@@ -5,6 +5,7 @@
 #include <click/element.hh>
 #include <clicknet/tcp.h>
 #include <boost/archive/archive_exception.hpp>
+#include <mutex>
 
 #define FROM_DUMP 0
 #define FROM_TO_DEVICE 1
@@ -16,6 +17,8 @@ CLICK_DECLS
 class FTAppenderElement : public Element {
 private:
     FTPacketMBPiggyBackedState _temp;
+//    std::mutex _mutex;
+    VLANId _first_vlan;
 
 public:
     FTAppenderElement();
@@ -24,12 +27,15 @@ public:
 
     const char *class_name() const { return "FTAppenderElement"; }
 
-    //TODO: Change PORTS_1_1 to PORTS_2_1
-    const char *port_count() const { return PORTS_2_1; }
+    const char *port_count() const { return PORTS_1_1; }
 
     const char *processing() const { return AGNOSTIC; }
 
+    int configure(Vector<String> &conf, ErrorHandler *errh);
+
     void push(int source, Packet *p);
+
+    void append(FTPacketMBPiggyBackedState state);
 
     static void serializePiggyBacked(FTPacketMBPiggyBackedState &pbStates, stringstream &ss);
 
@@ -86,6 +92,10 @@ public:
     static void decode(const string& data, FTState& state);
 
     static void decode(const char* data, int size, FTState& state);
+
+    static void decode(const string& data, FTPacketMBPiggyBackedState& state);
+
+    static void decode(const char* data, int size, FTPacketMBPiggyBackedState& state);
 
     /// Get a unique identifier for a packet
     /// \param p The packet

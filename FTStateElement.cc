@@ -18,6 +18,8 @@ int FTStateElement::configure(Vector<String> &conf, ErrorHandler *errh) {
                 .complete() < 0)
         return -1;
 
+    printf("Configuration of state element: id: %d, vlanId: %d, f: %d\n", _id, _vlanId, _failureCount);
+
     return 0;
 }
 
@@ -29,17 +31,18 @@ void FTStateElement::push(int source, Packet *p) {
     if (source == INPUT_PORT_TO_PROCESS) {
         try {
             reset();
-            FTPacketMBPiggyBackedState piggyBackedState;
-            WritablePacket *q = FTAppenderElement::decodeStatesRetPacket(p, piggyBackedState);
-            replicateStates(piggyBackedState);
+            WritablePacket *q = FTAppenderElement::decodeStatesRetPacket(p, _temp);
+            printf("State received from FTAppender\n");
+
+            FTAppenderElement::printState(_temp);
+
+            replicateStates();
             p->kill();
-            printf("This is the state recieved from FTAppender\n");
-            FTAppenderElement::printState(piggyBackedState);
             output(OUTPUT_PORT_TO_MIDDLEBOX).push(q);
-        }catch(...) {
+        } catch(...) {
             p->kill();
             printf("Not A valid packet for our protocol\n");
-        }
+        }//catch
     }//if
     else if (source == INPUT_PORT_PROCESSED) {
         FTState primaryState;
@@ -54,10 +57,25 @@ void FTStateElement::push(int source, Packet *p) {
         PBState.ack = 1;
         PBState.commit = (PBState.ack > this->_failureCount);
 
-        _log[packetId][_id] = primaryState;
-        _temp[packetId][_id] = PBState;
+        if (!PBState.commit) {
+            _log[packetId][_id] = PBState;
+        }//if
 
-        printf("This is the state going to the next middlebox\n");
+        printf("State going to the next middlebox:\n");
+
+        for (auto it = _log.begin(); it != _log.end(); ++it) {
+            for (auto it2 = it->second.begin(); it2 != it->second.end(); ++it2) {
+                if (it2->second.ack < _failureCount + 1) {
+                    _temp[it->first][it2->first] = it2->second;
+                }//if
+                else if (it2->second.ack == _failureCount + 1) {
+                    FTPiggyBackedState sState = it2->second;
+                    sState.state.clear();
+                    _temp[it->first][it2->first] = sState;
+                }//else if
+            }//for
+        }//for
+
         FTAppenderElement::printState(_temp);
         _packets[packetId] = p->uniqueify();
         WritablePacket *q = FTAppenderElement::encodeStates(p, _temp);
@@ -82,11 +100,11 @@ void FTStateElement::add_handlers() {
     add_write_handler(PUT_CALL_BACK, putStateCallback, PutCallBack, Handler::OP_WRITE);
 }
 
-void FTStateElement::replicateStates(FTPacketMBPiggyBackedState &piggyBackedState) {
+void FTStateElement::replicateStates() {
     printf("In state replication\n");
 
-    printf("this is the size of state: %d\n", piggyBackedState.size());
-    for (auto it = piggyBackedState.begin(); it != piggyBackedState.end(); ++it) {
+    printf("this is the size of state: %d\n", _temp.size());
+    for (auto it = _temp.begin(); it != _temp.end(); ++it) {
         auto packetId = it->first;
 
         printf("Replicating packet: %llu\n", packetId);
@@ -99,37 +117,49 @@ void FTStateElement::replicateStates(FTPacketMBPiggyBackedState &piggyBackedStat
             if (MBId == _id) {
                 //committing the primary states here
                 if (it2->second.commit) {
+                    printf("Removing the information of packet %llu and middlebox %d\n", it->first, it2->first);
                     //The middlebox visits its state in the third phase of protocol
                     it->second.erase(it2++);
                     //TODO check if we should release the memory of it(iterator)
                     itemErased = true;
                     // erase the log whenever the state of the packet is committed for every middlebox
                     _log.erase(packetId);
-
                 }//if
 
                 else if (it2->second.ack == _failureCount + 1) {
+                    printf("Committing the state of packet %llu and middlebox %d\n", it->first, it2->first);
                     //The middlebox visits its state in the second phase of protocol
                     commit(packetId, MBId);
                     it2->second.commit = true;
-                    _temp[packetId][MBId] = it2->second;
+
+                    printf("Printing temp for debug:\n");
+                    FTAppenderElement::printState(_temp);
                 }//else if
             }//if
             else {
                 //replicating the secondary states here
-                printf("Replicating secondary state!\n");
-
                 if (it2->second.ack != _failureCount + 1) {
-                    _log[packetId][MBId] = it2->second.state;
+                    printf("Replicating secondary state (ack is %d)!\n", (int)it2->second.ack);
 
                     FTAppenderElement::printState(it2->second.state);
-
                     ++(it2->second.ack);
-                    if (it2->second.ack == _failureCount + 1) {
-                        it2->second.state.clear();
-                    }//if
+
+                    _log[packetId][MBId] = it2->second;
+
+                    printf("Ack of packet %llu, and middlebox %d is %d\n", packetId, MBId, _log[packetId][MBId].ack);
+
+                    it->second.erase(it2++);
+                    itemErased = true;
+
+//                    if (it2->second.ack == _failureCount + 1) {
+//                        it2->second.state.clear();
+//                    }//if
                 }//if
-                _temp[packetId][MBId] = it2->second;
+                else if (it2->second.commit) {
+                    //Commiting secondary state
+                    commit(packetId, MBId);
+                }//else
+//                _temp[packetId][MBId] = it2->second;
             }//else
 
             // Increment iterator here
@@ -141,15 +171,15 @@ void FTStateElement::replicateStates(FTPacketMBPiggyBackedState &piggyBackedStat
 }
 
 void FTStateElement::commit(FTPacketId packetId, FTMBId MBId) {
-    printf("Committing the state of the middlebox '%d' for the packet id '%d\n", MBId, packetId);
-    for (auto it = _log[packetId][MBId].begin(); it != _log[packetId][MBId].end(); ++it) {
+    printf("Committing the state of the middlebox '%d' for the packet id '%llu\n", MBId, packetId);
+    for (auto it = _log[packetId][MBId].state.begin(); it != _log[packetId][MBId].state.end(); ++it) {
         _committed[MBId][it->first] = it->second;
         printf("'%s':'%s", it->first.c_str(), it->second.c_str());
     }//for
-//    _log[packetId].erase(MBId);
-//    if (_log[packetId].size() == 0) {
-//        _log.erase(packetId);
-//    }//if
+    _log[packetId].erase(MBId);
+    if (_log[packetId].size() == 0) {
+        _log.erase(packetId);
+    }//if
 }
 
 void FTStateElement::reset() {

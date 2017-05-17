@@ -33,9 +33,11 @@ void FTBufferElement::push(int, Packet *p) {
         auto oldPacketId = it->first;
         if (it->second.begin()->second.commit) {
             Packet *qq = _packets[oldPacketId];
-            click_chatter("packet %d is released", oldPacketId);
+            click_chatter("packet %llu is released", oldPacketId);
             output(TO_OUTSIDE_WORLD).push(qq);
+            click_chatter("After push!");
             _packets.erase(oldPacketId);
+            click_chatter("after erase!");
         }//if
     }//for
 }

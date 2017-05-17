@@ -31,14 +31,14 @@ void FTAppenderElement::push(int source, Packet *p) {
     else if (source == FROM_TO_DEVICE) {
         click_chatter("state from Elaheh:");
         try {
-//            FTPacketMBPiggyBackedState piggyBackedState;
-//            click_chatter("Decoding the piggybacked state!");
-//            decodeStates(p, piggyBackedState);
-//            click_chatter("the size of piggybacked state: %d", piggyBackedState.size());
-//            _temp.insert(piggyBackedState.begin(), piggyBackedState.end());
-//            click_chatter("state on the packet coming from state-element ");
-//            printState(_temp);
-            output(1).push(p);
+            FTPacketMBPiggyBackedState piggyBackedState;
+            click_chatter("Decoding the piggybacked state!");
+            decodeStates(p, piggyBackedState);
+            click_chatter("the size of piggybacked state: %d", piggyBackedState.size());
+            _temp.insert(piggyBackedState.begin(), piggyBackedState.end());
+            click_chatter("state on the packet coming from state-element ");
+            printState(_temp);
+//            output(1).push(p);
         }//try
         catch(...) {
             click_chatter("Not valid packet for our protocol!");
@@ -86,8 +86,6 @@ void FTAppenderElement::deserialize(stringstream &ss, FTState &state) {
     boost::archive::binary_iarchive ia(ss);
     ia >> state;
 }
-
-static void deserialize(stringstream &ss, FTState &state);
 
 int  FTAppenderElement::payloadOffset(Packet *p) {
     int off = -1;
@@ -156,6 +154,8 @@ WritablePacket* FTAppenderElement::decodeStatesRetPacket(Packet *p, FTPacketMBPi
 
     short stateLen;
     memcpy(&stateLen, p->data() + ploff, sizeof(short));
+
+    printf("State length is: %d\n", stateLen);
 
     string states(reinterpret_cast<const char*>(p->data()) + ploff + sizeof(short),
                   reinterpret_cast<const char*>(p->data()) + ploff + sizeof(short) + stateLen);

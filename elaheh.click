@@ -1,20 +1,20 @@
 require(package "FTSFC");
 
-FromDump(/Users/eghaznavi/Downloads/dumps/test.pcap)
+FromDump(small-packets-1.pcap)
 ->CheckIPHeader(14)
 ->ap::FTAppenderElement
 ->CheckIPHeader(14)
-->se::FTStateElement(ID 1, FAILURE_COUNT 2, STATE )
+->se1::FTStateElement(ID 1, F 1)
 ->CheckIPHeader(14)
 ->cmb::CounterMB(ID 1);
 
 cmb
 ->CheckIPHeader(14)
-->[1]se;
+->[1]se1;
 
-se[1]
+se1[1]
 ->CheckIPHeader(14)
-->se2::FTStateElement(ID 2)
+->se2::FTStateElement(ID 2, F 1)
 ->CheckIPHeader(14)
 ->cmb2::CounterMB(ID 2);
 
@@ -26,9 +26,9 @@ se2[1]
 ->CheckIPHeader(14)
 -> be :: FTBufferElement[1]
 ->CheckIPHeader(14)
-->[1]ap;
+->se1;
 
 be
-->ToDump(/Users/eghaznavi/Desktop/naghi.pcap);
+->ToDump(result.pcap);
 
-ControlSocket(TCP, 10000, VERBOSE true);
+//ControlSocket(TCP, 10000, VERBOSE true);

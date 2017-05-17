@@ -13,14 +13,20 @@ CounterMB::CounterMB() : _counter(INIT_COUNTER) {};
 CounterMB::~CounterMB() {};
 
 Packet *CounterMB::simple_action(Packet *p) {
-    click_chatter("finding state element");
+    printf("--------------------\n");
+    printf("In CounterMB %d:\n", _id);
     Router *r = this->router();
 
 //    for (int i = 0; i < r->elements().size(); ++i) {
 //        click_chatter("%d-Element name is: %s", i, r->ename(i).c_str());
 //    }//for
 
-    FTStateElement *stateElement = (FTStateElement *)(r->find("se"));
+    //TODO: remove adding _id from the name state-element. We can assume that the name of the state-element is always 'se'
+    stringstream seSS;
+    seSS << "se" << (int)_id;
+    click_chatter("look for the state element %s\n", seSS.str().c_str());
+
+    FTStateElement *stateElement = (FTStateElement *)(r->find(seSS.str().c_str()));
 
     //Getting the state's value from the FTStateElement
     stringstream ss;
@@ -33,7 +39,7 @@ Packet *CounterMB::simple_action(Packet *p) {
         }//if
     }//if
 
-    click_chatter("Packet id is: %d", FTAppenderElement::getPacketId(p));
+    click_chatter("Packet id is: %llu", FTAppenderElement::getPacketId(p));
     click_chatter("Packet counter is: %d", _counter);
 
     stringstream ss2;
@@ -50,6 +56,8 @@ Packet *CounterMB::simple_action(Packet *p) {
 int CounterMB::configure(Vector<String> &conf, ErrorHandler *errh) {
     if (Args(conf, this, errh).read_or_set("ID", _id, rand() % MB_ID_MAX).complete() < 0)
         return -1;
+
+    click_chatter("Counter MB id is %d!\n", _id);
 
     return 0;
 }

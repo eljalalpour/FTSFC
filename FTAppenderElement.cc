@@ -26,8 +26,8 @@ int FTAppenderElement::configure(Vector<String> &conf, ErrorHandler *errh) {
 
 void FTAppenderElement::push(int source, Packet *p) {
     FTPacketId packetId = getPacketId(p, IP_PACKET_AFTER_VLAN_OFFSET);
-    click_chatter("--------------------");
-    click_chatter("Begin FTAppender element:");
+    printf("--------------------\n");
+    printf("Begin FTAppender element:\n");
 
     const click_ether_vlan *vlan = reinterpret_cast<const click_ether_vlan *>(p->data());
     VLANId vlan_id = (ntohs(vlan->ether_vlan_tci) & 0xFFF);
@@ -56,7 +56,7 @@ void FTAppenderElement::push(int source, Packet *p) {
         p->kill();
     }//else
 
-    click_chatter("--------------------");
+    printf("--------------------\n");
 }
 
 void FTAppenderElement::append(FTPacketMBPiggyBackedState state) {

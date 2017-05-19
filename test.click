@@ -1,5 +1,7 @@
 require(package "FTSFC");
 
-FTControlElement(10001);
-
-se::FTStateElement(ID 1, VLAN_ID 1, F 2);
+FromDump(small-packets-1.pcap, STOP true)
+->Print
+->Test(ID 1)
+->Test(ID 2)
+->Discard;

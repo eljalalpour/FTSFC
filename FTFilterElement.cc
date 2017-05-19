@@ -22,6 +22,9 @@ int FTFilterElement::configure(Vector<String> &conf, ErrorHandler *errh) {
 }
 
 Packet *FTFilterElement::simple_action(Packet *p) {
+    click_chatter("--------------------");
+    click_chatter("In FTFilter Element");
+
     _all++;
     const click_ether_vlan *vlan = reinterpret_cast<const click_ether_vlan *>(p->data());
     VLANId vlan_id = (ntohs(vlan->ether_vlan_tci) & 0xFFF);
@@ -35,6 +38,7 @@ Packet *FTFilterElement::simple_action(Packet *p) {
         _passed++;
 
     click_chatter("All packets: %d, passed packets: %d", _all, _passed);
+    click_chatter("--------------------");
 
     if (!found)
         return 0;

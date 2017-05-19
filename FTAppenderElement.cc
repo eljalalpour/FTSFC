@@ -25,14 +25,16 @@ int FTAppenderElement::configure(Vector<String> &conf, ErrorHandler *errh) {
 }
 
 void FTAppenderElement::push(int source, Packet *p) {
-    FTPacketId packetId = getPacketId(p);
+    FTPacketId packetId = getPacketId(p, IP_PACKET_AFTER_VLAN_OFFSET);
     click_chatter("--------------------");
-    click_chatter("In FTAppender element:");
-    click_chatter("Receiving packet %llu from port %d", packetId, source);
+    click_chatter("Begin FTAppender element:");
 
     const click_ether_vlan *vlan = reinterpret_cast<const click_ether_vlan *>(p->data());
     VLANId vlan_id = (ntohs(vlan->ether_vlan_tci) & 0xFFF);
+    click_chatter("VLAN-ID is %d", vlan_id);
+
     if (vlan_id == _first_vlan) {
+        click_chatter("Receiving packet %llu from the source!", packetId);
         click_chatter("state on the packet going to state-element");
 
 //        _mutex.lock();
@@ -45,8 +47,10 @@ void FTAppenderElement::push(int source, Packet *p) {
         output(0).push(q);
     }//if
     else {
+        click_chatter("Receiving packet %llu from the end of the chain!", packetId);
         FTPacketMBPiggyBackedState pbState;
         decodeStates(p, pbState);
+        printState(pbState);
         append(pbState);
 
         p->kill();
@@ -72,8 +76,7 @@ void FTAppenderElement::deserializePiggyBacked(stringstream &ss, FTPacketMBPiggy
 }
 
 void FTAppenderElement::deserializePiggyBacked(string& states, FTPacketMBPiggyBackedState &piggyBackedStates) {
-    click_chatter("In deserialize piggybacked. The state size is %d, and state itself is: %s",
-                  states.size(), states.c_str());
+    click_chatter("In deserialize piggybacked. The state size is %d", states.size());
     stringstream ss(states);
     boost::archive::binary_iarchive ia(ss);
     ia >> piggyBackedStates;
@@ -110,8 +113,8 @@ int  FTAppenderElement::payloadOffset(Packet *p) {
         off = p->transport_header_offset() + sizeof(click_udp);
     }//else if
     else {
-        off=p->transport_header_offset();
-    }
+        off = p->transport_header_offset();
+    }//else
 
     return off;
 }
@@ -147,7 +150,6 @@ WritablePacket *FTAppenderElement::encodeStates(Packet *p, FTPacketMBPiggyBacked
 
 int FTAppenderElement::decodeStates(Packet *p, FTPacketMBPiggyBackedState &piggyBackedState) {
     auto ploff = payloadOffset(p);
-    click_chatter("Payload offset: %d", ploff);
 
     short stateLen;
     memcpy(&stateLen, p->data() + ploff, sizeof(short));
@@ -155,34 +157,33 @@ int FTAppenderElement::decodeStates(Packet *p, FTPacketMBPiggyBackedState &piggy
     string decompressed;
     decompress(states, decompressed);
 
-    click_chatter("Payload offset: %d", states.size());
     FTAppenderElement::deserializePiggyBacked(decompressed, piggyBackedState);
 
     return stateLen + sizeof(short);
 }
 
 WritablePacket* FTAppenderElement::decodeStatesRetPacket(Packet *p, FTPacketMBPiggyBackedState &piggyBackedState) {
+//    auto ploff = payloadOffset(p);
+//
+//    short stateLen;
+//    memcpy(&stateLen, p->data() + ploff, sizeof(short));
+//
+//    click_chatter("State length: %d", stateLen);
+//
+//    string states(reinterpret_cast<const char*>(p->data()) + ploff + sizeof(short), stateLen);
+//    string decompressed;
+//    decompress(states, decompressed);
+//
+//    FTAppenderElement::deserializePiggyBacked(decompressed, piggyBackedState);
     auto ploff = payloadOffset(p);
-
-    short stateLen;
-    memcpy(&stateLen, p->data() + ploff, sizeof(short));
-
-    printf("State length is: %d\n", stateLen);
-
-    string states(reinterpret_cast<const char*>(p->data()) + ploff + sizeof(short),
-                  reinterpret_cast<const char*>(p->data()) + ploff + sizeof(short) + stateLen);
-    string decompressed;
-    decompress(states, decompressed);
-
-    FTAppenderElement::deserializePiggyBacked(decompressed, piggyBackedState);
-
-    int orgPayloadBegin = ploff + sizeof(short) + stateLen;
-    WritablePacket *q = Packet::make(p->length() - stateLen - sizeof(short));
+    int stateLenPShort = FTAppenderElement::decodeStates(p, piggyBackedState);
+    int orgPayloadBegin = ploff + stateLenPShort;
+    WritablePacket *q = Packet::make(p->length() - stateLenPShort);
     memcpy(q->data(), p->data(), ploff);
     memcpy(q->data() + ploff, p->data() + orgPayloadBegin, p->length() - orgPayloadBegin);
 
     click_ip* ip_header = reinterpret_cast<click_ip*>(q->data() + p->ip_header_offset());
-    ip_header->ip_len = htons(ntohs(p->ip_header()->ip_len) - stateLen - sizeof(short));
+    ip_header->ip_len = htons(ntohs(p->ip_header()->ip_len) - stateLenPShort);
 
     int hlen = (ip_header->ip_hl) << 2;
     ip_header->ip_sum = 0;
@@ -207,11 +208,11 @@ void FTAppenderElement::decompress(const std::string &data, std::string &buffer)
     boost::iostreams::copy(in, boost::iostreams::back_inserter(buffer));
 }
 
-FTPacketId FTAppenderElement::getPacketId(Packet *p) {
+FTPacketId FTAppenderElement::getPacketId(Packet *p, int ip_offset) {
     //TODO: implement an identifier for non tcp packets
 
-    const click_ip* cip = reinterpret_cast<const click_ip*>(p->data() + 14);
-    const click_tcp* tcp =  reinterpret_cast<const click_tcp*>(p->data() + 14 + 20);
+    const click_ip* cip = reinterpret_cast<const click_ip*>(p->data() + ip_offset);
+    const click_tcp* tcp =  reinterpret_cast<const click_tcp*>(p->data() + ip_offset + 20);
     FTPacketId packetId = MAKE_UNIQUE_PACKET_ID(cip->ip_off, cip->ip_p, tcp->th_seq);
 
     return packetId;

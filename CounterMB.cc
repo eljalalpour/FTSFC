@@ -13,8 +13,8 @@ CounterMB::CounterMB() : _counter(INIT_COUNTER) {};
 CounterMB::~CounterMB() {};
 
 Packet *CounterMB::simple_action(Packet *p) {
-    printf("--------------------\n");
-    printf("In CounterMB %d:\n", _id);
+    click_chatter("--------------------");
+    click_chatter("In CounterMB %d:", _id);
     Router *r = this->router();
 
 //    for (int i = 0; i < r->elements().size(); ++i) {

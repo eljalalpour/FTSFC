@@ -12,7 +12,7 @@ CLICK_DECLS
 
 class FTBufferElement: public Element {
 private:
-    map<FTPacketId, Packet *> _packets;
+    map<FTPacketId, Packet * > _packets;
 
 public:
     FTBufferElement();

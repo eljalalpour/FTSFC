@@ -12,6 +12,9 @@
 #define TO_FT_STATE 0
 #define FT_APPENDER_CLASS_NAME "FTAppenderElement"
 
+#define IP_PACKET_OFFSET 14
+#define IP_PACKET_AFTER_VLAN_OFFSET 18
+
 CLICK_DECLS
 
 class FTAppenderElement : public Element {
@@ -100,7 +103,7 @@ public:
     /// Get a unique identifier for a packet
     /// \param p The packet
     /// \return The unique identifier
-    static FTPacketId getPacketId(Packet *p);
+    static FTPacketId getPacketId(Packet *p, int ip_offset = IP_PACKET_OFFSET);
 
     // TODO: remove this function
     static void printState(FTState &state);

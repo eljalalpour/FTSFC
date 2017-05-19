@@ -24,9 +24,9 @@ int FTStateElement::configure(Vector<String> &conf, ErrorHandler *errh) {
 }
 
 void FTStateElement::push(int source, Packet *p) {
-    click_chatter("--------------------\n");
-    click_chatter("In FTStateElement %d:\n", _id);
-    click_chatter("Receiving packet %llu from port %d\n", FTAppenderElement::getPacketId(p), source);
+    printf("--------------------\n");
+    printf("In FTStateElement %d:\n", _id);
+    printf("Receiving packet %llu from port %d\n", FTAppenderElement::getPacketId(p), source);
 
     if (source == INPUT_PORT_TO_PROCESS) {
         try {

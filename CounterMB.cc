@@ -21,7 +21,7 @@ Packet *CounterMB::simple_action(Packet *p) {
 //        click_chatter("%d-Element name is: %s", i, r->ename(i).c_str());
 //    }//for
 
-    FTStateElement *stateElement = (FTStateElement *)("se");
+    FTStateElement *stateElement = (FTStateElement *)(r->find("se"));
 
     //Getting the state's value from the FTStateElement
     stringstream ss;

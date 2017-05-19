@@ -21,12 +21,7 @@ Packet *CounterMB::simple_action(Packet *p) {
 //        click_chatter("%d-Element name is: %s", i, r->ename(i).c_str());
 //    }//for
 
-    //TODO: remove adding _id from the name state-element. We can assume that the name of the state-element is always 'se'
-    stringstream seSS;
-    seSS << "se" << (int)_id;
-    click_chatter("look for the state element %s\n", seSS.str().c_str());
-
-    FTStateElement *stateElement = (FTStateElement *)(r->find(seSS.str().c_str()));
+    FTStateElement *stateElement = (FTStateElement *)("se");
 
     //Getting the state's value from the FTStateElement
     stringstream ss;

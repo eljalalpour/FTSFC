@@ -42,7 +42,7 @@ public:
     /// Transfer the states from log to the committed memory and release the log memory
     /// \param packetId The id of the packet
     /// \param MBId The id of the middlebox
-    void commit(FTPacketId packetId, FTMBId MBId);
+    void commit(FTPacketId packetId, FTMBId MBId, FTMBKeyTimestamp& committed_time);
 
     /// Reset the modified map and temp memory for states
     inline void reset();

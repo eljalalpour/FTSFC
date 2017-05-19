@@ -56,6 +56,7 @@ void FTStateElement::push(int source, Packet *p) {
         PBState.state = primaryState;
         PBState.ack = 1;
         PBState.commit = (PBState.ack > this->_failureCount);
+        PBState.setTimeStamp();
 
         if (!PBState.commit) {
             _log[packetId][_id] = PBState;
@@ -102,6 +103,8 @@ void FTStateElement::add_handlers() {
 void FTStateElement::replicateStates() {
     click_chatter("In state replication\n");
 
+    FTMBKeyTimestamp _committed_time;
+
     click_chatter("this is the size of state: %d\n", _temp.size());
     for (auto it = _temp.begin(); it != _temp.end(); /* no increment */) {
         auto packetId = it->first;
@@ -126,9 +129,9 @@ void FTStateElement::replicateStates() {
                 }//if
 
                 else if (it2->second.ack == _failureCount + 1) {
-                    click_chatter("Committing the state of packet %llu and middlebox %d\n", it->first, it2->first);
+                    click_chatter("Committing the state of packet %llu and middlebox %d", it->first, it2->first);
                     //The middlebox visits its state in the second phase of protocol
-                    commit(packetId, MBId);
+                    commit(packetId, MBId, _committed_time);
                     it2->second.commit = true;
 
                     click_chatter("Printing temp for debug:\n");
@@ -156,7 +159,7 @@ void FTStateElement::replicateStates() {
                 }//if
                 else if (it2->second.commit) {
                     //Commiting secondary state
-                    commit(packetId, MBId);
+                    commit(packetId, MBId, _committed_time);
                 }//else
 //                _temp[packetId][MBId] = it2->second;
             }//else
@@ -176,11 +179,29 @@ void FTStateElement::replicateStates() {
     }//for
 }
 
-void FTStateElement::commit(FTPacketId packetId, FTMBId MBId) {
-    click_chatter("Committing the state of the middlebox '%d' for the packet id '%llu\n", MBId, packetId);
+void FTStateElement::commit(FTPacketId packetId, FTMBId MBId, FTMBKeyTimestamp& committed_time) {
+    click_chatter("Committing the state of the middlebox '%d' for the packet id %llu", MBId, packetId);
+    FTTimestamp time = _log[packetId][MBId].timestamp;
+
+    auto middlebox_ct = committed_time.find(MBId);
+    if (middlebox_ct == committed_time.end()) {
+        FTKeyTimestamp empty;
+        committed_time[MBId] = empty;
+        middlebox_ct = committed_time.find(MBId);
+    }//if
+
     for (auto it = _log[packetId][MBId].state.begin(); it != _log[packetId][MBId].state.end(); ++it) {
-        _committed[MBId][it->first] = it->second;
-        click_chatter("'%s':'%s", it->first.c_str(), it->second.c_str());
+        auto ct = middlebox_ct->second.find(it->first);
+        if (ct == middlebox_ct->second.end()) {
+            _committed[MBId][it->first] = it->second;
+            middlebox_ct->second[it->first] = time;
+            click_chatter("'%s':'%s", it->first.c_str(), it->second.c_str());
+        }//if
+        else if (time > ct->second){
+            _committed[MBId][it->first] = it->second;
+            middlebox_ct->second[it->first] = time;
+            click_chatter("'%s':'%s", it->first.c_str(), it->second.c_str());
+        }//else if
     }//for
     _log[packetId].erase(MBId);
     if (_log[packetId].size() == 0) {

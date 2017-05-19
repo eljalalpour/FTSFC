@@ -225,7 +225,7 @@ void FTAppenderElement::printState(FTState &state) {
 }
 
 void FTAppenderElement::printState(FTPiggyBackedState &state) {
-    click_chatter("Ack is %d, commit is %d", state.ack, state.commit);
+    click_chatter("Ack is %d, commit is %d, timestamp is %llu", state.ack, state.commit, state.timestamp);
     printState(state.state);
 }
 

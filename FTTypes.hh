@@ -8,6 +8,7 @@
 #include <string>
 #include <sstream>
 #include <iostream>
+#include <chrono>
 
 
 using std::map;
@@ -25,6 +26,8 @@ using std::stringstream;
 
 // FTPacketId type identifies a packet uniquely
 typedef uint64_t FTPacketId;
+
+typedef uint64_t FTTimestamp;
 
 // FTMBId type identifies a MB uniquely
 typedef uint16_t VLANId;
@@ -44,17 +47,22 @@ typedef map<FTMBId, FTState> FTMBStates;
 // FTPacketMBState type represents the state changes that a packet has caused in a set of MBs
 typedef map<FTPacketId, FTMBStates> FTPacketMBState;
 
+typedef map<string, FTTimestamp> FTKeyTimestamp;
+
+typedef map<FTMBId, FTKeyTimestamp> FTMBKeyTimestamp;
+
 class FTPiggyBackedState {
     friend class boost::serialization::access;
 
 public:
     uint8_t ack;
     bool commit;
+    FTTimestamp timestamp;
     FTState state;
 
     template<class Archive>
     void serialize(Archive &ar, const unsigned int) {
-        ar & commit & ack & BOOST_SERIALIZATION_NVP(state);
+        ar & commit & ack & timestamp & BOOST_SERIALIZATION_NVP(state);
     }
 
     void serialize(FTPiggyBackedState &pbState, stringstream &ss) {
@@ -65,6 +73,10 @@ public:
     void deserialize(stringstream &ss, FTPiggyBackedState &pbState) {
         boost::archive::binary_iarchive ia(ss);
         ia >> pbState;
+    }
+
+    void setTimeStamp() {
+        this->timestamp = std::chrono::high_resolution_clock::now().time_since_epoch().count();
     }
 };
 

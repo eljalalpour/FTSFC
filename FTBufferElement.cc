@@ -31,22 +31,27 @@ void FTBufferElement::push(int, Packet *p) {
     output(TO_CHAIN_BEGIN).push(p);
 //    click_chatter("--After push---");
 
+//    vector<FTPacketId> released_packets;
+
     click_chatter("Size of output buffer: %d", _packets.size());
+
     // Release the packets whose states have been committed
     for (auto it = states.begin(); it != states.end(); ++it) {
         auto oldPacketId = it->first;
         if (it->second.begin()->second.commit) {
             Packet *qq = _packets[oldPacketId];
-            if (_packets.find(oldPacketId) == _packets.end()) {
+            if (_packets.find(oldPacketId) == _packets.end() || qq == 0) {
                 click_chatter("Packet %llu is not found!", oldPacketId);
             }//if
+            else {
 //            click_chatter("Packetyy pointer is %llu!", qq);
-            click_chatter("packetyy %llu is released", oldPacketId);
-            click_chatter("packet size %d", qq->length());
-            output(TO_OUTSIDE_WORLD).push(qq);
+                click_chatter("packetyy %llu is released", oldPacketId);
+                click_chatter("packet size %d", qq->length());
+                output(TO_OUTSIDE_WORLD).push(qq);
 //            click_chatter("After push!");
-            _packets.erase(oldPacketId);
-            qq->kill();
+                _packets.erase(oldPacketId);
+                qq->kill();
+            }//else
 //            click_chatter("after erase!");
         }//if
     }//for

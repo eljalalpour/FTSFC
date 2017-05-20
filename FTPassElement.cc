@@ -13,8 +13,7 @@ void FTPassElement::push(int port, Packet *p) {
     click_chatter("------------------------------");
     click_chatter("Begin FTPassElement");
 
-    //TODO: change port to 0
-    output(port).push(p);
+    output(0).push(p);
 
     click_chatter("End FTPassElement");
     click_chatter("------------------------------");

@@ -5,7 +5,7 @@
 
 CLICK_DECLS
 
-FTBufferElement::FTBufferElement() { }
+FTBufferElement::FTBufferElement() { _count = 0;}
 
 FTBufferElement::~FTBufferElement() { }
 
@@ -49,10 +49,12 @@ void FTBufferElement::push(int, Packet *p) {
             click_chatter("packetyy %llu is released", oldPacketId);
             click_chatter("packet size %d", qq->length());
             output(TO_OUTSIDE_WORLD).push(qq);
-//            click_chatter("After push!");
+            click_chatter("After push!");
             _packets.erase(oldPacketId);
 
             released_packets.push_back(oldPacketId);
+            _count += released_packets.size();
+            click_chatter("Number of released packets: %d", _count);
 
             qq->kill();
 //            click_chatter("after erase!");

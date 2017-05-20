@@ -13,6 +13,7 @@ CLICK_DECLS
 class FTBufferElement: public Element {
 private:
     map<FTPacketId, Packet * > _packets;
+    int _count;
 
 public:
     FTBufferElement();

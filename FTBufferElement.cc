@@ -31,16 +31,23 @@ void FTBufferElement::push(int, Packet *p) {
     output(TO_CHAIN_BEGIN).push(p);
     click_chatter("--After push---");
 
-    vector<FTPacketId> released_packets;
+//    vector<FTPacketId> released_packets;
 
     click_chatter("Size of output buffer: %d", _packets.size());
 
     // Release the packets whose states have been committed
     for (auto it = states.begin(); it != states.end(); ++it) {
         auto oldPacketId = it->first;
-        if (it->second.begin()->second.commit &&
-                find(released_packets.begin(), released_packets.end(), oldPacketId) == released_packets.end()) {
-            Packet *qq = _packets[oldPacketId];
+        if (it->second.begin()->second.commit
+//            &&
+//                find(released_packets.begin(), released_packets.end(), oldPacketId) == released_packets.end()
+                ) {
+
+            auto item = _packets.find(oldPacketId);
+            if (item == _packets.end())
+                continue;
+
+            Packet *qq = item->second;
             if (_packets.find(oldPacketId) == _packets.end()) {
                 click_chatter("Packet %llu is not found!", oldPacketId);
             }//if
@@ -52,9 +59,9 @@ void FTBufferElement::push(int, Packet *p) {
             click_chatter("After push!");
             _packets.erase(oldPacketId);
 
-            released_packets.push_back(oldPacketId);
-            _count += released_packets.size();
-            click_chatter("Number of released packets: %d", _count);
+//            released_packets.push_back(oldPacketId);
+//            _count += released_packets.size();
+            click_chatter("Number of released packets: %d", ++_count);
 
             qq->kill();
 //            click_chatter("after erase!");

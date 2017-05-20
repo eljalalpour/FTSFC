@@ -32,7 +32,7 @@ void FTStateElement::push(int source, Packet *p) {
         try {
             reset();
             WritablePacket *q = FTAppenderElement::decodeStatesRetPacket(p, _temp);
-            //click_chatter("State received from FTAppender\n");
+            click_chatter("State received from FTAppender\n");
 
             FTAppenderElement::printState(_temp);
 

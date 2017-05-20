@@ -4,18 +4,22 @@ require(package "FTSFC");
 FromDump(/Users/eghaznavi/Downloads/dumps/test/input-vlan.pcap, STOP true)
 
 // First Replica
+//->begin::FTRandomDropElement(0.4)
 ->begin::FTFilterElement(1, 4)
 ->CheckIPHeader(18)
 ->FTAppenderElement(1)
 ->VLANDecap
 ->CheckIPHeader(14)
-->se1::FTStateElement(ID 1, VLAN_ID 1, F 1)
+->se::FTStateElement(ID 1, VLAN_ID 1, F 1)
 ->CheckIPHeader(14)
 ->MB1::CounterMB(ID 1)
-->[1]se1;
-se1[1]
-//->VLANDecap
+->[1]se;
+
+se[1]
 ->VLANEncap(VLAN_ID 2)
+
+// Network
+//->FTRandomDropElement(0.4)
 
 // Last replica
 ->FTFilterElement(2)

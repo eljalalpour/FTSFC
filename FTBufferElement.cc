@@ -27,9 +27,9 @@ void FTBufferElement::push(int, Packet *p) {
     _packets[packetId] = q;
 
     // Send packet to the beginning of the chain
-//    click_chatter("--Before push--");
+    click_chatter("--Before push--");
     output(TO_CHAIN_BEGIN).push(p);
-//    click_chatter("--After push---");
+    click_chatter("--After push---");
 
     vector<FTPacketId> released_packets;
 
@@ -39,13 +39,13 @@ void FTBufferElement::push(int, Packet *p) {
     for (auto it = states.begin(); it != states.end(); ++it) {
         auto oldPacketId = it->first;
         if (it->second.begin()->second.commit &&
-                find(released_packets.begin(), released_packets.end(), oldPacketId) != released_packets.end()) {
+                find(released_packets.begin(), released_packets.end(), oldPacketId) == released_packets.end()) {
             Packet *qq = _packets[oldPacketId];
             if (_packets.find(oldPacketId) == _packets.end()) {
                 click_chatter("Packet %llu is not found!", oldPacketId);
             }//if
 
-//            click_chatter("Packetyy pointer is %llu!", qq);
+            click_chatter("Packetyy pointer is %llu!", qq);
             click_chatter("packetyy %llu is released", oldPacketId);
             click_chatter("packet size %d", qq->length());
             output(TO_OUTSIDE_WORLD).push(qq);

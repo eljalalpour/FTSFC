@@ -24,9 +24,9 @@ int FTStateElement::configure(Vector<String> &conf, ErrorHandler *errh) {
 }
 
 void FTStateElement::push(int source, Packet *p) {
-//    click_chatter("--------------------\n");
-//    click_chatter("In FTStateElement %d:\n", _id);
-//    click_chatter("Receiving packet %llu from port %d\n", FTAppenderElement::getPacketId(p), source);
+    click_chatter("--------------------\n");
+    click_chatter("In FTStateElement %d:\n", _id);
+    click_chatter("Receiving packet %llu from port %d\n", FTAppenderElement::getPacketId(p), source);
 
     if (source == INPUT_PORT_TO_PROCESS) {
         try {
@@ -41,7 +41,7 @@ void FTStateElement::push(int source, Packet *p) {
             output(OUTPUT_PORT_TO_MIDDLEBOX).push(q);
         } catch(...) {
             p->kill();
-            //click_chatter("Not A valid packet for our protocol\n");
+            click_chatter("Not A valid packet for our protocol\n");
         }//catch
     }//if
     else if (source == INPUT_PORT_PROCESSED) {
@@ -62,7 +62,7 @@ void FTStateElement::push(int source, Packet *p) {
             _log[packetId][_id] = PBState;
         }//if
 
-        //click_chatter("State going to the next middlebox:\n");
+        click_chatter("State going to the next middlebox:\n");
 
         for (auto it = _log.begin(); it != _log.end(); ++it) {
             for (auto it2 = it->second.begin(); it2 != it->second.end(); ++it2) {
@@ -76,19 +76,15 @@ void FTStateElement::push(int source, Packet *p) {
                 }//else if
             }//for
         }//for
-
         FTAppenderElement::printState(_temp);
+
         _packets[packetId] = p->uniqueify();
         WritablePacket *q = FTAppenderElement::encodeStates(p, _temp);
-
-//        FTPacketMBPiggyBackedState ttt;
-//        WritablePacket *r = FTAppenderElement::decodeStatesRetPacket(q, ttt);
-//        r->kill();
 
         p->kill();
         output(OUTPUT_PORT_TO_NEXT_MIDDLEBOX).push(q);
     }//else if
-    //click_chatter("--------------------\n");
+    click_chatter("--------------------");
 }
 
 void FTStateElement::add_handlers() {

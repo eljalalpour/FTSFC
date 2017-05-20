@@ -13,8 +13,8 @@ CounterMB::CounterMB() : _counter(INIT_COUNTER) {};
 CounterMB::~CounterMB() {};
 
 Packet *CounterMB::simple_action(Packet *p) {
-    click_chatter("--------------------");
-    click_chatter("In CounterMB %d:", _id);
+//    click_chatter("--------------------");
+//    click_chatter("In CounterMB %d:", _id);
     Router *r = this->router();
 
 //    for (int i = 0; i < r->elements().size(); ++i) {
@@ -34,8 +34,8 @@ Packet *CounterMB::simple_action(Packet *p) {
         }//if
     }//if
 
-    click_chatter("Packet id is: %llu", FTAppenderElement::getPacketId(p));
-    click_chatter("Packet counter is: %d", _counter);
+//    click_chatter("Packet id is: %llu", FTAppenderElement::getPacketId(p));
+//    click_chatter("Packet counter is: %d", _counter);
 
     stringstream ss2;
     ss2 << (_counter + 1);

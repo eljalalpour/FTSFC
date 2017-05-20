@@ -27,9 +27,9 @@ void FTBufferElement::push(int, Packet *p) {
     _packets[packetId] = q;
 
     // Send packet to the beginning of the chain
-    click_chatter("--Before push--");
+//    click_chatter("--Before push--");
     output(TO_CHAIN_BEGIN).push(p);
-    click_chatter("--After push---");
+//    click_chatter("--After push---");
 
     click_chatter("Size of output buffer: %d", _packets.size());
     // Release the packets whose states have been committed
@@ -44,10 +44,10 @@ void FTBufferElement::push(int, Packet *p) {
             click_chatter("packetyy %llu is released", oldPacketId);
             click_chatter("packet size %d", qq->length());
             output(TO_OUTSIDE_WORLD).push(qq);
-            click_chatter("After push!");
+//            click_chatter("After push!");
             _packets.erase(oldPacketId);
             qq->kill();
-            click_chatter("after erase!");
+//            click_chatter("after erase!");
         }//if
     }//for
 

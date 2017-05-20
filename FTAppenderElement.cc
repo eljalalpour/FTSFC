@@ -19,26 +19,26 @@ FTAppenderElement::~FTAppenderElement() {};
 int FTAppenderElement::configure(Vector<String> &conf, ErrorHandler *errh) {
     BoundedIntArg parser(0, 0xFFF);
     parser.parse(conf[0], _first_vlan);
-    click_chatter("First VLAN ID: %d", _first_vlan);
+//    click_chatter("First VLAN ID: %d", _first_vlan);
 
     return 0;
 }
 
 void FTAppenderElement::push(int source, Packet *p) {
     FTPacketId packetId = getPacketId(p, IP_PACKET_AFTER_VLAN_OFFSET);
-    printf("--------------------\n");
-    printf("Begin FTAppender element:\n");
+    click_chatter("--------------------\n");
+    click_chatter("Begin FTAppender element:\n");
 
     const click_ether_vlan *vlan = reinterpret_cast<const click_ether_vlan *>(p->data());
     VLANId vlan_id = (ntohs(vlan->ether_vlan_tci) & 0xFFF);
-    click_chatter("VLAN-ID is %d", vlan_id);
+//    click_chatter("VLAN-ID is %d", vlan_id);
 
     if (vlan_id == _first_vlan) {
         click_chatter("Receiving packet %llu from the source!", packetId);
         click_chatter("state on the packet going to state-element");
 
 //        _mutex.lock();
-        printState(_temp);
+//        printState(_temp);
         WritablePacket *q = encodeStates(p, _temp);
         _temp.clear();
 //        _mutex.unlock();
@@ -50,13 +50,13 @@ void FTAppenderElement::push(int source, Packet *p) {
         click_chatter("Receiving packet %llu from the end of the chain!", packetId);
         FTPacketMBPiggyBackedState pbState;
         decodeStates(p, pbState);
-        printState(pbState);
+//        printState(pbState);
         append(pbState);
 
         p->kill();
     }//else
 
-    printf("--------------------\n");
+    click_chatter("--------------------\n");
 }
 
 void FTAppenderElement::append(FTPacketMBPiggyBackedState state) {
@@ -120,7 +120,7 @@ int  FTAppenderElement::payloadOffset(Packet *p) {
 }
 
 WritablePacket *FTAppenderElement::encodeStates(Packet *p, FTPacketMBPiggyBackedState &piggyBackedState) {
-    click_chatter("In encode state");
+//    click_chatter("In encode state");
     stringstream stateSS;
     serializePiggyBacked(piggyBackedState, stateSS);
 

@@ -50,7 +50,7 @@ void FTAppenderElement::push(int source, Packet *p) {
         click_chatter("Receiving packet %llu from the end of the chain!", packetId);
         FTPacketMBPiggyBackedState pbState;
         decodeStates(p, pbState);
-//        printState(pbState);
+        printState(pbState);
         append(pbState);
 
         p->kill();

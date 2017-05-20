@@ -38,7 +38,7 @@ void FTAppenderElement::push(int source, Packet *p) {
         click_chatter("state on the packet going to state-element");
 
 //        _mutex.lock();
-//        printState(_temp);
+        printState(_temp);
         WritablePacket *q = encodeStates(p, _temp);
         _temp.clear();
 //        _mutex.unlock();

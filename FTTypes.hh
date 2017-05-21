@@ -16,6 +16,21 @@ using std::vector;
 using std::string;
 using std::stringstream;
 
+#define ENABLE_DEBUG 1
+//#define ENABLE_LOG   1
+
+#ifdef ENABLE_DEBUG
+    #define DEBUG(...) click_chatter(__VA_ARGS__)
+#else
+    #define DEBUG(...)
+#endif
+
+#ifdef ENABLE_LOG
+    #define LOG(...) click_chatter(__VA_ARGS__)
+#else
+    #define LOG(...)
+#endif
+
 #define PORTS_2_2 "2/2"
 #define PORTS_2_1 "2/1"
 #define PORTS_1_2 "1/2"
@@ -38,7 +53,7 @@ typedef uint8_t FTMBId;
 // FTState type represents the state of a MB as a key value store
 typedef map<string, string> FTState;
 
-//shows if a variable has been modified
+// FTModified shows if a variable has been modified
 typedef map<string, bool> FTModified;
 
 // FTMBStates type represents the state of a MB with id FTMBId

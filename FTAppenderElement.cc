@@ -19,26 +19,26 @@ FTAppenderElement::~FTAppenderElement() {};
 int FTAppenderElement::configure(Vector<String> &conf, ErrorHandler *errh) {
     BoundedIntArg parser(0, 0xFFF);
     parser.parse(conf[0], _first_vlan);
-//    click_chatter("First VLAN ID: %d", _first_vlan);
+//    DEBUG("First VLAN ID: %d", _first_vlan);
 
     return 0;
 }
 
 void FTAppenderElement::push(int source, Packet *p) {
     FTPacketId packetId = getPacketId(p, IP_PACKET_AFTER_VLAN_OFFSET);
-    click_chatter("--------------------");
-    click_chatter("Begin FTAppender element:");
+    LOG("--------------------");
+    LOG("Begin FTAppender element:");
 
     const click_ether_vlan *vlan = reinterpret_cast<const click_ether_vlan *>(p->data());
     VLANId vlan_id = (ntohs(vlan->ether_vlan_tci) & 0xFFF);
-    click_chatter("VLAN-ID is %d", vlan_id);
+    LOG("VLAN-ID is %d", vlan_id);
 
     if (vlan_id == _first_vlan) {
-        click_chatter("Receiving packet %llu from the source!", packetId);
-        click_chatter("state on the packet going to state-element");
+        LOG("Receiving packet %llu from the source!", packetId);
+        LOG("state on the packet going to state-element");
 
 //        _mutex.lock();
-        printState(_temp);
+//        printState(_temp);
         WritablePacket *q = encodeStates(p, _temp);
         _temp.clear();
 //        _mutex.unlock();
@@ -47,7 +47,7 @@ void FTAppenderElement::push(int source, Packet *p) {
         output(0).push(q);
     }//if
     else {
-        click_chatter("Receiving packet %llu from the end of the chain!", packetId);
+        LOG("Receiving packet %llu from the end of the chain!", packetId);
         FTPacketMBPiggyBackedState pbState;
         decodeStates(p, pbState);
         printState(pbState);
@@ -56,7 +56,7 @@ void FTAppenderElement::push(int source, Packet *p) {
         p->kill();
     }//else
 
-    click_chatter("--------------------\n");
+    LOG("--------------------\n");
 }
 
 void FTAppenderElement::append(FTPacketMBPiggyBackedState state) {
@@ -76,7 +76,6 @@ void FTAppenderElement::deserializePiggyBacked(stringstream &ss, FTPacketMBPiggy
 }
 
 void FTAppenderElement::deserializePiggyBacked(string& states, FTPacketMBPiggyBackedState &piggyBackedStates) {
-    click_chatter("In deserialize piggybacked. The state size is %d", states.size());
     stringstream ss(states);
     boost::archive::binary_iarchive ia(ss);
     ia >> piggyBackedStates;
@@ -120,7 +119,7 @@ int  FTAppenderElement::payloadOffset(Packet *p) {
 }
 
 WritablePacket *FTAppenderElement::encodeStates(Packet *p, FTPacketMBPiggyBackedState &piggyBackedState) {
-//    click_chatter("In encode state");
+//    DEBUG("In encode state");
     stringstream stateSS;
     serializePiggyBacked(piggyBackedState, stateSS);
 
@@ -168,7 +167,7 @@ WritablePacket* FTAppenderElement::decodeStatesRetPacket(Packet *p, FTPacketMBPi
 //    short stateLen;
 //    memcpy(&stateLen, p->data() + ploff, sizeof(short));
 //
-//    click_chatter("State length: %d", stateLen);
+//    DEBUG("State length: %d", stateLen);
 //
 //    string states(reinterpret_cast<const char*>(p->data()) + ploff + sizeof(short), stateLen);
 //    string decompressed;
@@ -211,31 +210,31 @@ void FTAppenderElement::decompress(const std::string &data, std::string &buffer)
 FTPacketId FTAppenderElement::getPacketId(Packet *p, int ip_offset) {
     //TODO: implement an identifier for non tcp packets
 
-    const click_ip* cip = reinterpret_cast<const click_ip*>(p->data() + ip_offset);
-    const click_tcp* tcp =  reinterpret_cast<const click_tcp*>(p->data() + ip_offset + 20);
-    FTPacketId packetId = MAKE_UNIQUE_PACKET_ID(cip->ip_off, cip->ip_p, tcp->th_seq);
+    const click_ip* cip  = reinterpret_cast<const click_ip*>(p->data() + ip_offset);
+    const click_tcp* tcp = reinterpret_cast<const click_tcp*>(p->data() + ip_offset + 20);
+    FTPacketId packetId  = MAKE_UNIQUE_PACKET_ID(cip->ip_off, cip->ip_p, tcp->th_seq);
 
     return packetId;
 }
 
 void FTAppenderElement::printState(FTState &state) {
     for (auto it = state.begin(); it != state.end(); ++it) {
-        click_chatter("%s: %s", it->first.c_str(), it->second.c_str());
+        DEBUG("%s: %s", it->first.c_str(), it->second.c_str());
     }//for
 }
 
 void FTAppenderElement::printState(FTPiggyBackedState &state) {
-    click_chatter("Ack is %d, commit is %d, timestamp is %llu", state.ack, state.commit, state.timestamp);
+    DEBUG("Ack is %d, commit is %d, timestamp is %llu", state.ack, state.commit, state.timestamp);
     printState(state.state);
 }
 
 void FTAppenderElement::printState(FTPacketMBPiggyBackedState &state) {
-    click_chatter("In print state:");
     for (auto i = state.begin(); i != state.end(); ++i) {
-        click_chatter("State of packet %llu", i->first);
+        DEBUG("\nState of packet %llu", i->first);
         for (auto j = i->second.begin(); j != i->second.end(); ++j) {
-            click_chatter("State of middlebox %u", (uint16_t)(j->first));
+            DEBUG("State of middlebox %u", (uint16_t)(j->first));
             printState(j->second);
+            DEBUG("\n");
         }//for
     }//for
 }
@@ -251,13 +250,13 @@ void FTAppenderElement::encode(FTState& state, string& buffer) {
 void FTAppenderElement::decode(const string& buffer, FTState& state) {
     string decompressed;
     FTAppenderElement::decompress(buffer, decompressed);
-    click_chatter("Decompressed size is: %d", decompressed.size());
-    click_chatter("After decompress");
+    LOG("Decompressed size is: %d", decompressed.size());
+    LOG("After decompress");
 
     stringstream ss;
     ss.str(decompressed);
 
-    click_chatter("Before deserialize");
+    LOG("Before deserialize");
     FTAppenderElement::deserialize(ss, state);
 }
 

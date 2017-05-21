@@ -2,7 +2,6 @@
 #include <click/args.hh>
 #include <clicknet/ether.h>
 #include "FTFilterElement.hh"
-
 CLICK_DECLS
 
 FTFilterElement::FTFilterElement(): _all(0), _passed(0) { };
@@ -15,15 +14,15 @@ int FTFilterElement::configure(Vector<String> &conf, ErrorHandler *errh) {
     for (int i = 0; i < conf.size(); ++i) {
         parser.parse(conf[i], vlanId);
         _vlan_ids.push_back(vlanId);
-        click_chatter("VLAN ID: %d", vlanId);
+        LOG("VLAN ID: %d", vlanId);
     }//for
 
     return 0;
 }
 
 Packet *FTFilterElement::simple_action(Packet *p) {
-    click_chatter("--------------------");
-    click_chatter("In FTFilter Element");
+    LOG("--------------------");
+    LOG("In FTFilter Element");
 
     _all++;
     const click_ether_vlan *vlan = reinterpret_cast<const click_ether_vlan *>(p->data());
@@ -37,8 +36,8 @@ Packet *FTFilterElement::simple_action(Packet *p) {
     if (found)
         _passed++;
 
-    click_chatter("All packets: %d, passed packets: %d", _all, _passed);
-    click_chatter("--------------------");
+    LOG("All packets: %d, passed packets: %d", _all, _passed);
+    LOG("--------------------");
 
     if (!found)
         return 0;

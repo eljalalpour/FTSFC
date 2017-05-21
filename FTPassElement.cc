@@ -1,7 +1,6 @@
 #include <click/config.h>
 #include <click/args.hh>
 #include "FTPassElement.hh"
-
 CLICK_DECLS
 
 FTPassElement::FTPassElement() { }
@@ -10,13 +9,14 @@ FTPassElement::~FTPassElement() { }
 
 void FTPassElement::push(int port, Packet *p) {
 //    output(0).push(p);
-    click_chatter("------------------------------");
-    click_chatter("Begin FTPassElement");
+    LOG("------------------------------");
+    LOG("Begin FTPassElement");
 
-    output(0).push(p);
+    //TODO: change port to zero
+    output(port).push(p);
 
-    click_chatter("End FTPassElement");
-    click_chatter("------------------------------");
+    LOG("End FTPassElement");
+    LOG("------------------------------");
 }
 
 CLICK_ENDDECLS

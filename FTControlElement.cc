@@ -22,7 +22,7 @@ void FTControlElement::_init_socket() {
         return _init_socket_error("socket");
     int sockopt = 1;
     if (setsockopt(_socket_fd, SOL_SOCKET, SO_REUSEADDR, (void *)&sockopt, sizeof(sockopt)) < 0) {
-        click_chatter("Set socket error: %s", strerror(errno));
+        LOG("Set socket error: %s", strerror(errno));
     }//if
 
     bzero((char*) &_sa, sizeof(_sa));
@@ -30,7 +30,7 @@ void FTControlElement::_init_socket() {
     _sa.sin_port = htons(_port);
     _sa.sin_addr.s_addr = htonl(INADDR_LOOPBACK);
     if (bind(_socket_fd, (struct sockaddr *)&_sa, sizeof(_sa)) < 0)
-        click_chatter("Error on binding");
+        LOG("Error on binding");
 
     listen(_socket_fd, CON_QUEUE);
     pthread_create(&_accept_thread, NULL, _accept_connection, this);
@@ -50,15 +50,15 @@ void FTControlElement::put(FTStateElement* se, int conn_fd) {
     char buffer[size];
     read(conn_fd, &buffer, size);
 
-    click_chatter("State is (%d): ", size);
+    LOG("State is (%d): ", size);
     for(int i = 0; i < size; i++)
-        click_chatter("%d ", buffer[i]);
+        LOG("%d ", buffer[i]);
 
     if (size > 0) {
         FTState state;
         FTAppenderElement::decode(buffer, size, state);
 
-        FTAppenderElement::printState(state);
+//        FTAppenderElement::printState(state);
 
         se->putCommittedState(id, state);
     }//if
@@ -76,10 +76,10 @@ void FTControlElement::get(FTStateElement* se, int conn_fd) {
         write(conn_fd, &size, sizeof(int));
         write(conn_fd, buffer.c_str(), size);
 
-        click_chatter("State is (%d): ", buffer.size());
+        LOG("State is (%d): ", buffer.size());
         FTAppenderElement::printState(state);
         for(int i = 0; i < buffer.size(); i++)
-            click_chatter("%d ", buffer[i]);
+            LOG("%d ", buffer[i]);
     }//if
     else {
         // If there is some error in finding the state, return 0
@@ -94,10 +94,10 @@ void* FTControlElement::_accept_connection(void* param) {
         socklen_t len = sizeof(tp->_ca);
         int conn_fd = accept(tp->_socket_fd, (struct sockaddr *) &(tp->_ca), &len);
 
-        click_chatter("A connection (%d) is accepted!", conn_fd);
+        LOG("A connection (%d) is accepted!", conn_fd);
 
         if (conn_fd < 0) {
-            click_chatter("Error on accepting connection");
+            LOG("Error on accepting connection");
             break;
         }//if
 
@@ -105,21 +105,21 @@ void* FTControlElement::_accept_connection(void* param) {
         uint8_t command;
         read(conn_fd, &command, sizeof(uint8_t));
 
-        click_chatter("Command is %d", command);
+        LOG("Command is %d", command);
 
         switch(command) {
             case GET_STATE_CMD:
-                click_chatter("Get state command!", conn_fd);
+                LOG("Get state command!", conn_fd);
                 tp->get(se, conn_fd);
                 break;
 
             case PUT_STATE_CMD:
-                click_chatter("Put state command!", conn_fd);
+                LOG("Put state command!", conn_fd);
                 tp->put(se, conn_fd);
                 break;
 
             default:
-                click_chatter("Unknown command");
+                LOG("Unknown command");
                 break;
         }//switch
 
@@ -134,7 +134,7 @@ void FTControlElement::_init_socket_error(const char *syscall) {
         _socket_fd = -1;
     }//if
 
-    click_chatter("%s: %s", syscall, strerror(e));
+    LOG("%s: %s", syscall, strerror(e));
 }
 
 CLICK_ENDDECLS

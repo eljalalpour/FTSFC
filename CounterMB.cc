@@ -13,15 +13,19 @@ CounterMB::CounterMB() : _counter(INIT_COUNTER) {};
 CounterMB::~CounterMB() {};
 
 Packet *CounterMB::simple_action(Packet *p) {
-    click_chatter("--------------------");
-    click_chatter("In CounterMB %d:", _id);
+    LOG("--------------------");
+    LOG("Begin CounterMB %d:", _id);
     Router *r = this->router();
 
 //    for (int i = 0; i < r->elements().size(); ++i) {
-//        click_chatter("%d-Element name is: %s", i, r->ename(i).c_str());
+//        LOG("%d-Element name is: %s", i, r->ename(i).c_str());
 //    }//for
 
-    FTStateElement *stateElement = (FTStateElement *)(r->find("se"));
+    //TODO: change se%d back to se
+//    FTStateElement *stateElement = (FTStateElement *)(r->find("se"));
+    stringstream ess;
+    ess << "se" << (int)_id;
+    FTStateElement *stateElement = (FTStateElement *)(r->find(ess.str().c_str()));
 
     //Getting the state's value from the FTStateElement
     stringstream ss;
@@ -34,9 +38,6 @@ Packet *CounterMB::simple_action(Packet *p) {
         }//if
     }//if
 
-    click_chatter("Packet id is: %llu", FTAppenderElement::getPacketId(p));
-    click_chatter("Packet counter is: %d", _counter);
-
     stringstream ss2;
     ss2 << (_counter + 1);
     ss2 >> value;
@@ -45,7 +46,11 @@ Packet *CounterMB::simple_action(Packet *p) {
 
     _counter++;
 
-    click_chatter("--------------------");
+    LOG("Packet id is: %llu", FTAppenderElement::getPacketId(p));
+    LOG("Packet counter read is %d, and written %d", _counter - 1, _counter);
+
+    LOG("End CounterMB %d:", _id);
+    LOG("--------------------");
 
     return p;
 }
@@ -54,7 +59,7 @@ int CounterMB::configure(Vector<String> &conf, ErrorHandler *errh) {
     if (Args(conf, this, errh).read_or_set("ID", _id, rand() % MB_ID_MAX).complete() < 0)
         return -1;
 
-    click_chatter("Counter MB id is %d!\n", _id);
+    LOG("Counter MB id is %d!\n", _id);
 
     return 0;
 }

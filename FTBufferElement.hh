@@ -13,7 +13,9 @@ CLICK_DECLS
 class FTBufferElement: public Element {
 private:
     map<FTPacketId, Packet * > _packets;
-    int _count;
+    int _all;
+    int _released;
+    map<FTPacketId, int> _checked_to_release;
 
 public:
     FTBufferElement();

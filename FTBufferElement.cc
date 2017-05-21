@@ -5,71 +5,93 @@
 
 CLICK_DECLS
 
-FTBufferElement::FTBufferElement() { _count = 0;}
+FTBufferElement::FTBufferElement() : _all(0), _released(0) { }
 
 FTBufferElement::~FTBufferElement() { }
 
 void FTBufferElement::push(int, Packet *p) {
-    click_chatter("------------------------------");
-    click_chatter("Begin FTBufferElement");
+    DEBUG("\n------------------------------");
+    DEBUG("Begin FTBufferElement\n\n");
+
+    // TODO: remove-start
+    ++_all;
+    // TODO: remove-end
 
     // Finding the packet id
-
     Router * router;
 
     // Writing the output of the last stage of the chain into the buffer
     FTPacketMBPiggyBackedState states;
     WritablePacket *q = FTAppenderElement::decodeStatesRetPacket(p, states);
     FTPacketId packetId = FTAppenderElement::getPacketId(q);
-    click_chatter("q: Packetii %llu size %d", packetId, q->length());
+    DEBUG("Packet %llu with the size of %d (packet + state is %d) pushed to buffer",
+          packetId, q->length(), p->length());
 
     FTAppenderElement::printState(states);
     _packets[packetId] = q;
 
     // Send packet to the beginning of the chain
-    click_chatter("--Before push--");
+    DEBUG("Packet %llu sent to the beginning of the chain!", packetId);
     output(TO_CHAIN_BEGIN).push(p);
-    click_chatter("--After push---");
+    DEBUG("After Pushing packet %llu", packetId);
 
 //    vector<FTPacketId> released_packets;
 
-    click_chatter("Size of output buffer: %d", _packets.size());
+    DEBUG("Size of output buffer: %d", _packets.size());
 
     // Release the packets whose states have been committed
     for (auto it = states.begin(); it != states.end(); ++it) {
         auto oldPacketId = it->first;
-        if (it->second.begin()->second.commit
-//            &&
-//                find(released_packets.begin(), released_packets.end(), oldPacketId) == released_packets.end()
-                ) {
+
+        // TODO: remove-start
+        auto ctr = _checked_to_release.find(oldPacketId);
+        if (ctr == _checked_to_release.end())
+            _checked_to_release[oldPacketId] = 1;
+        else
+            ctr->second++;
+        DEBUG("%d-th time, packet %llu is being checked for release!",
+              _checked_to_release[oldPacketId], oldPacketId);
+        // TODO: remove-end
+
+        if (it->second.begin()->second.commit) {
 
             auto item = _packets.find(oldPacketId);
-            if (item == _packets.end())
+            if (item == _packets.end()) {
+                DEBUG("Packet %llu is not found!", oldPacketId);
                 continue;
-
-            Packet *qq = item->second;
-            if (_packets.find(oldPacketId) == _packets.end()) {
-                click_chatter("Packet %llu is not found!", oldPacketId);
             }//if
 
-            click_chatter("Packetyy pointer is %llu!", qq);
-            click_chatter("packetyy %llu is released", oldPacketId);
-            click_chatter("packet size %d", qq->length());
+            Packet *qq = item->second;
+            DEBUG("packet %llu with the size of %d released", oldPacketId, qq->length());
             output(TO_OUTSIDE_WORLD).push(qq);
-            click_chatter("After push!");
             _packets.erase(oldPacketId);
 
 //            released_packets.push_back(oldPacketId);
 //            _count += released_packets.size();
-            click_chatter("Number of released packets: %d", ++_count);
+            // TODO: remove-start
+            ++_released;
+            // TODO: remove-end
 
             qq->kill();
-//            click_chatter("after erase!");
+//            DEBUG("after erase!");
         }//if
+        // TODO: remove-start
+        else {
+            DEBUG("Packet %llu not committed yet to be released!", oldPacketId);
+        }//else
+        // TODO: remove-end
     }//for
 
-    click_chatter("End FTBufferElement");
-    click_chatter("------------------------------");
+    // TODO: remove-start
+    int rct_count = 0;
+    for (auto it = _checked_to_release.begin(); it != _checked_to_release.end(); ++it)
+        rct_count += it->second;
+    DEBUG("Received packets: %d, identical checked for release: %d, all checked for release: %d, released packets: %d",
+                  _all, _checked_to_release.size(), rct_count, _released);
+    // TODO: remove-end
+
+    DEBUG("\nEnd FTBufferElement");
+    DEBUG("------------------------------\n");
 }
 
 CLICK_ENDDECLS

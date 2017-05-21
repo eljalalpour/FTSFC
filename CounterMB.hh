@@ -8,7 +8,7 @@
 
 #define INIT_COUNTER 0
 #define COUNTER_MB_CLASS_NAME "CounterMB"
-#define COUNTER "counter"
+#define COUNTER "c"
 
 CLICK_DECLS
 

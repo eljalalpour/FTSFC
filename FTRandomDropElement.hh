@@ -12,6 +12,8 @@ CLICK_DECLS
 class FTRandomDropElement: public Element {
 private:
     double _dropChance;
+    int _all;
+    int _dropped;
 
 public:
     FTRandomDropElement();

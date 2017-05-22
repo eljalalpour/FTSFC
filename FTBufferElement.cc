@@ -32,7 +32,7 @@ void FTBufferElement::push(int, Packet *p) {
 
     // Send packet to the beginning of the chain
     DEBUG("Packet %llu with size %d sent to the beginning of the chain (on port %d)!",
-          packetId, p.length(), CHAIN_BEGIN);
+          packetId, p.length(), TO_CHAIN_BEGIN);
     output(TO_CHAIN_BEGIN).push(p);
     DEBUG("After Pushing packet %llu", packetId);
 

@@ -7,12 +7,11 @@ FTPassElement::FTPassElement() { }
 
 FTPassElement::~FTPassElement() { }
 
-void FTPassElement::push(int port, Packet *p) {
-//    output(0).push(p);
+void FTPassElement::push(int, Packet *p) {
     LOG("------------------------------");
     LOG("Begin FTPassElement");
 
-    output(port).push(0);
+    output(0).push(p);
 
     LOG("End FTPassElement");
     LOG("------------------------------");

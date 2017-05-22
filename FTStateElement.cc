@@ -24,31 +24,31 @@ int FTStateElement::configure(Vector<String> &conf, ErrorHandler *errh) {
 }
 
 void FTStateElement::push(int source, Packet *p) {
-    LOG("------------------------------\n");
-    LOG("Begin FTStateElement %d:\n", _id);
-    LOG("Receiving packet %llu from port %d\n", FTAppenderElement::getPacketId(p), source);
+    DEBUG("------------------------------\n");
+    DEBUG("Begin FTStateElement %d:\n", _id);
+    DEBUG("Receiving packet %llu from port %d\n", FTAppenderElement::getPacketId(p), source);
 
     if (source == INPUT_PORT_TO_PROCESS) {
         try {
             reset();
             WritablePacket *q = FTAppenderElement::decodeStatesRetPacket(p, _temp);
 
-            LOG("State received from FTAppender or previous replica\n");
-//            FTAppenderElement::printState(_temp);
+            DEBUG("State received from FTAppender or previous replica\n");
+            FTAppenderElement::printState(_temp);
 
             replicateStates();
             p->kill();
 
-            LOG("End FTStateElement %d\n", _id);
-            LOG("------------------------------");
+            DEBUG("End FTStateElement %d\n", _id);
+            DEBUG("------------------------------");
             output(OUTPUT_PORT_TO_MIDDLEBOX).push(q);
         }//try
         catch(...) {
             p->kill();
-            LOG("Not A valid packet for our protocol\n");
+            DEBUG("Not A valid packet for our protocol\n");
 
-            LOG("End FTStateElement %d\n", _id);
-            LOG("------------------------------");
+            DEBUG("End FTStateElement %d\n", _id);
+            DEBUG("------------------------------");
         }//catch
     }//if
     else if (source == INPUT_PORT_PROCESSED) {
@@ -81,16 +81,16 @@ void FTStateElement::push(int source, Packet *p) {
                 }//else if
             }//for
         }//for
-        LOG("State going to the next middlebox:\n");
-//        FTAppenderElement::printState(_temp);
+        DEBUG("State going to the next middlebox:\n");
+        FTAppenderElement::printState(_temp);
 
         _packets[packetId] = p->uniqueify();
         WritablePacket *q = FTAppenderElement::encodeStates(p, _temp);
 
         p->kill();
 
-        LOG("End FTStateElement %d\n", _id);
-        LOG("------------------------------");
+        DEBUG("End FTStateElement %d\n", _id);
+        DEBUG("------------------------------");
         output(OUTPUT_PORT_TO_NEXT_MIDDLEBOX).push(q);
     }//else if
 }

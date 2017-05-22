@@ -26,16 +26,16 @@ int FTAppenderElement::configure(Vector<String> &conf, ErrorHandler *errh) {
 
 void FTAppenderElement::push(int source, Packet *p) {
     FTPacketId packetId = getPacketId(p, IP_PACKET_AFTER_VLAN_OFFSET);
-    LOG("--------------------");
-    LOG("Begin FTAppender element:");
+    DEBUG("--------------------");
+    DEBUG("Begin FTAppender element:");
 
     const click_ether_vlan *vlan = reinterpret_cast<const click_ether_vlan *>(p->data());
     VLANId vlan_id = (ntohs(vlan->ether_vlan_tci) & 0xFFF);
-    LOG("VLAN-ID is %d", vlan_id);
+    DEBUG("VLAN-ID is %d", vlan_id);
 
     if (vlan_id == _first_vlan) {
-        LOG("Receiving packet %llu from the source!", packetId);
-        LOG("state on the packet going to state-element");
+        DEBUG("Receiving packet %llu from the source!", packetId);
+        DEBUG("state on the packet going to state-element");
 
 //        _mutex.lock();
 //        printState(_temp);
@@ -47,7 +47,7 @@ void FTAppenderElement::push(int source, Packet *p) {
         output(0).push(q);
     }//if
     else {
-        LOG("Receiving packet %llu from the end of the chain!", packetId);
+        DEBUG("Receiving packet %llu from the end of the chain!", packetId);
         FTPacketMBPiggyBackedState pbState;
         decodeStates(p, pbState);
         printState(pbState);
@@ -56,7 +56,7 @@ void FTAppenderElement::push(int source, Packet *p) {
         p->kill();
     }//else
 
-    LOG("--------------------\n");
+    DEBUG("--------------------\n");
 }
 
 void FTAppenderElement::append(FTPacketMBPiggyBackedState state) {

@@ -22,7 +22,7 @@ se1[1]
 ->VLANEncap(VLAN_ID 2)
 
 // Network
-->FTRandomDropElement(0.3)
+->FTRandomDropElement(0.7)
 
 // Last replica
 ->FTFilterElement(2)

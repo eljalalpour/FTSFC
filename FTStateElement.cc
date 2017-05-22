@@ -124,7 +124,7 @@ void FTStateElement::replicateStates() {
                 //committing the primary states here
                 if (it2->second.commit) {
                     //The middlebox visits its state in the third phase of protocol
-                    DEBUG("Removing the information of packet %llu and middlebox %d\n", it->first, it2->first);
+                    LOG("Removing the information of packet %llu and middlebox %d\n", it->first, it2->first);
                     it->second.erase(it2++);
                     //TODO: check if we should release the memory of it(iterator)
                     itemErased = true;

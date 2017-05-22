@@ -12,8 +12,7 @@ void FTPassElement::push(int port, Packet *p) {
     LOG("------------------------------");
     LOG("Begin FTPassElement");
 
-    //TODO: change port to zero
-    output(port).push(p);
+    output(port).push(0);
 
     LOG("End FTPassElement");
     LOG("------------------------------");

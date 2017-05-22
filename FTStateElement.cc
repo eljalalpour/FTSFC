@@ -81,11 +81,12 @@ void FTStateElement::push(int source, Packet *p) {
                 }//else if
             }//for
         }//for
-        DEBUG("State going to the next middlebox:\n");
+        DEBUG("State going to the next middlebox (state size is %d):", _temp.size());
         FTAppenderElement::printState(_temp);
 
         _packets[packetId] = p->uniqueify();
         WritablePacket *q = FTAppenderElement::encodeStates(p, _temp);
+        DEBUG("Packet size: %d\n", q->length());
 
         p->kill();
 

@@ -34,7 +34,7 @@ void FTAppenderElement::push(int source, Packet *p) {
     DEBUG("VLAN-ID is %d", vlan_id);
 
     if (vlan_id == _first_vlan) {
-        DEBUG("Receiving packet %llu from the source!", packetId);
+        DEBUG("Receiving packet %llu with size %d from the source!", packetId, p->length());
         DEBUG("state on the packet going to state-element");
 
 //        _mutex.lock();

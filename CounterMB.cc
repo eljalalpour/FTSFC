@@ -21,7 +21,12 @@ Packet *CounterMB::simple_action(Packet *p) {
 //        LOG("%d-Element name is: %s", i, r->ename(i).c_str());
 //    }//for
 
+    //TODO: change the name of stateElement back to se
     FTStateElement *stateElement = (FTStateElement *)(r->find("se"));
+//    stringstream ess;
+//    ess << "se" << (int)_id;
+//    DEBUG("state element: %s", ess.str().c_str());
+//    FTStateElement *stateElement = (FTStateElement *)(r->find(ess.str().c_str()));
 
     //Getting the state's value from the FTStateElement
     stringstream ss;

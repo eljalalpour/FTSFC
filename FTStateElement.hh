@@ -33,7 +33,6 @@ public:
     FTPacketMBPiggyBackedState _log;  // Does not to be initialized
     FTMBStates _committed; // Must be initialized in the configuration phase
     FTPacketMBPiggyBackedState _temp; // Does not to be initialized
-    map<FTPacketId, Packet *> _packets; // Does not to be initialized
 
     /// Replicate the states of other middleBoxes and increment the ack value
     /// \param piggyBackedState
@@ -83,6 +82,8 @@ public:
     //TODO: make sure that the connection type is push
     void push(int source, Packet *p);
 
+    void new_push(int source, Packet *p);
+
     void rollback();
 
     void add_handlers();
@@ -120,6 +121,8 @@ public:
     static String getStateCallback(Element *e, void *user_data);
 
     static int putStateCallback(const String &data, Element *element, void *user_data, ErrorHandler *errh);
+
+    static void difference();
 };
 
 CLICK_ENDDECLS

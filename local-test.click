@@ -19,7 +19,7 @@ se1[1]
 ->VLANEncap(VLAN_ID 2)
 
 // Network
-->FTRandomDropElement(0.7)
+->FTRandomDropElement(0.3)
 
 // Last replica
 ->FTFilterElement(2)
@@ -52,5 +52,5 @@ pe[1]
 //->ToDump(/Users/eghaznavi/Downloads/dumps/test/chain-begin-output.pcap)
 
 //Network
-->FTRandomDropElement(0.7)
+->FTRandomDropElement(0.3)
 ->begin

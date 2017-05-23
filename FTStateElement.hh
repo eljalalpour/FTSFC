@@ -38,6 +38,8 @@ public:
     /// \param piggyBackedState
     void replicateStates();
 
+    void new_replicateStates(FTPacketMBPiggyBackedState temp);
+
     /// Transfer the states from log to the committed memory and release the log memory
     /// \param packetId The id of the packet
     /// \param MBId The id of the middlebox
@@ -82,6 +84,8 @@ public:
     //TODO: make sure that the connection type is push
     void push(int source, Packet *p);
 
+    void old_push(int source, Packet *p);
+
     void new_push(int source, Packet *p);
 
     void rollback();
@@ -121,8 +125,6 @@ public:
     static String getStateCallback(Element *e, void *user_data);
 
     static int putStateCallback(const String &data, Element *element, void *user_data, ErrorHandler *errh);
-
-    static void difference();
 };
 
 CLICK_ENDDECLS

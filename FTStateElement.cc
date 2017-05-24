@@ -24,6 +24,11 @@ int FTStateElement::configure(Vector<String> &conf, ErrorHandler *errh) {
 }
 
 void FTStateElement::push(int source, Packet *p) {
+    old_push(source, p);
+//    new_push(source, p);
+}
+
+void FTStateElement::old_push(int source, Packet *p) {
     DEBUG("------------------------------\n");
     DEBUG("Begin FTStateElement %d:\n", _id);
     DEBUG("Receiving packet %llu from port %d\n", FTAppenderElement::getPacketId(p), source);
@@ -37,6 +42,11 @@ void FTStateElement::push(int source, Packet *p) {
             FTAppenderElement::printState(_temp);
 
             replicateStates();
+
+            click_chatter("temp size after replication: %d", _temp.size());
+            if (_temp.size() > 0)
+                FTAppenderElement::printState(_temp);
+
             p->kill();
 
             DEBUG("End FTStateElement %d\n", _id);
@@ -83,7 +93,6 @@ void FTStateElement::push(int source, Packet *p) {
         }//for
         DEBUG("State going to the next middlebox (state size is %d):", _temp.size());
 
-        _packets[packetId] = p->uniqueify();
         WritablePacket *q = FTAppenderElement::encodeStates(p, _temp);
 
         DEBUG("Packet size: %d\n", q->length());
@@ -93,6 +102,124 @@ void FTStateElement::push(int source, Packet *p) {
 
         DEBUG("End FTStateElement %d\n", _id);
         DEBUG("------------------------------");
+        output(OUTPUT_PORT_TO_NEXT_MIDDLEBOX).push(q);
+    }//else if
+}
+
+void FTStateElement::new_push(int source, Packet *p) {
+    DEBUG("------------------------------\n");
+    DEBUG("Begin FTStateElement %d:\n", _id);
+    DEBUG("Receiving packet %llu from port %d\n", FTAppenderElement::getPacketId(p), source);
+
+    FTPacketMBPiggyBackedState new_state;
+    FTPacketMBPiggyBackedState to_piggy_backed;
+
+    if (source == INPUT_PORT_TO_PROCESS) {
+        try {
+            reset();
+            WritablePacket *q = FTAppenderElement::decodeStatesRetPacket(p, new_state);
+
+            DEBUG("State received from FTAppender or previous replica\n");
+            FTAppenderElement::printState(new_state);
+
+            new_replicateStates(new_state);
+            p->kill();
+
+            DEBUG("End FTStateElement %d\n", _id);
+            DEBUG("------------------------------");
+            output(OUTPUT_PORT_TO_MIDDLEBOX).push(q);
+        }//try
+        catch(...) {
+            p->kill();
+            DEBUG("Not A valid packet for our protocol\n");
+
+            DEBUG("End FTStateElement %d\n", _id);
+            DEBUG("------------------------------");
+        }//catch
+    }//if
+    else if (source == INPUT_PORT_PROCESSED) {
+        FTState primaryState;
+        for (auto it = _modified.begin(); it != _modified.end(); ++it) {
+            if (it->second) {
+                primaryState[it->first] = _operationState[it->first];
+            }//if
+        }//for
+        auto packetId = FTAppenderElement::getPacketId(p);
+        FTPiggyBackedState PBState;
+        PBState.state = primaryState;
+        PBState.ack = 1;
+        PBState.commit = (PBState.ack > this->_failureCount);
+        PBState.setTimeStamp();
+
+        to_piggy_backed = new_state;
+        to_piggy_backed[packetId][_id] = PBState;
+
+        // For the primary state
+        for (auto pkt_it = _log.begin(); pkt_it != _log.end(); ++pkt_it) {
+            FTPiggyBackedState diff_state = pkt_it->second[_id];
+            DEBUG("Diff state before: ");
+            FTAppenderElement::printState(diff_state);
+            for (auto sts_it = diff_state.state.begin(); sts_it != diff_state.state.end(); /* no increment */) {
+                if (PBState.state.find(sts_it->first) != PBState.state.end()) {
+                    diff_state.state.erase(sts_it++);
+                }//if
+            }//for
+            DEBUG("Diff state after: ");
+            FTAppenderElement::printState(diff_state);
+            if (diff_state.state.size() > 0)
+                to_piggy_backed[pkt_it->first][_id] = diff_state;
+        }//for
+
+        if (!PBState.commit) {
+            _log[packetId][_id] = PBState;
+        }//if
+
+        // For the secondary state
+        for (auto pkt_it = _log.begin(); pkt_it != _log.end(); ++pkt_it) {
+            auto pkt_id = pkt_it->first;
+            auto pkt_it_2 = to_piggy_backed.find(pkt_id);
+
+            if (pkt_it_2 == to_piggy_backed.end()) {
+                to_piggy_backed[pkt_id] = pkt_it->second;
+                continue;
+            }//if
+
+            for (auto mb_it = pkt_it->second.begin(); mb_it != pkt_it->second.end(); ++mb_it) {
+                auto mb_id = mb_it->first;
+                if (mb_id == _id) continue;
+
+                auto mb_it_2 = pkt_it_2->second.find(mb_id);
+
+                if (mb_it_2 == pkt_it_2->second.end()) {
+                    pkt_it_2->second[mb_id] = mb_it->second;
+                }//if
+            }//for
+        }//for
+
+//        for (auto it = _log.begin(); it != _log.end(); ++it) {
+//            for (auto it2 = it->second.begin(); it2 != it->second.end(); ++it2) {
+//                if (it2->second.ack < _failureCount + 1) {
+//                    to_piggy_backed[it->first][it2->first] = it2->second;
+//                }//if
+//                else if (it2->second.ack == _failureCount + 1) {
+//                    FTPiggyBackedState sState = it2->second;
+//                    sState.state.clear();
+//                    to_piggy_backed[it->first][it2->first] = sState;
+//                }//else if
+//            }//for
+//        }//for
+
+
+        DEBUG("State going to the next middlebox (state size is %d):", to_piggy_backed.size());
+
+        WritablePacket *q = FTAppenderElement::encodeStates(p, to_piggy_backed);
+        p->kill();
+
+        DEBUG("Packet size: %d\n", q->length());
+        FTAppenderElement::printState(to_piggy_backed);
+        DEBUG("End FTStateElement %d\n", _id);
+        DEBUG("------------------------------");
+
         output(OUTPUT_PORT_TO_NEXT_MIDDLEBOX).push(q);
     }//else if
 }
@@ -163,8 +290,6 @@ void FTStateElement::replicateStates() {
 
                     _log[packetId][MBId] = it2->second;
 
-                    LOG("Ack of packet %llu, and middlebox %d is %d\n", packetId, MBId, _log[packetId][MBId].ack);
-
                     it->second.erase(it2++);
                     itemErased = true;
 
@@ -194,6 +319,97 @@ void FTStateElement::replicateStates() {
     }//for
 }
 
+void FTStateElement::new_replicateStates(FTPacketMBPiggyBackedState temp) {
+    //LOG("In state replication\n");
+    FTMBKeyTimestamp _committed_time;
+
+//    LOG("Size of state: %d\n", _temp.size());
+    for (auto it = temp.begin(); it != temp.end(); /* no increment */) {
+        auto packetId = it->first;
+//        LOG("Replicating packet: %llu\n", packetId);
+
+        for (auto it2 = it->second.begin(); it2 != it->second.end(); /*no increment*/) {
+            auto MBId = it2->first;
+            bool itemErased = false;
+
+            // Check if the state is of the current MB
+            if (MBId == _id) {
+                //committing the primary states here
+                if (it2->second.commit) {
+                    //The middlebox visits its state in the third phase of protocol
+                    LOG("Removing the information of packet %llu and middlebox %d\n", it->first, it2->first);
+
+                    it->second.erase(it2++);
+                    itemErased = true;
+                    // erase the log whenever the state of the packet is committed for every middlebox
+                    _log.erase(packetId);
+                }//if
+
+                else if (it2->second.ack == _failureCount + 1) {
+                    //The middlebox visits its state in the second phase of protocol
+                    LOG("Committing the state of packet %llu and middlebox %d", it->first, it2->first);
+                    commit(packetId, MBId, _committed_time);
+                    it2->second.commit = true;
+
+                    //TODO: new-begin
+                    //TODO: Make the following fix a bit cleaner
+                    // We should not remove the primary state from the log till the third phase,
+                    //to fix that we do as follows
+                    _log[packetId][MBId]= it2->second;
+                    it->second.erase(it2++);
+                    itemErased = true;
+                    //TODO: new-end
+
+                    LOG("Printing temp for debug:\n");
+//                    FTAppenderElement::printState(temp);
+                }//else if
+            }//if
+            else {
+                //replicating the secondary states here
+                if (it2->second.ack != _failureCount + 1) {
+                    LOG("Replicating secondary state (ack is %d)!\n", (int)it2->second.ack);
+//                    FTAppenderElement::printState(it2->second.state);
+
+                    ++(it2->second.ack);
+
+                    // The secondary state of the packet and middlebox is replicated only if this is the first time
+                    //the state is received in this replica. If the state already exists, it is not replicated again.
+                    auto pkt_it = _log.find(packetId);
+                    if (pkt_it == _log.end()) {
+                        _log[packetId][MBId] = it2->second;
+                        it->second.erase(it2++);
+                        itemErased = true;
+                    }//if
+                    else {
+                        auto mb_it = pkt_it->second.find(MBId);
+                        if (mb_it == pkt_it->second.end()) {
+                            _log[packetId][MBId] = it2->second;
+                            it->second.erase(it2++);
+                            itemErased = true;
+                        }//if
+                    }//else
+                }//if
+                else if (it2->second.commit) {
+                    //Commiting secondary state
+                    commit(packetId, MBId, _committed_time);
+                }//else
+            }//else
+
+            // Increment iterator here
+            if (!itemErased) {
+                ++it2;
+            }//if
+        }//for
+
+        if (it->second.size() == 0) {
+            temp.erase(it++);
+        }//if
+        else {
+            ++it;
+        }//else
+    }//for
+}
+
 void FTStateElement::commit(FTPacketId packetId, FTMBId MBId, FTMBKeyTimestamp& committed_time) {
     //LOG("Committing the state of the middlebox '%d' for the packet id %llu", MBId, packetId);
     FTTimestamp time = _log[packetId][MBId].timestamp;
@@ -210,13 +426,7 @@ void FTStateElement::commit(FTPacketId packetId, FTMBId MBId, FTMBKeyTimestamp& 
         if (ct == middlebox_ct->second.end() || time > ct->second) {
             _committed[MBId][log_it->first] = log_it->second;
             middlebox_ct->second[log_it->first] = time;
-            //LOG("'%s':'%s", log_it->first.c_str(), log_it->second.c_str());
         }//if
-//        else if (time > ct->second){
-//            _committed[MBId][log_it->first] = log_it->second;
-//            middlebox_ct->second[log_it->first] = time;
-//            //LOG("'%s':'%s", log_it->first.c_str(), log_it->second.c_str());
-//        }//else if
     }//for
     _log[packetId].erase(MBId);
     if (_log[packetId].size() == 0) {
@@ -388,6 +598,7 @@ int FTStateElement::putStateCallback(const String &data, Element *e, void *user_
 
     return result;
 }
+
 
 CLICK_ENDDECLS
 EXPORT_ELEMENT(FTStateElement)

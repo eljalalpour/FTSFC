@@ -33,11 +33,12 @@ public:
     FTPacketMBPiggyBackedState _log;  // Does not to be initialized
     FTMBStates _committed; // Must be initialized in the configuration phase
     FTPacketMBPiggyBackedState _temp; // Does not to be initialized
-    map<FTPacketId, Packet *> _packets; // Does not to be initialized
 
     /// Replicate the states of other middleBoxes and increment the ack value
     /// \param piggyBackedState
     void replicateStates();
+
+    void new_replicateStates(FTPacketMBPiggyBackedState temp);
 
     /// Transfer the states from log to the committed memory and release the log memory
     /// \param packetId The id of the packet
@@ -82,6 +83,10 @@ public:
 
     //TODO: make sure that the connection type is push
     void push(int source, Packet *p);
+
+    void old_push(int source, Packet *p);
+
+    void new_push(int source, Packet *p);
 
     void rollback();
 

@@ -93,6 +93,26 @@ public:
     void setTimeStamp() {
         this->timestamp = std::chrono::high_resolution_clock::now().time_since_epoch().count();
     }
+
+    /// Perform minus operation and the state of @param first and the state of @param second (@param first=@param first-@param second)
+    /// \param first
+    /// \param second
+    static void difference(FTPiggyBackedState& first, FTPiggyBackedState& second) {
+        for (auto it = second.state.begin(); it != second.state.end(); ++it) {
+            auto item = first.state.find(it->first);
+            if (item != first.state.end())
+                first.state.erase(item);
+        }//for
+    }
+
+    /// Perform minus operation and the state of @param first and the state of @param second (@param result=@param first-@param second)
+    /// \param first
+    /// \param second
+    /// \param result
+    static void difference(FTPiggyBackedState& first, FTPiggyBackedState& second, FTPiggyBackedState& result) {
+        result = first;
+        difference(result, second);
+    }
 };
 
 // FTMBStates type represents the state of a MB with id FTMBId
@@ -100,3 +120,39 @@ typedef map<FTMBId, FTPiggyBackedState> FTMBPiggyBackedState;
 
 // FTPacketMBState type represents the state changes that a packet has caused in a set of MBs
 typedef map<FTPacketId, FTMBPiggyBackedState> FTPacketMBPiggyBackedState;
+
+//void difference(FTMBId mbId, FTMBPiggyBackedState& first, FTMBPiggyBackedState& second) {
+//    FTPiggyBackedState::difference(first[mbId], second[mbId]);
+//}
+//
+//void difference(FTMBPiggyBackedState& first, FTMBPiggyBackedState& second) {
+//    for (auto it = second.begin(); it != second.end(); ++it) {
+//        FTMBId mbId = it->first;
+//        auto inFirst = first.find(mbId);
+//        if (inFirst != first.end())
+//            FTPiggyBackedState::difference(inFirst->second, second[mbId]);
+//    }//for
+//}
+//
+//void difference(FTMBId mbId, FTPacketMBPiggyBackedState& first, FTPacketMBPiggyBackedState& second) {
+//    for (auto it = first.begin(); it != first.end(); ++it) {
+//        for (auto it2 = second.begin(); it2 != second.end(); ++it2) {
+//            difference(mbId, it->second, it2->second);
+//        }//for
+//    }//for
+//}
+//
+//void difference(FTMBId mbId, FTPacketMBPiggyBackedState& first, FTPiggyBackedState& second) {
+//    for (auto pkt_it = first.begin(); pkt_it != first.end(); ++pkt_it) {
+//        auto mb_it = pkt_it->second.find(mbId);
+//        if (mb_it == pkt_it->second.end())
+//            continue;
+//
+//        FTPiggyBackedState::difference(mb_it->second, second);
+//    }//for
+//}
+//
+//void difference(FTMBId mbId, FTPacketMBPiggyBackedState& first, FTPiggyBackedState& second, FTPacketMBPiggyBackedState& result) {
+//    result = first;
+//    difference(mbId, result, second);
+//}

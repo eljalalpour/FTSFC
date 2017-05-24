@@ -1,7 +1,7 @@
 require(package "FTSFC");
 
 // Source
-FromDump(/Users/eghaznavi/Downloads/dumps/test/input-vlan.pcap, STOP true)
+FromDump(/Users/eghaznavi/Downloads/dumps/test/input-vlan.pcap)
 
 // First Replica
 ->begin::FTFilterElement(1, 4)

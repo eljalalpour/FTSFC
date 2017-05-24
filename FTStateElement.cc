@@ -150,19 +150,29 @@ void FTStateElement::new_push(int source, Packet *p) {
         PBState.ack = 1;
         PBState.commit = (PBState.ack > this->_failureCount);
         PBState.setTimeStamp();
-        if (!PBState.commit) {
-            _log[packetId][_id] = PBState;
-        }//if
 
         to_piggy_backed = new_state;
         to_piggy_backed[packetId][_id] = PBState;
 
         // For the primary state
         for (auto pkt_it = _log.begin(); pkt_it != _log.end(); ++pkt_it) {
-            for (auto sts_it = pkt_it->second[_id].state.begin(); sts_it != pkt_it->second[_id].state.end(); ++sts_it) {
-
+            FTPiggyBackedState diff_state = pkt_it->second[_id];
+            DEBUG("Diff state before: ");
+            FTAppenderElement::printState(diff_state);
+            for (auto sts_it = diff_state.state.begin(); sts_it != diff_state.state.end(); /* no increment */) {
+                if (PBState.state.find(sts_it->first) != PBState.state.end()) {
+                    diff_state.state.erase(sts_it++);
+                }//if
             }//for
+            DEBUG("Diff state after: ");
+            FTAppenderElement::printState(diff_state);
+            if (diff_state.state.size() > 0)
+                to_piggy_backed[pkt_it->first][_id] = diff_state;
         }//for
+
+        if (!PBState.commit) {
+            _log[packetId][_id] = PBState;
+        }//if
 
         // For the secondary state
         for (auto pkt_it = _log.begin(); pkt_it != _log.end(); ++pkt_it) {
@@ -176,6 +186,8 @@ void FTStateElement::new_push(int source, Packet *p) {
 
             for (auto mb_it = pkt_it->second.begin(); mb_it != pkt_it->second.end(); ++mb_it) {
                 auto mb_id = mb_it->first;
+                if (mb_id == _id) continue;
+
                 auto mb_it_2 = pkt_it_2->second.find(mb_id);
 
                 if (mb_it_2 == pkt_it_2->second.end()) {

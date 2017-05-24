@@ -31,7 +31,7 @@ set(SOURCE_FILES
 #        FTBufferElement.hh
 #        CounterMB.cc
 #        CounterMB.hh
-        main.cpp FTFilterElement.cc FTPassElement.cc FTPassElement.hh Test.cpp Test.h RandomDrop.cpp RandomDrop.h)
+        main.cpp FTFilterElement.cc FTPassElement.cc FTPassElement.hh Test.cpp Test.h RandomDrop.cpp RandomDrop.h FTFastTCPGen.cc FTFastTCPGen.hh)
 
 add_executable(FTSFC ${SOURCE_FILES})
 target_link_libraries(FTSFC ${CLICK_LIB})

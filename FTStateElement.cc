@@ -43,7 +43,7 @@ void FTStateElement::old_push(int source, Packet *p) {
 
             replicateStates();
 
-            click_chatter("temp size after replication: %d", _temp.size());
+            DEBUG("temp size after replication: %d", _temp.size());
             if (_temp.size() > 0)
                 FTAppenderElement::printState(_temp);
 

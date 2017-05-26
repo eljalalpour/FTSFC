@@ -1,7 +1,11 @@
 require(package "FTSFC");
 
 // Source
-FromDump(/Users/eghaznavi/Downloads/dumps/test/input-vlan.pcap)
+FromDump(generated.pcap)
+
+//FTFastTCPGen(10, 500000, 60, 68:5b:35:c5:e9:39, 192.168.200.18, 68:5b:35:c5:e9:55, 192.168.200.17, 100, 10)
+
+->VLANEncap(VLAN_ID 1)
 
 // First Replica
 ->begin::FTFilterElement(1, 4)

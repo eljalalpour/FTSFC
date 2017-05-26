@@ -82,7 +82,7 @@ class FTFastTCPGen : public Element {
     void change_ports(int);
     Packet *get_packet();
 
-    unsigned long _pkt_count;
+    tcp_seq_t _seq_track;
 
 public:
 
@@ -110,6 +110,8 @@ public:
     unsigned count() { return _count; }
     click_jiffies_t first() { return _first; }
     click_jiffies_t last() { return _last; }
+
+    WritablePacket* update_seq_num(Packet* p);
 };
 
 CLICK_ENDDECLS

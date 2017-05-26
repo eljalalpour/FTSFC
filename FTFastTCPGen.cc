@@ -29,11 +29,12 @@ CLICK_DECLS
 const unsigned FTFastTCPGen::NO_LIMIT;
 
 FTFastTCPGen::FTFastTCPGen()
-        : _flows(0), _pkt_count(0)
+        : _flows(0)
 {
     _rate_limited = true;
     _first = _last = 0;
     _count = 0;
+    _seq_track = 0;
 }
 
 FTFastTCPGen::~FTFastTCPGen()
@@ -186,7 +187,7 @@ FTFastTCPGen::initialize(ErrorHandler *)
         // set up TCP header
         tcp->th_sport = sport;
         tcp->th_dport = dport;
-        tcp->th_seq = /*click_random()*/ _pkt_count;
+        tcp->th_seq = click_random();
         tcp->th_ack = click_random();
         tcp->th_off = sizeof(click_tcp) >> 2;
         tcp->th_flags = TH_SYN;
@@ -221,7 +222,7 @@ FTFastTCPGen::initialize(ErrorHandler *)
         // set up TCP header
         tcp->th_sport = sport;
         tcp->th_dport = dport;
-        tcp->th_seq = /*click_random()*/_pkt_count;
+        tcp->th_seq = click_random();
         tcp->th_ack = click_random();
         tcp->th_off = sizeof(click_tcp) >> 2;
         tcp->th_flags = TH_PUSH | TH_ACK;
@@ -256,7 +257,7 @@ FTFastTCPGen::initialize(ErrorHandler *)
         // set up TCP header
         tcp->th_sport = sport;
         tcp->th_dport = dport;
-        tcp->th_seq = /*click_random()*/ _pkt_count;
+        tcp->th_seq = click_random();
         tcp->th_ack = click_random();
         tcp->th_off = sizeof(click_tcp) >> 2;
         tcp->th_flags = TH_FIN;
@@ -307,15 +308,18 @@ FTFastTCPGen::pull(int)
 
     if(p) {
         _count++;
+        _seq_track++;
         if(_count == 1)
             _first = click_jiffies();
         if(_limit != NO_LIMIT && _count >= _limit)
             _last = click_jiffies();
     }
 
-    _pkt_count++;
+    if (p) {
+        p = update_seq_num(p);
+    }//if
 
-    return(p);
+    return p;
 }
 
 void
@@ -406,6 +410,36 @@ FTFastTCPGen::add_handlers()
     add_write_handler("reset", FTFastTCPGen_reset_write_handler, 0, Handler::BUTTON);
     add_write_handler("active", FTFastTCPGen_active_write_handler, 0, Handler::CHECKBOX);
     add_write_handler("limit", FTFastTCPGen_limit_write_handler, 0);
+}
+
+struct delta_transition {
+    int32_t delta[2];
+    tcp_seq_t trigger[2];
+    uintptr_t nextptr;
+    delta_transition() {
+        memset(this, 0, sizeof(delta_transition));
+    }
+    delta_transition *next() const {
+        return reinterpret_cast<delta_transition *>(nextptr - (nextptr & 3));
+    }
+    bool has_trigger(bool direction) const {
+        return nextptr & (1 << direction);
+    }
+};
+
+WritablePacket* FTFastTCPGen::update_seq_num(Packet* p) {
+    WritablePacket* q = p->uniqueify();
+    if (q->data()) {
+        click_ip *ip =
+                reinterpret_cast<click_ip *>(q->data() + 14);
+        click_tcp *tcp = reinterpret_cast<click_tcp *>(ip + 1);
+        uint32_t newval = ntohl(_seq_track);
+        click_update_in_cksum(&tcp->th_sum, tcp->th_seq >> 16, newval >> 16);
+        click_update_in_cksum(&tcp->th_sum, tcp->th_seq, newval);
+        tcp->th_seq = newval;
+    }//if
+
+    return q;
 }
 
 CLICK_ENDDECLS

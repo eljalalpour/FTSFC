@@ -17,10 +17,11 @@ CLICK_DECLS
  */
 class FTLoggerElement: public Element {
 private:
-    map<FTPacketId, FTTimestamp> _pkt_time;
-    string _path;
-    int _count;
-    void _signal_handler(int signal);
+    static map<FTPacketId, FTTimestamp> _pkt_time;
+    static String _path;
+    static long long _count;
+    static void _signal_handler(int signal);
+    static void _write_to_file();
 
 public:
     FTLoggerElement();

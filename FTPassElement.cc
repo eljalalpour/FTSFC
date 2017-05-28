@@ -18,5 +18,22 @@ void FTPassElement::push(int port, Packet *p) {
     LOG("------------------------------");
 }
 
+Packet* FTPassElement::simple_action(Packet* p) {
+    return p;
+}
+
+Packet* FTPassElement::pull(int port) {
+    LOG("------------------------------");
+    LOG("Begin FTPassElement");
+
+    //TODO: change port back to zero
+    LOG("End FTPassElement");
+    LOG("------------------------------");
+
+    return input(port).pull();
+
+
+}
+
 CLICK_ENDDECLS
 EXPORT_ELEMENT(FTPassElement)

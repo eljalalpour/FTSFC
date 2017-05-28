@@ -18,6 +18,7 @@ FTLoggerElement::FTLoggerElement() {
     logger = this;
     _file_created = false;
     _count = std::numeric_limits<double>::infinity();
+    _ip_offset = IP_OFFSET_DEF_VAL;
 }
 
 FTLoggerElement::~FTLoggerElement() { }
@@ -28,8 +29,12 @@ int FTLoggerElement::configure(Vector<String> &conf, ErrorHandler *errh) {
 
     if (conf.size() > 1) {
         IntArg intParser;
-        intParser.parse(conf[1], _count);
-    }
+        intParser.parse(conf[1], _ip_offset);
+    }//if
+    if (conf.size() > 2) {
+        IntArg intParser;
+        intParser.parse(conf[2], _count);
+    }//if
 
     signal(SIGINT, signal_handler);
 
@@ -54,7 +59,7 @@ void FTLoggerElement::push(int port, Packet *p) {
     LOG("------------------------------");
     LOG("Begin FTLoggerElement");
 
-    _pkt_time[FTAppenderElement::getPacketId(p)] = std::chrono::high_resolution_clock::now().time_since_epoch().count();
+    _pkt_time[FTAppenderElement::getPacketId(p, _ip_offset)] = std::chrono::high_resolution_clock::now().time_since_epoch().count();
     if (_pkt_time.size() >= _count) {
         write_to_file();
         _pkt_time.clear();

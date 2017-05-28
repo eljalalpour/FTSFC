@@ -6,9 +6,11 @@
 #include "FTTypes.hh"
 CLICK_DECLS
 
+#define IP_OFFSET     "OFFSET"
 #define LOG_FILE_CONF "PATH"
 #define COUNT_CONF    "COUNT"
 #define COUNT_DEF_VAL std::numeric_limits<double>::infinity()
+#define IP_OFFSET_DEF_VAL 14
 
 /**
  * This element recieves a packet from two input ports and pass packet to a single output
@@ -18,6 +20,7 @@ private:
     map<FTPacketId, FTTimestamp> _pkt_time;
     String _log_file;
     long long _count;
+    int _ip_offset;
     bool _file_created;
 
 public:

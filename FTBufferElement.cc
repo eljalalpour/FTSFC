@@ -31,8 +31,8 @@ void FTBufferElement::push(int, Packet *p) {
           packetId, q->length(), p->length());
 
     FTAppenderElement::printState(states);
-//    _packets[packetId] = q;
-    _packets[packetId] = p;
+    _packets[packetId] = q;
+//    _packets[packetId] = p;
 
     // Send packet to the beginning of the chain
     DEBUG("Packet %llu with size %d sent to the beginning of the chain (on port %d)!",

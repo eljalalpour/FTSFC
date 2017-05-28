@@ -177,6 +177,7 @@ WritablePacket* FTAppenderElement::decodeStatesRetPacket(Packet *p, FTPacketMBPi
     auto ploff = payloadOffset(p);
     int stateLenPShort = FTAppenderElement::decodeStates(p, piggyBackedState);
     int orgPayloadBegin = ploff + stateLenPShort;
+    click_chatter("difference: %d", p->length() - stateLenPShort);
     WritablePacket *q = Packet::make(p->length() - stateLenPShort);
     memcpy(q->data(), p->data(), ploff);
     memcpy(q->data() + ploff, p->data() + orgPayloadBegin, p->length() - orgPayloadBegin);

@@ -14,7 +14,7 @@ void FTPassElement::push(int port, Packet *p) {
 
     const click_ether_vlan *vlan = reinterpret_cast<const click_ether_vlan *>(p->data());
     VLANId vlan_id = (ntohs(vlan->ether_vlan_tci) & 0xFFF);
-    click_chatter("VLAN_ID: %d", vlan_id);
+    click_chatter("Port: %d, VLAN_ID: %d", port, vlan_id);
 
     click_chatter("End FTPassElement - push");
     click_chatter("------------------------------");

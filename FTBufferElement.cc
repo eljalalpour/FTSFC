@@ -1,6 +1,5 @@
 #include <click/config.h>
 #include "FTBufferElement.hh"
-#include <click/router.hh>
 #include "FTAppenderElement.hh"
 
 CLICK_DECLS
@@ -16,9 +15,6 @@ void FTBufferElement::push(int, Packet *p) {
     // TODO: remove-start
     ++_all;
     // TODO: remove-end
-
-    // Finding the packet id
-    Router * router;
 
     // Writing the output of the last stage of the chain into the buffer
     FTPacketMBPiggyBackedState states;
@@ -63,8 +59,10 @@ void FTBufferElement::push(int, Packet *p) {
             }//if
 
             Packet *qq = item->second;
-            DEBUG("packet %llu with the size of %d is going to be released", oldPacketId, qq->length());
+            click_chatter("packet %llu with the size of %d is going to be released", oldPacketId, qq->length());
             output(TO_OUTSIDE_WORLD).push(qq);
+
+            qq->kill();
             _packets.erase(oldPacketId);
 
 //            released_packets.push_back(oldPacketId);
@@ -73,7 +71,6 @@ void FTBufferElement::push(int, Packet *p) {
             ++_released;
             // TODO: remove-end
 
-            qq->kill();
 //            DEBUG("after erase!");
         }//if
         // TODO: remove-start

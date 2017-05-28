@@ -1,48 +1,54 @@
+#include "FTLoggerElement.hh"
 #include <click/config.h>
 #include <click/args.hh>
 #include <fstream>
-#include "FTLoggerElement.hh"
-#include <limits>
+#include "FTAppenderElement.hh"
 
 CLICK_DECLS
 
-FTLoggerElement::FTLoggerElement() { }
+FTLoggerElement* logger;
 
-FTLoggerElement::~FTLoggerElement() {
-    _write_to_file();
+void signal_handler(int signal) {
+    LOG("Interrupt signal (%d) received. Writing packets timestamps to file!", signal);
+    logger->write_to_file();
+    exit(signal);
 }
 
+FTLoggerElement::FTLoggerElement() {
+    logger = this;
+    _file_created = false;
+    _count = std::numeric_limits<double>::infinity();
+}
+
+FTLoggerElement::~FTLoggerElement() { }
+
 int FTLoggerElement::configure(Vector<String> &conf, ErrorHandler *errh) {
-    if (Args(conf, this, errh)
-                .read(LOG_PATH_CONF, _path)
-                .complete() < 0)
-        return -1;
+    StringArg parser;
+    parser.parse(conf[0], _log_file);
 
-    if (Args(conf, this, errh)
-                .read(COUNT_CONF, _count).complete() < 0) {
-        _count = std::numeric_limits<double>::infinity();
-    }//if
+    if (conf.size() > 1) {
+        IntArg intParser;
+        intParser.parse(conf[1], _count);
+    }
 
-
-    //LOG("Configuration of state element: id: %d, vlanId: %d, f: %d\n", _id, _vlanId, _failureCount);
-    signal(SIGINT, FTLoggerElement::_signal_handler);
+    signal(SIGINT, signal_handler);
 
     return 0;
 }
 
-void FTLoggerElement::_write_to_file() {
-    std::ofstream ofs(_path.c_str(), std::ofstream::out | std::ofstream::app);
+void FTLoggerElement::write_to_file() {
+    std::ofstream ofs(_log_file.c_str(), std::ofstream::out | std::ofstream::app);
+
+    if (!_file_created) {
+        ofs << "id,timestamp\n";
+        _file_created = true;
+    }//if
+
     for (auto it = _pkt_time.begin(); it != _pkt_time.end(); ++it) {
-        ofs << it->first << " " << it->second << std::endl;
+        ofs << it->first << "," << it->second << std::endl;
     }//for
     ofs.close();
 }
-
-void FTLoggerElement::_signal_handler(int signal) {
-    click_chatter("Interrupt signal (%d) received. Writing packets timestamps to file!", signal);
-    FTLoggerElement::_write_to_file();
-}
-
 
 void FTLoggerElement::push(int port, Packet *p) {
     LOG("------------------------------");
@@ -50,7 +56,7 @@ void FTLoggerElement::push(int port, Packet *p) {
 
     _pkt_time[FTAppenderElement::getPacketId(p)] = std::chrono::high_resolution_clock::now().time_since_epoch().count();
     if (_pkt_time.size() >= _count) {
-        _write_to_file();
+        write_to_file();
         _pkt_time.clear();
     }//if
 

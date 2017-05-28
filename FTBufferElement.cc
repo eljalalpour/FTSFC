@@ -19,8 +19,11 @@ void FTBufferElement::push(int, Packet *p) {
     // Writing the output of the last stage of the chain into the buffer
     FTPacketMBPiggyBackedState states;
 
+    click_chatter("1: %llu", p);
     FTPacketId pid1 = FTAppenderElement::getPacketId(p);
+    click_chatter("2: %llu", p);
     WritablePacket *q = FTAppenderElement::decodeStatesRetPacket(p, states);
+    click_chatter("3: %llu", p);
     FTPacketId pid2 = FTAppenderElement::getPacketId(p);
 
     FTPacketId packetId = FTAppenderElement::getPacketId(q);

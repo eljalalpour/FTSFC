@@ -18,8 +18,15 @@ void FTBufferElement::push(int, Packet *p) {
 
     // Writing the output of the last stage of the chain into the buffer
     FTPacketMBPiggyBackedState states;
+
+    FTPacketId pid1 = FTAppenderElement::getPacketId(p);
     WritablePacket *q = FTAppenderElement::decodeStatesRetPacket(p, states);
+    FTPacketId pid2 = FTAppenderElement::getPacketId(p);
+
     FTPacketId packetId = FTAppenderElement::getPacketId(q);
+
+    click_chatter("1: %llu, 2: %llu, 3: %llu", pid1, pid2, packetId);
+
     DEBUG("Packet %llu with the size of %d (packet + state is %d) pushed to buffer",
           packetId, q->length(), p->length());
 

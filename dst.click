@@ -1,5 +1,7 @@
 require(package "FTSFC");
 
--> CheckIPHeader(18)
--> FTLoggerElement(src.2000.txt, 22)
--> ToDevice(p1);
+-> FromDevice(p1)
+-> VLANDecap()
+-> CheckIPHeader(14)
+-> FTLoggerElement(dst.txt)
+-> ToDump(dst.pcap);

@@ -41,7 +41,7 @@ void FTBufferElement::push(int, Packet *p) {
     DEBUG("Packet %llu with size %d sent to the beginning of the chain (on port %d)!",
           packetId, p->length(), TO_CHAIN_BEGIN);
     output(TO_CHAIN_BEGIN).push(p);
-    p->kill();
+//    p->kill();
 
     DEBUG("After Pushing packet %llu", packetId);
 
@@ -75,7 +75,7 @@ void FTBufferElement::push(int, Packet *p) {
             click_chatter("packet %llu with the size of %d is going to be released", oldPacketId, qq->length());
             output(TO_OUTSIDE_WORLD).push(qq);
 
-            qq->kill();
+//            qq->kill();
             _packets.erase(oldPacketId);
 
 //            released_packets.push_back(oldPacketId);

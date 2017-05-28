@@ -51,7 +51,6 @@ void FTLoggerElement::write_to_file() {
         ofs << "id,timestamp\n";
         _file_created = true;
     }//if
-    click_chatter("size: %d", _pkt_time.size());
     for (auto it = _pkt_time.begin(); it != _pkt_time.end(); ++it) {
         ofs << it->first << "," << it->second << std::endl;
     }//for
@@ -63,8 +62,6 @@ Packet* FTLoggerElement::simple_action(Packet* p) {
     LOG("Begin FTLoggerElement");
 
     auto id = FTAppenderElement::getPacketId(p);
-    click_chatter("id : %llu", id);
-
     _pkt_time[id] = std::chrono::high_resolution_clock::now().time_since_epoch().count();
     if (_pkt_time.size() >= _count) {
         write_to_file();

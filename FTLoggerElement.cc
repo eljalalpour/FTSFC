@@ -2,6 +2,7 @@
 #include <click/config.h>
 #include <click/args.hh>
 #include <fstream>
+#include <csignal>
 #include "FTAppenderElement.hh"
 
 CLICK_DECLS
@@ -9,16 +10,18 @@ CLICK_DECLS
 FTLoggerElement* logger;
 
 void signal_handler(int signal) {
-    LOG("Interrupt signal (%d) received. Writing packets timestamps to file!", signal);
+    DEBUG("Interrupt signal (%d) received. Writing packets timestamps to file!", signal);
+    DEBUG("Writing %llu packets", logger->num_packets());
     logger->write_to_file();
     exit(signal);
 }
 
 FTLoggerElement::FTLoggerElement() {
-    logger = this;
     _file_created = false;
-    _count = std::numeric_limits<double>::infinity();
+    _count = COUNT_DEF_VAL;
     _ip_offset = IP_OFFSET_DEF_VAL;
+
+    logger = this;
 }
 
 FTLoggerElement::~FTLoggerElement() { }
@@ -48,27 +51,33 @@ void FTLoggerElement::write_to_file() {
         ofs << "id,timestamp\n";
         _file_created = true;
     }//if
-
+    click_chatter("size: %d", _pkt_time.size());
     for (auto it = _pkt_time.begin(); it != _pkt_time.end(); ++it) {
         ofs << it->first << "," << it->second << std::endl;
     }//for
     ofs.close();
 }
 
-void FTLoggerElement::push(int port, Packet *p) {
+Packet* FTLoggerElement::simple_action(Packet* p) {
     LOG("------------------------------");
     LOG("Begin FTLoggerElement");
 
-    _pkt_time[FTAppenderElement::getPacketId(p, _ip_offset)] = std::chrono::high_resolution_clock::now().time_since_epoch().count();
+    auto id = FTAppenderElement::getPacketId(p);
+    click_chatter("id : %llu", id);
+
+    _pkt_time[id] = std::chrono::high_resolution_clock::now().time_since_epoch().count();
     if (_pkt_time.size() >= _count) {
         write_to_file();
         _pkt_time.clear();
     }//if
 
-    output(0).push(p);
-
     LOG("End FTLoggerElement");
     LOG("------------------------------");
+    return p;
+}
+
+size_t FTLoggerElement::num_packets() {
+    return _pkt_time.size();
 }
 
 CLICK_ENDDECLS

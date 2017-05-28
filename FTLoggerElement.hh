@@ -9,7 +9,7 @@ CLICK_DECLS
 #define IP_OFFSET     "OFFSET"
 #define LOG_FILE_CONF "PATH"
 #define COUNT_CONF    "COUNT"
-#define COUNT_DEF_VAL std::numeric_limits<double>::infinity()
+#define COUNT_DEF_VAL LLONG_MAX
 #define IP_OFFSET_DEF_VAL 14
 
 /**
@@ -35,7 +35,8 @@ public:
     const char *port_count() const { return PORTS_1_1; }
     const char *processing() const { return AGNOSTIC; }
 
-    void push(int, Packet *p);
+    Packet* simple_action(Packet* p);
+    size_t num_packets();
 };
 
 CLICK_ENDDECLS

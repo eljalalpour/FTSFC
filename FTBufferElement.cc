@@ -41,6 +41,8 @@ void FTBufferElement::push(int, Packet *p) {
     DEBUG("Packet %llu with size %d sent to the beginning of the chain (on port %d)!",
           packetId, p->length(), TO_CHAIN_BEGIN);
     output(TO_CHAIN_BEGIN).push(p);
+    p->kill();
+
     DEBUG("After Pushing packet %llu", packetId);
 
 //    vector<FTPacketId> released_packets;

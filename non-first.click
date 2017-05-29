@@ -1,7 +1,7 @@
 require(package "FTSFC");
 
 FromDevice(p0)
-->FTFilterElement(5, 8)
+->FTFilterElement(5)
 ->CheckIPHeader(18)
 ->VLANDecap
 ->CheckIPHeader(14) 

@@ -19,16 +19,11 @@ void FTBufferElement::push(int, Packet *p) {
     // Writing the output of the last stage of the chain into the buffer
     FTPacketMBPiggyBackedState states;
 
-    click_chatter("1: %llu", p);
     FTPacketId pid1 = FTAppenderElement::getPacketId(p);
-    click_chatter("2: %llu", p);
     WritablePacket *q = FTAppenderElement::decodeStatesRetPacket(p, states);
-    click_chatter("3: %llu", p);
     FTPacketId pid2 = FTAppenderElement::getPacketId(p);
 
     FTPacketId packetId = FTAppenderElement::getPacketId(q);
-
-    click_chatter("1: %llu, 2: %llu, 3: %llu", pid1, pid2, packetId);
 
     DEBUG("Packet %llu with the size of %d (packet + state is %d) pushed to buffer",
           packetId, q->length(), p->length());
@@ -72,7 +67,7 @@ void FTBufferElement::push(int, Packet *p) {
             }//if
 
             Packet *qq = item->second;
-            click_chatter("packet %llu with the size of %d is going to be released", oldPacketId, qq->length());
+            DEBUG("packet %llu with the size of %d is going to be released", oldPacketId, qq->length());
             output(TO_OUTSIDE_WORLD).push(qq);
 
 //            qq->kill();

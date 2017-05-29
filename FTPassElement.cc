@@ -9,46 +9,46 @@ FTPassElement::FTPassElement() { }
 FTPassElement::~FTPassElement() { }
 
 void FTPassElement::push(int port, Packet *p) {
-    click_chatter("------------------------------");
-    click_chatter("Begin FTPassElement - push");
+    LOG("------------------------------");
+    LOG("Begin FTPassElement - push");
 
     const click_ether_vlan *vlan = reinterpret_cast<const click_ether_vlan *>(p->data());
     VLANId vlan_id = (ntohs(vlan->ether_vlan_tci) & 0xFFF);
-    click_chatter("Port: %d, VLAN_ID: %d", port, vlan_id);
+    LOG("Port: %d, VLAN_ID: %d", port, vlan_id);
 
-    click_chatter("End FTPassElement - push");
-    click_chatter("------------------------------");
+    LOG("End FTPassElement - push");
+    LOG("------------------------------");
     //TODO: change port back to zero
     output(0).push(p);
 }
 
 Packet* FTPassElement::simple_action(Packet* p) {
-    click_chatter("------------------------------");
-    click_chatter("Begin FTPassElement - Simple action");
+    LOG("------------------------------");
+    LOG("Begin FTPassElement - Simple action");
 
     const click_ether_vlan *vlan = reinterpret_cast<const click_ether_vlan *>(p->data());
     VLANId vlan_id = (ntohs(vlan->ether_vlan_tci) & 0xFFF);
-    click_chatter("VLAN_ID: %d", vlan_id);
+    LOG("VLAN_ID: %d", vlan_id);
 
-    click_chatter("End FTPassElement - Simple action");
-    click_chatter("------------------------------");
+    LOG("End FTPassElement - Simple action");
+    LOG("------------------------------");
     return p;
 }
 
 Packet* FTPassElement::pull(int port) {
-    click_chatter("------------------------------");
-    click_chatter("Begin FTPassElement - pull");
+    LOG("------------------------------");
+    LOG("Begin FTPassElement - pull");
 
     Packet *p = input(port).pull();
 
     const click_ether_vlan *vlan = reinterpret_cast<const click_ether_vlan *>(p->data());
     VLANId vlan_id = (ntohs(vlan->ether_vlan_tci) & 0xFFF);
 
-    click_chatter("VLAN_ID: %d", vlan_id);
+    LOG("VLAN_ID: %d", vlan_id);
 
     //TODO: change port back to zero
-    click_chatter("End FTPassElement - pull");
-    click_chatter("------------------------------");
+    LOG("End FTPassElement - pull");
+    LOG("------------------------------");
 
     return p;
 }

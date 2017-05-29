@@ -12,10 +12,10 @@ CLICK_DECLS
 
 class FTBufferElement: public Element {
 private:
-    map<FTPacketId, Packet * > _packets;
+    unordered_map<FTPacketId, Packet * > _packets;
     int _all;
     int _released;
-    map<FTPacketId, int> _checked_to_release;
+    unordered_map<FTPacketId, int> _checked_to_release;
 
 public:
     FTBufferElement();

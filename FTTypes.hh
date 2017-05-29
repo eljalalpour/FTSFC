@@ -3,7 +3,7 @@
 #include <boost/archive/binary_oarchive.hpp>
 #include <boost/archive/binary_iarchive.hpp>
 #include <boost/serialization/vector.hpp>
-#include <boost/serialization/map.hpp>
+#include <boost/serialization/unordered_map.hpp>
 #include <boost/serialization/nvp.hpp>
 #include <string>
 #include <sstream>
@@ -11,7 +11,7 @@
 #include <chrono>
 
 
-using std::map;
+using std::unordered_map;
 using std::vector;
 using std::string;
 using std::stringstream;
@@ -51,20 +51,20 @@ typedef uint16_t VLANId;
 typedef uint8_t FTMBId;
 
 // FTState type represents the state of a MB as a key value store
-typedef map<string, string> FTState;
+typedef unordered_map<string, string> FTState;
 
 // FTModified shows if a variable has been modified
-typedef map<string, bool> FTModified;
+typedef unordered_map<string, bool> FTModified;
 
 // FTMBStates type represents the state of a MB with id FTMBId
-typedef map<FTMBId, FTState> FTMBStates;
+typedef unordered_map<FTMBId, FTState> FTMBStates;
 
 // FTPacketMBState type represents the state changes that a packet has caused in a set of MBs
-typedef map<FTPacketId, FTMBStates> FTPacketMBState;
+typedef unordered_map<FTPacketId, FTMBStates> FTPacketMBState;
 
-typedef map<string, FTTimestamp> FTKeyTimestamp;
+typedef unordered_map<string, FTTimestamp> FTKeyTimestamp;
 
-typedef map<FTMBId, FTKeyTimestamp> FTMBKeyTimestamp;
+typedef unordered_map<FTMBId, FTKeyTimestamp> FTMBKeyTimestamp;
 
 class FTPiggyBackedState {
     friend class boost::serialization::access;
@@ -116,10 +116,10 @@ public:
 };
 
 // FTMBStates type represents the state of a MB with id FTMBId
-typedef map<FTMBId, FTPiggyBackedState> FTMBPiggyBackedState;
+typedef unordered_map<FTMBId, FTPiggyBackedState> FTMBPiggyBackedState;
 
 // FTPacketMBState type represents the state changes that a packet has caused in a set of MBs
-typedef map<FTPacketId, FTMBPiggyBackedState> FTPacketMBPiggyBackedState;
+typedef unordered_map<FTPacketId, FTMBPiggyBackedState> FTPacketMBPiggyBackedState;
 
 //void difference(FTMBId mbId, FTMBPiggyBackedState& first, FTMBPiggyBackedState& second) {
 //    FTPiggyBackedState::difference(first[mbId], second[mbId]);

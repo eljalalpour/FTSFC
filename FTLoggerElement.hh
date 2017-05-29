@@ -17,7 +17,7 @@ CLICK_DECLS
  */
 class FTLoggerElement: public Element {
 private:
-    map<FTPacketId, FTTimestamp> _pkt_time;
+    unordered_map<FTPacketId, FTTimestamp> _pkt_time;
     String _log_file;
     long long _count;
     int _ip_offset;

@@ -1,5 +1,4 @@
 require(package "FTSFC");
-
 FromDevice(p0)
 ->FTFilterElement(6)
 ->CheckIPHeader(18)

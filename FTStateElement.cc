@@ -35,10 +35,10 @@ void FTStateElement::push(int source, Packet *p) {
             replicate();
 
             //TODO: to remove begin
-            DEBUG("Temp size after replication: %d", _temp.size());
-            if (_temp.size() > 0) {
-                FTAppenderElement::printState(_temp);
-            }//if
+//            DEBUG("Temp size after replication: %d", _temp.size());
+//            if (_temp.size() > 0) {
+//                FTAppenderElement::printState(_temp);
+//            }//if
             //TODO: to remove end
 
             p->kill();
@@ -83,7 +83,8 @@ void FTStateElement::push(int source, Packet *p) {
         WritablePacket *q = FTAppenderElement::encodeStates(p, _temp);
         DEBUG("Packet size: %d\n", q->length());
         DEBUG("State going to the next middlebox (state size is %d):", _temp.size());
-        FTAppenderElement::printState(_temp);
+
+//        FTAppenderElement::printState(_temp);
 
         p->kill();
 
@@ -153,7 +154,8 @@ void FTStateElement::commit(FTMBId MBId, FTTimestamp timestamp) {
 
     // If a log is found, commit this log, and erase this log and all previous ones
     if (index >= 0) {
-        FTAppenderElement::printState(log_mb_item->second[index]);
+//        FTAppenderElement::printState(log_mb_item->second[index]);
+
         _committed[MBId].timestamp = timestamp;
 
         for (auto it = log_mb_item->second[index].begin(); it != log_mb_item->second[index].end(); ++it) {

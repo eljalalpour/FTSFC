@@ -37,7 +37,8 @@ void FTBufferElement::push(int, Packet *p) {
     DEBUG("Packet with the size of %d (packet + state is %d) pushed to buffer",
           q->length(), p->length());
 
-    FTAppenderElement::printState(msg);
+//    FTAppenderElement::printState(msg);
+
     auto lts = last_timestamp(msg);
     _packets[lts] = q;
 

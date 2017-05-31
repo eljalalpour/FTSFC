@@ -35,7 +35,9 @@ void FTAppenderElement::push(int source, Packet *p) {
     if (vlan_id == _first_vlan) {
         DEBUG("Receiving packet with size %d from the source!", p->length());
         DEBUG("state on the packet going to state-element");
-        printState(_temp);
+
+//        printState(_temp);
+
         WritablePacket *q = encodeStates(p, _temp);
         _temp.clear();
 
@@ -47,7 +49,7 @@ void FTAppenderElement::push(int source, Packet *p) {
         FTPiggyBackMessage msg;
         decodeStates(p, msg);
 
-        printState(msg);
+//        printState(msg);
 
         append(msg);
 
@@ -204,6 +206,12 @@ FTPacketId FTAppenderElement::getPacketId(Packet *p, int ip_offset) {
 }
 
 void FTAppenderElement::printState(FTState &state) {
+    #ifndef DEBUG
+    #ifndef LOG
+        return;
+    #endif
+    #endif
+
     LOG("State size is %u", state.size());
     for (auto it = state.begin(); it != state.end(); ++it) {
         DEBUG("%s: %s", it->first.c_str(), it->second.c_str());
@@ -211,17 +219,34 @@ void FTAppenderElement::printState(FTState &state) {
 }
 
 void FTAppenderElement::printState(FTTimestampState &ft_state) {
+#ifndef DEBUG
+    #ifndef LOG
+        return;
+    #endif
+#endif
+
     DEBUG("Timestamp %llu:", ft_state.timestamp);
     printState(ft_state.state);
 }
 
 void FTAppenderElement::printState(FTPiggyBackState &state) {
+#ifndef DEBUG
+    #ifndef LOG
+        return;
+    #endif
+#endif
     DEBUG("Ack is %d, last commit is %llu",
           state.ack, state.last_commit);
     printState(state.state);
 }
 
 void FTAppenderElement::printState(FTPiggyBackMessage &msg) {
+#ifndef DEBUG
+    #ifndef LOG
+        return;
+    #endif
+#endif
+
     for (auto i = msg.begin(); i != msg.end(); ++i) {
         DEBUG("\nState of middlebox %u", i->first);
         printState(i->second);

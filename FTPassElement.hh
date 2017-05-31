@@ -17,12 +17,10 @@ public:
 
     const char *class_name() const { return "FTPassElement"; }
     //TODO: change PORTS_2_2 back to PORTS_2_1
-    const char *port_count() const { return PORTS_2_1; }
+    const char *port_count() const { return PORTS_2_2; }
     const char *processing() const { return AGNOSTIC; }
 
     void push(int, Packet *p);
-//    Packet*  pull(int);
-//    Packet* simple_action(Packet* p);
 };
 
 CLICK_ENDDECLS

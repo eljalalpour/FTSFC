@@ -5,7 +5,6 @@
 #include <click/element.hh>
 #include <clicknet/tcp.h>
 #include <boost/archive/archive_exception.hpp>
-#include <mutex>
 
 #define FROM_DUMP 0
 #define FROM_TO_DEVICE 1
@@ -19,8 +18,7 @@ CLICK_DECLS
 
 class FTAppenderElement : public Element {
 private:
-    FTPacketMBPiggyBackedState _temp;
-//    std::mutex _mutex;
+    FTPiggyBackMessage _temp;
     VLANId _first_vlan;
 
 public:
@@ -38,21 +36,21 @@ public:
 
     void push(int source, Packet *p);
 
-    void append(FTPacketMBPiggyBackedState state);
+    void append(FTPiggyBackMessage state);
 
-    static void serializePiggyBacked(FTPacketMBPiggyBackedState &pbStates, stringstream &ss);
+    static void serializePiggyBacked(FTPiggyBackMessage &pbStates, stringstream &ss);
 
-    static void deserializePiggyBacked(stringstream &ss, FTPacketMBPiggyBackedState &piggyBackedStates);
+    static void deserializePiggyBacked(stringstream &ss, FTPiggyBackMessage &piggyBackedStates);
 
-    static void deserializePiggyBacked(string& states, FTPacketMBPiggyBackedState &piggyBackedStates);
+    static void deserializePiggyBacked(string& states, FTPiggyBackMessage &piggyBackedStates);
 
-    static void serialize(FTMBStates &state, stringstream &ss);
+    static void serialize(FTPiggyBackState &state, stringstream &ss);
 
-    static void serialize(FTState &state, stringstream &ss);
+    static void serialize(FTTimestampState &state, stringstream &ss);
 
-    static void deserialize(stringstream &ss, FTMBStates &state);
+    static void deserialize(stringstream &ss, FTPiggyBackState &state);
 
-    static void deserialize(stringstream &ss, FTState &state);
+    static void deserialize(stringstream &ss, FTTimestampState &state);
 
     static int  payloadOffset(Packet *p);
 
@@ -60,19 +58,19 @@ public:
     /// \param p The packet
     /// \param piggyBackedState The state that is being piggybacked
     /// \return an encoded packet
-    static WritablePacket *encodeStates(Packet *p, FTPacketMBPiggyBackedState &piggyBackedState);
+    static WritablePacket *encodeStates(Packet *p, FTPiggyBackMessage& msg);
 
     /// Decode the states from the packet
     /// \param p The packet
     /// \param piggyBackedState The state that is being piggybacked
     /// \return the location of the payload
-    static int decodeStates(Packet *p, FTPacketMBPiggyBackedState &piggyBackedState);
+    static int decodeStates(Packet *p, FTPiggyBackMessage &piggyBackedState);
 
     /// Decode the states from the packet and return a packet without the state
     /// \param p The packet
     /// \param piggyBackedState The state that is being piggybacked
     /// \return The packet without the state
-    static WritablePacket* decodeStatesRetPacket(Packet *p, FTPacketMBPiggyBackedState &piggyBackedState);
+    static WritablePacket* decodeStatesRetPacket(Packet *p, FTPiggyBackMessage &piggyBackedState);
 
     /// Compress @arg data and write the compression result into @param buffer
     /// \param data To be compressed
@@ -87,18 +85,14 @@ public:
     /// Serialize and compress state
     /// \param state The state to be encoded
     /// \param buffer The encoded byte stream
-    static void encode(FTState& state, string& buffer);
+    static void encode(FTTimestampState& state, string& buffer);
 
     /// Deserialize and decompress state
     /// \param data The compressed serialized state
     /// \param state The state
-    static void decode(const string& data, FTState& state);
+    static void decode(const string& data, FTTimestampState& state);
 
-    static void decode(const char* data, int size, FTState& state);
-
-    static void decode(const string& data, FTPacketMBPiggyBackedState& state);
-
-    static void decode(const char* data, int size, FTPacketMBPiggyBackedState& state);
+    static void decode(const char* data, int size, FTTimestampState& state);
 
     /// Get a unique identifier for a packet
     /// \param p The packet
@@ -107,8 +101,9 @@ public:
 
     // TODO: remove this function
     static void printState(FTState &state);
-    static void printState(FTPiggyBackedState &state);
-    static void printState(FTPacketMBPiggyBackedState &state);
+    static void printState(FTTimestampState &state);
+    static void printState(FTPiggyBackState &state);
+    static void printState(FTPiggyBackMessage &state);
 };
 
 CLICK_ENDDECLS

@@ -11,15 +11,14 @@
 #include <chrono>
 #include <unordered_map>
 
-
 using std::map;
 using std::unordered_map;
 using std::vector;
 using std::string;
 using std::stringstream;
 
-//#define ENABLE_DEBUG 1
-//#define ENABLE_LOG   1
+#define ENABLE_DEBUG 1
+#define ENABLE_LOG   1
 
 #ifdef ENABLE_DEBUG
     #define DEBUG(...) click_chatter(__VA_ARGS__)
@@ -38,6 +37,8 @@ using std::stringstream;
 #define PORTS_1_2 "1/2"
 
 #define MB_ID_MAX 512
+
+#define CURRENT_TIMESTAMP std::chrono::high_resolution_clock::now().time_since_epoch().count()
 
 #define MAKE_UNIQUE_PACKET_ID(IP_OFFSET, IP_ID, SEQ_NUM) (((uint64_t)IP_OFFSET) << 48) | (((uint64_t)IP_ID) << 32) | ((uint64_t)SEQ_NUM)
 
@@ -58,103 +59,203 @@ typedef map<string, string> FTState;
 // FTModified shows if a variable has been modified
 typedef map<string, bool> FTModified;
 
-// FTMBStates type represents the state of a MB with id FTMBId
-typedef map<FTMBId, FTState> FTMBStates;
-
-// FTPacketMBState type represents the state changes that a packet has caused in a set of MBs
-typedef map<FTPacketId, FTMBStates> FTPacketMBState;
-
-typedef map<string, FTTimestamp> FTKeyTimestamp;
-
-typedef map<FTMBId, FTKeyTimestamp> FTMBKeyTimestamp;
-
-class FTPiggyBackedState {
+class FTTimestampState {
     friend class boost::serialization::access;
-
 public:
-    uint8_t ack;
-    bool commit;
-    FTTimestamp timestamp;
     FTState state;
+    FTTimestamp timestamp;
+
+    FTTimestampState() : timestamp(0) { }
+
+    void set_timestamp() {
+        this->timestamp = CURRENT_TIMESTAMP;
+    }
+
+    string& operator[] (const string& index) {
+        return state[index];
+    }
 
     template<class Archive>
     void serialize(Archive &ar, const unsigned int) {
-        ar & commit & ack & timestamp & BOOST_SERIALIZATION_NVP(state);
+        ar & timestamp & BOOST_SERIALIZATION_NVP(state);
     }
 
-    void serialize(FTPiggyBackedState &pbState, stringstream &ss) {
+    void serialize(FTTimestampState& ts_state, stringstream& ss) {
         boost::archive::binary_oarchive oa(ss);
-        oa << pbState;
+        oa << ts_state;
     }
 
-    void deserialize(stringstream &ss, FTPiggyBackedState &pbState) {
+    void deserialize(stringstream& ss, FTTimestampState& ts_state) {
         boost::archive::binary_iarchive ia(ss);
-        ia >> pbState;
+        ia >> ts_state;
     }
 
-    void setTimeStamp() {
-        this->timestamp = std::chrono::high_resolution_clock::now().time_since_epoch().count();
-    }
+    void time_union(FTTimestampState& st_state) {
+        if (st_state.timestamp < timestamp)
+            return;
 
-    /// Perform minus operation and the state of @param first and the state of @param second (@param first=@param first-@param second)
-    /// \param first
-    /// \param second
-    static void difference(FTPiggyBackedState& first, FTPiggyBackedState& second) {
-        for (auto it = second.state.begin(); it != second.state.end(); ++it) {
-            auto item = first.state.find(it->first);
-            if (item != first.state.end())
-                first.state.erase(item);
+        for (auto it = st_state.begin(); it != st_state.end(); ++it) {
+            (*this)[it->first] = it->second;
         }//for
+        timestamp = st_state.timestamp;
     }
 
-    /// Perform minus operation and the state of @param first and the state of @param second (@param result=@param first-@param second)
-    /// \param first
-    /// \param second
-    /// \param result
-    static void difference(FTPiggyBackedState& first, FTPiggyBackedState& second, FTPiggyBackedState& result) {
-        result = first;
-        difference(result, second);
+    FTState::iterator begin() {
+        return state.begin();
+    }
+
+    FTState::iterator end() {
+        return state.end();
     }
 };
 
-// FTMBStates type represents the state of a MB with id FTMBId
-typedef map<FTMBId, FTPiggyBackedState> FTMBPiggyBackedState;
+class FTPiggyBackState: public FTTimestampState {
+    friend class boost::serialization::access;
+public:
+    uint8_t ack;
+    FTTimestamp last_commit;
 
-// FTPacketMBState type represents the state changes that a packet has caused in a set of MBs
-typedef map<FTPacketId, FTMBPiggyBackedState> FTPacketMBPiggyBackedState;
+    void set_last_commit() {
+        this->last_commit = CURRENT_TIMESTAMP;
+    }
 
-//void difference(FTMBId mbId, FTMBPiggyBackedState& first, FTMBPiggyBackedState& second) {
-//    FTPiggyBackedState::difference(first[mbId], second[mbId]);
-//}
+    template<class Archive>
+    void serialize(Archive &ar, const unsigned int) {
+        ar & last_commit & ack & timestamp & BOOST_SERIALIZATION_NVP(state);
+    }
+
+    void serialize(FTPiggyBackState& pb_state, stringstream& ss) {
+        boost::archive::binary_oarchive oa(ss);
+        oa << pb_state;
+    }
+
+    void deserialize(stringstream& ss, FTPiggyBackState& pb_state) {
+        boost::archive::binary_iarchive ia(ss);
+        ia >> pb_state;
+    }
+
+    void set_state(FTTimestampState& ts_state) {
+        state = ts_state.state;
+        timestamp = ts_state.timestamp;
+    }
+};
+
+typedef vector<FTTimestampState> FTTimestampStateList;
+
+typedef map<FTMBId, FTTimestampStateList> FTLog;
+
+typedef map<FTMBId, FTTimestampState> FTCommitted;
+
+typedef map<FTMBId, FTPiggyBackState> FTPiggyBackMessage;
+
+//class FTCommitted {
+//    friend class boost::serialization::access;
+//private:
+//    map<FTMBId, FTTimestampState> ts_states;
 //
-//void difference(FTMBPiggyBackedState& first, FTMBPiggyBackedState& second) {
-//    for (auto it = second.begin(); it != second.end(); ++it) {
-//        FTMBId mbId = it->first;
-//        auto inFirst = first.find(mbId);
-//        if (inFirst != first.end())
-//            FTPiggyBackedState::difference(inFirst->second, second[mbId]);
-//    }//for
-//}
+//public:
+//    template<class Archive>
+//    void serialize(Archive &ar, const unsigned int) {
+//        ar & BOOST_SERIALIZATION_NVP(ts_states);
+//    }
 //
-//void difference(FTMBId mbId, FTPacketMBPiggyBackedState& first, FTPacketMBPiggyBackedState& second) {
-//    for (auto it = first.begin(); it != first.end(); ++it) {
-//        for (auto it2 = second.begin(); it2 != second.end(); ++it2) {
-//            difference(mbId, it->second, it2->second);
-//        }//for
-//    }//for
-//}
+//    void serialize(FTCommitted& committed, stringstream& ss) {
+//        boost::archive::binary_oarchive oa(ss);
+//        oa << committed;
+//    }
 //
-//void difference(FTMBId mbId, FTPacketMBPiggyBackedState& first, FTPiggyBackedState& second) {
-//    for (auto pkt_it = first.begin(); pkt_it != first.end(); ++pkt_it) {
-//        auto mb_it = pkt_it->second.find(mbId);
-//        if (mb_it == pkt_it->second.end())
-//            continue;
+//    void deserialize(stringstream& ss, FTCommitted& committed) {
+//        boost::archive::binary_iarchive ia(ss);
+//        ia >> committed;
+//    }
 //
-//        FTPiggyBackedState::difference(mb_it->second, second);
-//    }//for
-//}
+//    FTTimestampState& operator[] (const FTMBId& index) {
+//        return ts_states[index];
+//    }
 //
-//void difference(FTMBId mbId, FTPacketMBPiggyBackedState& first, FTPiggyBackedState& second, FTPacketMBPiggyBackedState& result) {
-//    result = first;
-//    difference(mbId, result, second);
-//}
+//    map<FTMBId, FTTimestampState>::iterator find(const FTMBId& index) {
+//        return ts_states.find(index);
+//    };
+//
+//    map<FTMBId, FTTimestampState>::iterator begin() {
+//        return ts_states.begin();
+//    };
+//
+//    map<FTMBId, FTTimestampState>::iterator end() {
+//        return ts_states.end();
+//    };
+//};
+//
+//class FTPiggyBackMessage {
+//    friend class boost::serialization::access;
+//
+//public:
+//    map<FTMBId, FTPiggyBackState> _pb_states;
+//
+//public:
+//    void update(const map<FTMBId, FTPiggyBackState>::iterator& begin,
+//                const map<FTMBId, FTPiggyBackState>::iterator& end) {
+//        for (auto it = begin; it != end; it++)
+//            _pb_states[it->first] = it->second;
+//    }
+//
+//    FTTimestamp last_mb_commit_timestamp() {
+//        return (_pb_states.size() > 0) ?
+//               _pb_states.rbegin()->second.last_commit : 0;
+//    }
+//
+//    FTTimestamp last_mb_timestamp() {
+//        FTTimestamp result = 0;
+//        if (_pb_states.size() > 0)
+//            result = _pb_states.rbegin()->second.timestamp;
+//
+//        return result;
+//    }
+//
+//    template<class Archive>
+//    void serialize(Archive &ar, const unsigned int) {
+//        ar & BOOST_SERIALIZATION_NVP(_pb_states);
+//    }
+//
+//    void serialize(FTPiggyBackMessage& msg, stringstream& ss) {
+//        boost::archive::binary_oarchive oa(ss);
+//        oa << msg;
+//    }
+//
+//    void deserialize(stringstream& ss, FTPiggyBackMessage& msg) {
+//        boost::archive::binary_iarchive ia(ss);
+//        ia >> msg;
+//    }
+//
+//    FTPiggyBackState& operator[] (const FTMBId& index) {
+//        return _pb_states[index];
+//    }
+//
+//    map<FTMBId, FTPiggyBackState>::iterator find(const FTMBId& index) {
+//        return _pb_states.find(index);
+//    };
+//
+//    map<FTMBId, FTPiggyBackState>::iterator begin() {
+//        return _pb_states.begin();
+//    };
+//
+//    map<FTMBId, FTPiggyBackState>::iterator end() {
+//        return _pb_states.end();
+//    };
+//
+//    map<FTMBId, FTPiggyBackState>::reverse_iterator rbegin() {
+//        return _pb_states.rbegin();
+//    };
+//
+//    map<FTMBId, FTPiggyBackState>::reverse_iterator rend() {
+//        return _pb_states.rend();
+//    };
+//
+//    void clear() {
+//        _pb_states.clear();
+//    }
+//
+//    size_t size() {
+//        _pb_states.size();
+//    }
+//};

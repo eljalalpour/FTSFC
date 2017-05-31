@@ -55,7 +55,7 @@ void FTControlElement::put(FTStateElement* se, int conn_fd) {
         LOG("%d ", buffer[i]);
 
     if (size > 0) {
-        FTState state;
+        FTTimestampState state;
         FTAppenderElement::decode(buffer, size, state);
 
 //        FTAppenderElement::printState(state);
@@ -67,19 +67,21 @@ void FTControlElement::put(FTStateElement* se, int conn_fd) {
 void FTControlElement::get(FTStateElement* se, int conn_fd) {
     FTMBId id;
     read(conn_fd, &id, sizeof(FTMBId));
-    FTState state;
-    if (se->getCommittedState(id, state)) {
+    FTTimestampState committed;
+    if (se->getCommittedState(id, committed)) {
 
         string buffer;
-        FTAppenderElement::encode(state, buffer);
+        FTAppenderElement::encode(committed, buffer);
         int size = buffer.size();
         write(conn_fd, &size, sizeof(int));
         write(conn_fd, buffer.c_str(), size);
 
+        //TODO: to remove begin
         LOG("State is (%d): ", buffer.size());
-        FTAppenderElement::printState(state);
+        FTAppenderElement::printState(committed);
         for(int i = 0; i < buffer.size(); i++)
             LOG("%d ", buffer[i]);
+        //TODO: to remove end
     }//if
     else {
         // If there is some error in finding the state, return 0

@@ -30,23 +30,23 @@ public:
     int _failureCount;
     FTState _operationState; // Does not to be initialized
     FTModified _modified;  // Does not to be initialized
-    FTPacketMBPiggyBackedState _log;  // Does not to be initialized
-    FTMBStates _committed; // Must be initialized in the configuration phase
-    FTPacketMBPiggyBackedState _temp; // Does not to be initialized
+    FTLog _log;  // Does not to be initialized
+    FTCommitted _committed; // Must be initialized in the configuration phase
+    FTPiggyBackMessage _temp; // Does not to be initialized
 
-    /// Replicate the states of other middleBoxes and increment the ack value
-    /// \param piggyBackedState
-    void replicateStates();
+    /// Replicate the states of other middleboxes, increment their ack value, and remove the FTState if necessary
+    void replicate();
 
-    void new_replicateStates(FTPacketMBPiggyBackedState temp);
-
-    /// Transfer the states from log to the committed memory and release the log memory
-    /// \param packetId The id of the packet
-    /// \param MBId The id of the middlebox
-    void commit(FTPacketId packetId, FTMBId MBId, FTMBKeyTimestamp& committed_time);
+    /// Commit the states from log to the committed memory if the log entry has a
+    /// timestamp less than @param commit_timestamp. This function also releases the log memory
+    /// \param MBId The middlebox id
+    /// \param commit_timestamp The commit timestamp
+    void commit(FTMBId MBId, FTTimestamp commit_timestamp);
 
     /// Reset the modified map and temp memory for states
     inline void reset();
+
+    void add_to_log(FTMBId mb_id, FTTimestampState& state);
 
 public:
     static const char *GET_CALL_BACK;
@@ -66,9 +66,8 @@ public:
 
     FTStateElement() {
         click_chatter("In FTStateElement Constructor!");
-        FTState tmp1, tmp2;
-        _committed[_id] = tmp1;
-        _operationState = tmp2;
+        _committed[_id] = FTTimestampState();
+        _operationState = FTState();
     }
 
     ~FTStateElement() {}
@@ -83,10 +82,6 @@ public:
 
     //TODO: make sure that the connection type is push
     void push(int source, Packet *p);
-
-    void old_push(int source, Packet *p);
-
-    void new_push(int source, Packet *p);
 
     void rollback();
 
@@ -110,13 +105,13 @@ public:
     /// \param mbId The id of middlebox
     /// \param state The state of middlebox to be set
     /// \return True if the state of middlebox with id @param mbId exists, otherwise false
-    bool getCommittedState(FTMBId mbId, FTState &state);
+    bool getCommittedState(FTMBId mbId, FTTimestampState &state);
 
     /// Put the state @param state to the committed state of middlebox @param mbId
     /// \param mbId The id of middlebox
     /// \param state The state of middlebox
     /// \return True if the state of middlebox with id @param mbId exists, otherwise false
-    bool putCommittedState(FTMBId mbId, const FTState &state);
+    bool putCommittedState(FTMBId mbId, const FTTimestampState &state);
 
     /// Returns the committed state as a string
     /// \param e element object

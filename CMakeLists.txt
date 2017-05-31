@@ -23,14 +23,14 @@ find_library(CLICK_LIB NAMES libclick.a PATHS ${CLICK_LIB_PATH})
 set(SOURCE_FILES
         FTTypes.cc
         FTTypes.hh
-#        FTAppenderElement.cc
-#        FTAppenderElement.hh
-#        FTStateElement.cc
-#        FTStateElement.hh
-#        FTBufferElement.cc
-#        FTBufferElement.hh
-#        CounterMB.cc
-#        CounterMB.hh
+        FTAppenderElement.cc
+        FTAppenderElement.hh
+        FTStateElement.cc
+        FTStateElement.hh
+        FTBufferElement.cc
+        FTBufferElement.hh
+        CounterMB.cc
+        CounterMB.hh
         main.cpp FTFilterElement.cc FTPassElement.cc FTPassElement.hh Test.cpp Test.h RandomDrop.cpp RandomDrop.h FTFastTCPGen.cc FTFastTCPGen.hh FTSetSeqNum.cc FTSetSeqNum.hh FTLoggerElement.cc FTLoggerElement.hh NFCounterMB.cc NFCounterMB.hh)
 
 add_executable(FTSFC ${SOURCE_FILES})

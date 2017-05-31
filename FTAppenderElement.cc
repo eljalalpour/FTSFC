@@ -46,8 +46,12 @@ void FTAppenderElement::push(int source, Packet *p) {
         DEBUG("Receiving packet from the end of the chain!");
         FTPiggyBackMessage msg;
         decodeStates(p, msg);
+
         printState(msg);
+
         append(msg);
+
+        DEBUG("_temp size is %u", _temp.size());
 
         p->kill();
     }//else

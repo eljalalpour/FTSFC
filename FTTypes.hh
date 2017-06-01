@@ -148,114 +148,46 @@ typedef map<FTMBId, FTTimestampState> FTCommitted;
 
 typedef map<FTMBId, FTPiggyBackState> FTPiggyBackMessage;
 
-//class FTCommitted {
-//    friend class boost::serialization::access;
-//private:
-//    map<FTMBId, FTTimestampState> ts_states;
-//
-//public:
-//    template<class Archive>
-//    void serialize(Archive &ar, const unsigned int) {
-//        ar & BOOST_SERIALIZATION_NVP(ts_states);
-//    }
-//
-//    void serialize(FTCommitted& committed, stringstream& ss) {
-//        boost::archive::binary_oarchive oa(ss);
-//        oa << committed;
-//    }
-//
-//    void deserialize(stringstream& ss, FTCommitted& committed) {
-//        boost::archive::binary_iarchive ia(ss);
-//        ia >> committed;
-//    }
-//
-//    FTTimestampState& operator[] (const FTMBId& index) {
-//        return ts_states[index];
-//    }
-//
-//    map<FTMBId, FTTimestampState>::iterator find(const FTMBId& index) {
-//        return ts_states.find(index);
-//    };
-//
-//    map<FTMBId, FTTimestampState>::iterator begin() {
-//        return ts_states.begin();
-//    };
-//
-//    map<FTMBId, FTTimestampState>::iterator end() {
-//        return ts_states.end();
-//    };
-//};
-//
-//class FTPiggyBackMessage {
-//    friend class boost::serialization::access;
-//
-//public:
-//    map<FTMBId, FTPiggyBackState> _pb_states;
-//
-//public:
-//    void update(const map<FTMBId, FTPiggyBackState>::iterator& begin,
-//                const map<FTMBId, FTPiggyBackState>::iterator& end) {
-//        for (auto it = begin; it != end; it++)
-//            _pb_states[it->first] = it->second;
-//    }
-//
-//    FTTimestamp last_mb_commit_timestamp() {
-//        return (_pb_states.size() > 0) ?
-//               _pb_states.rbegin()->second.last_commit : 0;
-//    }
-//
-//    FTTimestamp last_mb_timestamp() {
-//        FTTimestamp result = 0;
-//        if (_pb_states.size() > 0)
-//            result = _pb_states.rbegin()->second.timestamp;
-//
-//        return result;
-//    }
-//
-//    template<class Archive>
-//    void serialize(Archive &ar, const unsigned int) {
-//        ar & BOOST_SERIALIZATION_NVP(_pb_states);
-//    }
-//
-//    void serialize(FTPiggyBackMessage& msg, stringstream& ss) {
-//        boost::archive::binary_oarchive oa(ss);
-//        oa << msg;
-//    }
-//
-//    void deserialize(stringstream& ss, FTPiggyBackMessage& msg) {
-//        boost::archive::binary_iarchive ia(ss);
-//        ia >> msg;
-//    }
-//
-//    FTPiggyBackState& operator[] (const FTMBId& index) {
-//        return _pb_states[index];
-//    }
-//
-//    map<FTMBId, FTPiggyBackState>::iterator find(const FTMBId& index) {
-//        return _pb_states.find(index);
-//    };
-//
-//    map<FTMBId, FTPiggyBackState>::iterator begin() {
-//        return _pb_states.begin();
-//    };
-//
-//    map<FTMBId, FTPiggyBackState>::iterator end() {
-//        return _pb_states.end();
-//    };
-//
-//    map<FTMBId, FTPiggyBackState>::reverse_iterator rbegin() {
-//        return _pb_states.rbegin();
-//    };
-//
-//    map<FTMBId, FTPiggyBackState>::reverse_iterator rend() {
-//        return _pb_states.rend();
-//    };
-//
-//    void clear() {
-//        _pb_states.clear();
-//    }
-//
-//    size_t size() {
-//        _pb_states.size();
-//    }
-//};
+FTState random_state(int count) {
+    FTState state;
+    for (int i = 0; i < count; i++) {
+        int k = random();
+        int v = random();
+        stringstream ss1, ss2;
+        ss1 << k;
+        ss2 << v;
+
+        state[k] = v;
+    }//for
+    return state;
+}
+
+FTTimestampState random_ts_state(int count) {
+    FTTimestampState ts_state;
+    ts_state.timestamp = CURRENT_TIMESTAMP;
+    ts_state.state = random_state(count);
+
+    return ts_state;
+}
+
+FTPiggyBackState random_piggy_back(int count) {
+    FTPiggyBackState pb_state;
+    pb_state.last_commit = CURRENT_TIMESTAMP;
+
+    FTTimestampState ts_state = random_ts_state(count);
+    pb_state.state = ts_state.state;
+    pb_state.timestamp = ts_state.timestamp;
+    pb_state.ack = 0;
+
+    return pb_state;
+}
+
+FTPiggyBackMessage random_message(int mb_count, int state_count) {
+    FTPiggyBackMessage msg;
+
+    for (int i = 0; i < mb_count; ++i) {
+        msg[i] = random_piggy_back(state_count);
+    }//for
+
+    return msg;
+}

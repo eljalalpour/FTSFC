@@ -28,13 +28,14 @@ Packet *NFCounterMB::simple_action(Packet *p) {
     click_chatter("3");
     WritablePacket* q5 = FTAppenderElement::encodeStates(p, msg1);
     WritablePacket* q6 = FTAppenderElement::encodeStates(p, msg1);
+    WritablePacket* q7 = FTAppenderElement::encodeStates(p, msg1);
     click_chatter("4");
 
     FTPiggyBackMessage msg2, msg3, msg4;
     click_chatter("5");
     FTAppenderElement::decodeStates(q5, msg2);
     FTAppenderElement::decodeStates(q6, msg3);
-    FTAppenderElement::decodeStates(q6, msg4);
+    FTAppenderElement::decodeStates(q7, msg4);
     click_chatter("6");
 
     LOG("End NFCounterMB %d:", _id);

@@ -16,6 +16,13 @@ Packet *NFCounterMB::simple_action(Packet *p) {
 
     _counter++;
 
+    WritablePacket* q1 = p->uniqueify();
+    WritablePacket* q2 = p->uniqueify();
+    WritablePacket* q3 = p->uniqueify();
+    WritablePacket* q4 = p->uniqueify();
+    WritablePacket* q5 = p->uniqueify();
+    WritablePacket* q6 = p->uniqueify();
+
     LOG("End NFCounterMB %d:", _id);
     LOG("--------------------");
 

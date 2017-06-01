@@ -17,10 +17,10 @@ Packet *NFCounterMB::simple_action(Packet *p) {
 
     _counter++;
     
-    WritablePacket* q1 = p->uniqueify();
-    WritablePacket* q2 = p->uniqueify();
-    WritablePacket* q3 = p->uniqueify();
-    WritablePacket* q4 = p->uniqueify();
+//    WritablePacket* q1 = p->uniqueify();
+//    WritablePacket* q2 = p->uniqueify();
+//    WritablePacket* q3 = p->uniqueify();
+//    WritablePacket* q4 = p->uniqueify();
 
     RandomState rs;
     FTPiggyBackMessage msg1 = rs.random_message(2, 1);
@@ -31,7 +31,6 @@ Packet *NFCounterMB::simple_action(Packet *p) {
     FTPiggyBackMessage msg2, msg3, msg4;
     WritablePacket* q8  = FTAppenderElement::encodeStates(q1, msg1);
     WritablePacket* q9  = FTAppenderElement::encodeStates(q2, msg1);
-    WritablePacket* q10 = FTAppenderElement::encodeStates(q3, msg1);
 
     LOG("End NFCounterMB %d:", _id);
     LOG("--------------------");

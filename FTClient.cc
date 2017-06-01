@@ -37,7 +37,8 @@ void* FTClient::_send(void* param) {
     // Wait for the response
     char buffer;
     read(sock, &buffer, sizeof(char));
-
+    close(sock);
+    
     return NULL;
 }
 

@@ -16,21 +16,26 @@ Packet *NFCounterMB::simple_action(Packet *p) {
     LOG("Begin NFCounterMB %d:", _id);
 
     _counter++;
-
+    click_chatter("1");
     WritablePacket* q1 = p->uniqueify();
     WritablePacket* q2 = p->uniqueify();
     WritablePacket* q3 = p->uniqueify();
     WritablePacket* q4 = p->uniqueify();
 
+    click_chatter("2");
     RandomState rs;
     FTPiggyBackMessage msg1 = rs.random_message(2, 1);
+    click_chatter("3");
     WritablePacket* q5 = FTAppenderElement::encodeStates(p, msg1);
     WritablePacket* q6 = FTAppenderElement::encodeStates(p, msg1);
+    click_chatter("4");
 
     FTPiggyBackMessage msg2, msg3, msg4;
+    click_chatter("5");
     FTAppenderElement::decodeStates(q5, msg2);
     FTAppenderElement::decodeStates(q6, msg3);
     FTAppenderElement::decodeStates(q6, msg4);
+    click_chatter("6");
 
     LOG("End NFCounterMB %d:", _id);
     LOG("--------------------");

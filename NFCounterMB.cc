@@ -34,7 +34,9 @@ Packet *NFCounterMB::simple_action(Packet *p) {
     FTPiggyBackMessage msg2, msg3, msg4;
     click_chatter("5");
     FTAppenderElement::decodeStates(q5, msg2);
+    click_chatter("51");
     FTAppenderElement::decodeStates(q6, msg3);
+    click_chatter("52");
     FTAppenderElement::decodeStates(q7, msg4);
     click_chatter("6");
 

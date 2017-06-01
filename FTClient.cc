@@ -2,7 +2,7 @@
 #include <sys/socket.h>
 #include <arpa/inet.h>
 
-FTClient::FTClient(std::vector<string>& ips, std::vector<int>& ports) : _ips(ips), _ports(ports) { }
+FTClient::FTClient(std::vector<string>& ips, std::vector<uint16_t >& ports) : _ips(ips), _ports(ports) { }
 
 void* FTClient::_send(void* param) {
     ServerConn* scp = static_cast<ServerConn*>(param);

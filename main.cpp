@@ -17,10 +17,10 @@ int main(){
 
     // Send state
     vector<string> ips;
-    vector<int> ports;
+    vector<uint16_t> ports;
 
     ips.push_back("127.0.0.1"); ports.push_back(10001);
-    ips.push_back("127.0.0.1"); ports.push_back(10002);
+    //ips.push_back("127.0.0.1"); ports.push_back(10002);
 
     FTClient client(ips, ports);
     client.send(ft_state);

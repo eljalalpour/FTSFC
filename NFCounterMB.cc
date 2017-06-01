@@ -16,9 +16,7 @@ Packet *NFCounterMB::simple_action(Packet *p) {
     LOG("Begin NFCounterMB %d:", _id);
 
     _counter++;
-
-    click_chatter("counter: %u", _counter);
-
+    
     WritablePacket* q1 = p->uniqueify();
     WritablePacket* q2 = p->uniqueify();
     WritablePacket* q3 = p->uniqueify();

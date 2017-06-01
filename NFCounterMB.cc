@@ -22,7 +22,8 @@ Packet *NFCounterMB::simple_action(Packet *p) {
     WritablePacket* q3 = p->uniqueify();
     WritablePacket* q4 = p->uniqueify();
 
-    FTPiggyBackMessage msg1 = random_message(2, 1);
+    RandomState rs;
+    FTPiggyBackMessage msg1 = rs.random_message(2, 1);
     WritablePacket* q5 = FTAppenderElement::encodeStates(p, msg1);
     WritablePacket* q6 = FTAppenderElement::encodeStates(p, msg1);
 

@@ -26,7 +26,7 @@ set(SOURCE_FILES
         FTClient.cc
         FTClient.hh
         main.cpp
-    )
+        TrivialCounterMB.cpp TrivialCounterMB.h TrivialCounterMB.cc TrivialCounterMB.hh)
 
 add_executable(FTSFC ${SOURCE_FILES})
 target_link_libraries(FTSFC ${CLICK_LIB})

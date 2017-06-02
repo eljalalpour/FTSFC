@@ -7,10 +7,13 @@ FTClient::FTClient(std::vector<string>& ips, std::vector<int>& ports) : _ips(ips
 void* FTClient::_send(void* param) {
     ServerConn* scp = static_cast<ServerConn*>(param);
 
+    DEBUG("Connecting to server on port %d", scp->port);
+
     // Serialize state
     stringstream buffer;
     boost::archive::binary_oarchive oa(buffer);
-    oa << scp->ft_timestamp.state;
+
+    oa << scp->ft_timestamp;
 
     // Create socket
     int sock = socket(AF_INET, SOCK_STREAM, 0);
@@ -39,11 +42,12 @@ void* FTClient::_send(void* param) {
     char c;
     read(sock, &c, sizeof(char));
     close(sock);
+    DEBUG("Read from socket: %c", c);
 
     return NULL;
 }
 
-bool FTClient::send(FTTimestampState& ft_timestamp) {
+bool FTClient::send(FTTimestampState ft_timestamp) {
     pthread_attr_t attr;
     void *status;
 
@@ -52,24 +56,28 @@ bool FTClient::send(FTTimestampState& ft_timestamp) {
     pthread_attr_setdetachstate(&attr, PTHREAD_CREATE_JOINABLE);
 
     for (size_t i = 0; i < _ips.size(); ++i) {
-        ServerConn conn;
-        conn.ft_timestamp = ft_timestamp;
-        conn.ip = _ips[i];
-        conn.port = _ports[i];
+        ServerConn *conn = new ServerConn();
+        conn->ft_timestamp.timestamp = ft_timestamp.timestamp;
+        conn->ft_timestamp.state = ft_timestamp.state;
+        conn->ip = _ips[i];
+        conn->port = _ports[i];
 
         pthread_t thread;
-        if(!pthread_create(&thread, &attr, _send, (void *)&conn)) {
+        if(pthread_create(&thread, &attr, _send, (void *)conn)) {
+            DEBUG("Error on creating a thread for the server on %s:%d", conn->ip.c_str(), conn->port);
             goto CLEANUP;
         }//if
         _threads.push_back(thread);
-    }
+    }//for
 
     // free attribute and wait for the other threads
     pthread_attr_destroy(&attr);
 
     for(size_t i = 0; i < _ips.size(); ++i) {
-        if (!pthread_join(_threads[i], &status))
+        if (pthread_join(_threads[i], &status)) {
+            DEBUG("Error on joining the thread on %s:%d", _ips[i].c_str(), _ports[i]);
             goto CLEANUP;
+        }//if
     }//for
 
 CLEANUP:

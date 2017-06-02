@@ -18,8 +18,7 @@ private:
     std::vector<int> _ports;
 
     static void* _send(void* param);
-
 public:
     FTClient(std::vector<string>& ips, std::vector<int>& ports);
-    bool send(FTTimestampState& ft_timestamp);
+    bool send (FTTimestampState ft_timestamp);
 };

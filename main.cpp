@@ -20,7 +20,7 @@ int main(){
     vector<int> ports;
 
     ips.push_back("127.0.0.1"); ports.push_back(10001);
-    ips.push_back("127.0.0.1"); ports.push_back(10002);
+//    ips.push_back("127.0.0.1"); ports.push_back(10002);
 
     FTClient client(ips, ports);
     client.send(ft_state);

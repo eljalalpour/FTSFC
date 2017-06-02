@@ -1,11 +1,16 @@
 #include "FTClient.hh"
-#include <sys/socket.h>
+#include "FTAppenderElement.hh"
 #include <arpa/inet.h>
 
 FTClient::FTClient(std::vector<string>& ips, std::vector<int>& ports) : _ips(ips), _ports(ports) { }
 
 void* FTClient::_send(void* param) {
     ServerConn* scp = static_cast<ServerConn*>(param);
+
+    // Serialize state
+    stringstream buffer;
+    boost::archive::binary_oarchive oa(buffer);
+    oa << scp->ft_timestamp.state;
 
     // Create socket
     int sock = socket(AF_INET, SOCK_STREAM, 0);
@@ -25,20 +30,16 @@ void* FTClient::_send(void* param) {
         return NULL;
     }//if
 
-    // Serialize state
-    stringstream state;
-    scp->ft_timestamp.serialize(scp->ft_timestamp, state);
-
     // Send state
-    size_t size = state.str().size();
+    size_t size = buffer.str().size();
     write(sock, &size, sizeof(size_t));
-    write(sock, state.str().c_str(), size);
+    write(sock, buffer.str().c_str(), size);
 
     // Wait for the response
-    char buffer;
-    read(sock, &buffer, sizeof(char));
+    char c;
+    read(sock, &c, sizeof(char));
     close(sock);
-    
+
     return NULL;
 }
 

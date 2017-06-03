@@ -12,10 +12,12 @@ CLICK_DECLS
 
 class FTBufferElement: public Element {
 private:
-    map<FTPacketId, Packet * > _packets;
-    int _all;
-    int _released;
-    map<FTPacketId, int> _checked_to_release;
+    map<FTTimestamp, Packet *> _packets;
+
+    FTTimestamp last_timestamp       (FTPiggyBackMessage& msg);
+    FTTimestamp last_commit_timestamp(FTPiggyBackMessage& msg);
+
+    void release(FTTimestamp timestamp);
 
 public:
     FTBufferElement();

@@ -21,8 +21,6 @@ public:
     const char *processing() const { return AGNOSTIC; }
 
     void push(int, Packet *p);
-//    Packet*  pull(int);
-//    Packet* simple_action(Packet* p);
 };
 
 CLICK_ENDDECLS

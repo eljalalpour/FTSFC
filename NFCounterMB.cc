@@ -2,6 +2,7 @@
 #include <click/router.hh>
 #include <clicknet/tcp.h>
 #include <click/args.hh>
+#include "FTAppenderElement.hh"
 #include "NFCounterMB.hh"
 
 CLICK_DECLS
@@ -15,6 +16,21 @@ Packet *NFCounterMB::simple_action(Packet *p) {
     LOG("Begin NFCounterMB %d:", _id);
 
     _counter++;
+    
+//    WritablePacket* q1 = p->uniqueify();
+//    WritablePacket* q2 = p->uniqueify();
+//    WritablePacket* q3 = p->uniqueify();
+//    WritablePacket* q4 = p->uniqueify();
+
+//    RandomState rs;
+//    FTPiggyBackMessage msg1 = rs.random_message(2, 1);
+//    WritablePacket* q5 = FTAppenderElement::encodeStates(q1, msg1);
+//    WritablePacket* q6 = FTAppenderElement::encodeStates(q2, msg1);
+//    WritablePacket* q7 = FTAppenderElement::encodeStates(q3, msg1);
+//
+//    FTPiggyBackMessage msg2, msg3, msg4;
+//    WritablePacket* q8  = FTAppenderElement::encodeStates(q1, msg1);
+//    WritablePacket* q9  = FTAppenderElement::encodeStates(q2, msg1);
 
     LOG("End NFCounterMB %d:", _id);
     LOG("--------------------");

@@ -1,7 +1,7 @@
 require(package "FTSFC");
 
 // Source
-FromDump(generated.pcap)
+FromDump(small-packets-1.pcap)
 
 //FTFastTCPGen(10, 500000, 60, 68:5b:35:c5:e9:39, 192.168.200.18, 68:5b:35:c5:e9:55, 192.168.200.17, 100, 10)
 

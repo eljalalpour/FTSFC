@@ -207,7 +207,7 @@ bool FTStateElement::getPrimaryState(string key, string &value) {
         }//if
     }//else
 
-    if (!found)
+//    if (!found)
         //LOG("Key '%s' is not found!\n", key.c_str());
 
     return found;

@@ -37,7 +37,7 @@ public:
 
     Packet *simple_action(Packet *p);
 
-    bool send(FTTimestampState& ts_timestamp);
+    bool send(FTTimestampState& ts_state);
 
     int configure(Vector<String> &conf, ErrorHandler *errh);
 };

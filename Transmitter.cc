@@ -66,7 +66,7 @@ Packet *Transmitter::simple_action(Packet *p) {
     return p;
 }
 
-bool Transmitter::send(FTTimestampState& ts_timestamp) {
+bool Transmitter::send(FTTimestampState& ts_state) {
     return _client.send(ts_state);
 }
 

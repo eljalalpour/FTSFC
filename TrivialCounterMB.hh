@@ -22,6 +22,7 @@ private:
     vector<uint16_t> _ports;
 
     void _print_ip_port_list();
+    void _split(string& str, char dlm, vector<string>& tokens);
 
 public:
     TrivialCounterMB();

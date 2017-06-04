@@ -12,6 +12,7 @@ FTLoggerElement* logger;
 void signal_handler(int signal) {
     DEBUG("Interrupt signal (%d) received. Writing packets timestamps to file!", signal);
     DEBUG("Writing %llu packets", logger->num_packets());
+    click_chatter("In signal %d handler", signal);
     logger->write_to_file();
     exit(signal);
 }
@@ -40,6 +41,7 @@ int FTLoggerElement::configure(Vector<String> &conf, ErrorHandler *errh) {
     }//if
 
     signal(SIGINT, signal_handler);
+    signal(SIGTERM, signal_handler);
 
     return 0;
 }

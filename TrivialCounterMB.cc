@@ -4,7 +4,6 @@
 #include <click/router.hh>
 #include <clicknet/tcp.h>
 #include <click/args.hh>
-#include <boost/algorithm/string.hpp>
 #include "TrivialCounterMB.hh"
 
 CLICK_DECLS
@@ -23,6 +22,24 @@ void TrivialCounterMB::_print_ip_port_list() {
 #endif
 }
 
+void TrivialCounterMB::_split(string& str, char dlm, vector<string>& tokens) {
+    int last_index = 0;
+    int i = 0;
+    for (; i < str.size(); ++i) {
+        if (str[i] == dlm && i - last_index > 0) {
+            string token(str, last_index, i - last_index);
+            tokens.push_back(token);
+            last_index = i + 1;
+        }//if
+    }//for
+
+    if (i - 1 - last_index > 0) {
+        string token(str, last_index, i - 1 - last_index);
+        tokens.push_back(token);
+        last_index = i + 1;
+    }//if
+}
+
 int TrivialCounterMB::configure(Vector<String> &conf, ErrorHandler *errh) {
     Args(conf, this, errh).read_or_set("ID", _id, rand() % MB_ID_MAX);
 
@@ -30,7 +47,7 @@ int TrivialCounterMB::configure(Vector<String> &conf, ErrorHandler *errh) {
     for (int i = 1; i < conf.size(); ++i) {
         string line(conf[i].c_str());
         vector<string> strs;
-        boost::split(strs,line,boost::is_any_of(":"));
+        _split(line, ':', strs);
         string ip = strs[0];
         uint16_t port;
         b_int.parse(String(strs[1].c_str()), port);
@@ -73,4 +90,3 @@ Packet *TrivialCounterMB::simple_action(Packet *p) {
 
 CLICK_ENDDECLS
 EXPORT_ELEMENT(TrivialCounterMB)
-ELEMENT_LIBS(-L/usr/local/lib -lboost_algorithm)

@@ -40,6 +40,7 @@ int FTLoggerElement::configure(Vector<String> &conf, ErrorHandler *errh) {
     }//if
 
     signal(SIGINT, signal_handler);
+    signal(SIGTERM, signal_handler);
 
     return 0;
 }

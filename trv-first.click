@@ -1,6 +1,6 @@
 require(package "FTSFC");
 
-tr::TrivialCounterMB(ID 0, 192.168.200.12:22222);
+tr::TrivialCounterMB(ID 0, 10.12.4.10:22222);
 
 FromDevice(p0)
 ->FTFilterElement(5)

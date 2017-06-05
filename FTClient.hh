@@ -10,7 +10,7 @@
 struct ServerConn {
     string ip;
     int port;
-    FTTimestampState ft_timestamp;
+    FTState state;
 };
 
 class FTClient {
@@ -22,15 +22,14 @@ private:
     static void* _send(void* param) {
         ServerConn* scp = static_cast<ServerConn*>(param);
 
-        DEBUG("Connecting to server on port %d", scp->port);
-
         // Serialize state
         stringstream buffer;
         boost::archive::binary_oarchive oa(buffer);
 
-        oa << scp->ft_timestamp;
+        oa << scp->state;
 
         // Create socket
+        DEBUG("Connecting to server %s on port %d", scp->ip.c_str(), scp->port);
         int sock = socket(AF_INET, SOCK_STREAM, 0);
         if (sock == -1) {
             perror("Could not create socket");
@@ -69,7 +68,7 @@ public:
         set_ip_ports(ips, ports);
     }
 
-    bool send(FTTimestampState ft_timestamp) {
+    bool send(FTState state) {
         bool result = true;
         pthread_attr_t attr;
         void *status;
@@ -80,8 +79,7 @@ public:
 
         for (size_t i = 0; i < _ips.size(); ++i) {
             ServerConn *conn = new ServerConn();
-            conn->ft_timestamp.timestamp = ft_timestamp.timestamp;
-            conn->ft_timestamp.state = ft_timestamp.state;
+            conn->state = state;
             conn->ip = _ips[i];
             conn->port = _ports[i];
 

@@ -33,8 +33,8 @@ void TrivialCounterMB::_split(string& str, char dlm, vector<string>& tokens) {
         }//if
     }//for
 
-    if (i - 1 - last_index > 0) {
-        string token(str, last_index, i - 1 - last_index);
+    if (i - last_index > 0) {
+        string token(str, last_index, i - last_index);
         tokens.push_back(token);
         last_index = i + 1;
     }//if
@@ -73,11 +73,7 @@ Packet *TrivialCounterMB::simple_action(Packet *p) {
 
     FTState state;
     state[COUNTER] = _counter;
-    FTTimestampState ts_state;
-    ts_state.set_timestamp();
-    ts_state.state = state;
-
-    _client.send(ts_state);
+    _client.send(state);
 
     LOG("Packet id is: %llu", FTAppenderElement::getPacketId(p));
     LOG("Packet counter read is %d, and written %d", _counter - 1, _counter);

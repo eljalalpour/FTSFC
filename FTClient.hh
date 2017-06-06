@@ -37,9 +37,16 @@ private:
         }//if
 
         struct sockaddr_in server;
+        memset(&server, '0', sizeof(server));
         server.sin_addr.s_addr = inet_addr(scp->ip.c_str());
         server.sin_family = AF_INET;
         server.sin_port = htons(scp->port);
+
+        // inet_pton
+        if(inet_pton(AF_INET, scp->ip.c_str(), &server.sin_addr) <= 0) {
+            perror("\n inet_pton error occured\n");
+            return NULL;
+        }//if
 
         // Connect to server
         if (connect(sock, (struct sockaddr *)&server, sizeof(server)) < 0) {

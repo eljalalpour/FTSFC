@@ -33,8 +33,8 @@ void Transmitter::_split(string& str, char dlm, vector<string>& tokens) {
         }//if
     }//for
 
-    if (i - 1 - last_index > 0) {
-        string token(str, last_index, i - 1 - last_index);
+    if (i - last_index > 0) {
+        string token(str, last_index, i - last_index);
         tokens.push_back(token);
         last_index = i + 1;
     }//if
@@ -66,8 +66,8 @@ Packet *Transmitter::simple_action(Packet *p) {
     return p;
 }
 
-bool Transmitter::send(FTTimestampState& ts_state) {
-    return _client.send(ts_state);
+bool Transmitter::send(FTState& state) {
+    return _client.send(state);
 }
 
 CLICK_ENDDECLS

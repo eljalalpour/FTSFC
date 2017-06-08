@@ -4,13 +4,15 @@
 #include <string>
 #include <pthread.h>
 #include <arpa/inet.h>
+#include <netinet/tcp.h>
 #include "FTTypes.hh"
 #include "FTAppenderElement.hh"
 
 struct ServerConn {
     string ip;
-    int port;
+    uint16_t port;
     FTState state;
+    int socket;
 };
 
 class FTClient {
@@ -18,6 +20,7 @@ private:
     std::vector<pthread_t> _threads;
     std::vector<string> _ips;
     std::vector<uint16_t> _ports;
+    std::vector<int> _sockets;
 
     static void* _send(void* param) {
         ServerConn* scp = static_cast<ServerConn*>(param);
@@ -28,22 +31,43 @@ private:
 
         oa << scp->state;
 
+        // Send state
+        size_t size = buffer.str().size();
+        write(scp->socket, &size, sizeof(size_t));
+        write(scp->socket, buffer.str().c_str(), size);
+
+        // Wait for the response
+        char c;
+        read(scp->socket, &c, sizeof(char));
+        DEBUG("Read from socket: %c", c);
+
+        return NULL;
+    }
+
+    int _connect(string ip, uint16_t port) {
         // Create socket
-        DEBUG("Connecting to server %s on port %d", scp->ip.c_str(), scp->port);
+        DEBUG("Connecting to server %s on port %d", ip.c_str(), port);
         int sock = socket(AF_INET, SOCK_STREAM, 0);
         if (sock == -1) {
             perror("Could not create socket");
             return NULL;
         }//if
 
+        // Set TCP_NODELAY
+        int yes = 1;
+        if (setsockopt(sock, IPPROTO_TCP, TCP_NODELAY, (char *) &yes, sizeof(int))) {
+            perror("\nUnable to set TCP_NODELAY\n");
+            return NULL;
+        }//if
+
         struct sockaddr_in server;
         memset(&server, '0', sizeof(server));
-        server.sin_addr.s_addr = inet_addr(scp->ip.c_str());
+        server.sin_addr.s_addr = inet_addr(ip.c_str());
         server.sin_family = AF_INET;
-        server.sin_port = htons(scp->port);
+        server.sin_port = htons(port);
 
         // inet_pton
-        if(inet_pton(AF_INET, scp->ip.c_str(), &server.sin_addr) <= 0) {
+        if(inet_pton(AF_INET, ip.c_str(), &server.sin_addr) <= 0) {
             perror("\n inet_pton error occured\n");
             return NULL;
         }//if
@@ -54,22 +78,25 @@ private:
             return NULL;
         }//if
 
-        // Send state
-        size_t size = buffer.str().size();
-        write(sock, &size, sizeof(size_t));
-        write(sock, buffer.str().c_str(), size);
+        return sock;
+    }
 
-        // Wait for the response
-        char c;
-        read(sock, &c, sizeof(char));
-        close(sock);
-        DEBUG("Read from socket: %c", c);
+    void _connect_sockets() {
+        for (int i = 0;i < _ips.size(); ++i)
+            _sockets.push_back(_connect(_ips[i], _ports[i]));
+    }
 
-        return NULL;
+    void _close_sockets() {
+        for (int i = 0; i < _sockets.size(); ++i)
+            close(_sockets[i]);
     }
 
 public:
     FTClient() { };
+
+    ~FTClient() {
+        _close_sockets();
+    }
 
     FTClient(std::vector<string>& ips, std::vector<uint16_t>& ports) {
         set_ip_ports(ips, ports);
@@ -89,6 +116,7 @@ public:
             conn->state = state;
             conn->ip = _ips[i];
             conn->port = _ports[i];
+            conn->socket = _sockets[i];
 
             pthread_t thread;
             if(pthread_create(&thread, &attr, _send, (void *)conn)) {
@@ -121,5 +149,7 @@ public:
 
         _ips.insert(_ips.begin(), ips.begin(), ips.end());
         _ports.insert(_ports.begin(), ports.begin(), ports.end());
+
+        _connect_sockets();
     }
 };

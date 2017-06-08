@@ -112,6 +112,8 @@ public:
     click_jiffies_t last() { return _last; }
 
     WritablePacket* update_seq_num(Packet* p);
+
+    int rate();
 };
 
 CLICK_ENDDECLS

@@ -442,5 +442,16 @@ WritablePacket* FTFastTCPGen::update_seq_num(Packet* p) {
     return q;
 }
 
+int FTFastTCPGen::rate() {
+    if(last() != 0){
+        int d = last() - first();
+        if (d < 1) d = 1;
+        return count() * CLICK_HZ / d;
+    }//if
+    else {
+        return 0;
+    }//else
+}
+
 CLICK_ENDDECLS
 EXPORT_ELEMENT(FTFastTCPGen)

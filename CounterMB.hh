@@ -13,7 +13,7 @@
 CLICK_DECLS
 
 class CounterMB : public Element {
-private:
+public:
     unsigned int _counter;
     FTMBId _id;
 

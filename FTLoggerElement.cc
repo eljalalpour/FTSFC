@@ -3,8 +3,6 @@
 #include <click/args.hh>
 #include <fstream>
 #include <csignal>
-#include <click/router.hh>
-#include "CounterMB.hh"
 #include "FTAppenderElement.hh"
 
 CLICK_DECLS
@@ -15,12 +13,6 @@ void signal_handler(int signal) {
     DEBUG("Interrupt signal (%d) received. Writing packets timestamps to file!", signal);
     DEBUG("Writing %llu packets", logger->num_packets());
     click_chatter("In signal %d handler", signal);
-    logger->write_to_file();
-    ofstream ofile("counter.txt");
-    Router* r = logger->router();
-    CounterMB* mb = (CounterMB*)(r->find("cnt"));
-    ofile << mb->_couter;
-    ofile.close();
     exit(signal);
 }
 

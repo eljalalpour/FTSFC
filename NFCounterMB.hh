@@ -31,6 +31,10 @@ public:
     Packet *simple_action(Packet *p);
 
     int configure(Vector<String> &conf, ErrorHandler *errh);
+
+    unsigned int counter();
+
+    void write_to_file();
 };
 
 CLICK_ENDDECLS

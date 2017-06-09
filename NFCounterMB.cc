@@ -2,17 +2,21 @@
 #include <click/router.hh>
 #include <clicknet/tcp.h>
 #include <click/args.hh>
+#include <iostream>
 #include <fstream>
 #include "FTAppenderElement.hh"
 #include "NFCounterMB.hh"
+
+using namespace std;
 
 CLICK_DECLS
 
 NFCounterMB* _counter_mb;
 
-void signal_handler(int signal) {
+void signal_handler2(int signal) {
     DEBUG("Interrupt signal (%d) received. Writing packets timestamps to file!", signal);
     click_chatter("In signal %d handler", signal);
+    cout << "Counter is: " << _counter_mb->counter() << endl;
     _counter_mb->write_to_file();
     exit(signal);
 }
@@ -58,8 +62,8 @@ int NFCounterMB::configure(Vector<String> &conf, ErrorHandler *errh) {
 
     LOG("NFCounterMB id is %d!\n", _id);
 
-    signal(SIGINT, signal_handler);
-    signal(SIGTERM, signal_handler);
+    signal(SIGINT, signal_handler2);
+    signal(SIGTERM, signal_handler2);
 
     return 0;
 }

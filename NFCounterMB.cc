@@ -4,6 +4,7 @@
 #include <click/args.hh>
 #include <iostream>
 #include <fstream>
+#include <csignal>
 #include "FTAppenderElement.hh"
 #include "NFCounterMB.hh"
 

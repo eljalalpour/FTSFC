@@ -77,15 +77,16 @@ void FTControlElement::get(FTStateElement* se, int conn_fd) {
         write(conn_fd, buffer.c_str(), size);
 
         //TODO: to remove begin
-//        LOG("State is (%d): ", buffer.size());
-//        FTAppenderElement::printState(committed);
-//
-//        for(int i = 0; i < buffer.size(); i++)
-//            LOG("%d ", buffer[i]);
+        LOG("State is (%d): ", buffer.size());
+        FTAppenderElement::printState(committed);
+
+        for(int i = 0; i < buffer.size(); i++)
+            LOG("%d ", buffer[i]);
         //TODO: to remove end
     }//if
     else {
         // If there is some error in finding the state, return 0
+        LOG("State not found for MB %d", id);
         int size = 0;
         write(conn_fd, &size, sizeof(int));
     }//else

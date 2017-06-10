@@ -42,6 +42,7 @@ void FTControlElement::put(FTStateElement* se, int conn_fd) {
     // and finally the state!
     FTMBId id;
     read(conn_fd, &id, sizeof(FTMBId));
+    LOG("Put the state of middlebox %d", id);
 
     int size = 0;
     read(conn_fd, &size, sizeof(int));
@@ -51,14 +52,14 @@ void FTControlElement::put(FTStateElement* se, int conn_fd) {
     read(conn_fd, &buffer, size);
 
     LOG("State is (%d): ", size);
-    for(int i = 0; i < size; i++)
-        LOG("%d ", buffer[i]);
+//    for(int i = 0; i < size; i++)
+//        LOG("%d ", buffer[i]);
 
     if (size > 0) {
         FTTimestampState state;
         FTAppenderElement::decode(buffer, size, state);
 
-//        FTAppenderElement::printState(state);
+        FTAppenderElement::printState(state);
 
         se->putCommittedState(id, state);
     }//if
@@ -67,6 +68,9 @@ void FTControlElement::put(FTStateElement* se, int conn_fd) {
 void FTControlElement::get(FTStateElement* se, int conn_fd) {
     FTMBId id;
     read(conn_fd, &id, sizeof(FTMBId));
+
+    LOG("Get the state of middlebox %d", id);
+
     FTTimestampState committed;
     if (se->getCommittedState(id, committed)) {
 

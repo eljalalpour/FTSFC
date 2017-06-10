@@ -80,8 +80,8 @@ void FTControlElement::get(FTStateElement* se, int conn_fd) {
         LOG("State is (%d): ", buffer.size());
         FTAppenderElement::printState(committed);
 
-        for(int i = 0; i < buffer.size(); i++)
-            LOG("%d ", buffer[i]);
+//        for(int i = 0; i < buffer.size(); i++)
+//            LOG("%d ", buffer[i]);
         //TODO: to remove end
     }//if
     else {

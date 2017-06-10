@@ -225,7 +225,7 @@ bool FTStateElement::putPrimaryState(string key, string value) {
 
 bool FTStateElement::getCommittedState(FTMBId mbId, FTTimestampState &state) {
     bool found = false;
-    LOG("This is the size of committed states %u", _committed.size());
+    LOG("Get the state of Middlebox %d", mbId);
     auto item = _committed.find(mbId);
     if (item != _committed.end()) {
         state = item->second;

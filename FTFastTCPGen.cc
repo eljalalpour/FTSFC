@@ -83,8 +83,8 @@ FTFastTCPGen::configure(Vector<String> &conf, ErrorHandler *errh)
 void
 FTFastTCPGen::change_ports(int flow)
 {
-    unsigned short sport = (click_random() >> 2) % 0xFFFF;
-    unsigned short dport = (click_random() >> 2) % 0xFFFF;
+    unsigned short sport = (click_random() % 3 >> 2) % 0xFFFF;
+    unsigned short dport = (click_random() % 3 >> 2) % 0xFFFF;
     WritablePacket *q = _flows[flow].syn_packet->uniqueify(); // better not fail
     _flows[flow].syn_packet = q;
     click_ip *ip =
@@ -159,8 +159,8 @@ FTFastTCPGen::initialize(ErrorHandler *)
     _flows = new flow_t[_nflows];
 
     for (unsigned i=0; i<_nflows; i++) {
-        unsigned short sport = (click_random() >> 2) % 0xFFFF;
-        unsigned short dport = (click_random() >> 2) % 0xFFFF;
+        unsigned short sport = (click_random() % 3 >> 2) % 0xFFFF;
+        unsigned short dport = (click_random() % 3>> 2) % 0xFFFF;
 
         // SYN packet
         WritablePacket *q = Packet::make(_len);

@@ -14,7 +14,7 @@ Monitor::~Monitor() {};
 
 Packet *Monitor::simple_action(Packet *p) {
     LOG("--------------------");
-    std::cout << "Begin Monitor :" << _id << std::endl;
+//    std::cout << "Begin Monitor :" << _id << std::endl;
     Router *r = this->router();
 
 //    for (int i = 0; i < r->elements().size(); ++i) {
@@ -32,25 +32,25 @@ Packet *Monitor::simple_action(Packet *p) {
     stringstream ss;
     string value;
 
-    std::cout << "Begin Monitor1 :" << _id << std::endl;
+//    std::cout << "Begin Monitor1 :" << _id << std::endl;
     if (stateElement->getPrimaryState(COUNTER, value)) {
-	std::cout << "before in here" << std::endl;
+//	std::cout << "before in here" << std::endl;
         if (value.size() != 0) {
-	    std::cout << "in here" << std::endl;
+//	    std::cout << "in here" << std::endl;
             ss << value;
             ss >> _counter;
         }//if
-	std::cout << "out here" << std::endl;
+//	std::cout << "out here" << std::endl;
     }//if
 
-    std::cout << "Begin Monitor2 :" << _id << std::endl;
+//    std::cout << "Begin Monitor2 :" << _id << std::endl;
     stringstream ss2;
     ss2 << (_counter + 1);
     ss2 >> value;
 
     stateElement->putPrimaryState(COUNTER, value);
 
-    std::cout << "Begin Monitor3 :" << _id << std::endl;
+//    std::cout << "Begin Monitor3 :" << _id << std::endl;
     _counter++;
 
     LOG("Packet id is: %llu", FTAppenderElement::getPacketId(p));

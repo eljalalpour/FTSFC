@@ -19,14 +19,45 @@
 #include <click/config.h>
 #include "timestamper.hh"
 #include <click/glue.hh>
+#include <vector>
+#include <csignal>
+#include <fstream>
 CLICK_DECLS
+
+using std::vector;
+
+vector<Timestamper*> _global_ts;
+
+void handle_signal(int signal) {
+	for (int i = 0; i < _global_ts.size(); ++i) {
+		_global_ts[i]->write_to_file();
+	}
+	_global_ts.clear();
+	exit(signal);
+}
 
 Timestamper::Timestamper()
 {
+	_global_ts.push_back(this);
 }
 
 Timestamper::~Timestamper()
 {
+    //printf("crash called %f\n", _usec_accum);
+    
+}
+
+void
+Timestamper::write_to_file() 
+{
+	//ofstream ofile(log_path.c_str(), std::ofstream::out | std::ofstream::app);
+	std::ofstream ofile("latency", std::ofstream::out | std::ofstream::app);
+	
+	while(_latency.size()){
+		ofile << _latency.back() << "\n";
+		_latency.pop_back();
+	}//while
+	ofile.close();
 }
 
 int
@@ -35,6 +66,8 @@ Timestamper::initialize(ErrorHandler *)
     _usec_accum = 0;
     _usec_base = 0;
     _count = 0;
+    signal(SIGINT, handle_signal);
+    signal(SIGTERM, handle_signal);
     return 0;
 }
 /*
@@ -55,7 +88,8 @@ Timestamper::push(int port, Packet *pkt)
 	    output(0).push(pkt);
 	    break;
 	case 1:
-	    _usec_accum += Timestamp::now().doubleval() - _usec_base;
+	    _latency.push_back(Timestamp::now().doubleval() - _usec_base);
+	    _usec_accum += _latency.back();
 	    _count++;
 	    output(1).push(pkt);
 	    break;

@@ -2,6 +2,7 @@
 #ifndef CLICK_TIMESTAMPER_HH
 #define CLICK_TIMESTAMPER_HH
 #include <click/element.hh>
+#include <deque>
 CLICK_DECLS
 
 /*
@@ -43,6 +44,7 @@ class Timestamper : public Element { public:
     int initialize(ErrorHandler *) CLICK_COLD;
     void add_handlers() CLICK_COLD;
     void push(int port, Packet *p);
+    void write_to_file();
 //    Packet *simple_action(Packet *);
 
   private:
@@ -50,6 +52,7 @@ class Timestamper : public Element { public:
     double _usec_accum;
     double _usec_base;
     uint64_t _count;
+    std::deque<double> _latency;
 
     static String read_handler(Element *, void *) CLICK_COLD;
     static int reset_handler(const String &, Element *, void *, ErrorHandler *);

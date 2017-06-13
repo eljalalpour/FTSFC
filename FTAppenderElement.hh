@@ -19,7 +19,6 @@ CLICK_DECLS
 class FTAppenderElement : public Element {
 private:
     FTPiggyBackMessage _temp;
-    VLANId _first_vlan;
 
 public:
     FTAppenderElement();
@@ -28,11 +27,9 @@ public:
 
     const char *class_name() const { return "FTAppenderElement"; }
 
-    const char *port_count() const { return PORTS_1_1; }
+    const char *port_count() const { return PORTS_2_1; }
 
     const char *processing() const { return AGNOSTIC; }
-
-    int configure(Vector<String> &conf, ErrorHandler *errh);
 
     void push(int source, Packet *p);
 

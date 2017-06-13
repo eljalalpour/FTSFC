@@ -13,7 +13,6 @@ const char *FTStateElement::PUT_CALL_BACK = "p";
 int FTStateElement::configure(Vector<String> &conf, ErrorHandler *errh) {
     if (Args(conf, this, errh)
                 .read(CONF_ID, _id)
-                .read(CONF_VLAN_ID, _vlanId)
                 .read(CONF_FAILURE_COUNT, _failureCount)
                 .complete() < 0)
         return -1;

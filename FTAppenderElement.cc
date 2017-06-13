@@ -16,23 +16,11 @@ FTAppenderElement::FTAppenderElement() {};
 
 FTAppenderElement::~FTAppenderElement() {};
 
-int FTAppenderElement::configure(Vector<String> &conf, ErrorHandler *errh) {
-    BoundedIntArg parser(0, 0xFFF);
-    parser.parse(conf[0], _first_vlan);
-    LOG("First VLAN ID: %d", _first_vlan);
-
-    return 0;
-}
-
 void FTAppenderElement::push(int source, Packet *p) {
     DEBUG("--------------------");
     DEBUG("Begin FTAppender element:");
 
-    const click_ether_vlan *vlan = reinterpret_cast<const click_ether_vlan *>(p->data());
-    VLANId vlan_id = (ntohs(vlan->ether_vlan_tci) & 0xFFF);
-    DEBUG("VLAN-ID is %d", vlan_id);
-
-    if (vlan_id == _first_vlan) {
+    if (source == 0) {
         DEBUG("Receiving packet with size %d from the source!", p->length());
         DEBUG("state on the packet going to state-element");
 

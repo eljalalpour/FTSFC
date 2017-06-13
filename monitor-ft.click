@@ -2,24 +2,23 @@ require(package "FTSFC");
 
 FTControlElement(10001);
 
-FromDevice(p0)
-->FTFilterElement(6)
-->VLANDecap
+AddressInfo(sender 10.70.0.7);
+
+
+FromDevice(p1p1)
 ->CheckIPHeader(14)
-->se::FTStateElement(ID 2, VLAN_ID 6, F 1)
-->CheckIPHeader(14)
-//->MB1::CounterMB(ID 1)
-->Print(ok)
+->IPFilter(allow src sender)
+->Strip(14)
+->se::FTStateElement(ID 2, F 1)
+
 ->cmb::Monitor(ID 1)
 
-//
-->CheckIPHeader(14)
-->Print(ok1)
-->[1]se;se[1]
-->CheckIPHeader(14)
-->Print(ok2)
-->VLANEncap(VLAN_ID 7)
-->VLANEncap(VLAN_ID 7)
-->Queue
-->Print(ok3)
-->ToDevice(p0);
+->[1]se;
+
+se[1]
+-> Queue
+->ctr::Counter()
+->StoreIPAddress(10.70.0.8, src)
+->StoreIPAddress(10.70.0.9, dst)
+->EtherEncap(0x0800, f4:52:14:5a:90:70, e4:1d:2d:13:9c:60)
+->ToDevice(p1p1);

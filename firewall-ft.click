@@ -1,13 +1,25 @@
 require(package "FTSFC");
 
 firewall :: Classifier(12/0806 20/0001, 12/0806 20/0002, 12/0800, -);
-FromDevice(eth6)
-->VLANEncap(VLAN_ID 4)
-->CheckIPHeader(18)
-->ap::FTAppenderElement(4)
-->VLANDecap
+
+AddressInfo(source 10.70.0.6, last 10.70.0.9);
+ap::FTAppenderElement();
+
+FromDevice(p1p1)
 ->CheckIPHeader(14)
--> se::FTStateElement(ID 1, VLAN_ID 4, F 1)
+//-> Print(ok)
+->fil::IPClassifier(src host 10.70.0.6,
+	   	    src host 10.70.0.9,
+		    -);
+
+fil[0] -> Print(ok0)-> [0]ap;
+fil[1] -> Print(ok1) -> [1]ap;
+fil[2] -> Discard;
+
+ap 
+-> Print(afterap)
+-> se::FTStateElement(ID 1, F 1)
+-> Print(afterap1)
 -> firewall;
 
 firewall[0] -> Discard;	// ARP queries
@@ -21,7 +33,7 @@ ip_from_extern :: IPClassifier(dst tcp ssh,
                         -);
 
 
-firewall[2] -> Strip(14) -> CheckIPHeader -> ip_from_extern;
+firewall[2] -> Strip(14) -> ip_from_extern;
 
 ip_from_extern[0] -> Discard; // SSH traffic (rewrite to server)
 ip_from_extern[1] -> Discard; // HTTP(S) traffic (rewrite to server)
@@ -37,4 +49,9 @@ mo
 //-> Discard;
 
 se[1]
--> Discard;
+-> Queue
+-> ctr::Counter()
+-> StoreIPAddress(10.70.0.7, src)
+-> StoreIPAddress(10.70.0.8, dst)
+-> EtherEncap(0x0800, e4:1d:2d:13:9e:d0, f4:52:14:5a:90:70)
+-> ToDevice(p1p1);

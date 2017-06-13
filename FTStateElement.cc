@@ -142,6 +142,12 @@ void FTStateElement::commit(FTMBId MBId, FTTimestamp timestamp) {
     LOG("Committing the state of the middlebox '%d' for timestamp %llu", MBId, timestamp);
 
     auto log_mb_item = _log.find(MBId);
+    if (log_mb_item == _log.end()) {
+	FTTimestampStateList statelist;
+        _log[MBId] = statelist;
+	return;
+    }//if
+
     // Find a log with the largest timestamp below the given timestamp
     int index = log_mb_item->second.size() - 1;
     LOG("Index before is %d", index);
@@ -160,6 +166,7 @@ void FTStateElement::commit(FTMBId MBId, FTTimestamp timestamp) {
 
         for (auto it = log_mb_item->second[index].begin(); it != log_mb_item->second[index].end(); ++it) {
             _committed[MBId][it->first] = it->second;
+	    DEBUG("for MB %u commit %s Committed %s", MBId, it->first.c_str(), it->second.c_str());
         }//for
 
         DEBUG("Committing the state for timestamp: %llu", _committed[MBId].timestamp);
@@ -318,8 +325,9 @@ int FTStateElement::putStateCallback(const String &data, Element *e, void *user_
 
         FTTimestampState state;
         FTAppenderElement::deserialize(decSS, state);
-
-//        FTAppenderElement::printState(state);
+	
+	DEBUG("put the state of middlebox %u!", id);
+        FTAppenderElement::printState(state);
 
         se->putCommittedState(id, state);
     }//try

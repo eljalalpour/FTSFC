@@ -7,19 +7,23 @@ ap::FTAppenderElement();
 
 FromDevice(p1p1)
 ->CheckIPHeader(14)
-//-> Print(ok)
 ->fil::IPClassifier(src host 10.70.0.6,
 	   	    src host 10.70.0.9,
 		    -);
 
-fil[0] -> Print(ok0)-> [0]ap;
-fil[1] -> Print(ok1) -> [1]ap;
+fil[0] -> [0]ap;
+fil[1] -> Print(FromAss) ->[1]ap;
 fil[2] -> Discard;
 
 ap 
--> Print(afterap)
+-> CheckIPHeader(14)
+-> filt::IPClassifier(tcp or udp,
+                        -);
+
+
+filt[1] -> Print(Drop) -> Discard;
+filt[0]
 -> se::FTStateElement(ID 1, F 1)
--> Print(afterap1)
 -> firewall;
 
 firewall[0] -> Discard;	// ARP queries
@@ -33,7 +37,8 @@ ip_from_extern :: IPClassifier(dst tcp ssh,
                         -);
 
 
-firewall[2] -> Strip(14) -> ip_from_extern;
+firewall[2] -> CheckIPHeader(14) -> ip_from_extern;
+//firewall[2] -> Strip(14) -> Print(beforeextern) // -> ip_from_extern;
 
 ip_from_extern[0] -> Discard; // SSH traffic (rewrite to server)
 ip_from_extern[1] -> Discard; // HTTP(S) traffic (rewrite to server)
@@ -44,12 +49,13 @@ ip_from_extern[4] -> Discard; // non TCP or UDP traffic is dropped
 //se[0] -> CheckIPHeader(14) -> Print(tcp_or_udp) -> mo::Monitor(ID 1);
 
 mo
--> Print(out)
 -> [1]se;
-//-> Discard;
 
 se[1]
+-> Strip(14)
+-> CheckIPHeader
 -> Queue
+//-> Print(out2)
 -> ctr::Counter()
 -> StoreIPAddress(10.70.0.7, src)
 -> StoreIPAddress(10.70.0.8, dst)

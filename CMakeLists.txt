@@ -25,6 +25,8 @@ set(SOURCE_FILES
         FTTypes.hh
         FTClient.cc
         FTClient.hh
+        Efficient.cc
+        Efficient.hh
         main.cpp)
 
 add_executable(FTSFC ${SOURCE_FILES})

@@ -123,9 +123,11 @@ WritablePacket *FTAppenderElement::encodeStates(Packet *p, FTPiggyBackMessage &m
     stringstream stateSS;
     serializePiggyBacked(msg, stateSS);
 
-    string compressed;
-    compress(stateSS.str(), compressed);
-    short stateLen = compressed.size();
+//    string compressed;
+//    compress(stateSS.str(), compressed);
+//    short stateLen = compressed.size();
+
+    short stateLen = stateSS.str().size();
 
     uint16_t newPacketSize = sizeof(short) + stateLen + p->length();
     WritablePacket *q = Packet::make(newPacketSize);
@@ -133,7 +135,8 @@ WritablePacket *FTAppenderElement::encodeStates(Packet *p, FTPiggyBackMessage &m
 
     memcpy(q->data(), p->data(), ploff);
     memcpy(q->data() + ploff, &stateLen, sizeof(short));
-    memcpy(q->data() + ploff + sizeof(short), compressed.c_str(), stateLen);
+//    memcpy(q->data() + ploff + sizeof(short), compressed.c_str(), stateLen);
+    memcpy(q->data() + ploff + sizeof(short), stateSS.str().c_str(), stateLen);
     if (ploff < p->length())
         memcpy(q->data() + ploff + sizeof(short) + stateLen, p->data() + ploff, p->length() - ploff);
 
@@ -153,10 +156,11 @@ int FTAppenderElement::decodeStates(Packet *p, FTPiggyBackMessage &msg) {
     short stateLen;
     memcpy(&stateLen, p->data() + ploff, sizeof(short));
     string states(reinterpret_cast<const char*>(p->data()) + ploff + sizeof(short), stateLen);
-    string decompressed;
-    decompress(states, decompressed);
-
-    FTAppenderElement::deserializePiggyBacked(decompressed, msg);
+//    string decompressed;
+//    decompress(states, decompressed);
+//
+//    FTAppenderElement::deserializePiggyBacked(decompressed, msg);
+    FTAppenderElement::deserializePiggyBacked(states, msg);
 
     return stateLen + sizeof(short);
 }
@@ -258,19 +262,21 @@ void FTAppenderElement::encode(FTTimestampState& state, string& buffer) {
 
     // Serialize and compress the state
     FTAppenderElement::serialize(state, ss);
-    FTAppenderElement::compress(ss.str(), buffer);
+//    FTAppenderElement::compress(ss.str(), buffer);
+    buffer = ss.str();
 }
 
 void FTAppenderElement::decode(const string& buffer, FTTimestampState& state) {
-    string decompressed;
-    FTAppenderElement::decompress(buffer, decompressed);
-    LOG("Decompressed size is: %d", decompressed.size());
-    LOG("After decompress");
+//    string decompressed;
+//    FTAppenderElement::decompress(buffer, decompressed);
+//    LOG("Decompressed size is: %d", decompressed.size());
+//    LOG("After decompress");
 
     stringstream ss;
-    ss.str(decompressed);
+//    ss.str(decompressed);
+    ss.str(buffer);
 
-    LOG("Before deserialize");
+//    LOG("Before deserialize");
     FTAppenderElement::deserialize(ss, state);
 }
 

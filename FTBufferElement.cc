@@ -26,16 +26,16 @@ void FTBufferElement::release(FTTimestamp commit_timestamp) {
 }
 
 void FTBufferElement::push(int, Packet *p) {
-    DEBUG("\n------------------------------");
-    DEBUG("Begin FTBufferElement\n\n");
+//    DEBUG("\n------------------------------");
+//    DEBUG("Begin FTBufferElement\n\n");
 
     // Writing the output of the last stage of the chain into the buffer
     FTPiggyBackMessage msg;
 
     WritablePacket *q = FTAppenderElement::decodeStatesRetPacket(p, msg);
 
-    DEBUG("Packet with the size of %d (packet + state is %d) pushed to buffer",
-          q->length(), p->length());
+//    DEBUG("Packet with the size of %d (packet + state is %d) pushed to buffer",
+//          q->length(), p->length());
 
 //    FTAppenderElement::printState(msg);
 
@@ -43,8 +43,8 @@ void FTBufferElement::push(int, Packet *p) {
     _packets[lts] = q;
 
     // Send packet to the beginning of the chain
-    DEBUG("Packet with size %d sent to the beginning of the chain (on port %d)!",
-          p->length(), TO_CHAIN_BEGIN);
+//    DEBUG("Packet with size %d sent to the beginning of the chain (on port %d)!",
+//          p->length(), TO_CHAIN_BEGIN);
     output(TO_CHAIN_BEGIN).push(p);
 
     DEBUG("Size of output buffer: %d", _packets.size());

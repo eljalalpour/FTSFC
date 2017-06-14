@@ -12,17 +12,11 @@ FromDevice(p1p1)
 		    -);
 
 fil[0] -> [0]ap;
-fil[1] -> Print(FromAss) ->[1]ap;
+fil[1] -> [1]ap;
 fil[2] -> Discard;
 
 ap 
 -> CheckIPHeader(14)
--> filt::IPClassifier(tcp or udp,
-                        -);
-
-
-filt[1] -> Print(Drop) -> Discard;
-filt[0]
 -> se::FTStateElement(ID 1, F 1)
 -> firewall;
 
@@ -38,7 +32,6 @@ ip_from_extern :: IPClassifier(dst tcp ssh,
 
 
 firewall[2] -> CheckIPHeader(14) -> ip_from_extern;
-//firewall[2] -> Strip(14) -> Print(beforeextern) // -> ip_from_extern;
 
 ip_from_extern[0] -> Discard; // SSH traffic (rewrite to server)
 ip_from_extern[1] -> Discard; // HTTP(S) traffic (rewrite to server)
@@ -46,18 +39,19 @@ ip_from_extern[2] -> Discard; // FTP control traffic, rewrite w/tcp_rw
 ip_from_extern[3] -> mo::Monitor(ID 1);  // other TCP or UDP traffic, rewrite to monitor
 ip_from_extern[4] -> Discard; // non TCP or UDP traffic is dropped
 
-//se[0] -> CheckIPHeader(14) -> Print(tcp_or_udp) -> mo::Monitor(ID 1);
 
 mo
 -> [1]se;
 
 se[1]
--> Strip(14)
--> CheckIPHeader
+//-> Strip(14)
+-> CheckIPHeader(14)
 -> Queue
 //-> Print(out2)
--> ctr::Counter()
+//-> ctr::Counter()
 -> StoreIPAddress(10.70.0.7, src)
 -> StoreIPAddress(10.70.0.8, dst)
--> EtherEncap(0x0800, e4:1d:2d:13:9e:d0, f4:52:14:5a:90:70)
+-> StoreEtherAddress(e4:1d:2d:13:9e:d0, src)
+-> StoreEtherAddress(f4:52:14:5a:90:70, dst)
+//-> EtherEncap(0x0800, e4:1d:2d:13:9e:d0, f4:52:14:5a:90:70)
 -> ToDevice(p1p1);

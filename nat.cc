@@ -38,16 +38,16 @@ nat::push(int port, Packet *p) {
     WritablePacket *rp = p->uniqueify();
     click_ip *iph = rp->ip_header();
 
-    printf("before!!\n");
+//    printf("before!!\n");
     
     //Eaxmine packet header and del
     // if not tcp or udp, delete it
     if((iph->ip_p != IP_PROTO_TCP && iph->ip_p != IP_PROTO_UDP)
 	|| !IP_FIRSTFRAG(iph)
 	|| rp->transport_length() < 8) {
-    	printf("delete one \n");
+//    	printf("delete one \n");
 	rp->kill();
-    	printf("delete one \n");
+//    	printf("delete one \n");
 	return;
     }    
 
@@ -62,7 +62,7 @@ nat::push(int port, Packet *p) {
     // ss << "protocol" << "/";
 
     string teststr = ss.str(); 
-    std::cout << "key is" << teststr << std::endl;
+//    std::cout << "key is" << teststr << std::endl;
     //Search the key from database
     if (stateElement->getPrimaryState(teststr, value)) {
 //    	printf("found! \n");
@@ -79,7 +79,7 @@ nat::push(int port, Packet *p) {
             // rewrite the package header
 	    p->set_anno_u32(0, addrs[2]);
     	
-	    printf("FOUND!!!!!\n");
+//	    printf("FOUND!!!!!\n");
 
         } 
     } else {//if 
@@ -92,7 +92,7 @@ nat::push(int port, Packet *p) {
         ss1 << dst_ip << " ";
         ss1 << flowid.dport() << " ";
 
-        printf("NOT FOUND\n");
+//        printf("NOT FOUND\n");
             // put new flowID into database
         stateElement->putPrimaryState(ss.str(), ss1.str());
 

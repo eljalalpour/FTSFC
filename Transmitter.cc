@@ -41,10 +41,9 @@ void Transmitter::_split(string& str, char dlm, vector<string>& tokens) {
 }
 
 int Transmitter::configure(Vector<String> &conf, ErrorHandler *errh) {
-    Args(conf, this, errh).read_or_set("ID", _id, rand() % MB_ID_MAX);
 
     BoundedIntArg b_int(0, 0xFFFF);
-    for (int i = 1; i < conf.size(); ++i) {
+    for (int i = 0; i < conf.size(); ++i) {
         string line(conf[i].c_str());
         vector<string> strs;
         _split(line, ':', strs);

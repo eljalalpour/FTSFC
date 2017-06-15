@@ -6,6 +6,7 @@ AddressInfo(source 10.70.0.6, last 10.70.0.9);
 ap::FTAppenderElement();
 
 FromDevice(p1p1)
+->Print(recv)
 ->CheckIPHeader(14)
 ->fil::IPClassifier(src host 10.70.0.6,
 	   	    src host 10.70.0.9,
@@ -48,7 +49,7 @@ se[1]
 -> CheckIPHeader(14)
 -> Queue
 //-> Print(out2)
-//-> ctr::Counter()
+-> ctr::Counter()
 -> StoreIPAddress(10.70.0.7, src)
 -> StoreIPAddress(10.70.0.8, dst)
 -> StoreEtherAddress(e4:1d:2d:13:9e:d0, src)

@@ -17,7 +17,7 @@ private:
 
     std::map<string, string> _table;
 
-    FTClient _client;
+//    FTClient _client;
 
     vector<string> _ips;
 

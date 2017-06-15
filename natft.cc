@@ -30,7 +30,7 @@ natft::push(int port, Packet *p) {
     Router *r = this->router();
 
     //TODO: change the name of Transmitter to "trans"
-    Transmitter *stateElement = (Transmitter *)(r->find("trans"));
+    Transmitter *transmitter = (Transmitter *)(r->find("trans"));
 
     //Getting the state's value from the FTStateElement
     stringstream ss, ss1;
@@ -40,16 +40,16 @@ natft::push(int port, Packet *p) {
     WritablePacket *rp = p->uniqueify();
     click_ip *iph = rp->ip_header();
 
-    printf("before!!\n");
+//    printf("before!!\n");
     
     //Eaxmine packet header and del
     // if not tcp or udp, delete it
     if((iph->ip_p != IP_PROTO_TCP && iph->ip_p != IP_PROTO_UDP)
 	|| !IP_FIRSTFRAG(iph)
 	|| rp->transport_length() < 8) {
-    	printf("delete one \n");
+//    	printf("delete one \n");
 	rp->kill();
-    	printf("delete one \n");
+//    	printf("delete one \n");
 	return;
     }    
 
@@ -83,7 +83,7 @@ natft::push(int port, Packet *p) {
             // rewrite the package header
 	    p->set_anno_u32(0, addrs[2]);
     	
-	    printf("FOUND!!!!!\n");
+//	    printf("FOUND!!!!!\n");
 
         } 
     } else {//if 
@@ -96,11 +96,11 @@ natft::push(int port, Packet *p) {
         ss1 << dst_ip << " ";
         ss1 << flowid.dport() << " ";
 
-        printf("NOT FOUND\n");
+//        printf("NOT FOUND\n");
             // put new flowID into database
 	FTState state;
 	state[ss.str()] = ss1.str();
-	_client.send(state);
+	transmitter->send(state);
         //stateElement->send(ss.str(), ss1.str());
 	_table[ss.str()] = ss1.str();
 	
@@ -156,7 +156,7 @@ natft::configure(Vector<String> &conf, ErrorHandler *errh) {
         _ips.push_back(ip);
         _ports.push_back(port);
     }//for
-    _client.set_ip_ports(_ips, _ports);
+    //_client.set_ip_ports(_ips, _ports);
 //    _print_ip_port_list();
 
     LOG("natft id is %d!\n", _id);

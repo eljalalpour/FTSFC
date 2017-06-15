@@ -19,18 +19,18 @@ Packet *Monitorp::simple_action(Packet *p) {
     Router *r = this->router();
 
     //TODO: change the name of stateElement back to se
-    Transmitter *stateElement = (Transmitter *)(r->find("trans"));
+    Transmitter *transmitter = (Transmitter *)(r->find("trans"));
 
     //Getting the state's value from the FTStateElement
     stringstream ss;
     string value;
-stringstream ss2;
+    stringstream ss2;
     ss2 << (_counter + 1);
     ss2 >> value;
 
     FTState state;
     state[COUNTER] = value;
-    _client.send(state);
+    transmitter->send(state);
 
     _counter++;
 
@@ -81,7 +81,7 @@ int Monitorp::configure(Vector<String> &conf, ErrorHandler *errh) {
         _ips.push_back(ip);
         _ports.push_back(port);
     }//for
-    _client.set_ip_ports(_ips, _ports);
+//    _client.set_ip_ports(_ips, _ports);
 
     return 0;
 }

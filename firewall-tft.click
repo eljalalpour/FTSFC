@@ -1,14 +1,13 @@
 require(package "FTSFC");
 
-trans::Transmitter(ID 0, 10.10.1.1:12, 10.1.1.1:121);
+AddressInfo(sender 10.70.0.6);
+trans::Transmitter(10.70.0.10:22222); // one replica's ip and port
+
 firewall :: Classifier(12/0806 20/0001, 12/0806 20/0002, 12/0800, -);
-FromDevice(eth6)
-->VLANEncap(VLAN_ID 4)
-->CheckIPHeader(18)
-->ap::FTAppenderElement(4)
-->VLANDecap
-->CheckIPHeader(14)
--> se::FTStateElement(ID 1, VLAN_ID 4, F 1)
+
+FromDevice(p1p1)
+-> CheckIPHeader(14)
+-> IPFilter(allow src sender)
 -> firewall;
 
 firewall[0] -> Discard;	// ARP queries
@@ -30,12 +29,11 @@ ip_from_extern[2] -> Discard; // FTP control traffic, rewrite w/tcp_rw
 ip_from_extern[3] -> mo::Monitorp(ID 1);  // other TCP or UDP traffic, rewrite to monitor
 ip_from_extern[4] -> Discard; // non TCP or UDP traffic is dropped
 
-//se[0] -> CheckIPHeader(14) -> Print(tcp_or_udp) -> mo::Monitor(ID 1);
-
 mo
--> Print(out)
--> [1]se;
-//-> Discard;
-
-se[1]
--> Discard;
+//-> Print(out)
+-> ctr::Counter()
+-> Queue
+-> StoreIPAddress(10.70.0.7, src)// to the next mdlbox
+-> StoreIPAddress(10.70.0.8, dst)
+-> EtherEncap(0x0800, e4:1d:2d:13:9e:d0, f4:52:14:5a:90:70)
+-> ToDevice(p1p1);

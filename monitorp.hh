@@ -21,7 +21,7 @@ private:
 
     FTMBId _id;
 
-    FTClient _client;
+//    FTClient _client;
 
     vector<string> _ips;
 

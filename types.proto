@@ -1,0 +1,11 @@
+syntax = "proto2";
+
+package tutorial;
+
+message PiggyBackState {
+    required int32 ack = 1;
+    required int64 commit = 2;
+    required int64 last_commit = 3;
+    repeated string key = 4;
+    repeated string value = 5;
+}

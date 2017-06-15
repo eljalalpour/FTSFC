@@ -97,10 +97,10 @@ void* FTControlElement::_accept_connection(void* param) {
         socklen_t len = sizeof(tp->_ca);
         int conn_fd = accept(tp->_socket_fd, (struct sockaddr *) &(tp->_ca), &len);
 
-        LOG("A connection (%d) is accepted!", conn_fd);
+//        LOG("A connection (%d) is accepted!", conn_fd);
 
         if (conn_fd < 0) {
-            LOG("Error on accepting connection");
+//            LOG("Error on accepting connection");
             break;
         }//if
 
@@ -108,21 +108,21 @@ void* FTControlElement::_accept_connection(void* param) {
         uint8_t command;
         read(conn_fd, &command, sizeof(uint8_t));
 
-        LOG("Command is %d", command);
+//        LOG("Command is %d", command);
 
         switch(command) {
             case GET_STATE_CMD:
-                LOG("Get state command!", conn_fd);
+//                LOG("Get state command!", conn_fd);
                 tp->get(se, conn_fd);
                 break;
 
             case PUT_STATE_CMD:
-                LOG("Put state command!", conn_fd);
+//                LOG("Put state command!", conn_fd);
                 tp->put(se, conn_fd);
                 break;
 
             default:
-                LOG("Unknown command");
+//                LOG("Unknown command");
                 break;
         }//switch
 

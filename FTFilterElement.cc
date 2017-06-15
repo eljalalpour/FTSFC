@@ -14,7 +14,7 @@ int FTFilterElement::configure(Vector<String> &conf, ErrorHandler *errh) {
     for (int i = 0; i < conf.size(); ++i) {
         parser.parse(conf[i], vlanId);
         _vlan_ids.push_back(vlanId);
-        LOG("VLAN ID: %d", vlanId);
+//        LOG("VLAN ID: %d", vlanId);
     }//for
 
     return 0;

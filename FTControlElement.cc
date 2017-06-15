@@ -42,6 +42,7 @@ void FTControlElement::put(FTStateElement* se, int conn_fd) {
     // and finally the state!
     FTMBId id;
     read(conn_fd, &id, sizeof(FTMBId));
+    LOG("Put the state of middlebox %d", id);
 
     int size = 0;
     read(conn_fd, &size, sizeof(int));
@@ -51,14 +52,14 @@ void FTControlElement::put(FTStateElement* se, int conn_fd) {
     read(conn_fd, &buffer, size);
 
     LOG("State is (%d): ", size);
-    for(int i = 0; i < size; i++)
-        LOG("%d ", buffer[i]);
+//    for(int i = 0; i < size; i++)
+//        LOG("%d ", buffer[i]);
 
     if (size > 0) {
         FTTimestampState state;
         FTAppenderElement::decode(buffer, size, state);
 
-//        FTAppenderElement::printState(state);
+        FTAppenderElement::printState(state);
 
         se->putCommittedState(id, state);
     }//if
@@ -67,6 +68,9 @@ void FTControlElement::put(FTStateElement* se, int conn_fd) {
 void FTControlElement::get(FTStateElement* se, int conn_fd) {
     FTMBId id;
     read(conn_fd, &id, sizeof(FTMBId));
+
+    LOG("Get the state of middlebox %d", id);
+
     FTTimestampState committed;
     if (se->getCommittedState(id, committed)) {
 
@@ -77,15 +81,16 @@ void FTControlElement::get(FTStateElement* se, int conn_fd) {
         write(conn_fd, buffer.c_str(), size);
 
         //TODO: to remove begin
-//        LOG("State is (%d): ", buffer.size());
-//        FTAppenderElement::printState(committed);
-//
+        LOG("State is (%d): ", buffer.size());
+        FTAppenderElement::printState(committed);
+
 //        for(int i = 0; i < buffer.size(); i++)
 //            LOG("%d ", buffer[i]);
         //TODO: to remove end
     }//if
     else {
         // If there is some error in finding the state, return 0
+        LOG("State not found for MB %d", id);
         int size = 0;
         write(conn_fd, &size, sizeof(int));
     }//else

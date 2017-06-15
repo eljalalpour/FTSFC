@@ -16,7 +16,6 @@ CLICK_DECLS
 class Transmitter : public Element {
 private:
     unsigned int _counter;
-    FTMBId _id;
     FTClient _client;
     vector<string> _ips;
     vector<uint16_t> _ports;

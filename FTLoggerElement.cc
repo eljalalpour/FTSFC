@@ -7,13 +7,15 @@
 
 CLICK_DECLS
 
-FTLoggerElement* logger;
+vector<FTLoggerElement*> loggers;
 
 void signal_handler(int signal) {
     DEBUG("Interrupt signal (%d) received. Writing packets timestamps to file!", signal);
-    DEBUG("Writing %llu packets", logger->num_packets());
     click_chatter("In signal %d handler", signal);
-    logger->write_to_file();
+    for (int i = 0; i < loggers.size(); ++i) {
+        loggers[i]->write_to_file();
+    }//for
+    loggers.clear();
     exit(signal);
 }
 
@@ -22,7 +24,7 @@ FTLoggerElement::FTLoggerElement() {
     _count = COUNT_DEF_VAL;
     _ip_offset = IP_OFFSET_DEF_VAL;
 
-    logger = this;
+    loggers.push_back(this);
 }
 
 FTLoggerElement::~FTLoggerElement() { }
@@ -64,7 +66,7 @@ Packet* FTLoggerElement::simple_action(Packet* p) {
     LOG("Begin FTLoggerElement");
 
     auto id = FTAppenderElement::getPacketId(p);
-    _pkt_time[id] = std::chrono::high_resolution_clock::now().time_since_epoch().count();
+    _pkt_time[id] = CURRENT_TIMESTAMP;
     if (_pkt_time.size() >= _count) {
         write_to_file();
         _pkt_time.clear();

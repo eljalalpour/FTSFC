@@ -13,7 +13,6 @@ const char *FTStateElement::PUT_CALL_BACK = "p";
 int FTStateElement::configure(Vector<String> &conf, ErrorHandler *errh) {
     if (Args(conf, this, errh)
                 .read(CONF_ID, _id)
-                .read(CONF_VLAN_ID, _vlanId)
                 .read(CONF_FAILURE_COUNT, _failureCount)
                 .complete() < 0)
         return -1;
@@ -26,7 +25,7 @@ int FTStateElement::configure(Vector<String> &conf, ErrorHandler *errh) {
 void FTStateElement::push(int source, Packet *p) {
     DEBUG("------------------------------\n");
     DEBUG("Begin FTStateElement %d:\n", _id);
-    DEBUG("Receiving packet %llu from port %d\n", FTAppenderElement::getPacketId(p), source);
+//    DEBUG("Receiving packet %llu from port %d\n", FTAppenderElement::getPacketId(p), source);
 
     if (source == INPUT_PORT_TO_PROCESS) {
         try {

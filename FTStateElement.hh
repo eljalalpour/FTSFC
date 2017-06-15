@@ -26,7 +26,6 @@ class FTStateElement : public Element {
 public:
     //TODO: must be configured
     FTMBId _id;// Must be initialized during the configuration phase
-    VLANId _vlanId;// Must be initialized during the configuration phase
     int _failureCount;
     FTState _operationState; // Does not to be initialized
     FTModified _modified;  // Does not to be initialized

@@ -19,7 +19,7 @@ Packet *TrArrCounterMB::simple_action(Packet *p) {
     Router *r = this->router();
 
     //TODO: change the name of stateElement back to se
-    Transmitter *trans = (FTStateElement *)(r->find("se"));
+    Transmitter *trans = (Transmitter *)(r->find("se"));
     FTState state;
     for (int i = 0; i < _counters.size(); ++i) {
         stringstream value;

@@ -147,7 +147,7 @@ void FTStateElement::commit(FTMBId MBId, FTTimestamp timestamp) {
         _log[MBId] = statelist;
         return;
     }//if
-    
+
     // Find a log with the largest timestamp below the given timestamp
     int index = log_mb_item->second.size() - 1;
     LOG("Index before is %d", index);

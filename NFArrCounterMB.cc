@@ -1,7 +1,6 @@
 #include "FTStateElement.hh"
 #include "FTAppenderElement.hh"
 #include <click/config.h>
-#include <click/router.hh>
 #include <clicknet/tcp.h>
 #include <click/args.hh>
 #include "NFArrCounterMB.hh"
@@ -15,14 +14,6 @@ NFArrCounterMB::~NFArrCounterMB() {};
 Packet *NFArrCounterMB::simple_action(Packet *p) {
     LOG("--------------------");
     LOG("Begin NFArrCounterMB %d:", _id);
-    Router *r = this->router();
-
-    //TODO: change the name of stateElement back to se
-//    FTStateElement *stateElement = (FTStateElement *)(r->find("se"));
-    stringstream ess;
-    ess << "se" << (int)_id;
-    DEBUG("state element: %s", ess.str().c_str());
-    FTStateElement *stateElement = (FTStateElement *)(r->find(ess.str().c_str()));
 
     for (int i = 0; i < _counters.size(); ++i) {
         _counters[i] = INIT_COUNTER;

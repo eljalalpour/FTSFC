@@ -39,11 +39,11 @@ Packet *TrArrCounterMB::simple_action(Packet *p) {
 }
 
 int TrArrCounterMB::configure(Vector<String> &conf, ErrorHandler *errh) {
-    if (Args(conf, this, errh).read_or_set("ID", _id, rand() % MB_ID_MAX).complete() < 0)
-        return -1;
-
     IntArg parser;
     int size;
+
+    parser.parse(conf[0], _id);
+
     parser.parse(conf[1], size);
 
     for (int i = 0; i < size; ++i) {

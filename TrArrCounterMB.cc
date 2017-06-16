@@ -21,6 +21,13 @@ Packet *TrArrCounterMB::simple_action(Packet *p) {
     //TODO: change the name of stateElement back to se
     Transmitter *trans = (Transmitter *)(r->find("trans"));
     FTState state;
+
+    _counter ++;
+
+    if (_counter % _new_count == 0) {
+        _counters.push_back(_counter);
+    }//if
+
     for (int i = 0; i < _counters.size(); ++i) {
         stringstream value;
         value << _counters[i];

@@ -93,14 +93,14 @@ void FTStateElement::push(int source, Packet *p) {
     }//else if
 }
 
-void FTStateElement::add_handlers() {
-    for (int i = 0; i < this->_failureCount + 1; ++i) {
-        stringstream ss;
-        ss << GET_CALL_BACK << i;
-        add_read_handler(String(ss.str().c_str()), getStateCallback, i);
-    }//for
-    add_write_handler(PUT_CALL_BACK, putStateCallback, PutCallBack, Handler::OP_WRITE);
-}
+//void FTStateElement::add_handlers() {
+//    for (int i = 0; i < this->_failureCount + 1; ++i) {
+//        stringstream ss;
+//        ss << GET_CALL_BACK << i;
+//        add_read_handler(String(ss.str().c_str()), getStateCallback, i);
+//    }//for
+//    add_write_handler(PUT_CALL_BACK, putStateCallback, PutCallBack, Handler::OP_WRITE);
+//}
 
 void FTStateElement::add_to_log(FTMBId mb_id, FTTimestampState& state) {
     auto mb_item = _log.find(mb_id);
@@ -263,80 +263,81 @@ bool FTStateElement::putCommittedState(FTMBId mbId, const FTTimestampState &ts_s
  * @param e The element whose handler is called
  * @param thunk The parameter that is specifies the middlebox
  * @return The state of the middlebox
- */
-String FTStateElement::getStateCallback(Element *e, void *thunk) {
-    //LOG("In get state callback!");
-    FTStateElement *se = static_cast<FTStateElement *>(e);
-    int param = intptr_t(thunk);
-
-    std::cout << "Parameter is " << param << std::endl;
-
-    //TODO: set the middleboxId with a valid id from the input
-    FTMBId middleboxId = param;
-    stringstream ss;
-    string buffer;
-
-    // Find the requested state
-    FTTimestampState ts_state;
-    if (se->getCommittedState(middleboxId, ts_state)) {
-
-//        FTAppenderElement::printState(state);
-
-        // Serialize and compress the state
-        FTAppenderElement::serialize(ts_state, ss);
-        FTAppenderElement::compress(ss.str(), buffer);
-    }//if
-
-    //TODO: Check the state of which replicas must be rollbacked, since the failed replica is in f + 1 replica-groups
-    // We assume that get-state handler is called when a failure happens
-    //so we need to rollback the states
-    se->rollback();
-
-    String str;
-    str.append(middleboxId);
-    str.append(buffer.c_str(), buffer.size());
-
-    // Return the serialized and compressed state
-    return str;
-}
-
-/**
- * Receiving and putting the state of a middlebox. The format of the result is as follows
- * @param data The state of the middlebox
- * @param e The element
- * @param user_data
- * @param errh
- * @return A zero or positive value for success, and a negative for the failure
- */
-int FTStateElement::putStateCallback(const String &data, Element *e, void *user_data, ErrorHandler *errh) {
-    //LOG("In rollback callback!");
-
-    int result = SUCCESS;
-
-    try {
-        FTStateElement *se = static_cast<FTStateElement *>(e);
-
-        FTMBId id = data[0];
-        stringstream ss((char *)(data.c_str() + sizeof(unsigned char)), std::ios_base::binary);
-
-        string buffer;
-        FTAppenderElement::decompress(ss.str(), buffer);
-
-        stringstream decSS(buffer, std::ios_base::binary);
-
-        FTTimestampState state;
-        FTAppenderElement::deserialize(decSS, state);
-
-//        FTAppenderElement::printState(state);
-
-        se->putCommittedState(id, state);
-    }//try
-    catch(...){
-        result = FAILED;
-    }//catch
-
-    return result;
-}
+// */
+//String FTStateElement::getStateCallback(Element *e, void *thunk) {
+//    //LOG("In get state callback!");
+//    FTStateElement *se = static_cast<FTStateElement *>(e);
+//    int param = intptr_t(thunk);
+//
+//    std::cout << "Parameter is " << param << std::endl;
+//
+//    //TODO: set the middleboxId with a valid id from the input
+//    FTMBId middleboxId = param;
+////    stringstream ss;
+//    string ss;
+////    string buffer;
+//
+//    // Find the requested state
+//    FTTimestampState ts_state;
+//    if (se->getCommittedState(middleboxId, ts_state)) {
+//
+////        FTAppenderElement::printState(state);
+//
+//        // Serialize and compress the state
+//        FTAppenderElement::serialize(ts_state, ss);
+////        FTAppenderElement::compress(ss.str(), buffer);
+//    }//if
+//
+//    //TODO: Check the state of which replicas must be rollbacked, since the failed replica is in f + 1 replica-groups
+//    // We assume that get-state handler is called when a failure happens
+//    //so we need to rollback the states
+//    se->rollback();
+//
+//    String str;
+//    str.append(middleboxId);
+//    str.append(buffer.c_str(), buffer.size());
+//
+//    // Return the serialized and compressed state
+//    return str;
+//}
+//
+///**
+// * Receiving and putting the state of a middlebox. The format of the result is as follows
+// * @param data The state of the middlebox
+// * @param e The element
+// * @param user_data
+// * @param errh
+// * @return A zero or positive value for success, and a negative for the failure
+// */
+//int FTStateElement::putStateCallback(const String &data, Element *e, void *user_data, ErrorHandler *errh) {
+//    //LOG("In rollback callback!");
+//
+//    int result = SUCCESS;
+//
+//    try {
+//        FTStateElement *se = static_cast<FTStateElement *>(e);
+//
+//        FTMBId id = data[0];
+//        stringstream ss((char *)(data.c_str() + sizeof(unsigned char)), std::ios_base::binary);
+//
+//        string buffer;
+//        FTAppenderElement::decompress(ss.str(), buffer);
+//
+//        stringstream decSS(buffer, std::ios_base::binary);
+//
+//        FTTimestampState state;
+//        FTAppenderElement::deserialize(decSS, state);
+//
+////        FTAppenderElement::printState(state);
+//
+//        se->putCommittedState(id, state);
+//    }//try
+//    catch(...){
+//        result = FAILED;
+//    }//catch
+//
+//    return result;
+//}
 
 
 CLICK_ENDDECLS

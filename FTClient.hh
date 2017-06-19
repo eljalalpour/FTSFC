@@ -26,15 +26,14 @@ private:
         ServerConn* scp = static_cast<ServerConn*>(param);
 
         // Serialize state
-        stringstream buffer;
-        boost::archive::binary_oarchive oa(buffer);
-
-        oa << scp->state;
+        string buffer;
+        Serializer serializer;
+        buffer = serializer.serialize(scp->state);
 
         // Send state
-        size_t size = buffer.str().size();
+        size_t size = buffer.size();
         write(scp->socket, &size, sizeof(size_t));
-        write(scp->socket, buffer.str().c_str(), size);
+        write(scp->socket, buffer.c_str(), size);
 
         // Wait for the response
         char c;

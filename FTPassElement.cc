@@ -9,7 +9,7 @@ FTPassElement::FTPassElement() { }
 FTPassElement::~FTPassElement() { }
 
 void FTPassElement::push(int port, Packet *p) {
-    output(0).push(p);
+    output(port).push(p);
 }
 
 CLICK_ENDDECLS

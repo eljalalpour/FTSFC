@@ -24,9 +24,9 @@ Packet *TrArrCounterMB::simple_action(Packet *p) {
 
     _counter ++;
 
-    if (_counter % _new_count == 0) {
-        _counters.push_back(_counter);
-    }//if
+//    if (_counter % _new_count == 0) {
+//        _counters.push_back(_counter);
+//    }//if
 
     for (int i = 0; i < _counters.size(); ++i) {
         stringstream value;

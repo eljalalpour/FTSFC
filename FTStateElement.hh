@@ -84,7 +84,7 @@ public:
 
     void rollback();
 
-    void add_handlers();
+//    void add_handlers();
 
     /// Get the value associated to @param key from the in-operation state or committed state by setting @param value.
     /// The function searches the in-operation state, and if the key is not found then the function searches
@@ -112,13 +112,13 @@ public:
     /// \return True if the state of middlebox with id @param mbId exists, otherwise false
     bool putCommittedState(FTMBId mbId, const FTTimestampState &state);
 
-    /// Returns the committed state as a string
-    /// \param e element object
-    /// \param vparam
-    /// \return The state
-    static String getStateCallback(Element *e, void *user_data);
-
-    static int putStateCallback(const String &data, Element *element, void *user_data, ErrorHandler *errh);
+//    /// Returns the committed state as a string
+//    /// \param e element object
+//    /// \param vparam
+//    /// \return The state
+//    static String getStateCallback(Element *e, void *user_data);
+//
+//    static int putStateCallback(const String &data, Element *element, void *user_data, ErrorHandler *errh);
 };
 
 CLICK_ENDDECLS

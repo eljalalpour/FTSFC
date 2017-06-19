@@ -17,7 +17,7 @@ class ArrCounterMB : public Element {
 private:
     std::vector<unsigned int> _counters;
     FTMBId _id;
-    int _new_count;
+//    int _new_count;
     int _counter;
 
 public:

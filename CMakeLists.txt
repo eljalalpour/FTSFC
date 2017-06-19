@@ -29,7 +29,15 @@ set(SOURCE_FILES
         Efficient.hh
         types.pb.cc
         types.pb.h
-        main.cpp ArrCounterMB.cc ArrCounterMB.hh NFArrCounterMB.cpp NFArrCounterMB.h NFArrCounterMB.cc NFArrCounterMB.hh TrArrCounterMB.cc TrArrCounterMB.hh)
+        main.cpp
+        ArrCounterMB.cc
+        ArrCounterMB.hh
+        NFArrCounterMB.cpp
+        NFArrCounterMB.h
+        NFArrCounterMB.cc
+        NFArrCounterMB.hh
+        TrArrCounterMB.cc
+        TrArrCounterMB.hh)
 
 add_executable(FTSFC ${SOURCE_FILES})
 target_link_libraries(FTSFC ${CLICK_LIB})

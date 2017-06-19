@@ -4,7 +4,6 @@
 #include <click/config.h>
 #include <click/element.hh>
 #include <clicknet/tcp.h>
-#include <boost/archive/archive_exception.hpp>
 
 #define FROM_DUMP 0
 #define FROM_TO_DEVICE 1
@@ -33,21 +32,19 @@ public:
 
     void push(int source, Packet *p);
 
-    void append(FTPiggyBackMessage state);
+    void append(FTPiggyBackMessage& state);
 
-    static void serializePiggyBacked(FTPiggyBackMessage &pbStates, stringstream &ss);
-
-    static void deserializePiggyBacked(stringstream &ss, FTPiggyBackMessage &piggyBackedStates);
+    static void serializePiggyBacked(FTPiggyBackMessage &pbStates, string &ss);
 
     static void deserializePiggyBacked(string& states, FTPiggyBackMessage &piggyBackedStates);
 
-    static void serialize(FTPiggyBackState &state, stringstream &ss);
+    static void serialize(FTPiggyBackState &state, string &ss);
 
-    static void serialize(FTTimestampState &state, stringstream &ss);
+    static void serialize(FTTimestampState &state, string &ss);
 
-    static void deserialize(stringstream &ss, FTPiggyBackState &state);
+    static void deserialize(string &ss, FTPiggyBackState &state);
 
-    static void deserialize(stringstream &ss, FTTimestampState &state);
+    static void deserialize(string &ss, FTTimestampState &state);
 
     static int  payloadOffset(Packet *p);
 
@@ -68,16 +65,6 @@ public:
     /// \param piggyBackedState The state that is being piggybacked
     /// \return The packet without the state
     static WritablePacket* decodeStatesRetPacket(Packet *p, FTPiggyBackMessage &piggyBackedState);
-
-    /// Compress @arg data and write the compression result into @param buffer
-    /// \param data To be compressed
-    /// \param buffer Compressed
-    static void compress(const std::string &data, std::string &buffer);
-
-    /// Decompress @arg data and write the decompression result into @param buffer
-    /// \param data To be decompressed
-    /// \param buffer Decompressed
-    static void decompress(const std::string &data, std::string &buffer);
 
     /// Serialize and compress state
     /// \param state The state to be encoded

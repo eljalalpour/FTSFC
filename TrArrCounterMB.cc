@@ -22,21 +22,7 @@ Packet *TrArrCounterMB::simple_action(Packet *p) {
     Transmitter *trans = (Transmitter *)(r->find("trans"));
     FTState state;
 
-    _counter ++;
-
-//    if (_counter % _new_count == 0) {
-//        _counters.push_back(_counter);
-//    }//if
-
-    for (int i = 0; i < _counters.size(); ++i) {
-        stringstream value;
-        value << _counters[i];
-
-        stringstream key;
-        key << COUNTER << i;
-
-        state[key.str()] = value.str();
-    }//for
+    state[COUNTER] = _state;
     trans->send(state);
 
     LOG("End TrArrCounterMB %d:", _id);
@@ -50,12 +36,8 @@ int TrArrCounterMB::configure(Vector<String> &conf, ErrorHandler *errh) {
     int size;
 
     parser.parse(conf[0], _id);
-
     parser.parse(conf[1], size);
-
-    for (int i = 0; i < size; ++i) {
-        _counters.push_back(INIT_COUNTER);
-    }//for
+    _state = string(size, 't');
 
     LOG("Counter MB id is %d!\n", _id);
 

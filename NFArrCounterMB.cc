@@ -15,15 +15,7 @@ Packet *NFArrCounterMB::simple_action(Packet *p) {
     LOG("--------------------");
     LOG("Begin NFArrCounterMB %d:", _id);
 
-//    _counter ++;
-
-    for (int i = 0; i < _counters.size(); ++i) {
-        _counters[i]++;
-    }//for
-
-    if (_counter % _new_count == 0) {
-        _counters.push_back(_counter);
-    }
+    _state = _state;
 
     LOG("End NFArrCounterMB %d:", _id);
     LOG("--------------------");
@@ -36,16 +28,10 @@ int NFArrCounterMB::configure(Vector<String> &conf, ErrorHandler *errh) {
     int size;
 
     parser.parse(conf[0], _id);
-
     parser.parse(conf[1], size);
+    _state = string(size, 'n');
 
-    for (int i = 0; i < size; ++i) {
-        _counters.push_back(INIT_COUNTER);
-    }//for
-
-//    parser.parse(conf[1], _new_count);
-
-    LOG("Counter MB id is %d!\n", _id);
+    LOG("NF Counter MB id is %d!\n", _id);
 
     return 0;
 }

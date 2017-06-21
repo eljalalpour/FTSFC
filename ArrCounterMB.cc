@@ -8,7 +8,7 @@
 
 CLICK_DECLS
 
-ArrCounterMB::ArrCounterMB() { _counter = 0; };
+ArrCounterMB::ArrCounterMB() { };
 
 ArrCounterMB::~ArrCounterMB() {};
 
@@ -24,27 +24,7 @@ Packet *ArrCounterMB::simple_action(Packet *p) {
 //    DEBUG("state element: %s", ess.str().c_str());
 //    FTStateElement *stateElement = (FTStateElement *)(r->find(ess.str().c_str()));
 
-    _counter ++;
-
-    for (int i = 0; i < _counters.size(); ++i) {
-        stringstream value;
-        value << _counters[i];
-
-        stringstream key;
-        key << COUNTER << i;
-
-        stateElement->putPrimaryState(key.str(), value.str());
-    }//for
-
-//    if (_counter % _new_count == 0) {
-//        stringstream value;
-//        value << _counter;
-//
-//        stringstream key;
-//        key << COUNTER << _counter;
-//
-//        stateElement->putPrimaryState(key.str(), value.str());
-//    }
+    stateElement->putPrimaryState(COUNTER, _state);
 
     LOG("End ArrCounterMB %d:", _id);
     LOG("--------------------");
@@ -57,14 +37,8 @@ int ArrCounterMB::configure(Vector<String> &conf, ErrorHandler *errh) {
     int size;
 
     parser.parse(conf[0], _id);
-
     parser.parse(conf[1], size);
-
-    for (int i = 0; i < size; ++i) {
-        _counters.push_back(INIT_COUNTER);
-    }//for
-
-//    parser.parse(conf[1], _new_count);
+    _state = string(size, 'f');
 
     LOG("Counter MB id is %d!\n", _id);
 

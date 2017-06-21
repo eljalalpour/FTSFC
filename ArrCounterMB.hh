@@ -15,10 +15,8 @@ CLICK_DECLS
 
 class ArrCounterMB : public Element {
 private:
-    std::vector<unsigned int> _counters;
+    string _state;
     FTMBId _id;
-//    int _new_count;
-    int _counter;
 
 public:
     ArrCounterMB();

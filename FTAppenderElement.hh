@@ -18,7 +18,7 @@ CLICK_DECLS
 class FTAppenderElement : public Element {
 private:
     FTPiggyBackMessage _temp;
-
+    std::mutex _lock;
 public:
     FTAppenderElement();
 

@@ -23,10 +23,11 @@ void FTAppenderElement::push(int source, Packet *p) {
         DEBUG("state on the packet going to state-element");
 
 //        printState(_temp);
-
+        _lock.lock();
         WritablePacket *q = encodeStates(p, _temp);
         _temp.clear();
-
+        _lock.unlock();
+        
         p->kill();
         output(0).push(q);
     }//if
@@ -36,9 +37,9 @@ void FTAppenderElement::push(int source, Packet *p) {
         decodeStates(p, msg);
 
 //        printState(msg);
-
+        _lock.lock();
         append(msg);
-
+        _lock.unlock();
 //        DEBUG("_temp size is %u", _temp.size());
 
         p->kill();

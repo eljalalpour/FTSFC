@@ -235,4 +235,4 @@ void FTAppenderElement::decode(const char* data, int size, FTTimestampState& sta
 
 CLICK_ENDDECLS
 EXPORT_ELEMENT(FTAppenderElement)
-ELEMENT_LIBS(-L/usr/local/lib -lprotobuf)
+ELEMENT_LIBS(-L/usr/local/lib -lprotobuf -pthread -lpthread)

@@ -7,8 +7,6 @@
 CLICK_DECLS
 
 #define ETHER_PACKET_MAX_SIZE 1500
-#define TIME_STAMP_OFFSET 16
-#define HAS_TIME_STAMP true
 
 FTAppenderElement::FTAppenderElement() {};
 
@@ -97,9 +95,6 @@ int  FTAppenderElement::payloadOffset(Packet *p) {
     else {
         off = p->transport_header_offset();
     }//else
-
-    if (HAS_TIME_STAMP && off + TIME_STAMP_OFFSET < p->length())
-        off += TIME_STAMP_OFFSET;
 
     return off;
 }

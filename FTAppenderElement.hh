@@ -4,6 +4,7 @@
 #include <click/config.h>
 #include <click/element.hh>
 #include <clicknet/tcp.h>
+#include <mutex>
 
 #define FROM_DUMP 0
 #define FROM_TO_DEVICE 1

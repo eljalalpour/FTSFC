@@ -51,6 +51,11 @@ void FTStateElement::push(int source, Packet *p) {
             FTAppenderElement::decodeStates(p, _temp);
             replicate();
 
+            DEBUG("Temp size after replication: %d", _temp.size());
+            if (_temp.size() > 0) {
+                FTAppenderElement::printState(_temp);
+            }//if
+
             DEBUG("End FTStateElement %d\n", _id);
             DEBUG("------------------------------");
             // Sending the packet with pg msg to mb

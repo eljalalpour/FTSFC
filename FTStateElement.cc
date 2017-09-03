@@ -94,8 +94,7 @@ void FTStateElement::push(int source, Packet *p) {
         DEBUG("State going to the next middlebox (state size is %d):", _temp.size());
 
 //        FTAppenderElement::printState(_temp);
-
-        p->kill();
+//        p->kill();
 
         DEBUG("End FTStateElement %d\n", _id);
         DEBUG("------------------------------");

@@ -129,7 +129,7 @@ WritablePacket *FTAppenderElement::encodeStates(Packet *p, FTPiggyBackMessage &m
     if (!(q = p->uniqueify()))
         throw "Cannot create Packet";
 
-    String _data(stateSS);
+    String _data(stateSS.c_str());
     int stateLen = _data.length();
 
     if (q->length() < DEFAULT_OFFSET + stateLen + stateLen)

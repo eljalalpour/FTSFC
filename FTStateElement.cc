@@ -29,22 +29,37 @@ void FTStateElement::push(int source, Packet *p) {
 
     if (source == INPUT_PORT_TO_PROCESS) {
         try {
+//            reset();
+//            WritablePacket *q = FTAppenderElement::decodeStatesRetPacket(p, _temp);
+//            replicate();
+//
+//            //TODO: to remove begin
+////            DEBUG("Temp size after replication: %d", _temp.size());
+////            if (_temp.size() > 0) {
+////                FTAppenderElement::printState(_temp);
+////            }//if
+//            //TODO: to remove end
+//
+//            p->kill();
+//
+//            DEBUG("End FTStateElement %d\n", _id);
+//            DEBUG("------------------------------");
+//            output(OUTPUT_PORT_TO_MIDDLEBOX).push(q);
+
+
             reset();
-            WritablePacket *q = FTAppenderElement::decodeStatesRetPacket(p, _temp);
+            FTAppenderElement::decodeStates(p, _temp);
             replicate();
 
-            //TODO: to remove begin
             DEBUG("Temp size after replication: %d", _temp.size());
             if (_temp.size() > 0) {
                 FTAppenderElement::printState(_temp);
             }//if
-            //TODO: to remove end
-
-            p->kill();
 
             DEBUG("End FTStateElement %d\n", _id);
             DEBUG("------------------------------");
-            output(OUTPUT_PORT_TO_MIDDLEBOX).push(q);
+            // Sending the packet with pg msg to mb
+            output(OUTPUT_PORT_TO_MIDDLEBOX).push(p);
         }//try
         catch(...) {
             p->kill();
@@ -84,8 +99,7 @@ void FTStateElement::push(int source, Packet *p) {
         DEBUG("State going to the next middlebox (state size is %d):", _temp.size());
 
         FTAppenderElement::printState(_temp);
-
-        p->kill();
+//        p->kill();
 
         DEBUG("End FTStateElement %d\n", _id);
         DEBUG("------------------------------");
@@ -215,7 +229,7 @@ bool FTStateElement::getPrimaryState(string key, string &value) {
     }//else
 
 //    if (!found)
-    //LOG("Key '%s' is not found!\n", key.c_str());
+        //LOG("Key '%s' is not found!\n", key.c_str());
 
     return found;
 }

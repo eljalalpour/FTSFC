@@ -20,7 +20,7 @@ void FTAppenderElement::push(int source, Packet *p) {
         DEBUG("Receiving packet with size %d from the source!", p->length());
         DEBUG("state on the packet going to state-element");
 
-        printState(_temp);
+//        printState(_temp);
         _lock.lock();
         WritablePacket *q = encodeStates(p, _temp);
         _temp.clear();
@@ -34,11 +34,11 @@ void FTAppenderElement::push(int source, Packet *p) {
         FTPiggyBackMessage msg;
         decodeStates(p, msg);
 
-        printState(msg);
+//        printState(msg);
         _lock.lock();
         append(msg);
         _lock.unlock();
-        DEBUG("_temp size is %u", _temp.size());
+//        DEBUG("_temp size is %u", _temp.size());
 
         p->kill();
     }//else
@@ -100,59 +100,87 @@ int  FTAppenderElement::payloadOffset(Packet *p) {
 }
 
 WritablePacket *FTAppenderElement::encodeStates(Packet *p, FTPiggyBackMessage &msg) {
+//    string stateSS;
+//    serializePiggyBacked(msg, stateSS);
+//
+//    short stateLen = stateSS.size();
+//
+//    uint16_t newPacketSize = sizeof(short) + stateLen + p->length();
+//    WritablePacket *q = Packet::make(newPacketSize);
+//    int ploff = payloadOffset(p);
+//
+//    memcpy(q->data(), p->data(), ploff);
+//    memcpy(q->data() + ploff, &stateLen, sizeof(short));
+////    memcpy(q->data() + ploff + sizeof(short), compressed.c_str(), stateLen);
+//    memcpy(q->data() + ploff + sizeof(short), stateSS.c_str(), stateLen);
+//    if (ploff < p->length())
+//        memcpy(q->data() + ploff + sizeof(short) + stateLen, p->data() + ploff, p->length() - ploff);
+//
+//    click_ip* ip_header = reinterpret_cast<click_ip*>(q->data() + p->ip_header_offset());
+//    ip_header->ip_len = htons(ntohs(p->ip_header()->ip_len) + sizeof(short) + stateLen);
+//    ip_header->ip_sum = 0;
+//
+//    int hlen = (ip_header->ip_hl) << 2;
+//    ip_header->ip_sum = click_in_cksum((unsigned char *)ip_header, hlen);
+
     string stateSS;
     serializePiggyBacked(msg, stateSS);
+    WritablePacket *q;
+    if (!(q = p->uniqueify()))
+        throw "Cannot create Packet";
 
-    short stateLen = stateSS.size();
+    String _data(stateSS.c_str());
+    int stateLen = _data.length();
 
-    uint16_t newPacketSize = sizeof(short) + stateLen + p->length();
-    WritablePacket *q = Packet::make(newPacketSize);
-    int ploff = payloadOffset(p);
+    if (q->length() < DEFAULT_OFFSET + stateLen + sizeof(stateLen))
+        throw "Not sufficient space to place the piggybacked message!";
 
-    memcpy(q->data(), p->data(), ploff);
-    memcpy(q->data() + ploff, &stateLen, sizeof(short));
-//    memcpy(q->data() + ploff + sizeof(short), compressed.c_str(), stateLen);
-    memcpy(q->data() + ploff + sizeof(short), stateSS.c_str(), stateLen);
-    if (ploff < p->length())
-        memcpy(q->data() + ploff + sizeof(short) + stateLen, p->data() + ploff, p->length() - ploff);
-
-    click_ip* ip_header = reinterpret_cast<click_ip*>(q->data() + p->ip_header_offset());
-    ip_header->ip_len = htons(ntohs(p->ip_header()->ip_len) + sizeof(short) + stateLen);
-    ip_header->ip_sum = 0;
-
-    int hlen = (ip_header->ip_hl) << 2;
-    ip_header->ip_sum = click_in_cksum((unsigned char *)ip_header, hlen);
+    memcpy(q->data() + DEFAULT_OFFSET, &stateLen, sizeof(stateLen));
+    memcpy(q->data() + DEFAULT_OFFSET + sizeof(stateLen), _data.data(), _data.length());
 
     return q;
 }
 
 int FTAppenderElement::decodeStates(Packet *p, FTPiggyBackMessage &msg) {
-    auto ploff = payloadOffset(p);
+//    auto ploff = payloadOffset(p);
+//
+//    short stateLen;
+//    memcpy(&stateLen, p->data() + ploff, sizeof(short));
+//    string states(reinterpret_cast<const char*>(p->data()) + ploff + sizeof(short), stateLen);
+//    FTAppenderElement::deserializePiggyBacked(states, msg);
+//
+//    return stateLen + sizeof(short);
 
-    short stateLen;
-    memcpy(&stateLen, p->data() + ploff, sizeof(short));
-    string states(reinterpret_cast<const char*>(p->data()) + ploff + sizeof(short), stateLen);
-    FTAppenderElement::deserializePiggyBacked(states, msg);
+    int stateLen;
+    memcpy(&stateLen, p->data() + DEFAULT_OFFSET, sizeof(stateLen));
+    std::cout << "State length: " << stateLen << std::endl;
+//    string states(reinterpret_cast<const char*>(p->data()) + DEFAULT_OFFSET + sizeof(stateLen), stateLen);
+    String states(p->data() + DEFAULT_OFFSET + sizeof(stateLen), stateLen);
+    string statesStr(states.c_str());
+    FTAppenderElement::deserializePiggyBacked(statesStr, msg);
 
-    return stateLen + sizeof(short);
+    return stateLen + sizeof(stateLen);
 }
 
 WritablePacket* FTAppenderElement::decodeStatesRetPacket(Packet *p, FTPiggyBackMessage &msg) {
-    auto ploff = payloadOffset(p);
-    int stateLenPShort = FTAppenderElement::decodeStates(p, msg);
-    int orgPayloadBegin = ploff + stateLenPShort;
-    WritablePacket *q = Packet::make(p->length() - stateLenPShort);
-    memcpy(q->data(), p->data(), ploff);
-    memcpy(q->data() + ploff, p->data() + orgPayloadBegin, p->length() - orgPayloadBegin);
+//    auto ploff = payloadOffset(p);
+//    int stateLenPShort = FTAppenderElement::decodeStates(p, msg);
+//    int orgPayloadBegin = ploff + stateLenPShort;
+//    WritablePacket *q = Packet::make(p->length() - stateLenPShort);
+//    memcpy(q->data(), p->data(), ploff);
+//    memcpy(q->data() + ploff, p->data() + orgPayloadBegin, p->length() - orgPayloadBegin);
+//
+//    click_ip* ip_header = reinterpret_cast<click_ip*>(q->data() + p->ip_header_offset());
+//    ip_header->ip_len = htons(ntohs(p->ip_header()->ip_len) - stateLenPShort);
+//
+//    int hlen = (ip_header->ip_hl) << 2;
+//    ip_header->ip_sum = 0;
+//    ip_header->ip_sum = click_in_cksum((unsigned char *)ip_header, hlen);
+//
+//    return q;
 
-    click_ip* ip_header = reinterpret_cast<click_ip*>(q->data() + p->ip_header_offset());
-    ip_header->ip_len = htons(ntohs(p->ip_header()->ip_len) - stateLenPShort);
-
-    int hlen = (ip_header->ip_hl) << 2;
-    ip_header->ip_sum = 0;
-    ip_header->ip_sum = click_in_cksum((unsigned char *)ip_header, hlen);
-
-    return q;
+    FTAppenderElement::decodeStates(p, msg);
+    return p->uniqueify();
 }
 
 FTPacketId FTAppenderElement::getPacketId(Packet *p, int ip_offset) {
@@ -166,11 +194,11 @@ FTPacketId FTAppenderElement::getPacketId(Packet *p, int ip_offset) {
 }
 
 void FTAppenderElement::printState(FTState &state) {
-#ifndef DEBUG
+    #ifndef DEBUG
     #ifndef LOG
         return;
     #endif
-#endif
+    #endif
 
     LOG("State size is %u", state.size());
     for (auto it = state.begin(); it != state.end(); ++it) {

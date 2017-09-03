@@ -14,8 +14,6 @@
 #define IP_PACKET_OFFSET 14
 #define IP_PACKET_AFTER_VLAN_OFFSET 18
 
-#define DEFAULT_OFFSET  50
-
 CLICK_DECLS
 
 class FTAppenderElement : public Element {

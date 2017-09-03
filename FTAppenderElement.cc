@@ -153,7 +153,7 @@ int FTAppenderElement::decodeStates(Packet *p, FTPiggyBackMessage &msg) {
 
     int stateLen;
     memcpy(&stateLen, p->data() + DEFAULT_OFFSET, sizeof(stateLen));
-    std::cout << "State length: " << stateLen << std::endl;
+//    std::cout << "State length: " << stateLen << std::endl;
 //    string states(reinterpret_cast<const char*>(p->data()) + DEFAULT_OFFSET + sizeof(stateLen), stateLen);
     String states(p->data() + DEFAULT_OFFSET + sizeof(stateLen), stateLen);
     string statesStr(states.c_str());

@@ -131,13 +131,12 @@ WritablePacket *FTAppenderElement::encodeStates(Packet *p, FTPiggyBackMessage &m
 
     String _data(stateSS.c_str());
     int stateLen = _data.length();
-    int ploff = payloadOffset(p);
 
-    if (q->length() < ploff + DEFAULT_OFFSET + stateLen + stateLen)
+    if (q->length() < DEFAULT_OFFSET + stateLen + stateLen)
         throw "Not sufficient space to place the piggybacked message!";
 
-    memcpy(q->data() + ploff + DEFAULT_OFFSET, &stateLen, sizeof(stateLen));
-    memcpy(q->data() + ploff + DEFAULT_OFFSET + sizeof(stateLen), _data.data(), _data.length());
+    memcpy(q->data() + DEFAULT_OFFSET, &stateLen, sizeof(stateLen));
+    memcpy(q->data() + DEFAULT_OFFSET + sizeof(stateLen), _data.data(), _data.length());
 
     return q;
 }
@@ -153,11 +152,10 @@ int FTAppenderElement::decodeStates(Packet *p, FTPiggyBackMessage &msg) {
 //    return stateLen + sizeof(short);
 
     int stateLen;
-    int ploff = payloadOffset(p);
-    memcpy(&stateLen, p->data() + ploff + DEFAULT_OFFSET, sizeof(stateLen));
+    memcpy(&stateLen, p->data() + DEFAULT_OFFSET, sizeof(stateLen));
     std::cout << "State length: " << stateLen << std::endl;
 //    string states(reinterpret_cast<const char*>(p->data()) + DEFAULT_OFFSET + sizeof(stateLen), stateLen);
-    String states(p->data() + ploff + DEFAULT_OFFSET + sizeof(stateLen), stateLen);
+    String states(p->data() + DEFAULT_OFFSET + sizeof(stateLen), stateLen);
     string statesStr(states.c_str());
     FTAppenderElement::deserializePiggyBacked(statesStr, msg);
 

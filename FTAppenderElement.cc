@@ -177,7 +177,7 @@ WritablePacket* FTAppenderElement::decodeStatesRetPacket(Packet *p, FTPiggyBackM
 //    return q;
 
     FTAppenderElement::decodeStates(p, msg);
-    return p;
+    return p->uniqueify();
 }
 
 FTPacketId FTAppenderElement::getPacketId(Packet *p, int ip_offset) {

@@ -17,12 +17,19 @@ FTTimestamp FTBufferElement::last_commit_timestamp(FTPiggyBackMessage& msg) {
 }
 
 void FTBufferElement::release(FTTimestamp commit_timestamp) {
+    DEBUG("Releasing packets, packets length is %d!", _packets.size());
+    int i = 0;
     for (auto it = _packets.begin(); it != _packets.end(); /* no increment */) {
+	DEBUG("Check packet!");
         if (it->first > commit_timestamp)
             break;
+	DEBUG("Release packet %d-th", i);
         output(TO_OUTSIDE_WORLD).push(it->second);
+	DEBUG("Erase the packet %d-th", i);
         _packets.erase(it++);
+	i++;
     }//for
+    DEBUG("End of releasing packets!");
 }
 
 void FTBufferElement::push(int, Packet *p) {
@@ -55,13 +62,22 @@ void FTBufferElement::push(int, Packet *p) {
 //    DEBUG("\nEnd FTBufferElement");
 //    DEBUG("------------------------------\n");
 
+    DEBUG("\n------------------------------");
+    DEBUG("Begin FTBufferElement\n\n");
+
+    LOG("Buffer size is: %d", _packets.size());
+    
     FTPiggyBackMessage msg;
     FTAppenderElement::decodeStates(p, msg);
+    
     auto lts = last_timestamp(msg);
-    _packets[lts] = p;
-
+    _packets[lts] = Packet::make(p->data(), p->length());
+    
     output(TO_CHAIN_BEGIN).push(p);
     release(last_commit_timestamp(msg));
+
+    DEBUG("\nEnd FTBufferElement");
+    DEBUG("------------------------------\n");
 }
 
 CLICK_ENDDECLS

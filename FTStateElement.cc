@@ -25,7 +25,7 @@ int FTStateElement::configure(Vector<String> &conf, ErrorHandler *errh) {
 void FTStateElement::push(int source, Packet *p) {
     DEBUG("------------------------------\n");
     DEBUG("Begin FTStateElement %d:\n", _id);
-//    DEBUG("Receiving packet %llu from port %d\n", FTAppenderElement::getPacketId(p), source);
+    DEBUG("Receiving packet %llu from port %d\n", FTAppenderElement::getPacketId(p), source);
 
     if (source == INPUT_PORT_TO_PROCESS) {
         try {
@@ -46,22 +46,27 @@ void FTStateElement::push(int source, Packet *p) {
 //            DEBUG("------------------------------");
 //            output(OUTPUT_PORT_TO_MIDDLEBOX).push(q);
 
-
+	    DEBUG("Here-0");
             reset();
+	    DEBUG("Here-1");
             FTAppenderElement::decodeStates(p, _temp);
+	    DEBUG("Here-2");
             replicate();
-
             DEBUG("Temp size after replication: %d", _temp.size());
             if (_temp.size() > 0) {
-                FTAppenderElement::printState(_temp);
+	    	DEBUG("Here-3");
+		FTAppenderElement::printState(_temp);
             }//if
 
             DEBUG("End FTStateElement %d\n", _id);
             DEBUG("------------------------------");
             // Sending the packet with pg msg to mb
+	    
+	    DEBUG("Here-5");
             output(OUTPUT_PORT_TO_MIDDLEBOX).push(p);
         }//try
-        catch(...) {
+        catch(...) { 
+	    DEBUG("Here-6");
             p->kill();
             DEBUG("Not A valid packet for our protocol\n");
 
@@ -71,17 +76,21 @@ void FTStateElement::push(int source, Packet *p) {
     }//if
     else if (source == INPUT_PORT_PROCESSED) {
         FTTimestampState primaryState;
+  	
         for (auto it = _modified.begin(); it != _modified.end(); ++it) {
             if (it->second) {
                 primaryState[it->first] = _operationState[it->first];
             }//if
         }//for
+	
         primaryState.timestamp = CURRENT_TIMESTAMP;
         FTPiggyBackState union_;
+	
         auto primary_log = _log.find(_id);
         if (primary_log != _log.end() && primary_log->second.size() > 0) {
             union_.set_state(*primary_log->second.rbegin());
         }//if
+	
         union_.time_union(primaryState);
         union_.ack = 1;
         auto committed_state_item = _committed.find(_id);
@@ -93,17 +102,18 @@ void FTStateElement::push(int source, Packet *p) {
         add_to_log(_id, union_);
 
         // Write the changes state into log
-
         WritablePacket *q = FTAppenderElement::encodeStates(p, _temp);
         DEBUG("Packet size: %d\n", q->length());
         DEBUG("State going to the next middlebox (state size is %d):", _temp.size());
-
+	
+	DEBUG("Here-14");
         FTAppenderElement::printState(_temp);
 //        p->kill();
 
         DEBUG("End FTStateElement %d\n", _id);
         DEBUG("------------------------------");
         output(OUTPUT_PORT_TO_NEXT_MIDDLEBOX).push(q);
+	p->kill();
     }//else if
 }
 

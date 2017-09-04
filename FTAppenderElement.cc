@@ -7,38 +7,57 @@
 CLICK_DECLS
 
 #define ETHER_PACKET_MAX_SIZE 1500
+#define DEFAULT_OFFSET  100
 
 FTAppenderElement::FTAppenderElement() {};
 
 FTAppenderElement::~FTAppenderElement() {};
 
 void FTAppenderElement::push(int source, Packet *p) {
-//    DEBUG("--------------------");
-//    DEBUG("Begin FTAppender element:");
+    DEBUG("--------------------");
+    DEBUG("Begin FTAppender element:");
 
     if (source == 0) {
-        DEBUG("Receiving packet with size %d from the source!", p->length());
+        DEBUG("Receiving packet %llu with size %d from the source!", getPacketId(p),  p->length());
         DEBUG("state on the packet going to state-element");
+	DEBUG("State size: %d", _temp.size());
 
-//        printState(_temp);
         _lock.lock();
-        WritablePacket *q = encodeStates(p, _temp);
-        _temp.clear();
-        _lock.unlock();
+	bool encoded = true;
+	WritablePacket* q;
+	try {
+            q = encodeStates(p, _temp);
+            _temp.clear();
+	}//try
+	catch(...) {
+	    encoded = false;
+	}//catch
 
+        _lock.unlock();
+	
         p->kill();
-        output(0).push(q);
+	if (encoded) {
+	    output(0).push(q);
+	}//if
+	else { 
+	    DEBUG("Not sending out the packet!");
+	}//else
     }//if
     else {
-        DEBUG("Receiving packet from the end of the chain!");
+        DEBUG("Receiving packet %llu from the end of the chain!", getPacketId(p));
         FTPiggyBackMessage msg;
         decodeStates(p, msg);
 
-//        printState(msg);
+        printState(msg);
         _lock.lock();
-        append(msg);
+	try {
+            append(msg);
+	}//try
+	catch(...) {
+	    DEBUG("Some Error happened during appending the message!");
+        }//catch
         _lock.unlock();
-//        DEBUG("_temp size is %u", _temp.size());
+        DEBUG("_temp size is %u", _temp.size());
 
         p->kill();
     }//else
@@ -126,17 +145,22 @@ WritablePacket *FTAppenderElement::encodeStates(Packet *p, FTPiggyBackMessage &m
     string stateSS;
     serializePiggyBacked(msg, stateSS);
     WritablePacket *q;
-    if (!(q = p->uniqueify()))
+    if (!(q = p->uniqueify())) {
+	DEBUG("Cannot create Packet");
         throw "Cannot create Packet";
+    }//if
 
-    String _data(stateSS.c_str());
+    String _data(stateSS.c_str(), stateSS.size());
     int stateLen = _data.length();
 
-    if (q->length() < DEFAULT_OFFSET + stateLen + sizeof(stateLen))
+    if (q->length() < DEFAULT_OFFSET + stateLen + sizeof(stateLen)) {
+	DEBUG("Not sufficient space to place the piggybacked message!");
+//	DEBUG("Packet Len: %d, default_offset: %d, State Len: %d, Sizeoof(statelen): %d", q->length(), DEFAULT_OFFSET, stateLen, sizeof(stateLen));
         throw "Not sufficient space to place the piggybacked message!";
-
+    }//if
+    DEBUG("State length in encoding: %d == %d", stateLen, stateSS.size());
     memcpy(q->data() + DEFAULT_OFFSET, &stateLen, sizeof(stateLen));
-    memcpy(q->data() + DEFAULT_OFFSET + sizeof(stateLen), _data.data(), _data.length());
+    memcpy(q->data() + DEFAULT_OFFSET + sizeof(stateLen), _data.data(), stateLen);
 
     return q;
 }
@@ -153,12 +177,14 @@ int FTAppenderElement::decodeStates(Packet *p, FTPiggyBackMessage &msg) {
 
     int stateLen;
     memcpy(&stateLen, p->data() + DEFAULT_OFFSET, sizeof(stateLen));
-//    std::cout << "State length: " << stateLen << std::endl;
+    DEBUG("State length in decoding: %d", stateLen);
 //    string states(reinterpret_cast<const char*>(p->data()) + DEFAULT_OFFSET + sizeof(stateLen), stateLen);
-    String states(p->data() + DEFAULT_OFFSET + sizeof(stateLen), stateLen);
-    string statesStr(states.c_str());
+    String _data(p->data() + DEFAULT_OFFSET + sizeof(stateLen), stateLen);
+    DEBUG("There-0");
+    string statesStr(_data.data(), _data.length());
+    DEBUG("There-1");
     FTAppenderElement::deserializePiggyBacked(statesStr, msg);
-
+    DEBUG("There-2");
     return stateLen + sizeof(stateLen);
 }
 

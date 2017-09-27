@@ -153,12 +153,12 @@ WritablePacket *FTAppenderElement::encodeStates(Packet *p, FTPiggyBackMessage &m
     String _data(stateSS.c_str(), stateSS.size());
     int stateLen = _data.length();
 
-    if (q->length() < DEFAULT_OFFSET + stateLen + sizeof(stateLen)) {
-	DEBUG("Not sufficient space to place the piggybacked message!");
-//	DEBUG("Packet Len: %d, default_offset: %d, State Len: %d, Sizeoof(statelen): %d", q->length(), DEFAULT_OFFSET, stateLen, sizeof(stateLen));
-        throw "Not sufficient space to place the piggybacked message!";
-    }//if
-    DEBUG("State length in encoding: %d == %d", stateLen, stateSS.size());
+//    if (q->length() < DEFAULT_OFFSET + stateLen + sizeof(stateLen)) {
+//	DEBUG("Not sufficient space to place the piggybacked message!");
+////	DEBUG("Packet Len: %d, default_offset: %d, State Len: %d, Sizeoof(statelen): %d", q->length(), DEFAULT_OFFSET, stateLen, sizeof(stateLen));
+//        throw "Not sufficient space to place the piggybacked message!";
+//    }//if
+//    DEBUG("State length in encoding: %d == %d", stateLen, stateSS.size());
     memcpy(q->data() + DEFAULT_OFFSET, &stateLen, sizeof(stateLen));
     memcpy(q->data() + DEFAULT_OFFSET + sizeof(stateLen), _data.data(), stateLen);
 

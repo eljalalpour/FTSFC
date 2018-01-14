@@ -7,6 +7,7 @@
 CLICK_DECLS
 
 #define ETHER_PACKET_MAX_SIZE 1500
+#define DEFAULT_OFFSET 0
 
 FTAppenderElement::FTAppenderElement() {};
 

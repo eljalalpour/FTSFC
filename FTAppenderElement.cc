@@ -7,7 +7,6 @@
 CLICK_DECLS
 
 #define ETHER_PACKET_MAX_SIZE 1500
-#define DEFAULT_OFFSET  100
 
 FTAppenderElement::FTAppenderElement() {};
 
@@ -18,51 +17,33 @@ void FTAppenderElement::push(int source, Packet *p) {
     DEBUG("Begin FTAppender element:");
 
     if (source == 0) {
-        DEBUG("Receiving packet %llu with size %d from the source!", getPacketId(p),  p->length());
+        DEBUG("Receiving packet with size %d from the source!", p->length());
         DEBUG("state on the packet going to state-element");
-	DEBUG("State size: %d", _temp.size());
 
+        printState(_temp);
         _lock.lock();
-	bool encoded = true;
-	WritablePacket* q;
-	try {
-            q = encodeStates(p, _temp);
-            _temp.clear();
-	}//try
-	catch(...) {
-	    encoded = false;
-	}//catch
-
+        WritablePacket *q = encodeStates(p, _temp);
+        _temp.clear();
         _lock.unlock();
-	
+
         p->kill();
-	if (encoded) {
-	    output(0).push(q);
-	}//if
-	else { 
-	    DEBUG("Not sending out the packet!");
-	}//else
+        output(0).push(q);
     }//if
     else {
-        DEBUG("Receiving packet %llu from the end of the chain!", getPacketId(p));
+        DEBUG("Receiving packet from the end of the chain!");
         FTPiggyBackMessage msg;
         decodeStates(p, msg);
 
         printState(msg);
         _lock.lock();
-	try {
-            append(msg);
-	}//try
-	catch(...) {
-	    DEBUG("Some Error happened during appending the message!");
-        }//catch
+        append(msg);
         _lock.unlock();
         DEBUG("_temp size is %u", _temp.size());
 
         p->kill();
     }//else
 
-
+    DEBUG("End FTAppender element:");
     DEBUG("--------------------\n");
 }
 
@@ -145,22 +126,17 @@ WritablePacket *FTAppenderElement::encodeStates(Packet *p, FTPiggyBackMessage &m
     string stateSS;
     serializePiggyBacked(msg, stateSS);
     WritablePacket *q;
-    if (!(q = p->uniqueify())) {
-	DEBUG("Cannot create Packet");
+    if (!(q = p->uniqueify()))
         throw "Cannot create Packet";
-    }//if
 
-    String _data(stateSS.c_str(), stateSS.size());
+    String _data(stateSS.c_str());
     int stateLen = _data.length();
 
-//    if (q->length() < DEFAULT_OFFSET + stateLen + sizeof(stateLen)) {
-//	DEBUG("Not sufficient space to place the piggybacked message!");
-////	DEBUG("Packet Len: %d, default_offset: %d, State Len: %d, Sizeoof(statelen): %d", q->length(), DEFAULT_OFFSET, stateLen, sizeof(stateLen));
-//        throw "Not sufficient space to place the piggybacked message!";
-//    }//if
-//    DEBUG("State length in encoding: %d == %d", stateLen, stateSS.size());
+    if (q->length() < DEFAULT_OFFSET + stateLen + sizeof(stateLen))
+        throw "Not sufficient space to place the piggybacked message!";
+
     memcpy(q->data() + DEFAULT_OFFSET, &stateLen, sizeof(stateLen));
-    memcpy(q->data() + DEFAULT_OFFSET + sizeof(stateLen), _data.data(), stateLen);
+    memcpy(q->data() + DEFAULT_OFFSET + sizeof(stateLen), _data.data(), _data.length());
 
     return q;
 }
@@ -177,14 +153,12 @@ int FTAppenderElement::decodeStates(Packet *p, FTPiggyBackMessage &msg) {
 
     int stateLen;
     memcpy(&stateLen, p->data() + DEFAULT_OFFSET, sizeof(stateLen));
-    DEBUG("State length in decoding: %d", stateLen);
+//    std::cout << "State length: " << stateLen << std::endl;
 //    string states(reinterpret_cast<const char*>(p->data()) + DEFAULT_OFFSET + sizeof(stateLen), stateLen);
-    String _data(p->data() + DEFAULT_OFFSET + sizeof(stateLen), stateLen);
-    DEBUG("There-0");
-    string statesStr(_data.data(), _data.length());
-    DEBUG("There-1");
+    String states(p->data() + DEFAULT_OFFSET + sizeof(stateLen), stateLen);
+    string statesStr(states.c_str());
     FTAppenderElement::deserializePiggyBacked(statesStr, msg);
-    DEBUG("There-2");
+
     return stateLen + sizeof(stateLen);
 }
 
@@ -220,11 +194,11 @@ FTPacketId FTAppenderElement::getPacketId(Packet *p, int ip_offset) {
 }
 
 void FTAppenderElement::printState(FTState &state) {
-    #ifndef DEBUG
+#ifndef DEBUG
     #ifndef LOG
         return;
     #endif
-    #endif
+#endif
 
     LOG("State size is %u", state.size());
     for (auto it = state.begin(); it != state.end(); ++it) {

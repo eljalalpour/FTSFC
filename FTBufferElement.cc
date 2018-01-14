@@ -20,14 +20,19 @@ void FTBufferElement::release(FTTimestamp commit_timestamp) {
     DEBUG("Releasing packets, packets length is %d!", _packets.size());
     int i = 0;
     for (auto it = _packets.begin(); it != _packets.end(); /* no increment */) {
-	DEBUG("Check packet!");
+	    DEBUG("Check packet!");
         if (it->first > commit_timestamp)
             break;
-	DEBUG("Release packet %d-th", i);
+	
+        DEBUG("Release packet %d-th", i);
+        FTPiggyBackMessage msg;
+        FTAppenderElement::decodeStates(it->second, msg);
+        FTAppenderElement::printState(msg);
+
         output(TO_OUTSIDE_WORLD).push(it->second);
-	DEBUG("Erase the packet %d-th", i);
+    	DEBUG("Erase the packet %d-th", i);
         _packets.erase(it++);
-	i++;
+	    i++;
     }//for
     DEBUG("End of releasing packets!");
 }

@@ -18,182 +18,169 @@
 // @@protoc_insertion_point(includes)
 
 namespace FTSFC {
-class StateDefaultTypeInternal : public ::google::protobuf::internal::ExplicitlyConstructed<State> {
-} _State_default_instance_;
-class TimestampStateDefaultTypeInternal : public ::google::protobuf::internal::ExplicitlyConstructed<TimestampState> {
-} _TimestampState_default_instance_;
-class PiggyBackStateDefaultTypeInternal : public ::google::protobuf::internal::ExplicitlyConstructed<PiggyBackState> {
-} _PiggyBackState_default_instance_;
-class PiggyBackMessageDefaultTypeInternal : public ::google::protobuf::internal::ExplicitlyConstructed<PiggyBackMessage> {
-} _PiggyBackMessage_default_instance_;
-
-namespace protobuf_types_2eproto {
-
 
 namespace {
 
-::google::protobuf::Metadata file_level_metadata[4];
+const ::google::protobuf::Descriptor* State_descriptor_ = NULL;
+const ::google::protobuf::internal::GeneratedMessageReflection*
+  State_reflection_ = NULL;
+const ::google::protobuf::Descriptor* TimestampState_descriptor_ = NULL;
+const ::google::protobuf::internal::GeneratedMessageReflection*
+  TimestampState_reflection_ = NULL;
+const ::google::protobuf::Descriptor* PiggyBackState_descriptor_ = NULL;
+const ::google::protobuf::internal::GeneratedMessageReflection*
+  PiggyBackState_reflection_ = NULL;
+const ::google::protobuf::Descriptor* PiggyBackMessage_descriptor_ = NULL;
+const ::google::protobuf::internal::GeneratedMessageReflection*
+  PiggyBackMessage_reflection_ = NULL;
 
 }  // namespace
 
-PROTOBUF_CONSTEXPR_VAR ::google::protobuf::internal::ParseTableField
-    const TableStruct::entries[] = {
-  {0, 0, 0, ::google::protobuf::internal::kInvalidMask, 0, 0},
-};
 
-PROTOBUF_CONSTEXPR_VAR ::google::protobuf::internal::AuxillaryParseTableField
-    const TableStruct::aux[] = {
-  ::google::protobuf::internal::AuxillaryParseTableField(),
-};
-PROTOBUF_CONSTEXPR_VAR ::google::protobuf::internal::ParseTable const
-    TableStruct::schema[] = {
-  { NULL, NULL, 0, -1, -1, false },
-  { NULL, NULL, 0, -1, -1, false },
-  { NULL, NULL, 0, -1, -1, false },
-  { NULL, NULL, 0, -1, -1, false },
-};
-
-const ::google::protobuf::uint32 TableStruct::offsets[] = {
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(State, _has_bits_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(State, _internal_metadata_),
-  ~0u,  // no _extensions_
-  ~0u,  // no _oneof_case_
-  ~0u,  // no _weak_field_map_
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(State, key_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(State, val_),
-  ~0u,
-  ~0u,
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(TimestampState, _has_bits_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(TimestampState, _internal_metadata_),
-  ~0u,  // no _extensions_
-  ~0u,  // no _oneof_case_
-  ~0u,  // no _weak_field_map_
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(TimestampState, timestamp_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(TimestampState, state_),
-  1,
-  0,
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(PiggyBackState, _has_bits_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(PiggyBackState, _internal_metadata_),
-  ~0u,  // no _extensions_
-  ~0u,  // no _oneof_case_
-  ~0u,  // no _weak_field_map_
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(PiggyBackState, ack_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(PiggyBackState, last_commit_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(PiggyBackState, timestamp_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(PiggyBackState, state_),
-  3,
-  1,
-  2,
-  0,
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(PiggyBackMessage, _has_bits_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(PiggyBackMessage, _internal_metadata_),
-  ~0u,  // no _extensions_
-  ~0u,  // no _oneof_case_
-  ~0u,  // no _weak_field_map_
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(PiggyBackMessage, mb_id_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(PiggyBackMessage, pb_state_),
-  ~0u,
-  ~0u,
-};
-
-static const ::google::protobuf::internal::MigrationSchema schemas[] = {
-  { 0, 7, sizeof(State)},
-  { 9, 16, sizeof(TimestampState)},
-  { 18, 27, sizeof(PiggyBackState)},
-  { 31, 38, sizeof(PiggyBackMessage)},
-};
-
-static ::google::protobuf::Message const * const file_default_instances[] = {
-  reinterpret_cast<const ::google::protobuf::Message*>(&_State_default_instance_),
-  reinterpret_cast<const ::google::protobuf::Message*>(&_TimestampState_default_instance_),
-  reinterpret_cast<const ::google::protobuf::Message*>(&_PiggyBackState_default_instance_),
-  reinterpret_cast<const ::google::protobuf::Message*>(&_PiggyBackMessage_default_instance_),
-};
+void protobuf_AssignDesc_types_2eproto() GOOGLE_ATTRIBUTE_COLD;
+void protobuf_AssignDesc_types_2eproto() {
+  protobuf_AddDesc_types_2eproto();
+  const ::google::protobuf::FileDescriptor* file =
+    ::google::protobuf::DescriptorPool::generated_pool()->FindFileByName(
+      "types.proto");
+  GOOGLE_CHECK(file != NULL);
+  State_descriptor_ = file->message_type(0);
+  static const int State_offsets_[2] = {
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(State, key_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(State, val_),
+  };
+  State_reflection_ =
+    ::google::protobuf::internal::GeneratedMessageReflection::NewGeneratedMessageReflection(
+      State_descriptor_,
+      State::default_instance_,
+      State_offsets_,
+      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(State, _has_bits_[0]),
+      -1,
+      -1,
+      sizeof(State),
+      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(State, _internal_metadata_),
+      -1);
+  TimestampState_descriptor_ = file->message_type(1);
+  static const int TimestampState_offsets_[2] = {
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(TimestampState, timestamp_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(TimestampState, state_),
+  };
+  TimestampState_reflection_ =
+    ::google::protobuf::internal::GeneratedMessageReflection::NewGeneratedMessageReflection(
+      TimestampState_descriptor_,
+      TimestampState::default_instance_,
+      TimestampState_offsets_,
+      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(TimestampState, _has_bits_[0]),
+      -1,
+      -1,
+      sizeof(TimestampState),
+      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(TimestampState, _internal_metadata_),
+      -1);
+  PiggyBackState_descriptor_ = file->message_type(2);
+  static const int PiggyBackState_offsets_[4] = {
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(PiggyBackState, ack_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(PiggyBackState, last_commit_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(PiggyBackState, timestamp_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(PiggyBackState, state_),
+  };
+  PiggyBackState_reflection_ =
+    ::google::protobuf::internal::GeneratedMessageReflection::NewGeneratedMessageReflection(
+      PiggyBackState_descriptor_,
+      PiggyBackState::default_instance_,
+      PiggyBackState_offsets_,
+      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(PiggyBackState, _has_bits_[0]),
+      -1,
+      -1,
+      sizeof(PiggyBackState),
+      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(PiggyBackState, _internal_metadata_),
+      -1);
+  PiggyBackMessage_descriptor_ = file->message_type(3);
+  static const int PiggyBackMessage_offsets_[2] = {
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(PiggyBackMessage, mb_id_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(PiggyBackMessage, pb_state_),
+  };
+  PiggyBackMessage_reflection_ =
+    ::google::protobuf::internal::GeneratedMessageReflection::NewGeneratedMessageReflection(
+      PiggyBackMessage_descriptor_,
+      PiggyBackMessage::default_instance_,
+      PiggyBackMessage_offsets_,
+      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(PiggyBackMessage, _has_bits_[0]),
+      -1,
+      -1,
+      sizeof(PiggyBackMessage),
+      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(PiggyBackMessage, _internal_metadata_),
+      -1);
+}
 
 namespace {
 
-void protobuf_AssignDescriptors() {
-  AddDescriptors();
-  ::google::protobuf::MessageFactory* factory = NULL;
-  AssignDescriptors(
-      "types.proto", schemas, file_default_instances, TableStruct::offsets, factory,
-      file_level_metadata, NULL, NULL);
-}
-
-void protobuf_AssignDescriptorsOnce() {
-  static GOOGLE_PROTOBUF_DECLARE_ONCE(once);
-  ::google::protobuf::GoogleOnceInit(&once, &protobuf_AssignDescriptors);
+GOOGLE_PROTOBUF_DECLARE_ONCE(protobuf_AssignDescriptors_once_);
+inline void protobuf_AssignDescriptorsOnce() {
+  ::google::protobuf::GoogleOnceInit(&protobuf_AssignDescriptors_once_,
+                 &protobuf_AssignDesc_types_2eproto);
 }
 
 void protobuf_RegisterTypes(const ::std::string&) GOOGLE_ATTRIBUTE_COLD;
 void protobuf_RegisterTypes(const ::std::string&) {
   protobuf_AssignDescriptorsOnce();
-  ::google::protobuf::internal::RegisterAllTypes(file_level_metadata, 4);
+  ::google::protobuf::MessageFactory::InternalRegisterGeneratedMessage(
+      State_descriptor_, &State::default_instance());
+  ::google::protobuf::MessageFactory::InternalRegisterGeneratedMessage(
+      TimestampState_descriptor_, &TimestampState::default_instance());
+  ::google::protobuf::MessageFactory::InternalRegisterGeneratedMessage(
+      PiggyBackState_descriptor_, &PiggyBackState::default_instance());
+  ::google::protobuf::MessageFactory::InternalRegisterGeneratedMessage(
+      PiggyBackMessage_descriptor_, &PiggyBackMessage::default_instance());
 }
 
 }  // namespace
 
-void TableStruct::Shutdown() {
-  _State_default_instance_.Shutdown();
-  delete file_level_metadata[0].reflection;
-  _TimestampState_default_instance_.Shutdown();
-  delete file_level_metadata[1].reflection;
-  _PiggyBackState_default_instance_.Shutdown();
-  delete file_level_metadata[2].reflection;
-  _PiggyBackMessage_default_instance_.Shutdown();
-  delete file_level_metadata[3].reflection;
+void protobuf_ShutdownFile_types_2eproto() {
+  delete State::default_instance_;
+  delete State_reflection_;
+  delete TimestampState::default_instance_;
+  delete TimestampState_reflection_;
+  delete PiggyBackState::default_instance_;
+  delete PiggyBackState_reflection_;
+  delete PiggyBackMessage::default_instance_;
+  delete PiggyBackMessage_reflection_;
 }
 
-void TableStruct::InitDefaultsImpl() {
+void protobuf_AddDesc_types_2eproto() GOOGLE_ATTRIBUTE_COLD;
+void protobuf_AddDesc_types_2eproto() {
+  static bool already_here = false;
+  if (already_here) return;
+  already_here = true;
   GOOGLE_PROTOBUF_VERIFY_VERSION;
 
-  ::google::protobuf::internal::InitProtobufDefaults();
-  _State_default_instance_.DefaultConstruct();
-  _TimestampState_default_instance_.DefaultConstruct();
-  _PiggyBackState_default_instance_.DefaultConstruct();
-  _PiggyBackMessage_default_instance_.DefaultConstruct();
-  _TimestampState_default_instance_.get_mutable()->state_ = const_cast< ::FTSFC::State*>(
-      ::FTSFC::State::internal_default_instance());
-  _PiggyBackState_default_instance_.get_mutable()->state_ = const_cast< ::FTSFC::State*>(
-      ::FTSFC::State::internal_default_instance());
-}
-
-void InitDefaults() {
-  static GOOGLE_PROTOBUF_DECLARE_ONCE(once);
-  ::google::protobuf::GoogleOnceInit(&once, &TableStruct::InitDefaultsImpl);
-}
-void AddDescriptorsImpl() {
-  InitDefaults();
-  static const char descriptor[] = {
-      "\n\013types.proto\022\005FTSFC\"!\n\005State\022\013\n\003key\030\001 \003"
-      "(\t\022\013\n\003val\030\002 \003(\t\"@\n\016TimestampState\022\021\n\ttim"
-      "estamp\030\001 \002(\003\022\033\n\005state\030\002 \001(\0132\014.FTSFC.Stat"
-      "e\"b\n\016PiggyBackState\022\013\n\003ack\030\001 \002(\005\022\023\n\013last"
-      "_commit\030\002 \002(\003\022\021\n\ttimestamp\030\003 \002(\003\022\033\n\005stat"
-      "e\030\004 \001(\0132\014.FTSFC.State\"J\n\020PiggyBackMessag"
-      "e\022\r\n\005mb_id\030\001 \003(\005\022\'\n\010pb_state\030\002 \003(\0132\025.FTS"
-      "FC.PiggyBackState"
-  };
   ::google::protobuf::DescriptorPool::InternalAddGeneratedFile(
-      descriptor, 297);
+    "\n\013types.proto\022\005FTSFC\"!\n\005State\022\013\n\003key\030\001 \003"
+    "(\t\022\013\n\003val\030\002 \003(\t\"@\n\016TimestampState\022\021\n\ttim"
+    "estamp\030\001 \002(\003\022\033\n\005state\030\002 \001(\0132\014.FTSFC.Stat"
+    "e\"b\n\016PiggyBackState\022\013\n\003ack\030\001 \002(\005\022\023\n\013last"
+    "_commit\030\002 \002(\003\022\021\n\ttimestamp\030\003 \002(\003\022\033\n\005stat"
+    "e\030\004 \001(\0132\014.FTSFC.State\"J\n\020PiggyBackMessag"
+    "e\022\r\n\005mb_id\030\001 \003(\005\022\'\n\010pb_state\030\002 \003(\0132\025.FTS"
+    "FC.PiggyBackState", 297);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "types.proto", &protobuf_RegisterTypes);
-  ::google::protobuf::internal::OnShutdown(&TableStruct::Shutdown);
+  State::default_instance_ = new State();
+  TimestampState::default_instance_ = new TimestampState();
+  PiggyBackState::default_instance_ = new PiggyBackState();
+  PiggyBackMessage::default_instance_ = new PiggyBackMessage();
+  State::default_instance_->InitAsDefaultInstance();
+  TimestampState::default_instance_->InitAsDefaultInstance();
+  PiggyBackState::default_instance_->InitAsDefaultInstance();
+  PiggyBackMessage::default_instance_->InitAsDefaultInstance();
+  ::google::protobuf::internal::OnShutdown(&protobuf_ShutdownFile_types_2eproto);
 }
 
-void AddDescriptors() {
-  static GOOGLE_PROTOBUF_DECLARE_ONCE(once);
-  ::google::protobuf::GoogleOnceInit(&once, &AddDescriptorsImpl);
-}
 // Force AddDescriptors() to be called at static initialization time.
-struct StaticDescriptorInitializer {
-  StaticDescriptorInitializer() {
-    AddDescriptors();
+struct StaticDescriptorInitializer_types_2eproto {
+  StaticDescriptorInitializer_types_2eproto() {
+    protobuf_AddDesc_types_2eproto();
   }
-} static_descriptor_initializer;
-
-}  // namespace protobuf_types_2eproto
-
+} static_descriptor_initializer_types_2eproto_;
 
 // ===================================================================
 
@@ -204,25 +191,25 @@ const int State::kValFieldNumber;
 
 State::State()
   : ::google::protobuf::Message(), _internal_metadata_(NULL) {
-  if (GOOGLE_PREDICT_TRUE(this != internal_default_instance())) {
-    protobuf_types_2eproto::InitDefaults();
-  }
   SharedCtor();
   // @@protoc_insertion_point(constructor:FTSFC.State)
 }
+
+void State::InitAsDefaultInstance() {
+}
+
 State::State(const State& from)
   : ::google::protobuf::Message(),
-      _internal_metadata_(NULL),
-      _has_bits_(from._has_bits_),
-      _cached_size_(0),
-      key_(from.key_),
-      val_(from.val_) {
-  _internal_metadata_.MergeFrom(from._internal_metadata_);
+    _internal_metadata_(NULL) {
+  SharedCtor();
+  MergeFrom(from);
   // @@protoc_insertion_point(copy_constructor:FTSFC.State)
 }
 
 void State::SharedCtor() {
+  ::google::protobuf::internal::GetEmptyString();
   _cached_size_ = 0;
+  ::memset(_has_bits_, 0, sizeof(_has_bits_));
 }
 
 State::~State() {
@@ -231,6 +218,8 @@ State::~State() {
 }
 
 void State::SharedDtor() {
+  if (this != default_instance_) {
+  }
 }
 
 void State::SetCachedSize(int size) const {
@@ -239,14 +228,16 @@ void State::SetCachedSize(int size) const {
   GOOGLE_SAFE_CONCURRENT_WRITES_END();
 }
 const ::google::protobuf::Descriptor* State::descriptor() {
-  protobuf_types_2eproto::protobuf_AssignDescriptorsOnce();
-  return protobuf_types_2eproto::file_level_metadata[kIndexInFileMessages].descriptor;
+  protobuf_AssignDescriptorsOnce();
+  return State_descriptor_;
 }
 
 const State& State::default_instance() {
-  protobuf_types_2eproto::InitDefaults();
-  return *internal_default_instance();
+  if (default_instance_ == NULL) protobuf_AddDesc_types_2eproto();
+  return *default_instance_;
 }
+
+State* State::default_instance_ = NULL;
 
 State* State::New(::google::protobuf::Arena* arena) const {
   State* n = new State;
@@ -260,8 +251,10 @@ void State::Clear() {
 // @@protoc_insertion_point(message_clear_start:FTSFC.State)
   key_.Clear();
   val_.Clear();
-  _has_bits_.Clear();
-  _internal_metadata_.Clear();
+  ::memset(_has_bits_, 0, sizeof(_has_bits_));
+  if (_internal_metadata_.have_unknown_fields()) {
+    mutable_unknown_fields()->Clear();
+  }
 }
 
 bool State::MergePartialFromCodedStream(
@@ -270,14 +263,14 @@ bool State::MergePartialFromCodedStream(
   ::google::protobuf::uint32 tag;
   // @@protoc_insertion_point(parse_start:FTSFC.State)
   for (;;) {
-    ::std::pair< ::google::protobuf::uint32, bool> p = input->ReadTagWithCutoffNoLastTag(127u);
+    ::std::pair< ::google::protobuf::uint32, bool> p = input->ReadTagWithCutoff(127);
     tag = p.first;
     if (!p.second) goto handle_unusual;
     switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
       // repeated string key = 1;
       case 1: {
-        if (static_cast< ::google::protobuf::uint8>(tag) ==
-            static_cast< ::google::protobuf::uint8>(10u)) {
+        if (tag == 10) {
+         parse_key:
           DO_(::google::protobuf::internal::WireFormatLite::ReadString(
                 input, this->add_key()));
           ::google::protobuf::internal::WireFormat::VerifyUTF8StringNamedField(
@@ -288,13 +281,15 @@ bool State::MergePartialFromCodedStream(
         } else {
           goto handle_unusual;
         }
+        if (input->ExpectTag(10)) goto parse_key;
+        if (input->ExpectTag(18)) goto parse_val;
         break;
       }
 
       // repeated string val = 2;
       case 2: {
-        if (static_cast< ::google::protobuf::uint8>(tag) ==
-            static_cast< ::google::protobuf::uint8>(18u)) {
+        if (tag == 18) {
+         parse_val:
           DO_(::google::protobuf::internal::WireFormatLite::ReadString(
                 input, this->add_val()));
           ::google::protobuf::internal::WireFormat::VerifyUTF8StringNamedField(
@@ -305,6 +300,8 @@ bool State::MergePartialFromCodedStream(
         } else {
           goto handle_unusual;
         }
+        if (input->ExpectTag(18)) goto parse_val;
+        if (input->ExpectAtEnd()) goto success;
         break;
       }
 
@@ -333,11 +330,8 @@ failure:
 void State::SerializeWithCachedSizes(
     ::google::protobuf::io::CodedOutputStream* output) const {
   // @@protoc_insertion_point(serialize_start:FTSFC.State)
-  ::google::protobuf::uint32 cached_has_bits = 0;
-  (void) cached_has_bits;
-
   // repeated string key = 1;
-  for (int i = 0, n = this->key_size(); i < n; i++) {
+  for (int i = 0; i < this->key_size(); i++) {
     ::google::protobuf::internal::WireFormat::VerifyUTF8StringNamedField(
       this->key(i).data(), this->key(i).length(),
       ::google::protobuf::internal::WireFormat::SERIALIZE,
@@ -347,7 +341,7 @@ void State::SerializeWithCachedSizes(
   }
 
   // repeated string val = 2;
-  for (int i = 0, n = this->val_size(); i < n; i++) {
+  for (int i = 0; i < this->val_size(); i++) {
     ::google::protobuf::internal::WireFormat::VerifyUTF8StringNamedField(
       this->val(i).data(), this->val(i).length(),
       ::google::protobuf::internal::WireFormat::SERIALIZE,
@@ -366,11 +360,8 @@ void State::SerializeWithCachedSizes(
 ::google::protobuf::uint8* State::InternalSerializeWithCachedSizesToArray(
     bool deterministic, ::google::protobuf::uint8* target) const {
   // @@protoc_insertion_point(serialize_to_array_start:FTSFC.State)
-  ::google::protobuf::uint32 cached_has_bits = 0;
-  (void) cached_has_bits;
-
   // repeated string key = 1;
-  for (int i = 0, n = this->key_size(); i < n; i++) {
+  for (int i = 0; i < this->key_size(); i++) {
     ::google::protobuf::internal::WireFormat::VerifyUTF8StringNamedField(
       this->key(i).data(), this->key(i).length(),
       ::google::protobuf::internal::WireFormat::SERIALIZE,
@@ -380,7 +371,7 @@ void State::SerializeWithCachedSizes(
   }
 
   // repeated string val = 2;
-  for (int i = 0, n = this->val_size(); i < n; i++) {
+  for (int i = 0; i < this->val_size(); i++) {
     ::google::protobuf::internal::WireFormat::VerifyUTF8StringNamedField(
       this->val(i).data(), this->val(i).length(),
       ::google::protobuf::internal::WireFormat::SERIALIZE,
@@ -397,42 +388,41 @@ void State::SerializeWithCachedSizes(
   return target;
 }
 
-size_t State::ByteSizeLong() const {
+int State::ByteSize() const {
 // @@protoc_insertion_point(message_byte_size_start:FTSFC.State)
-  size_t total_size = 0;
+  int total_size = 0;
+
+  // repeated string key = 1;
+  total_size += 1 * this->key_size();
+  for (int i = 0; i < this->key_size(); i++) {
+    total_size += ::google::protobuf::internal::WireFormatLite::StringSize(
+      this->key(i));
+  }
+
+  // repeated string val = 2;
+  total_size += 1 * this->val_size();
+  for (int i = 0; i < this->val_size(); i++) {
+    total_size += ::google::protobuf::internal::WireFormatLite::StringSize(
+      this->val(i));
+  }
 
   if (_internal_metadata_.have_unknown_fields()) {
     total_size +=
       ::google::protobuf::internal::WireFormat::ComputeUnknownFieldsSize(
         unknown_fields());
   }
-  // repeated string key = 1;
-  total_size += 1 *
-      ::google::protobuf::internal::FromIntSize(this->key_size());
-  for (int i = 0, n = this->key_size(); i < n; i++) {
-    total_size += ::google::protobuf::internal::WireFormatLite::StringSize(
-      this->key(i));
-  }
-
-  // repeated string val = 2;
-  total_size += 1 *
-      ::google::protobuf::internal::FromIntSize(this->val_size());
-  for (int i = 0, n = this->val_size(); i < n; i++) {
-    total_size += ::google::protobuf::internal::WireFormatLite::StringSize(
-      this->val(i));
-  }
-
-  int cached_size = ::google::protobuf::internal::ToCachedSize(total_size);
   GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
-  _cached_size_ = cached_size;
+  _cached_size_ = total_size;
   GOOGLE_SAFE_CONCURRENT_WRITES_END();
   return total_size;
 }
 
 void State::MergeFrom(const ::google::protobuf::Message& from) {
 // @@protoc_insertion_point(generalized_merge_from_start:FTSFC.State)
-  GOOGLE_DCHECK_NE(&from, this);
-  const State* source =
+  if (GOOGLE_PREDICT_FALSE(&from == this)) {
+    ::google::protobuf::internal::MergeFromFail(__FILE__, __LINE__);
+  }
+  const State* source = 
       ::google::protobuf::internal::DynamicCastToGenerated<const State>(
           &from);
   if (source == NULL) {
@@ -446,13 +436,14 @@ void State::MergeFrom(const ::google::protobuf::Message& from) {
 
 void State::MergeFrom(const State& from) {
 // @@protoc_insertion_point(class_specific_merge_from_start:FTSFC.State)
-  GOOGLE_DCHECK_NE(&from, this);
-  _internal_metadata_.MergeFrom(from._internal_metadata_);
-  ::google::protobuf::uint32 cached_has_bits = 0;
-  (void) cached_has_bits;
-
+  if (GOOGLE_PREDICT_FALSE(&from == this)) {
+    ::google::protobuf::internal::MergeFromFail(__FILE__, __LINE__);
+  }
   key_.MergeFrom(from.key_);
   val_.MergeFrom(from.val_);
+  if (from._internal_metadata_.have_unknown_fields()) {
+    mutable_unknown_fields()->MergeFrom(from.unknown_fields());
+  }
 }
 
 void State::CopyFrom(const ::google::protobuf::Message& from) {
@@ -470,6 +461,7 @@ void State::CopyFrom(const State& from) {
 }
 
 bool State::IsInitialized() const {
+
   return true;
 }
 
@@ -478,16 +470,19 @@ void State::Swap(State* other) {
   InternalSwap(other);
 }
 void State::InternalSwap(State* other) {
-  key_.InternalSwap(&other->key_);
-  val_.InternalSwap(&other->val_);
+  key_.UnsafeArenaSwap(&other->key_);
+  val_.UnsafeArenaSwap(&other->val_);
   std::swap(_has_bits_[0], other->_has_bits_[0]);
   _internal_metadata_.Swap(&other->_internal_metadata_);
   std::swap(_cached_size_, other->_cached_size_);
 }
 
 ::google::protobuf::Metadata State::GetMetadata() const {
-  protobuf_types_2eproto::protobuf_AssignDescriptorsOnce();
-  return protobuf_types_2eproto::file_level_metadata[kIndexInFileMessages];
+  protobuf_AssignDescriptorsOnce();
+  ::google::protobuf::Metadata metadata;
+  metadata.descriptor = State_descriptor_;
+  metadata.reflection = State_reflection_;
+  return metadata;
 }
 
 #if PROTOBUF_INLINE_NOT_IN_HEADERS
@@ -500,63 +495,49 @@ int State::key_size() const {
 void State::clear_key() {
   key_.Clear();
 }
-const ::std::string& State::key(int index) const {
+ const ::std::string& State::key(int index) const {
   // @@protoc_insertion_point(field_get:FTSFC.State.key)
   return key_.Get(index);
 }
-::std::string* State::mutable_key(int index) {
+ ::std::string* State::mutable_key(int index) {
   // @@protoc_insertion_point(field_mutable:FTSFC.State.key)
   return key_.Mutable(index);
 }
-void State::set_key(int index, const ::std::string& value) {
+ void State::set_key(int index, const ::std::string& value) {
   // @@protoc_insertion_point(field_set:FTSFC.State.key)
   key_.Mutable(index)->assign(value);
 }
-#if LANG_CXX11
-void State::set_key(int index, ::std::string&& value) {
-  // @@protoc_insertion_point(field_set:FTSFC.State.key)
-  key_.Mutable(index)->assign(std::move(value));
-}
-#endif
-void State::set_key(int index, const char* value) {
-  GOOGLE_DCHECK(value != NULL);
+ void State::set_key(int index, const char* value) {
   key_.Mutable(index)->assign(value);
   // @@protoc_insertion_point(field_set_char:FTSFC.State.key)
 }
-void State::set_key(int index, const char* value, size_t size) {
+ void State::set_key(int index, const char* value, size_t size) {
   key_.Mutable(index)->assign(
     reinterpret_cast<const char*>(value), size);
   // @@protoc_insertion_point(field_set_pointer:FTSFC.State.key)
 }
-::std::string* State::add_key() {
+ ::std::string* State::add_key() {
   // @@protoc_insertion_point(field_add_mutable:FTSFC.State.key)
   return key_.Add();
 }
-void State::add_key(const ::std::string& value) {
+ void State::add_key(const ::std::string& value) {
   key_.Add()->assign(value);
   // @@protoc_insertion_point(field_add:FTSFC.State.key)
 }
-#if LANG_CXX11
-void State::add_key(::std::string&& value) {
-  key_.Add(std::move(value));
-  // @@protoc_insertion_point(field_add:FTSFC.State.key)
-}
-#endif
-void State::add_key(const char* value) {
-  GOOGLE_DCHECK(value != NULL);
+ void State::add_key(const char* value) {
   key_.Add()->assign(value);
   // @@protoc_insertion_point(field_add_char:FTSFC.State.key)
 }
-void State::add_key(const char* value, size_t size) {
+ void State::add_key(const char* value, size_t size) {
   key_.Add()->assign(reinterpret_cast<const char*>(value), size);
   // @@protoc_insertion_point(field_add_pointer:FTSFC.State.key)
 }
-const ::google::protobuf::RepeatedPtrField< ::std::string>&
+ const ::google::protobuf::RepeatedPtrField< ::std::string>&
 State::key() const {
   // @@protoc_insertion_point(field_list:FTSFC.State.key)
   return key_;
 }
-::google::protobuf::RepeatedPtrField< ::std::string>*
+ ::google::protobuf::RepeatedPtrField< ::std::string>*
 State::mutable_key() {
   // @@protoc_insertion_point(field_mutable_list:FTSFC.State.key)
   return &key_;
@@ -569,63 +550,49 @@ int State::val_size() const {
 void State::clear_val() {
   val_.Clear();
 }
-const ::std::string& State::val(int index) const {
+ const ::std::string& State::val(int index) const {
   // @@protoc_insertion_point(field_get:FTSFC.State.val)
   return val_.Get(index);
 }
-::std::string* State::mutable_val(int index) {
+ ::std::string* State::mutable_val(int index) {
   // @@protoc_insertion_point(field_mutable:FTSFC.State.val)
   return val_.Mutable(index);
 }
-void State::set_val(int index, const ::std::string& value) {
+ void State::set_val(int index, const ::std::string& value) {
   // @@protoc_insertion_point(field_set:FTSFC.State.val)
   val_.Mutable(index)->assign(value);
 }
-#if LANG_CXX11
-void State::set_val(int index, ::std::string&& value) {
-  // @@protoc_insertion_point(field_set:FTSFC.State.val)
-  val_.Mutable(index)->assign(std::move(value));
-}
-#endif
-void State::set_val(int index, const char* value) {
-  GOOGLE_DCHECK(value != NULL);
+ void State::set_val(int index, const char* value) {
   val_.Mutable(index)->assign(value);
   // @@protoc_insertion_point(field_set_char:FTSFC.State.val)
 }
-void State::set_val(int index, const char* value, size_t size) {
+ void State::set_val(int index, const char* value, size_t size) {
   val_.Mutable(index)->assign(
     reinterpret_cast<const char*>(value), size);
   // @@protoc_insertion_point(field_set_pointer:FTSFC.State.val)
 }
-::std::string* State::add_val() {
+ ::std::string* State::add_val() {
   // @@protoc_insertion_point(field_add_mutable:FTSFC.State.val)
   return val_.Add();
 }
-void State::add_val(const ::std::string& value) {
+ void State::add_val(const ::std::string& value) {
   val_.Add()->assign(value);
   // @@protoc_insertion_point(field_add:FTSFC.State.val)
 }
-#if LANG_CXX11
-void State::add_val(::std::string&& value) {
-  val_.Add(std::move(value));
-  // @@protoc_insertion_point(field_add:FTSFC.State.val)
-}
-#endif
-void State::add_val(const char* value) {
-  GOOGLE_DCHECK(value != NULL);
+ void State::add_val(const char* value) {
   val_.Add()->assign(value);
   // @@protoc_insertion_point(field_add_char:FTSFC.State.val)
 }
-void State::add_val(const char* value, size_t size) {
+ void State::add_val(const char* value, size_t size) {
   val_.Add()->assign(reinterpret_cast<const char*>(value), size);
   // @@protoc_insertion_point(field_add_pointer:FTSFC.State.val)
 }
-const ::google::protobuf::RepeatedPtrField< ::std::string>&
+ const ::google::protobuf::RepeatedPtrField< ::std::string>&
 State::val() const {
   // @@protoc_insertion_point(field_list:FTSFC.State.val)
   return val_;
 }
-::google::protobuf::RepeatedPtrField< ::std::string>*
+ ::google::protobuf::RepeatedPtrField< ::std::string>*
 State::mutable_val() {
   // @@protoc_insertion_point(field_mutable_list:FTSFC.State.val)
   return &val_;
@@ -642,31 +609,27 @@ const int TimestampState::kStateFieldNumber;
 
 TimestampState::TimestampState()
   : ::google::protobuf::Message(), _internal_metadata_(NULL) {
-  if (GOOGLE_PREDICT_TRUE(this != internal_default_instance())) {
-    protobuf_types_2eproto::InitDefaults();
-  }
   SharedCtor();
   // @@protoc_insertion_point(constructor:FTSFC.TimestampState)
 }
+
+void TimestampState::InitAsDefaultInstance() {
+  state_ = const_cast< ::FTSFC::State*>(&::FTSFC::State::default_instance());
+}
+
 TimestampState::TimestampState(const TimestampState& from)
   : ::google::protobuf::Message(),
-      _internal_metadata_(NULL),
-      _has_bits_(from._has_bits_),
-      _cached_size_(0) {
-  _internal_metadata_.MergeFrom(from._internal_metadata_);
-  if (from.has_state()) {
-    state_ = new ::FTSFC::State(*from.state_);
-  } else {
-    state_ = NULL;
-  }
-  timestamp_ = from.timestamp_;
+    _internal_metadata_(NULL) {
+  SharedCtor();
+  MergeFrom(from);
   // @@protoc_insertion_point(copy_constructor:FTSFC.TimestampState)
 }
 
 void TimestampState::SharedCtor() {
   _cached_size_ = 0;
-  ::memset(&state_, 0, reinterpret_cast<char*>(&timestamp_) -
-    reinterpret_cast<char*>(&state_) + sizeof(timestamp_));
+  timestamp_ = GOOGLE_LONGLONG(0);
+  state_ = NULL;
+  ::memset(_has_bits_, 0, sizeof(_has_bits_));
 }
 
 TimestampState::~TimestampState() {
@@ -675,7 +638,7 @@ TimestampState::~TimestampState() {
 }
 
 void TimestampState::SharedDtor() {
-  if (this != internal_default_instance()) {
+  if (this != default_instance_) {
     delete state_;
   }
 }
@@ -686,14 +649,16 @@ void TimestampState::SetCachedSize(int size) const {
   GOOGLE_SAFE_CONCURRENT_WRITES_END();
 }
 const ::google::protobuf::Descriptor* TimestampState::descriptor() {
-  protobuf_types_2eproto::protobuf_AssignDescriptorsOnce();
-  return protobuf_types_2eproto::file_level_metadata[kIndexInFileMessages].descriptor;
+  protobuf_AssignDescriptorsOnce();
+  return TimestampState_descriptor_;
 }
 
 const TimestampState& TimestampState::default_instance() {
-  protobuf_types_2eproto::InitDefaults();
-  return *internal_default_instance();
+  if (default_instance_ == NULL) protobuf_AddDesc_types_2eproto();
+  return *default_instance_;
 }
+
+TimestampState* TimestampState::default_instance_ = NULL;
 
 TimestampState* TimestampState::New(::google::protobuf::Arena* arena) const {
   TimestampState* n = new TimestampState;
@@ -705,13 +670,16 @@ TimestampState* TimestampState::New(::google::protobuf::Arena* arena) const {
 
 void TimestampState::Clear() {
 // @@protoc_insertion_point(message_clear_start:FTSFC.TimestampState)
-  if (has_state()) {
-    GOOGLE_DCHECK(state_ != NULL);
-    state_->::FTSFC::State::Clear();
+  if (_has_bits_[0 / 32] & 3u) {
+    timestamp_ = GOOGLE_LONGLONG(0);
+    if (has_state()) {
+      if (state_ != NULL) state_->::FTSFC::State::Clear();
+    }
   }
-  timestamp_ = GOOGLE_LONGLONG(0);
-  _has_bits_.Clear();
-  _internal_metadata_.Clear();
+  ::memset(_has_bits_, 0, sizeof(_has_bits_));
+  if (_internal_metadata_.have_unknown_fields()) {
+    mutable_unknown_fields()->Clear();
+  }
 }
 
 bool TimestampState::MergePartialFromCodedStream(
@@ -720,33 +688,34 @@ bool TimestampState::MergePartialFromCodedStream(
   ::google::protobuf::uint32 tag;
   // @@protoc_insertion_point(parse_start:FTSFC.TimestampState)
   for (;;) {
-    ::std::pair< ::google::protobuf::uint32, bool> p = input->ReadTagWithCutoffNoLastTag(127u);
+    ::std::pair< ::google::protobuf::uint32, bool> p = input->ReadTagWithCutoff(127);
     tag = p.first;
     if (!p.second) goto handle_unusual;
     switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
       // required int64 timestamp = 1;
       case 1: {
-        if (static_cast< ::google::protobuf::uint8>(tag) ==
-            static_cast< ::google::protobuf::uint8>(8u)) {
-          set_has_timestamp();
+        if (tag == 8) {
           DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
                    ::google::protobuf::int64, ::google::protobuf::internal::WireFormatLite::TYPE_INT64>(
                  input, &timestamp_)));
+          set_has_timestamp();
         } else {
           goto handle_unusual;
         }
+        if (input->ExpectTag(18)) goto parse_state;
         break;
       }
 
       // optional .FTSFC.State state = 2;
       case 2: {
-        if (static_cast< ::google::protobuf::uint8>(tag) ==
-            static_cast< ::google::protobuf::uint8>(18u)) {
+        if (tag == 18) {
+         parse_state:
           DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
                input, mutable_state()));
         } else {
           goto handle_unusual;
         }
+        if (input->ExpectAtEnd()) goto success;
         break;
       }
 
@@ -775,17 +744,13 @@ failure:
 void TimestampState::SerializeWithCachedSizes(
     ::google::protobuf::io::CodedOutputStream* output) const {
   // @@protoc_insertion_point(serialize_start:FTSFC.TimestampState)
-  ::google::protobuf::uint32 cached_has_bits = 0;
-  (void) cached_has_bits;
-
-  cached_has_bits = _has_bits_[0];
   // required int64 timestamp = 1;
-  if (cached_has_bits & 0x00000002u) {
+  if (has_timestamp()) {
     ::google::protobuf::internal::WireFormatLite::WriteInt64(1, this->timestamp(), output);
   }
 
   // optional .FTSFC.State state = 2;
-  if (cached_has_bits & 0x00000001u) {
+  if (has_state()) {
     ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
       2, *this->state_, output);
   }
@@ -800,20 +765,16 @@ void TimestampState::SerializeWithCachedSizes(
 ::google::protobuf::uint8* TimestampState::InternalSerializeWithCachedSizesToArray(
     bool deterministic, ::google::protobuf::uint8* target) const {
   // @@protoc_insertion_point(serialize_to_array_start:FTSFC.TimestampState)
-  ::google::protobuf::uint32 cached_has_bits = 0;
-  (void) cached_has_bits;
-
-  cached_has_bits = _has_bits_[0];
   // required int64 timestamp = 1;
-  if (cached_has_bits & 0x00000002u) {
+  if (has_timestamp()) {
     target = ::google::protobuf::internal::WireFormatLite::WriteInt64ToArray(1, this->timestamp(), target);
   }
 
   // optional .FTSFC.State state = 2;
-  if (cached_has_bits & 0x00000001u) {
+  if (has_state()) {
     target = ::google::protobuf::internal::WireFormatLite::
       InternalWriteMessageNoVirtualToArray(
-        2, *this->state_, deterministic, target);
+        2, *this->state_, false, target);
   }
 
   if (_internal_metadata_.have_unknown_fields()) {
@@ -824,15 +785,10 @@ void TimestampState::SerializeWithCachedSizes(
   return target;
 }
 
-size_t TimestampState::ByteSizeLong() const {
+int TimestampState::ByteSize() const {
 // @@protoc_insertion_point(message_byte_size_start:FTSFC.TimestampState)
-  size_t total_size = 0;
+  int total_size = 0;
 
-  if (_internal_metadata_.have_unknown_fields()) {
-    total_size +=
-      ::google::protobuf::internal::WireFormat::ComputeUnknownFieldsSize(
-        unknown_fields());
-  }
   // required int64 timestamp = 1;
   if (has_timestamp()) {
     total_size += 1 +
@@ -846,17 +802,23 @@ size_t TimestampState::ByteSizeLong() const {
         *this->state_);
   }
 
-  int cached_size = ::google::protobuf::internal::ToCachedSize(total_size);
+  if (_internal_metadata_.have_unknown_fields()) {
+    total_size +=
+      ::google::protobuf::internal::WireFormat::ComputeUnknownFieldsSize(
+        unknown_fields());
+  }
   GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
-  _cached_size_ = cached_size;
+  _cached_size_ = total_size;
   GOOGLE_SAFE_CONCURRENT_WRITES_END();
   return total_size;
 }
 
 void TimestampState::MergeFrom(const ::google::protobuf::Message& from) {
 // @@protoc_insertion_point(generalized_merge_from_start:FTSFC.TimestampState)
-  GOOGLE_DCHECK_NE(&from, this);
-  const TimestampState* source =
+  if (GOOGLE_PREDICT_FALSE(&from == this)) {
+    ::google::protobuf::internal::MergeFromFail(__FILE__, __LINE__);
+  }
+  const TimestampState* source = 
       ::google::protobuf::internal::DynamicCastToGenerated<const TimestampState>(
           &from);
   if (source == NULL) {
@@ -870,20 +832,19 @@ void TimestampState::MergeFrom(const ::google::protobuf::Message& from) {
 
 void TimestampState::MergeFrom(const TimestampState& from) {
 // @@protoc_insertion_point(class_specific_merge_from_start:FTSFC.TimestampState)
-  GOOGLE_DCHECK_NE(&from, this);
-  _internal_metadata_.MergeFrom(from._internal_metadata_);
-  ::google::protobuf::uint32 cached_has_bits = 0;
-  (void) cached_has_bits;
-
-  cached_has_bits = from._has_bits_[0];
-  if (cached_has_bits & 3u) {
-    if (cached_has_bits & 0x00000001u) {
+  if (GOOGLE_PREDICT_FALSE(&from == this)) {
+    ::google::protobuf::internal::MergeFromFail(__FILE__, __LINE__);
+  }
+  if (from._has_bits_[0 / 32] & (0xffu << (0 % 32))) {
+    if (from.has_timestamp()) {
+      set_timestamp(from.timestamp());
+    }
+    if (from.has_state()) {
       mutable_state()->::FTSFC::State::MergeFrom(from.state());
     }
-    if (cached_has_bits & 0x00000002u) {
-      timestamp_ = from.timestamp_;
-    }
-    _has_bits_[0] |= cached_has_bits;
+  }
+  if (from._internal_metadata_.have_unknown_fields()) {
+    mutable_unknown_fields()->MergeFrom(from.unknown_fields());
   }
 }
 
@@ -902,7 +863,8 @@ void TimestampState::CopyFrom(const TimestampState& from) {
 }
 
 bool TimestampState::IsInitialized() const {
-  if ((_has_bits_[0] & 0x00000002) != 0x00000002) return false;
+  if ((_has_bits_[0] & 0x00000001) != 0x00000001) return false;
+
   return true;
 }
 
@@ -911,16 +873,19 @@ void TimestampState::Swap(TimestampState* other) {
   InternalSwap(other);
 }
 void TimestampState::InternalSwap(TimestampState* other) {
-  std::swap(state_, other->state_);
   std::swap(timestamp_, other->timestamp_);
+  std::swap(state_, other->state_);
   std::swap(_has_bits_[0], other->_has_bits_[0]);
   _internal_metadata_.Swap(&other->_internal_metadata_);
   std::swap(_cached_size_, other->_cached_size_);
 }
 
 ::google::protobuf::Metadata TimestampState::GetMetadata() const {
-  protobuf_types_2eproto::protobuf_AssignDescriptorsOnce();
-  return protobuf_types_2eproto::file_level_metadata[kIndexInFileMessages];
+  protobuf_AssignDescriptorsOnce();
+  ::google::protobuf::Metadata metadata;
+  metadata.descriptor = TimestampState_descriptor_;
+  metadata.reflection = TimestampState_reflection_;
+  return metadata;
 }
 
 #if PROTOBUF_INLINE_NOT_IN_HEADERS
@@ -928,23 +893,23 @@ void TimestampState::InternalSwap(TimestampState* other) {
 
 // required int64 timestamp = 1;
 bool TimestampState::has_timestamp() const {
-  return (_has_bits_[0] & 0x00000002u) != 0;
+  return (_has_bits_[0] & 0x00000001u) != 0;
 }
 void TimestampState::set_has_timestamp() {
-  _has_bits_[0] |= 0x00000002u;
+  _has_bits_[0] |= 0x00000001u;
 }
 void TimestampState::clear_has_timestamp() {
-  _has_bits_[0] &= ~0x00000002u;
+  _has_bits_[0] &= ~0x00000001u;
 }
 void TimestampState::clear_timestamp() {
   timestamp_ = GOOGLE_LONGLONG(0);
   clear_has_timestamp();
 }
-::google::protobuf::int64 TimestampState::timestamp() const {
+ ::google::protobuf::int64 TimestampState::timestamp() const {
   // @@protoc_insertion_point(field_get:FTSFC.TimestampState.timestamp)
   return timestamp_;
 }
-void TimestampState::set_timestamp(::google::protobuf::int64 value) {
+ void TimestampState::set_timestamp(::google::protobuf::int64 value) {
   set_has_timestamp();
   timestamp_ = value;
   // @@protoc_insertion_point(field_set:FTSFC.TimestampState.timestamp)
@@ -952,13 +917,13 @@ void TimestampState::set_timestamp(::google::protobuf::int64 value) {
 
 // optional .FTSFC.State state = 2;
 bool TimestampState::has_state() const {
-  return (_has_bits_[0] & 0x00000001u) != 0;
+  return (_has_bits_[0] & 0x00000002u) != 0;
 }
 void TimestampState::set_has_state() {
-  _has_bits_[0] |= 0x00000001u;
+  _has_bits_[0] |= 0x00000002u;
 }
 void TimestampState::clear_has_state() {
-  _has_bits_[0] &= ~0x00000001u;
+  _has_bits_[0] &= ~0x00000002u;
 }
 void TimestampState::clear_state() {
   if (state_ != NULL) state_->::FTSFC::State::Clear();
@@ -966,8 +931,7 @@ void TimestampState::clear_state() {
 }
 const ::FTSFC::State& TimestampState::state() const {
   // @@protoc_insertion_point(field_get:FTSFC.TimestampState.state)
-  return state_ != NULL ? *state_
-                         : *::FTSFC::State::internal_default_instance();
+  return state_ != NULL ? *state_ : *default_instance_->state_;
 }
 ::FTSFC::State* TimestampState::mutable_state() {
   set_has_state();
@@ -1008,33 +972,29 @@ const int PiggyBackState::kStateFieldNumber;
 
 PiggyBackState::PiggyBackState()
   : ::google::protobuf::Message(), _internal_metadata_(NULL) {
-  if (GOOGLE_PREDICT_TRUE(this != internal_default_instance())) {
-    protobuf_types_2eproto::InitDefaults();
-  }
   SharedCtor();
   // @@protoc_insertion_point(constructor:FTSFC.PiggyBackState)
 }
+
+void PiggyBackState::InitAsDefaultInstance() {
+  state_ = const_cast< ::FTSFC::State*>(&::FTSFC::State::default_instance());
+}
+
 PiggyBackState::PiggyBackState(const PiggyBackState& from)
   : ::google::protobuf::Message(),
-      _internal_metadata_(NULL),
-      _has_bits_(from._has_bits_),
-      _cached_size_(0) {
-  _internal_metadata_.MergeFrom(from._internal_metadata_);
-  if (from.has_state()) {
-    state_ = new ::FTSFC::State(*from.state_);
-  } else {
-    state_ = NULL;
-  }
-  ::memcpy(&last_commit_, &from.last_commit_,
-    reinterpret_cast<char*>(&ack_) -
-    reinterpret_cast<char*>(&last_commit_) + sizeof(ack_));
+    _internal_metadata_(NULL) {
+  SharedCtor();
+  MergeFrom(from);
   // @@protoc_insertion_point(copy_constructor:FTSFC.PiggyBackState)
 }
 
 void PiggyBackState::SharedCtor() {
   _cached_size_ = 0;
-  ::memset(&state_, 0, reinterpret_cast<char*>(&ack_) -
-    reinterpret_cast<char*>(&state_) + sizeof(ack_));
+  ack_ = 0;
+  last_commit_ = GOOGLE_LONGLONG(0);
+  timestamp_ = GOOGLE_LONGLONG(0);
+  state_ = NULL;
+  ::memset(_has_bits_, 0, sizeof(_has_bits_));
 }
 
 PiggyBackState::~PiggyBackState() {
@@ -1043,7 +1003,7 @@ PiggyBackState::~PiggyBackState() {
 }
 
 void PiggyBackState::SharedDtor() {
-  if (this != internal_default_instance()) {
+  if (this != default_instance_) {
     delete state_;
   }
 }
@@ -1054,14 +1014,16 @@ void PiggyBackState::SetCachedSize(int size) const {
   GOOGLE_SAFE_CONCURRENT_WRITES_END();
 }
 const ::google::protobuf::Descriptor* PiggyBackState::descriptor() {
-  protobuf_types_2eproto::protobuf_AssignDescriptorsOnce();
-  return protobuf_types_2eproto::file_level_metadata[kIndexInFileMessages].descriptor;
+  protobuf_AssignDescriptorsOnce();
+  return PiggyBackState_descriptor_;
 }
 
 const PiggyBackState& PiggyBackState::default_instance() {
-  protobuf_types_2eproto::InitDefaults();
-  return *internal_default_instance();
+  if (default_instance_ == NULL) protobuf_AddDesc_types_2eproto();
+  return *default_instance_;
 }
+
+PiggyBackState* PiggyBackState::default_instance_ = NULL;
 
 PiggyBackState* PiggyBackState::New(::google::protobuf::Arena* arena) const {
   PiggyBackState* n = new PiggyBackState;
@@ -1073,16 +1035,37 @@ PiggyBackState* PiggyBackState::New(::google::protobuf::Arena* arena) const {
 
 void PiggyBackState::Clear() {
 // @@protoc_insertion_point(message_clear_start:FTSFC.PiggyBackState)
-  if (has_state()) {
-    GOOGLE_DCHECK(state_ != NULL);
-    state_->::FTSFC::State::Clear();
+#if defined(__clang__)
+#define ZR_HELPER_(f) \
+  _Pragma("clang diagnostic push") \
+  _Pragma("clang diagnostic ignored \"-Winvalid-offsetof\"") \
+  __builtin_offsetof(PiggyBackState, f) \
+  _Pragma("clang diagnostic pop")
+#else
+#define ZR_HELPER_(f) reinterpret_cast<char*>(\
+  &reinterpret_cast<PiggyBackState*>(16)->f)
+#endif
+
+#define ZR_(first, last) do {\
+  ::memset(&first, 0,\
+           ZR_HELPER_(last) - ZR_HELPER_(first) + sizeof(last));\
+} while (0)
+
+  if (_has_bits_[0 / 32] & 15u) {
+    ZR_(last_commit_, timestamp_);
+    ack_ = 0;
+    if (has_state()) {
+      if (state_ != NULL) state_->::FTSFC::State::Clear();
+    }
   }
-  if (_has_bits_[0 / 32] & 14u) {
-    ::memset(&last_commit_, 0, reinterpret_cast<char*>(&ack_) -
-      reinterpret_cast<char*>(&last_commit_) + sizeof(ack_));
+
+#undef ZR_HELPER_
+#undef ZR_
+
+  ::memset(_has_bits_, 0, sizeof(_has_bits_));
+  if (_internal_metadata_.have_unknown_fields()) {
+    mutable_unknown_fields()->Clear();
   }
-  _has_bits_.Clear();
-  _internal_metadata_.Clear();
 }
 
 bool PiggyBackState::MergePartialFromCodedStream(
@@ -1091,61 +1074,64 @@ bool PiggyBackState::MergePartialFromCodedStream(
   ::google::protobuf::uint32 tag;
   // @@protoc_insertion_point(parse_start:FTSFC.PiggyBackState)
   for (;;) {
-    ::std::pair< ::google::protobuf::uint32, bool> p = input->ReadTagWithCutoffNoLastTag(127u);
+    ::std::pair< ::google::protobuf::uint32, bool> p = input->ReadTagWithCutoff(127);
     tag = p.first;
     if (!p.second) goto handle_unusual;
     switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
       // required int32 ack = 1;
       case 1: {
-        if (static_cast< ::google::protobuf::uint8>(tag) ==
-            static_cast< ::google::protobuf::uint8>(8u)) {
-          set_has_ack();
+        if (tag == 8) {
           DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
                    ::google::protobuf::int32, ::google::protobuf::internal::WireFormatLite::TYPE_INT32>(
                  input, &ack_)));
+          set_has_ack();
         } else {
           goto handle_unusual;
         }
+        if (input->ExpectTag(16)) goto parse_last_commit;
         break;
       }
 
       // required int64 last_commit = 2;
       case 2: {
-        if (static_cast< ::google::protobuf::uint8>(tag) ==
-            static_cast< ::google::protobuf::uint8>(16u)) {
-          set_has_last_commit();
+        if (tag == 16) {
+         parse_last_commit:
           DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
                    ::google::protobuf::int64, ::google::protobuf::internal::WireFormatLite::TYPE_INT64>(
                  input, &last_commit_)));
+          set_has_last_commit();
         } else {
           goto handle_unusual;
         }
+        if (input->ExpectTag(24)) goto parse_timestamp;
         break;
       }
 
       // required int64 timestamp = 3;
       case 3: {
-        if (static_cast< ::google::protobuf::uint8>(tag) ==
-            static_cast< ::google::protobuf::uint8>(24u)) {
-          set_has_timestamp();
+        if (tag == 24) {
+         parse_timestamp:
           DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
                    ::google::protobuf::int64, ::google::protobuf::internal::WireFormatLite::TYPE_INT64>(
                  input, &timestamp_)));
+          set_has_timestamp();
         } else {
           goto handle_unusual;
         }
+        if (input->ExpectTag(34)) goto parse_state;
         break;
       }
 
       // optional .FTSFC.State state = 4;
       case 4: {
-        if (static_cast< ::google::protobuf::uint8>(tag) ==
-            static_cast< ::google::protobuf::uint8>(34u)) {
+        if (tag == 34) {
+         parse_state:
           DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
                input, mutable_state()));
         } else {
           goto handle_unusual;
         }
+        if (input->ExpectAtEnd()) goto success;
         break;
       }
 
@@ -1174,27 +1160,23 @@ failure:
 void PiggyBackState::SerializeWithCachedSizes(
     ::google::protobuf::io::CodedOutputStream* output) const {
   // @@protoc_insertion_point(serialize_start:FTSFC.PiggyBackState)
-  ::google::protobuf::uint32 cached_has_bits = 0;
-  (void) cached_has_bits;
-
-  cached_has_bits = _has_bits_[0];
   // required int32 ack = 1;
-  if (cached_has_bits & 0x00000008u) {
+  if (has_ack()) {
     ::google::protobuf::internal::WireFormatLite::WriteInt32(1, this->ack(), output);
   }
 
   // required int64 last_commit = 2;
-  if (cached_has_bits & 0x00000002u) {
+  if (has_last_commit()) {
     ::google::protobuf::internal::WireFormatLite::WriteInt64(2, this->last_commit(), output);
   }
 
   // required int64 timestamp = 3;
-  if (cached_has_bits & 0x00000004u) {
+  if (has_timestamp()) {
     ::google::protobuf::internal::WireFormatLite::WriteInt64(3, this->timestamp(), output);
   }
 
   // optional .FTSFC.State state = 4;
-  if (cached_has_bits & 0x00000001u) {
+  if (has_state()) {
     ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
       4, *this->state_, output);
   }
@@ -1209,30 +1191,26 @@ void PiggyBackState::SerializeWithCachedSizes(
 ::google::protobuf::uint8* PiggyBackState::InternalSerializeWithCachedSizesToArray(
     bool deterministic, ::google::protobuf::uint8* target) const {
   // @@protoc_insertion_point(serialize_to_array_start:FTSFC.PiggyBackState)
-  ::google::protobuf::uint32 cached_has_bits = 0;
-  (void) cached_has_bits;
-
-  cached_has_bits = _has_bits_[0];
   // required int32 ack = 1;
-  if (cached_has_bits & 0x00000008u) {
+  if (has_ack()) {
     target = ::google::protobuf::internal::WireFormatLite::WriteInt32ToArray(1, this->ack(), target);
   }
 
   // required int64 last_commit = 2;
-  if (cached_has_bits & 0x00000002u) {
+  if (has_last_commit()) {
     target = ::google::protobuf::internal::WireFormatLite::WriteInt64ToArray(2, this->last_commit(), target);
   }
 
   // required int64 timestamp = 3;
-  if (cached_has_bits & 0x00000004u) {
+  if (has_timestamp()) {
     target = ::google::protobuf::internal::WireFormatLite::WriteInt64ToArray(3, this->timestamp(), target);
   }
 
   // optional .FTSFC.State state = 4;
-  if (cached_has_bits & 0x00000001u) {
+  if (has_state()) {
     target = ::google::protobuf::internal::WireFormatLite::
       InternalWriteMessageNoVirtualToArray(
-        4, *this->state_, deterministic, target);
+        4, *this->state_, false, target);
   }
 
   if (_internal_metadata_.have_unknown_fields()) {
@@ -1243,9 +1221,16 @@ void PiggyBackState::SerializeWithCachedSizes(
   return target;
 }
 
-size_t PiggyBackState::RequiredFieldsByteSizeFallback() const {
+int PiggyBackState::RequiredFieldsByteSizeFallback() const {
 // @@protoc_insertion_point(required_fields_byte_size_fallback_start:FTSFC.PiggyBackState)
-  size_t total_size = 0;
+  int total_size = 0;
+
+  if (has_ack()) {
+    // required int32 ack = 1;
+    total_size += 1 +
+      ::google::protobuf::internal::WireFormatLite::Int32Size(
+        this->ack());
+  }
 
   if (has_last_commit()) {
     // required int64 last_commit = 2;
@@ -1261,25 +1246,18 @@ size_t PiggyBackState::RequiredFieldsByteSizeFallback() const {
         this->timestamp());
   }
 
-  if (has_ack()) {
+  return total_size;
+}
+int PiggyBackState::ByteSize() const {
+// @@protoc_insertion_point(message_byte_size_start:FTSFC.PiggyBackState)
+  int total_size = 0;
+
+  if (((_has_bits_[0] & 0x00000007) ^ 0x00000007) == 0) {  // All required fields are present.
     // required int32 ack = 1;
     total_size += 1 +
       ::google::protobuf::internal::WireFormatLite::Int32Size(
         this->ack());
-  }
 
-  return total_size;
-}
-size_t PiggyBackState::ByteSizeLong() const {
-// @@protoc_insertion_point(message_byte_size_start:FTSFC.PiggyBackState)
-  size_t total_size = 0;
-
-  if (_internal_metadata_.have_unknown_fields()) {
-    total_size +=
-      ::google::protobuf::internal::WireFormat::ComputeUnknownFieldsSize(
-        unknown_fields());
-  }
-  if (((_has_bits_[0] & 0x0000000e) ^ 0x0000000e) == 0) {  // All required fields are present.
     // required int64 last_commit = 2;
     total_size += 1 +
       ::google::protobuf::internal::WireFormatLite::Int64Size(
@@ -1289,11 +1267,6 @@ size_t PiggyBackState::ByteSizeLong() const {
     total_size += 1 +
       ::google::protobuf::internal::WireFormatLite::Int64Size(
         this->timestamp());
-
-    // required int32 ack = 1;
-    total_size += 1 +
-      ::google::protobuf::internal::WireFormatLite::Int32Size(
-        this->ack());
 
   } else {
     total_size += RequiredFieldsByteSizeFallback();
@@ -1305,17 +1278,23 @@ size_t PiggyBackState::ByteSizeLong() const {
         *this->state_);
   }
 
-  int cached_size = ::google::protobuf::internal::ToCachedSize(total_size);
+  if (_internal_metadata_.have_unknown_fields()) {
+    total_size +=
+      ::google::protobuf::internal::WireFormat::ComputeUnknownFieldsSize(
+        unknown_fields());
+  }
   GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
-  _cached_size_ = cached_size;
+  _cached_size_ = total_size;
   GOOGLE_SAFE_CONCURRENT_WRITES_END();
   return total_size;
 }
 
 void PiggyBackState::MergeFrom(const ::google::protobuf::Message& from) {
 // @@protoc_insertion_point(generalized_merge_from_start:FTSFC.PiggyBackState)
-  GOOGLE_DCHECK_NE(&from, this);
-  const PiggyBackState* source =
+  if (GOOGLE_PREDICT_FALSE(&from == this)) {
+    ::google::protobuf::internal::MergeFromFail(__FILE__, __LINE__);
+  }
+  const PiggyBackState* source = 
       ::google::protobuf::internal::DynamicCastToGenerated<const PiggyBackState>(
           &from);
   if (source == NULL) {
@@ -1329,26 +1308,25 @@ void PiggyBackState::MergeFrom(const ::google::protobuf::Message& from) {
 
 void PiggyBackState::MergeFrom(const PiggyBackState& from) {
 // @@protoc_insertion_point(class_specific_merge_from_start:FTSFC.PiggyBackState)
-  GOOGLE_DCHECK_NE(&from, this);
-  _internal_metadata_.MergeFrom(from._internal_metadata_);
-  ::google::protobuf::uint32 cached_has_bits = 0;
-  (void) cached_has_bits;
-
-  cached_has_bits = from._has_bits_[0];
-  if (cached_has_bits & 15u) {
-    if (cached_has_bits & 0x00000001u) {
+  if (GOOGLE_PREDICT_FALSE(&from == this)) {
+    ::google::protobuf::internal::MergeFromFail(__FILE__, __LINE__);
+  }
+  if (from._has_bits_[0 / 32] & (0xffu << (0 % 32))) {
+    if (from.has_ack()) {
+      set_ack(from.ack());
+    }
+    if (from.has_last_commit()) {
+      set_last_commit(from.last_commit());
+    }
+    if (from.has_timestamp()) {
+      set_timestamp(from.timestamp());
+    }
+    if (from.has_state()) {
       mutable_state()->::FTSFC::State::MergeFrom(from.state());
     }
-    if (cached_has_bits & 0x00000002u) {
-      last_commit_ = from.last_commit_;
-    }
-    if (cached_has_bits & 0x00000004u) {
-      timestamp_ = from.timestamp_;
-    }
-    if (cached_has_bits & 0x00000008u) {
-      ack_ = from.ack_;
-    }
-    _has_bits_[0] |= cached_has_bits;
+  }
+  if (from._internal_metadata_.have_unknown_fields()) {
+    mutable_unknown_fields()->MergeFrom(from.unknown_fields());
   }
 }
 
@@ -1367,7 +1345,8 @@ void PiggyBackState::CopyFrom(const PiggyBackState& from) {
 }
 
 bool PiggyBackState::IsInitialized() const {
-  if ((_has_bits_[0] & 0x0000000e) != 0x0000000e) return false;
+  if ((_has_bits_[0] & 0x00000007) != 0x00000007) return false;
+
   return true;
 }
 
@@ -1376,18 +1355,21 @@ void PiggyBackState::Swap(PiggyBackState* other) {
   InternalSwap(other);
 }
 void PiggyBackState::InternalSwap(PiggyBackState* other) {
-  std::swap(state_, other->state_);
+  std::swap(ack_, other->ack_);
   std::swap(last_commit_, other->last_commit_);
   std::swap(timestamp_, other->timestamp_);
-  std::swap(ack_, other->ack_);
+  std::swap(state_, other->state_);
   std::swap(_has_bits_[0], other->_has_bits_[0]);
   _internal_metadata_.Swap(&other->_internal_metadata_);
   std::swap(_cached_size_, other->_cached_size_);
 }
 
 ::google::protobuf::Metadata PiggyBackState::GetMetadata() const {
-  protobuf_types_2eproto::protobuf_AssignDescriptorsOnce();
-  return protobuf_types_2eproto::file_level_metadata[kIndexInFileMessages];
+  protobuf_AssignDescriptorsOnce();
+  ::google::protobuf::Metadata metadata;
+  metadata.descriptor = PiggyBackState_descriptor_;
+  metadata.reflection = PiggyBackState_reflection_;
+  return metadata;
 }
 
 #if PROTOBUF_INLINE_NOT_IN_HEADERS
@@ -1395,23 +1377,23 @@ void PiggyBackState::InternalSwap(PiggyBackState* other) {
 
 // required int32 ack = 1;
 bool PiggyBackState::has_ack() const {
-  return (_has_bits_[0] & 0x00000008u) != 0;
+  return (_has_bits_[0] & 0x00000001u) != 0;
 }
 void PiggyBackState::set_has_ack() {
-  _has_bits_[0] |= 0x00000008u;
+  _has_bits_[0] |= 0x00000001u;
 }
 void PiggyBackState::clear_has_ack() {
-  _has_bits_[0] &= ~0x00000008u;
+  _has_bits_[0] &= ~0x00000001u;
 }
 void PiggyBackState::clear_ack() {
   ack_ = 0;
   clear_has_ack();
 }
-::google::protobuf::int32 PiggyBackState::ack() const {
+ ::google::protobuf::int32 PiggyBackState::ack() const {
   // @@protoc_insertion_point(field_get:FTSFC.PiggyBackState.ack)
   return ack_;
 }
-void PiggyBackState::set_ack(::google::protobuf::int32 value) {
+ void PiggyBackState::set_ack(::google::protobuf::int32 value) {
   set_has_ack();
   ack_ = value;
   // @@protoc_insertion_point(field_set:FTSFC.PiggyBackState.ack)
@@ -1431,11 +1413,11 @@ void PiggyBackState::clear_last_commit() {
   last_commit_ = GOOGLE_LONGLONG(0);
   clear_has_last_commit();
 }
-::google::protobuf::int64 PiggyBackState::last_commit() const {
+ ::google::protobuf::int64 PiggyBackState::last_commit() const {
   // @@protoc_insertion_point(field_get:FTSFC.PiggyBackState.last_commit)
   return last_commit_;
 }
-void PiggyBackState::set_last_commit(::google::protobuf::int64 value) {
+ void PiggyBackState::set_last_commit(::google::protobuf::int64 value) {
   set_has_last_commit();
   last_commit_ = value;
   // @@protoc_insertion_point(field_set:FTSFC.PiggyBackState.last_commit)
@@ -1455,11 +1437,11 @@ void PiggyBackState::clear_timestamp() {
   timestamp_ = GOOGLE_LONGLONG(0);
   clear_has_timestamp();
 }
-::google::protobuf::int64 PiggyBackState::timestamp() const {
+ ::google::protobuf::int64 PiggyBackState::timestamp() const {
   // @@protoc_insertion_point(field_get:FTSFC.PiggyBackState.timestamp)
   return timestamp_;
 }
-void PiggyBackState::set_timestamp(::google::protobuf::int64 value) {
+ void PiggyBackState::set_timestamp(::google::protobuf::int64 value) {
   set_has_timestamp();
   timestamp_ = value;
   // @@protoc_insertion_point(field_set:FTSFC.PiggyBackState.timestamp)
@@ -1467,13 +1449,13 @@ void PiggyBackState::set_timestamp(::google::protobuf::int64 value) {
 
 // optional .FTSFC.State state = 4;
 bool PiggyBackState::has_state() const {
-  return (_has_bits_[0] & 0x00000001u) != 0;
+  return (_has_bits_[0] & 0x00000008u) != 0;
 }
 void PiggyBackState::set_has_state() {
-  _has_bits_[0] |= 0x00000001u;
+  _has_bits_[0] |= 0x00000008u;
 }
 void PiggyBackState::clear_has_state() {
-  _has_bits_[0] &= ~0x00000001u;
+  _has_bits_[0] &= ~0x00000008u;
 }
 void PiggyBackState::clear_state() {
   if (state_ != NULL) state_->::FTSFC::State::Clear();
@@ -1481,8 +1463,7 @@ void PiggyBackState::clear_state() {
 }
 const ::FTSFC::State& PiggyBackState::state() const {
   // @@protoc_insertion_point(field_get:FTSFC.PiggyBackState.state)
-  return state_ != NULL ? *state_
-                         : *::FTSFC::State::internal_default_instance();
+  return state_ != NULL ? *state_ : *default_instance_->state_;
 }
 ::FTSFC::State* PiggyBackState::mutable_state() {
   set_has_state();
@@ -1521,25 +1502,24 @@ const int PiggyBackMessage::kPbStateFieldNumber;
 
 PiggyBackMessage::PiggyBackMessage()
   : ::google::protobuf::Message(), _internal_metadata_(NULL) {
-  if (GOOGLE_PREDICT_TRUE(this != internal_default_instance())) {
-    protobuf_types_2eproto::InitDefaults();
-  }
   SharedCtor();
   // @@protoc_insertion_point(constructor:FTSFC.PiggyBackMessage)
 }
+
+void PiggyBackMessage::InitAsDefaultInstance() {
+}
+
 PiggyBackMessage::PiggyBackMessage(const PiggyBackMessage& from)
   : ::google::protobuf::Message(),
-      _internal_metadata_(NULL),
-      _has_bits_(from._has_bits_),
-      _cached_size_(0),
-      mb_id_(from.mb_id_),
-      pb_state_(from.pb_state_) {
-  _internal_metadata_.MergeFrom(from._internal_metadata_);
+    _internal_metadata_(NULL) {
+  SharedCtor();
+  MergeFrom(from);
   // @@protoc_insertion_point(copy_constructor:FTSFC.PiggyBackMessage)
 }
 
 void PiggyBackMessage::SharedCtor() {
   _cached_size_ = 0;
+  ::memset(_has_bits_, 0, sizeof(_has_bits_));
 }
 
 PiggyBackMessage::~PiggyBackMessage() {
@@ -1548,6 +1528,8 @@ PiggyBackMessage::~PiggyBackMessage() {
 }
 
 void PiggyBackMessage::SharedDtor() {
+  if (this != default_instance_) {
+  }
 }
 
 void PiggyBackMessage::SetCachedSize(int size) const {
@@ -1556,14 +1538,16 @@ void PiggyBackMessage::SetCachedSize(int size) const {
   GOOGLE_SAFE_CONCURRENT_WRITES_END();
 }
 const ::google::protobuf::Descriptor* PiggyBackMessage::descriptor() {
-  protobuf_types_2eproto::protobuf_AssignDescriptorsOnce();
-  return protobuf_types_2eproto::file_level_metadata[kIndexInFileMessages].descriptor;
+  protobuf_AssignDescriptorsOnce();
+  return PiggyBackMessage_descriptor_;
 }
 
 const PiggyBackMessage& PiggyBackMessage::default_instance() {
-  protobuf_types_2eproto::InitDefaults();
-  return *internal_default_instance();
+  if (default_instance_ == NULL) protobuf_AddDesc_types_2eproto();
+  return *default_instance_;
 }
+
+PiggyBackMessage* PiggyBackMessage::default_instance_ = NULL;
 
 PiggyBackMessage* PiggyBackMessage::New(::google::protobuf::Arena* arena) const {
   PiggyBackMessage* n = new PiggyBackMessage;
@@ -1577,8 +1561,10 @@ void PiggyBackMessage::Clear() {
 // @@protoc_insertion_point(message_clear_start:FTSFC.PiggyBackMessage)
   mb_id_.Clear();
   pb_state_.Clear();
-  _has_bits_.Clear();
-  _internal_metadata_.Clear();
+  ::memset(_has_bits_, 0, sizeof(_has_bits_));
+  if (_internal_metadata_.have_unknown_fields()) {
+    mutable_unknown_fields()->Clear();
+  }
 }
 
 bool PiggyBackMessage::MergePartialFromCodedStream(
@@ -1587,37 +1573,43 @@ bool PiggyBackMessage::MergePartialFromCodedStream(
   ::google::protobuf::uint32 tag;
   // @@protoc_insertion_point(parse_start:FTSFC.PiggyBackMessage)
   for (;;) {
-    ::std::pair< ::google::protobuf::uint32, bool> p = input->ReadTagWithCutoffNoLastTag(127u);
+    ::std::pair< ::google::protobuf::uint32, bool> p = input->ReadTagWithCutoff(127);
     tag = p.first;
     if (!p.second) goto handle_unusual;
     switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
       // repeated int32 mb_id = 1;
       case 1: {
-        if (static_cast< ::google::protobuf::uint8>(tag) ==
-            static_cast< ::google::protobuf::uint8>(8u)) {
+        if (tag == 8) {
+         parse_mb_id:
           DO_((::google::protobuf::internal::WireFormatLite::ReadRepeatedPrimitive<
                    ::google::protobuf::int32, ::google::protobuf::internal::WireFormatLite::TYPE_INT32>(
-                 1, 8u, input, this->mutable_mb_id())));
-        } else if (static_cast< ::google::protobuf::uint8>(tag) ==
-                   static_cast< ::google::protobuf::uint8>(10u)) {
+                 1, 8, input, this->mutable_mb_id())));
+        } else if (tag == 10) {
           DO_((::google::protobuf::internal::WireFormatLite::ReadPackedPrimitiveNoInline<
                    ::google::protobuf::int32, ::google::protobuf::internal::WireFormatLite::TYPE_INT32>(
                  input, this->mutable_mb_id())));
         } else {
           goto handle_unusual;
         }
+        if (input->ExpectTag(8)) goto parse_mb_id;
+        if (input->ExpectTag(18)) goto parse_pb_state;
         break;
       }
 
       // repeated .FTSFC.PiggyBackState pb_state = 2;
       case 2: {
-        if (static_cast< ::google::protobuf::uint8>(tag) ==
-            static_cast< ::google::protobuf::uint8>(18u)) {
-          DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
+        if (tag == 18) {
+         parse_pb_state:
+          DO_(input->IncrementRecursionDepth());
+         parse_loop_pb_state:
+          DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtualNoRecursionDepth(
                 input, add_pb_state()));
         } else {
           goto handle_unusual;
         }
+        if (input->ExpectTag(18)) goto parse_loop_pb_state;
+        input->UnsafeDecrementRecursionDepth();
+        if (input->ExpectAtEnd()) goto success;
         break;
       }
 
@@ -1646,11 +1638,8 @@ failure:
 void PiggyBackMessage::SerializeWithCachedSizes(
     ::google::protobuf::io::CodedOutputStream* output) const {
   // @@protoc_insertion_point(serialize_start:FTSFC.PiggyBackMessage)
-  ::google::protobuf::uint32 cached_has_bits = 0;
-  (void) cached_has_bits;
-
   // repeated int32 mb_id = 1;
-  for (int i = 0, n = this->mb_id_size(); i < n; i++) {
+  for (int i = 0; i < this->mb_id_size(); i++) {
     ::google::protobuf::internal::WireFormatLite::WriteInt32(
       1, this->mb_id(i), output);
   }
@@ -1671,18 +1660,17 @@ void PiggyBackMessage::SerializeWithCachedSizes(
 ::google::protobuf::uint8* PiggyBackMessage::InternalSerializeWithCachedSizesToArray(
     bool deterministic, ::google::protobuf::uint8* target) const {
   // @@protoc_insertion_point(serialize_to_array_start:FTSFC.PiggyBackMessage)
-  ::google::protobuf::uint32 cached_has_bits = 0;
-  (void) cached_has_bits;
-
   // repeated int32 mb_id = 1;
-  target = ::google::protobuf::internal::WireFormatLite::
-    WriteInt32ToArray(1, this->mb_id_, target);
+  for (int i = 0; i < this->mb_id_size(); i++) {
+    target = ::google::protobuf::internal::WireFormatLite::
+      WriteInt32ToArray(1, this->mb_id(i), target);
+  }
 
   // repeated .FTSFC.PiggyBackState pb_state = 2;
   for (unsigned int i = 0, n = this->pb_state_size(); i < n; i++) {
     target = ::google::protobuf::internal::WireFormatLite::
       InternalWriteMessageNoVirtualToArray(
-        2, this->pb_state(i), deterministic, target);
+        2, this->pb_state(i), false, target);
   }
 
   if (_internal_metadata_.have_unknown_fields()) {
@@ -1693,46 +1681,45 @@ void PiggyBackMessage::SerializeWithCachedSizes(
   return target;
 }
 
-size_t PiggyBackMessage::ByteSizeLong() const {
+int PiggyBackMessage::ByteSize() const {
 // @@protoc_insertion_point(message_byte_size_start:FTSFC.PiggyBackMessage)
-  size_t total_size = 0;
+  int total_size = 0;
+
+  // repeated int32 mb_id = 1;
+  {
+    int data_size = 0;
+    for (int i = 0; i < this->mb_id_size(); i++) {
+      data_size += ::google::protobuf::internal::WireFormatLite::
+        Int32Size(this->mb_id(i));
+    }
+    total_size += 1 * this->mb_id_size() + data_size;
+  }
+
+  // repeated .FTSFC.PiggyBackState pb_state = 2;
+  total_size += 1 * this->pb_state_size();
+  for (int i = 0; i < this->pb_state_size(); i++) {
+    total_size +=
+      ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
+        this->pb_state(i));
+  }
 
   if (_internal_metadata_.have_unknown_fields()) {
     total_size +=
       ::google::protobuf::internal::WireFormat::ComputeUnknownFieldsSize(
         unknown_fields());
   }
-  // repeated int32 mb_id = 1;
-  {
-    size_t data_size = ::google::protobuf::internal::WireFormatLite::
-      Int32Size(this->mb_id_);
-    total_size += 1 *
-                  ::google::protobuf::internal::FromIntSize(this->mb_id_size());
-    total_size += data_size;
-  }
-
-  // repeated .FTSFC.PiggyBackState pb_state = 2;
-  {
-    unsigned int count = this->pb_state_size();
-    total_size += 1UL * count;
-    for (unsigned int i = 0; i < count; i++) {
-      total_size +=
-        ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
-          this->pb_state(i));
-    }
-  }
-
-  int cached_size = ::google::protobuf::internal::ToCachedSize(total_size);
   GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
-  _cached_size_ = cached_size;
+  _cached_size_ = total_size;
   GOOGLE_SAFE_CONCURRENT_WRITES_END();
   return total_size;
 }
 
 void PiggyBackMessage::MergeFrom(const ::google::protobuf::Message& from) {
 // @@protoc_insertion_point(generalized_merge_from_start:FTSFC.PiggyBackMessage)
-  GOOGLE_DCHECK_NE(&from, this);
-  const PiggyBackMessage* source =
+  if (GOOGLE_PREDICT_FALSE(&from == this)) {
+    ::google::protobuf::internal::MergeFromFail(__FILE__, __LINE__);
+  }
+  const PiggyBackMessage* source = 
       ::google::protobuf::internal::DynamicCastToGenerated<const PiggyBackMessage>(
           &from);
   if (source == NULL) {
@@ -1746,13 +1733,14 @@ void PiggyBackMessage::MergeFrom(const ::google::protobuf::Message& from) {
 
 void PiggyBackMessage::MergeFrom(const PiggyBackMessage& from) {
 // @@protoc_insertion_point(class_specific_merge_from_start:FTSFC.PiggyBackMessage)
-  GOOGLE_DCHECK_NE(&from, this);
-  _internal_metadata_.MergeFrom(from._internal_metadata_);
-  ::google::protobuf::uint32 cached_has_bits = 0;
-  (void) cached_has_bits;
-
+  if (GOOGLE_PREDICT_FALSE(&from == this)) {
+    ::google::protobuf::internal::MergeFromFail(__FILE__, __LINE__);
+  }
   mb_id_.MergeFrom(from.mb_id_);
   pb_state_.MergeFrom(from.pb_state_);
+  if (from._internal_metadata_.have_unknown_fields()) {
+    mutable_unknown_fields()->MergeFrom(from.unknown_fields());
+  }
 }
 
 void PiggyBackMessage::CopyFrom(const ::google::protobuf::Message& from) {
@@ -1770,6 +1758,7 @@ void PiggyBackMessage::CopyFrom(const PiggyBackMessage& from) {
 }
 
 bool PiggyBackMessage::IsInitialized() const {
+
   if (!::google::protobuf::internal::AllAreInitialized(this->pb_state())) return false;
   return true;
 }
@@ -1779,16 +1768,19 @@ void PiggyBackMessage::Swap(PiggyBackMessage* other) {
   InternalSwap(other);
 }
 void PiggyBackMessage::InternalSwap(PiggyBackMessage* other) {
-  mb_id_.InternalSwap(&other->mb_id_);
-  pb_state_.InternalSwap(&other->pb_state_);
+  mb_id_.UnsafeArenaSwap(&other->mb_id_);
+  pb_state_.UnsafeArenaSwap(&other->pb_state_);
   std::swap(_has_bits_[0], other->_has_bits_[0]);
   _internal_metadata_.Swap(&other->_internal_metadata_);
   std::swap(_cached_size_, other->_cached_size_);
 }
 
 ::google::protobuf::Metadata PiggyBackMessage::GetMetadata() const {
-  protobuf_types_2eproto::protobuf_AssignDescriptorsOnce();
-  return protobuf_types_2eproto::file_level_metadata[kIndexInFileMessages];
+  protobuf_AssignDescriptorsOnce();
+  ::google::protobuf::Metadata metadata;
+  metadata.descriptor = PiggyBackMessage_descriptor_;
+  metadata.reflection = PiggyBackMessage_reflection_;
+  return metadata;
 }
 
 #if PROTOBUF_INLINE_NOT_IN_HEADERS
@@ -1801,24 +1793,24 @@ int PiggyBackMessage::mb_id_size() const {
 void PiggyBackMessage::clear_mb_id() {
   mb_id_.Clear();
 }
-::google::protobuf::int32 PiggyBackMessage::mb_id(int index) const {
+ ::google::protobuf::int32 PiggyBackMessage::mb_id(int index) const {
   // @@protoc_insertion_point(field_get:FTSFC.PiggyBackMessage.mb_id)
   return mb_id_.Get(index);
 }
-void PiggyBackMessage::set_mb_id(int index, ::google::protobuf::int32 value) {
+ void PiggyBackMessage::set_mb_id(int index, ::google::protobuf::int32 value) {
   mb_id_.Set(index, value);
   // @@protoc_insertion_point(field_set:FTSFC.PiggyBackMessage.mb_id)
 }
-void PiggyBackMessage::add_mb_id(::google::protobuf::int32 value) {
+ void PiggyBackMessage::add_mb_id(::google::protobuf::int32 value) {
   mb_id_.Add(value);
   // @@protoc_insertion_point(field_add:FTSFC.PiggyBackMessage.mb_id)
 }
-const ::google::protobuf::RepeatedField< ::google::protobuf::int32 >&
+ const ::google::protobuf::RepeatedField< ::google::protobuf::int32 >&
 PiggyBackMessage::mb_id() const {
   // @@protoc_insertion_point(field_list:FTSFC.PiggyBackMessage.mb_id)
   return mb_id_;
 }
-::google::protobuf::RepeatedField< ::google::protobuf::int32 >*
+ ::google::protobuf::RepeatedField< ::google::protobuf::int32 >*
 PiggyBackMessage::mutable_mb_id() {
   // @@protoc_insertion_point(field_mutable_list:FTSFC.PiggyBackMessage.mb_id)
   return &mb_id_;

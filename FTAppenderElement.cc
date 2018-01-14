@@ -7,7 +7,7 @@
 CLICK_DECLS
 
 #define ETHER_PACKET_MAX_SIZE 1500
-#define DEFAULT_OFFSET 0
+#define DEFAULT_OFFSET 100 // This value must be greater than 72
 
 FTAppenderElement::FTAppenderElement() {};
 
@@ -24,11 +24,15 @@ void FTAppenderElement::push(int source, Packet *p) {
         printState(_temp);
         _lock.lock();
         WritablePacket *q = encodeStates(p, _temp);
+        LOG("after encode state in FTAppender, q: %llu", q);
         _temp.clear();
         _lock.unlock();
-
+        
+        //p->kill();
+        if (q != 0) {
+            output(0).push(q);
+        }//if
         p->kill();
-        output(0).push(q);
     }//if
     else {
         DEBUG("Receiving packet from the end of the chain!");
@@ -130,14 +134,17 @@ WritablePacket *FTAppenderElement::encodeStates(Packet *p, FTPiggyBackMessage &m
     if (!(q = p->uniqueify()))
         throw "Cannot create Packet";
 
-    String _data(stateSS.c_str());
+    String _data(stateSS.c_str(), stateSS.size());
     int stateLen = _data.length();
-
-    if (q->length() < DEFAULT_OFFSET + stateLen + sizeof(stateLen))
-        throw "Not sufficient space to place the piggybacked message!";
+    //LOG("State Length is: %d", stateLen);
+    if (q->length() < DEFAULT_OFFSET + stateLen + sizeof(stateLen)) {
+        //throw "Not sufficient space to place the piggybacked message!";
+        q->kill();
+        return 0;
+    }//if
 
     memcpy(q->data() + DEFAULT_OFFSET, &stateLen, sizeof(stateLen));
-    memcpy(q->data() + DEFAULT_OFFSET + sizeof(stateLen), _data.data(), _data.length());
+    memcpy(q->data() + DEFAULT_OFFSET + sizeof(stateLen), _data.data(), stateLen);
 
     return q;
 }
@@ -151,15 +158,22 @@ int FTAppenderElement::decodeStates(Packet *p, FTPiggyBackMessage &msg) {
 //    FTAppenderElement::deserializePiggyBacked(states, msg);
 //
 //    return stateLen + sizeof(short);
-
+    LOG("khar-01");
     int stateLen;
     memcpy(&stateLen, p->data() + DEFAULT_OFFSET, sizeof(stateLen));
 //    std::cout << "State length: " << stateLen << std::endl;
 //    string states(reinterpret_cast<const char*>(p->data()) + DEFAULT_OFFSET + sizeof(stateLen), stateLen);
-    String states(p->data() + DEFAULT_OFFSET + sizeof(stateLen), stateLen);
-    string statesStr(states.c_str());
+    LOG("khar-02: stateLen: %d, p->length(): %d,  p->data(): %llu", stateLen, p->length(), p->data());
+    String _data(p->data() + DEFAULT_OFFSET + sizeof(stateLen), stateLen); 
+//    String states(p->data() + DEFAULT_OFFSET + sizeof(stateLen), stateLen);
+
+    LOG("khar-03");
+    string statesStr(_data.data(), _data.length());
+//    string statesStr(states.c_str());
+    LOG("khar-04");
     FTAppenderElement::deserializePiggyBacked(statesStr, msg);
 
+    LOG("khar-05");
     return stateLen + sizeof(stateLen);
 }
 

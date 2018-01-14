@@ -25,7 +25,7 @@ int FTStateElement::configure(Vector<String> &conf, ErrorHandler *errh) {
 void FTStateElement::push(int source, Packet *p) {
     DEBUG("------------------------------\n");
     DEBUG("Begin FTStateElement %d:\n", _id);
-    DEBUG("Receiving packet %llu from port %d\n", FTAppenderElement::getPacketId(p), source);
+//    DEBUG("Receiving packet %llu from port %d\n", FTAppenderElement::getPacketId(p), source);
 
     if (source == INPUT_PORT_TO_PROCESS) {
         try {
@@ -46,27 +46,27 @@ void FTStateElement::push(int source, Packet *p) {
 //            DEBUG("------------------------------");
 //            output(OUTPUT_PORT_TO_MIDDLEBOX).push(q);
 
-	    DEBUG("Here-0");
+	        DEBUG("Here-0");
             reset();
-	    DEBUG("Here-1");
+	        DEBUG("Here-01");
             FTAppenderElement::decodeStates(p, _temp);
-	    DEBUG("Here-2");
+	        DEBUG("Here-2");
             replicate();
             DEBUG("Temp size after replication: %d", _temp.size());
             if (_temp.size() > 0) {
-	    	DEBUG("Here-3");
-		FTAppenderElement::printState(_temp);
+	    	    DEBUG("Here-3");
+		        FTAppenderElement::printState(_temp);
             }//if
 
             DEBUG("End FTStateElement %d\n", _id);
             DEBUG("------------------------------");
             // Sending the packet with pg msg to mb
 	    
-	    DEBUG("Here-5");
+    	    DEBUG("Here-5");
             output(OUTPUT_PORT_TO_MIDDLEBOX).push(p);
         }//try
         catch(...) { 
-	    DEBUG("Here-6");
+    	    DEBUG("Here-6");
             p->kill();
             DEBUG("Not A valid packet for our protocol\n");
 
@@ -102,11 +102,12 @@ void FTStateElement::push(int source, Packet *p) {
         add_to_log(_id, union_);
 
         // Write the changes state into log
+        LOG("Before encodeStates in FTStateElement");
         WritablePacket *q = FTAppenderElement::encodeStates(p, _temp);
         DEBUG("Packet size: %d\n", q->length());
         DEBUG("State going to the next middlebox (state size is %d):", _temp.size());
 	
-	DEBUG("Here-14");
+	    DEBUG("Here-14");
         FTAppenderElement::printState(_temp);
 //        p->kill();
 
@@ -138,8 +139,8 @@ void FTStateElement::add_to_log(FTMBId mb_id, FTTimestampState& state) {
 }
 
 void FTStateElement::replicate() {
-    LOG("In state replication. temp size is %d!", _temp.size());
-
+    //LOG("In state replication. temp size is %d!", _temp.size());
+    LOG("In replicate function!");
     for (auto mb_it = _temp.begin(); mb_it != _temp.end(); ++mb_it) {
         auto mb_id = mb_it->first;
         auto last_commit = (mb_id == _id) ? CURRENT_TIMESTAMP : mb_it->second.last_commit;

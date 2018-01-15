@@ -3,7 +3,7 @@ ap::FTAppenderElement();
 FromDPDKDevice(0)
 -> MarkIPHeader(14)
 -> fil::IPClassifier(src host 192.168.233.6,
-                    src host 192.168.233.8,
+                    src host 192.168.233.10,
                     -);
 
 fil[0] 

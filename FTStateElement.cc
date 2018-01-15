@@ -53,10 +53,10 @@ void FTStateElement::push(int source, Packet *p) {
 	        DEBUG("Here-2");
             replicate();
             DEBUG("Temp size after replication: %d", _temp.size());
-            if (_temp.size() > 0) {
-	    	    DEBUG("Here-3");
-		        FTAppenderElement::printState(_temp);
-            }//if
+            //if (_temp.size() > 0) {
+	    	//    DEBUG("Here-3");
+		    //    FTAppenderElement::printState(_temp);
+            //}//if
 
             DEBUG("End FTStateElement %d\n", _id);
             DEBUG("------------------------------");
@@ -108,7 +108,7 @@ void FTStateElement::push(int source, Packet *p) {
         DEBUG("State going to the next middlebox (state size is %d):", _temp.size());
 	
 	    DEBUG("Here-14");
-        FTAppenderElement::printState(_temp);
+//        FTAppenderElement::printState(_temp);
 //        p->kill();
 
         DEBUG("End FTStateElement %d\n", _id);
@@ -192,7 +192,7 @@ void FTStateElement::commit(FTMBId MBId, FTTimestamp timestamp) {
             _committed[MBId][it->first] = it->second;
         }//for
         LOG("This is the state that is committed");
-        FTAppenderElement::printState(_committed[MBId]);
+        //FTAppenderElement::printState(_committed[MBId]);
 
         DEBUG("Committing the state for timestamp: %llu", _committed[MBId].timestamp);
         DEBUG("Erasing %d log item(s) for middlebox %d\n", index + 1, MBId);

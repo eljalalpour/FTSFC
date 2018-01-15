@@ -27,7 +27,7 @@ void FTBufferElement::release(FTTimestamp commit_timestamp) {
         DEBUG("Release packet %d-th", i);
         FTPiggyBackMessage msg;
         FTAppenderElement::decodeStates(it->second, msg);
-        FTAppenderElement::printState(msg);
+//        FTAppenderElement::printState(msg);
 
         output(TO_OUTSIDE_WORLD).push(it->second);
     	DEBUG("Erase the packet %d-th", i);

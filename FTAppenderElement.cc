@@ -7,7 +7,7 @@
 CLICK_DECLS
 
 #define ETHER_PACKET_MAX_SIZE 1500
-#define DEFAULT_OFFSET 73 // This value must be greater than 72
+#define DEFAULT_OFFSET 76 // This value must be greater than 76
 
 FTAppenderElement::FTAppenderElement() {};
 
@@ -21,10 +21,10 @@ void FTAppenderElement::push(int source, Packet *p) {
         DEBUG("Receiving packet with size %d from the source!", p->length());
         DEBUG("state on the packet going to state-element");
 
-        printState(_temp);
+        //printState(_temp);
         _lock.lock();
         WritablePacket *q = encodeStates(p, _temp);
-        LOG("after encode state in FTAppender, q: %llu", q);
+        //LOG("after encode state in FTAppender, q: %llu", q);
         _temp.clear();
         _lock.unlock();
         
@@ -39,11 +39,11 @@ void FTAppenderElement::push(int source, Packet *p) {
         FTPiggyBackMessage msg;
         decodeStates(p, msg);
 
-        printState(msg);
+        //printState(msg);
         _lock.lock();
         append(msg);
         _lock.unlock();
-        DEBUG("_temp size is %u", _temp.size());
+        //DEBUG("_temp size is %u", _temp.size());
 
         p->kill();
     }//else

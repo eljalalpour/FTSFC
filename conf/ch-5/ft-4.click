@@ -3,11 +3,11 @@ AddressInfo(sender 192.168.233.8);
 FromDPDKDevice(0)
 -> MarkIPHeader(14)
 -> IPFilter(allow src sender)
--> se::FTStateElement(ID 2, F 1);
+-> se::FTStateElement(ID 3, F 1);
 
 se[0]
 -> MarkIPHeader(14)
--> CounterMB(ID 2)
+-> CounterMB(ID 3)
 -> MarkIPHeader(14)
 -> [1]se;
 

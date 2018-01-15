@@ -101,20 +101,34 @@ void FTStateElement::push(int source, Packet *p) {
         _temp[_id] = union_;
         add_to_log(_id, union_);
 
+//        // Write the changes state into log
+//        LOG("Before encodeStates in FTStateElement");
+//        WritablePacket *q = FTAppenderElement::encodeStates(p, _temp);
+//        DEBUG("Packet size: %d\n", q->length());
+//        DEBUG("State going to the next middlebox (state size is %d):", _temp.size());
+//
+//	    DEBUG("Here-14");
+////        FTAppenderElement::printState(_temp);
+////        p->kill();
+//
+//        DEBUG("End FTStateElement %d\n", _id);
+//        DEBUG("------------------------------");
+//        output(OUTPUT_PORT_TO_NEXT_MIDDLEBOX).push(q);
+//	    p->kill();
+
         // Write the changes state into log
         LOG("Before encodeStates in FTStateElement");
-        WritablePacket *q = FTAppenderElement::encodeStates(p, _temp);
-        DEBUG("Packet size: %d\n", q->length());
+        FTAppenderElement::lightEncodeStates(p, _temp);
+        DEBUG("Packet size: %d\n", p->length());
         DEBUG("State going to the next middlebox (state size is %d):", _temp.size());
-	
-	    DEBUG("Here-14");
+
+        DEBUG("Here-14");
 //        FTAppenderElement::printState(_temp);
 //        p->kill();
 
         DEBUG("End FTStateElement %d\n", _id);
         DEBUG("------------------------------");
-        output(OUTPUT_PORT_TO_NEXT_MIDDLEBOX).push(q);
-	p->kill();
+        output(OUTPUT_PORT_TO_NEXT_MIDDLEBOX).push(p);
     }//else if
 }
 

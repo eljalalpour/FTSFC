@@ -7,7 +7,8 @@
 CLICK_DECLS
 
 #define ETHER_PACKET_MAX_SIZE 1500
-#define DEFAULT_OFFSET 76 // This value must be greater than 76
+#define DEFAULT_OFFSET 76 // This value must be greater than 75
+#define STATE_ROOM 200
 
 FTAppenderElement::FTAppenderElement() {};
 
@@ -147,18 +148,55 @@ WritablePacket *FTAppenderElement::encodeStates(Packet *p, FTPiggyBackMessage &m
 //    memcpy(q->data() + DEFAULT_OFFSET + sizeof(stateLen), _data.data(), stateLen);
 //    return q;
 
+//    string stateSS;
+//    serializePiggyBacked(msg, stateSS);
+//
+//    String _data(stateSS.c_str(), stateSS.size());
+//    int stateLen = _data.length();
+//    int new_pkt_size = p->length() + stateLen + sizeof(stateLen);
+//    WritablePacket *q = Packet::make(new_pkt_size);
+//
+//    memcpy(q->data(), p->data(), DEFAULT_OFFSET);
+//    memcpy(q->data() + DEFAULT_OFFSET, &stateLen, sizeof(stateLen));
+//    memcpy(q->data() + DEFAULT_OFFSET + sizeof(stateLen), _data.data(), stateLen);
+//    memcpy(q->data() + DEFAULT_OFFSET + sizeof(stateLen) + stateLen, p->data() + DEFAULT_OFFSET, p->length() - DEFAULT_OFFSET);
+//
+//    return q;
+
     string stateSS;
     serializePiggyBacked(msg, stateSS);
 
     String _data(stateSS.c_str(), stateSS.size());
     int stateLen = _data.length();
-    int new_pkt_size = p->length() + stateLen + sizeof(stateLen);
+
+    if (stateLen > STATE_ROOM) {
+        auto dd = "State length is bigger than STATE_ROOM!";
+        DEBUG(dd);
+        throw dd;
+    }//if
+
+    int new_pkt_size = p->length() + STATE_ROOM;
     WritablePacket *q = Packet::make(new_pkt_size);
 
     memcpy(q->data(), p->data(), DEFAULT_OFFSET);
     memcpy(q->data() + DEFAULT_OFFSET, &stateLen, sizeof(stateLen));
     memcpy(q->data() + DEFAULT_OFFSET + sizeof(stateLen), _data.data(), stateLen);
-    memcpy(q->data() + DEFAULT_OFFSET + sizeof(stateLen) + stateLen, p->data() + DEFAULT_OFFSET, p->length() - DEFAULT_OFFSET);
+    memcpy(q->data() + DEFAULT_OFFSET + STATE_ROOM, p->data() + DEFAULT_OFFSET, p->length() - DEFAULT_OFFSET);
+
+    return q;
+}
+
+void FTAppenderElement::lightEncodeStates(Packet *p, FTPiggyBackMessage &msg) {
+    string stateSS;
+    serializePiggyBacked(msg, stateSS);
+
+    String _data(stateSS.c_str(), stateSS.size());
+    int stateLen = _data.length();
+
+    unsigned char * p_data = const_cast<unsigned char *>(p->data());
+
+    memcpy(p_data + DEFAULT_OFFSET, &stateLen, sizeof(stateLen));
+    memcpy(p_data + DEFAULT_OFFSET + sizeof(stateLen), _data.data(), stateLen);
 
     return q;
 }

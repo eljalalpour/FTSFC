@@ -49,11 +49,16 @@ public:
 
     static int  payloadOffset(Packet *p);
 
-    /// Encode the states from the packet
+    /// Encode the states into a new packet
     /// \param p The packet
     /// \param piggyBackedState The state that is being piggybacked
     /// \return an encoded packet
     static WritablePacket *encodeStates(Packet *p, FTPiggyBackMessage& msg);
+
+    /// Encode the state to the given packet
+    /// \param p The packet
+    /// \param msg piggyBackedState The state that is being piggybacked
+    static void lightEncodeStates(Packet *p, FTPiggyBackMessage &msg);
 
     /// Decode the states from the packet
     /// \param p The packet

@@ -197,8 +197,6 @@ void FTAppenderElement::lightEncodeStates(Packet *p, FTPiggyBackMessage &msg) {
 
     memcpy(p_data + DEFAULT_OFFSET, &stateLen, sizeof(stateLen));
     memcpy(p_data + DEFAULT_OFFSET + sizeof(stateLen), _data.data(), stateLen);
-
-    return q;
 }
 
 int FTAppenderElement::decodeStates(Packet *p, FTPiggyBackMessage &msg) {

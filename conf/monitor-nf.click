@@ -3,14 +3,7 @@ AddressInfo(sender 192.168.233.7);
 FromDPDKDevice(0)
 -> MarkIPHeader(14)
 -> IPFilter(allow src 192.168.233.7)
-
-->ip_from_extern :: IPClassifier(
-                     tcp or udp,
-                     -);
-
-ip_from_extern[1] -> Discard;
-
-ip_from_extern[0]
+-> Counter
 -> Strip(14)
 -> StoreIPAddress(192.168.233.8, src)
 -> StoreIPAddress(192.168.233.9, dst)

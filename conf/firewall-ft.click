@@ -1,3 +1,4 @@
+trans::Transmitter(10.70.0.11:22222); // set replica's ip and port
 firewall :: Classifier(12/0806 20/0001, 12/0806 20/0002, 12/0800, -);
 
 FromDPDKDevice(0)

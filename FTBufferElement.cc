@@ -24,9 +24,9 @@ void FTBufferElement::release(FTTimestamp commit_timestamp) {
         if (it->first > commit_timestamp)
             break;
 	
-        DEBUG("Release packet %d-th", i);
-        FTPiggyBackMessage msg;
-        FTAppenderElement::decodeStates(it->second, msg);
+//        DEBUG("Release packet %d-th", i);
+//        FTPiggyBackMessage msg;
+//        FTAppenderElement::decodeStates(it->second, msg);
 //        FTAppenderElement::printState(msg);
 
         output(TO_OUTSIDE_WORLD).push(it->second);

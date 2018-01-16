@@ -2,11 +2,8 @@ AddressInfo(sender 192.168.233.9);
 
 FromDPDKDevice(0)
 -> MarkIPHeader(14)
+-> IPFilter(allow src sender)
 -> Counter
--> MarkIPHeader(14)
--> [1]se;
-
-se[1]
 -> MarkIPHeader(14)
 -> StoreIPAddress(192.168.233.10, src)
 -> StoreIPAddress(192.168.233.11, dst)

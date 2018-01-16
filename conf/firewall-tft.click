@@ -1,6 +1,6 @@
-trans::Transmitter(10.0.7.10:22222); // one replica's ip and port
-
 AddressInfo(sender 192.168.233.6);
+
+trans::Transmitter(192.168.233.12:10000); // set replica's ip and port
 
 firewall :: Classifier(12/0806 20/0001, 12/0806 20/0002, 12/0800, -);
 
@@ -21,8 +21,7 @@ ip_from_extern :: IPClassifier(dst tcp ssh,
                         -);
 
 firewall[2]
--> Strip(14)
--> MarkIPHeader
+-> MarkIPHeader(14)
 -> ip_from_extern;
 
 ip_from_extern[0] -> Discard; // SSH traffic (rewrite to server)

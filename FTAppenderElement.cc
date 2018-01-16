@@ -210,6 +210,17 @@ int FTAppenderElement::decodeStates(Packet *p, FTPiggyBackMessage &msg) {
     return stateLen + sizeof(stateLen);
 }
 
+WritablePacket* FTAppenderElement::stripStates(Packet *p) {
+    WritablePacket* q = Packet::make(p->length() - STATE_ROOM);
+
+    memcpy(q->data(), p->data(), DEFAULT_OFFSET);
+    memcpy(q->data() + DEFAULT_OFFSET,
+           p->data() + DEFAULT_OFFSET + STATE_ROOM,
+           p->length() - DEFAULT_OFFSET - STATE_ROOM);
+
+    return q;
+}
+
 WritablePacket* FTAppenderElement::decodeStatesRetPacket(Packet *p, FTPiggyBackMessage &msg) {
 //    auto ploff = payloadOffset(p);
 //    int stateLenPShort = FTAppenderElement::decodeStates(p, msg);

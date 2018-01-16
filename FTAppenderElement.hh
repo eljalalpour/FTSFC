@@ -60,6 +60,10 @@ public:
     /// \param msg piggyBackedState The state that is being piggybacked
     static void lightEncodeStates(Packet *p, FTPiggyBackMessage &msg);
 
+    /// Strip state from a given packet
+    /// \param p a given packet
+    static WritablePacket* stripStates(Packet *p);
+
     /// Decode the states from the packet
     /// \param p The packet
     /// \param piggyBackedState The state that is being piggybacked

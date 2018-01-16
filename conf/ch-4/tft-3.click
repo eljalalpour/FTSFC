@@ -5,7 +5,7 @@ trans::Transmitter(192.168.233.12:30000); // set replica's ip and port
 FromDPDKDevice(0)
 -> MarkIPHeader(14)
 -> IPFilter(allow src sender)
--> Counter
+-> Monitorp(ID 2)
 -> MarkIPHeader(14)
 -> StoreIPAddress(192.168.233.9, src)
 -> StoreIPAddress(192.168.233.10, dst)

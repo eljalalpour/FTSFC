@@ -77,7 +77,7 @@ void FTBufferElement::push(int, Packet *p) {
     
     auto lts = last_timestamp(msg);
     _packets[lts] = FTAppenderElement::stripStates(p);
-//    _packets[lts] = Packet::make(p->data(), p->length());
+    //_packets[lts] = Packet::make(p->data(), p->length());
     
     output(TO_CHAIN_BEGIN).push(p);
     release(last_commit_timestamp(msg));

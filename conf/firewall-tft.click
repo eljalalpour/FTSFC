@@ -30,7 +30,7 @@ ip_from_extern[2] -> Discard; // FTP control traffic, rewrite w/tcp_rw
 ip_from_extern[4] -> Discard; // non TCP or UDP traffic is dropped
 
 ip_from_extern[3]
--> Monitorp(ID 1)  // other TCP or UDP traffic, rewrite to monitor
+-> Monitorp(ID 0)  // other TCP or UDP traffic, rewrite to monitor
 -> StoreIPAddress(192.168.233.7, src)// to the next mdlbox
 -> StoreIPAddress(192.168.233.8, dst)
 -> EtherEncap(0x0800, 0c:c4:7a:73:fa:54, 0c:c4:7a:73:fa:6a)

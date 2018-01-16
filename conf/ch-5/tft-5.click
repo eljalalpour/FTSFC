@@ -1,6 +1,6 @@
 AddressInfo(sender 192.168.233.10);
 
-trans::Transmitter(192.168.233.12:50000); // set replica's ip and port
+trans::Transmitter(172.19.18.112:50000); // set replica's ip and port
 
 FromDPDKDevice(0)
 -> MarkIPHeader(14)

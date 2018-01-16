@@ -1,6 +1,6 @@
 AddressInfo(sender 192.168.233.8);
 
-trans::Transmitter(192.168.233.12:30000); // set replica's ip and port
+trans::Transmitter(172.19.18.112:30000); // set replica's ip and port
 
 FromDPDKDevice(0)
 -> SetTimestamp

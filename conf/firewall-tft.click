@@ -1,6 +1,6 @@
 AddressInfo(sender 192.168.233.6);
 
-trans::Transmitter(192.168.233.12:10000); // set replica's ip and port
+trans::Transmitter(172.19.18.112:10000); // set replica's ip and port
 
 firewall :: Classifier(12/0806 20/0001, 12/0806 20/0002, 12/0800, -);
 

@@ -23,6 +23,5 @@ ap
 -> StoreEtherAddress(0c:c4:7a:73:fa:54, src)
 -> StoreIPAddress(192.168.233.6, dst) // set dst ip to M1
 -> StoreEtherAddress(0c:c4:7a:73:fa:46, dst)
-//-> IPPrint(ToChainBegin)
 //-> IPPrint(REC)
 -> ToDPDKDevice(0);

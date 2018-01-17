@@ -328,7 +328,7 @@ bool FTStateElement::putCommittedState(FTMBId mbId, const FTTimestampState &ts_s
 //    }//if
 //
 //    //TODO: Check the state of which replicas must be rollbacked, since the failed replica is in f + 1 replica-groups
-//    // We assume that get-state handler is called when a failure happens
+//    // We assume that get-state handler is called when a f-2 happens
 //    //so we need to rollback the states
 //    se->rollback();
 //
@@ -346,7 +346,7 @@ bool FTStateElement::putCommittedState(FTMBId mbId, const FTTimestampState &ts_s
 // * @param e The element
 // * @param user_data
 // * @param errh
-// * @return A zero or positive value for success, and a negative for the failure
+// * @return A zero or positive value for success, and a negative for the f-2
 // */
 //int FTStateElement::putStateCallback(const String &data, Element *e, void *user_data, ErrorHandler *errh) {
 //    //LOG("In rollback callback!");

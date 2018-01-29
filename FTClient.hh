@@ -101,7 +101,7 @@ public:
         set_ip_ports(ips, ports);
     }
 
-    bool send(FTState state) {
+    bool multi_send(FTState &state) {
         bool result = true;
         pthread_attr_t attr;
         void *status;
@@ -137,9 +137,18 @@ public:
             }//if
         }//for
 
-    CLEANUP:
+        CLEANUP:
         _threads.clear();
         return result;
+    }
+
+    bool send(FTState& state) {
+        if (_ips.size() > 1) {
+            return multi_send(state);
+        }//if
+
+        _send(status);
+        return true;
     }
 
     void set_ip_ports(std::vector<string>& ips, std::vector<uint16_t>& ports) {

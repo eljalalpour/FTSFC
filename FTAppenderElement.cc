@@ -273,6 +273,26 @@ void FTAppenderElement::decode(const char* data, int size, FTTimestampState& sta
     decode(buffer, state);
 }
 
+WritablePacket* FTAppenderElement::strip(Packet *p, int offset, int size) {
+    int new_pkt_size = p->length() - size;
+    WritablePacket *q = Packet::make(new_pkt_size);
+
+    memcpy(q->data(), p->data(), offset);
+    memcpy(q->data() + offset, p->data() + offset + size, p->length() - offset - size);
+
+    return q;
+}
+
+WritablePacket* FTAppenderElement::extend(Packet *p, int offset, int size) {
+    int new_pkt_size = p->length() + size;
+    WritablePacket *q = Packet::make(new_pkt_size);
+
+    memcpy(q->data(), p->data(), offset);
+    memcpy(q->data() + offset + size, p->data() + offset, p->length() - offset);
+
+    return q;
+}
+
 CLICK_ENDDECLS
 EXPORT_ELEMENT(FTAppenderElement)
 ELEMENT_LIBS(-L/usr/local/lib -lprotobuf -pthread -lpthread)

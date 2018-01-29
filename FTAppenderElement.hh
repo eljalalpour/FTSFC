@@ -64,6 +64,20 @@ public:
     /// \param p a given packet
     static WritablePacket* stripStates(Packet *p);
 
+    /// Creates a packet by striping from packet from offset 'offset', 'size' bytes
+    /// \param p
+    /// \param offset
+    /// \param size
+    /// \return New packet
+    static WritablePacket* strip(Packet *p, int offset, int size);
+
+    /// Extends a packet by adding room starting from offset 'offset' for 'size' bytes
+    /// \param p
+    /// \param offset must be less than packet size
+    /// \param size
+    /// \return New Packet
+    static WritablePacket* extend(Packet *p, int offset, int size);
+
     /// Decode the states from the packet
     /// \param p The packet
     /// \param piggyBackedState The state that is being piggybacked

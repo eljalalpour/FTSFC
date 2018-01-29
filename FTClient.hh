@@ -11,7 +11,7 @@
 struct ServerConn {
     string ip;
     uint16_t port;
-    FTState state;
+    FTState* state;
     int socket;
 };
 
@@ -28,7 +28,7 @@ private:
         // Serialize state
         string buffer;
         Serializer serializer;
-        buffer = serializer.serialize(scp->state);
+        buffer = serializer.serialize(*scp->state);
 
         // Send state
         size_t size = buffer.size();
@@ -38,7 +38,7 @@ private:
         // Wait for the response
         char c;
         read(scp->socket, &c, sizeof(char));
-        DEBUG("Read from socket: %c", c);
+//        DEBUG("Read from socket: %c", c);
 
         return NULL;
     }
@@ -147,7 +147,12 @@ public:
             return multi_send(state);
         }//if
 
-        _send(status);
+        ServerConn *conn = new ServerConn();
+        conn->state = &state;
+        conn->ip = _ips[i];
+        conn->port = _ports[i];
+        conn->socket = _sockets[i];
+        _send(conn);
         return true;
     }
 

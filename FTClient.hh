@@ -112,7 +112,7 @@ public:
 
         for (size_t i = 0; i < _ips.size(); ++i) {
             ServerConn *conn = new ServerConn();
-            conn->state = state;
+            conn->state = &state;
             conn->ip = _ips[i];
             conn->port = _ports[i];
             conn->socket = _sockets[i];
@@ -149,9 +149,9 @@ public:
 
         ServerConn *conn = new ServerConn();
         conn->state = &state;
-        conn->ip = _ips[i];
-        conn->port = _ports[i];
-        conn->socket = _sockets[i];
+        conn->ip = _ips[0];
+        conn->port = _ports[0];
+        conn->socket = _sockets[0];
         _send(conn);
         return true;
     }

@@ -8,6 +8,9 @@
 
 CLICK_DECLS
 
+#define SLEEP_USEC 250
+//#define FOR_COUNT 100000000
+
 CounterMB::CounterMB() : _counter(INIT_COUNTER) {};
 
 CounterMB::~CounterMB() {};
@@ -52,6 +55,12 @@ Packet *CounterMB::simple_action(Packet *p) {
 
     LOG("End CounterMB %d:", _id);
     LOG("--------------------");
+    
+//    usleep(SLEEP_USEC);
+    //int j, k = 2, l = 3;
+    //for (int i = 0; i < FOR_COUNT; ++i) {
+    //    j = k * l;
+    //}//for
 
     return p;
 }

@@ -9,4 +9,5 @@ FromDPDKDevice(0)
 -> StoreIPAddress(192.168.233.10, dst)
 -> StoreEtherAddress(0c:c4:7a:73:f9:ec, src)
 -> StoreEtherAddress(0c:c4:7a:73:fa:18, dst)
+//-> Print(REC)
 -> ToDPDKDevice(0);

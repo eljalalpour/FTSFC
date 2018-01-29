@@ -8,6 +8,8 @@
 
 CLICK_DECLS
 
+#define SLEEP_USEC 500
+
 TrivialCounterMB::TrivialCounterMB() : _counter(INIT_COUNTER) {};
 
 TrivialCounterMB::~TrivialCounterMB() { };
@@ -80,6 +82,8 @@ Packet *TrivialCounterMB::simple_action(Packet *p) {
 
     LOG("End TrivialCounterMB %d:", _id);
     LOG("--------------------");
+
+    sleep(SLEEP_USEC);
 
     return p;
 }

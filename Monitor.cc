@@ -5,8 +5,12 @@
 #include <clicknet/tcp.h>
 #include <click/args.hh>
 #include "Monitor.hh"
+#include <stdlib.h>
 
 CLICK_DECLS
+
+#define FOR_COUNT 0
+//#define SLEEP_TIME 0
 
 Monitor::Monitor() : _counter(INIT_COUNTER) {};
 
@@ -14,43 +18,28 @@ Monitor::~Monitor() {};
 
 Packet *Monitor::simple_action(Packet *p) {
     LOG("--------------------");
-//    std::cout << "Begin Monitor :" << _id << std::endl;
     Router *r = this->router();
-
-//    for (int i = 0; i < r->elements().size(); ++i) {
-//        LOG("%d-Element name is: %s", i, r->ename(i).c_str());
-//    }//for
 
     //TODO: change the name of stateElement back to se
     FTStateElement *stateElement = (FTStateElement *)(r->find("se"));
-//    stringstream ess;
-//    ess << "se" << (int)_id;
-//    DEBUG("state element: %s", ess.str().c_str());
-//    FTStateElement *stateElement = (FTStateElement *)(r->find(ess.str().c_str()));
 
     //Getting the state's value from the FTStateElement
     stringstream ss;
     string value;
 
-//    std::cout << "Begin Monitor1 :" << _id << std::endl;
     if (stateElement->getPrimaryState(COUNTER, value)) {
-//	std::cout << "before in here" << std::endl;
         if (value.size() != 0) {
-//	    std::cout << "in here" << std::endl;
             ss << value;
             ss >> _counter;
         }//if
-//	std::cout << "out here" << std::endl;
     }//if
 
-//    std::cout << "Begin Monitor2 :" << _id << std::endl;
     stringstream ss2;
     ss2 << (_counter + 1);
     ss2 >> value;
 
     stateElement->putPrimaryState(COUNTER, value);
 
-//    std::cout << "Begin Monitor3 :" << _id << std::endl;
     _counter++;
 
     LOG("Packet id is: %llu", FTAppenderElement::getPacketId(p));
@@ -58,6 +47,10 @@ Packet *Monitor::simple_action(Packet *p) {
 
     LOG("End Monitor %d:", _id);
     LOG("--------------------");
+
+    for (int i = 0; i < FOR_COUNT; ++i) {
+    	rand();
+    }
 
     return p;
 }

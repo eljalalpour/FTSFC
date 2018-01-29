@@ -12,6 +12,8 @@ using namespace std;
 
 CLICK_DECLS
 
+#define SLEEP_USEC 500
+
 NFCounterMB* _counter_mb;
 
 void signal_handler2(int signal) {
@@ -53,6 +55,8 @@ Packet *NFCounterMB::simple_action(Packet *p) {
 
     LOG("End NFCounterMB %d:", _id);
     LOG("--------------------");
+    
+    sleep(SLEEP_USEC);
 
     return p;
 }

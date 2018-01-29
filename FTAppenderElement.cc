@@ -108,59 +108,17 @@ int  FTAppenderElement::payloadOffset(Packet *p) {
 WritablePacket *FTAppenderElement::encodeStates(Packet *p, FTPiggyBackMessage &msg) {
 //    string stateSS;
 //    serializePiggyBacked(msg, stateSS);
-//
-//    short stateLen = stateSS.size();
-//
-//    uint16_t newPacketSize = sizeof(short) + stateLen + p->length();
-//    WritablePacket *q = Packet::make(newPacketSize);
-//    int ploff = payloadOffset(p);
-//
-//    memcpy(q->data(), p->data(), ploff);
-//    memcpy(q->data() + ploff, &stateLen, sizeof(short));
-////    memcpy(q->data() + ploff + sizeof(short), compressed.c_str(), stateLen);
-//    memcpy(q->data() + ploff + sizeof(short), stateSS.c_str(), stateLen);
-//    if (ploff < p->length())
-//        memcpy(q->data() + ploff + sizeof(short) + stateLen, p->data() + ploff, p->length() - ploff);
-//
-//    click_ip* ip_header = reinterpret_cast<click_ip*>(q->data() + p->ip_header_offset());
-//    ip_header->ip_len = htons(ntohs(p->ip_header()->ip_len) + sizeof(short) + stateLen);
-//    ip_header->ip_sum = 0;
-//
-//    int hlen = (ip_header->ip_hl) << 2;
-//    ip_header->ip_sum = click_in_cksum((unsigned char *)ip_header, hlen);
 
-//    string stateSS;
-//    serializePiggyBacked(msg, stateSS);
-//    WritablePacket *q;
-//    if (!(q = p->uniqueify()))
-//        throw "Cannot create Packet";
-
-//    String _data(stateSS.c_str(), stateSS.size());
-//    int stateLen = _data.length();
-//    //LOG("State Length is: %d", stateLen);
-//    if (q->length() < DEFAULT_OFFSET + stateLen + sizeof(stateLen)) {
-//        //throw "Not sufficient space to place the piggybacked message!";
-//        q->kill();
-//        return 0;
-//    }//if
-
-//    memcpy(q->data() + DEFAULT_OFFSET, &stateLen, sizeof(stateLen));
-//    memcpy(q->data() + DEFAULT_OFFSET + sizeof(stateLen), _data.data(), stateLen);
-//    return q;
-
-//    string stateSS;
-//    serializePiggyBacked(msg, stateSS);
-//
 //    String _data(stateSS.c_str(), stateSS.size());
 //    int stateLen = _data.length();
 //    int new_pkt_size = p->length() + stateLen + sizeof(stateLen);
 //    WritablePacket *q = Packet::make(new_pkt_size);
-//
+
 //    memcpy(q->data(), p->data(), DEFAULT_OFFSET);
 //    memcpy(q->data() + DEFAULT_OFFSET, &stateLen, sizeof(stateLen));
 //    memcpy(q->data() + DEFAULT_OFFSET + sizeof(stateLen), _data.data(), stateLen);
 //    memcpy(q->data() + DEFAULT_OFFSET + sizeof(stateLen) + stateLen, p->data() + DEFAULT_OFFSET, p->length() - DEFAULT_OFFSET);
-//
+
 //    return q;
 
     string stateSS;
@@ -222,7 +180,7 @@ WritablePacket* FTAppenderElement::stripStates(Packet *p) {
 }
 
 WritablePacket* FTAppenderElement::decodeStatesRetPacket(Packet *p, FTPiggyBackMessage &msg) {
-//    auto ploff = payloadOffset(p);
+    auto ploff = DEFAULT_OFFSET;
 //    int stateLenPShort = FTAppenderElement::decodeStates(p, msg);
 //    int orgPayloadBegin = ploff + stateLenPShort;
 //    WritablePacket *q = Packet::make(p->length() - stateLenPShort);

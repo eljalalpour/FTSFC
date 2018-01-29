@@ -6,8 +6,11 @@
 #include <click/args.hh>
 #include "monitorp.hh"
 #include "Transmitter.hh"
+#include <stdlib.h>
 
 CLICK_DECLS
+
+#define FOR_COUNT 0
 
 Monitorp::Monitorp() : _counter(INIT_COUNTER) {};
 
@@ -39,6 +42,10 @@ Packet *Monitorp::simple_action(Packet *p) {
 
     LOG("End Monitorp %d:", _id);
     LOG("--------------------");
+
+    for (int i = 0; i < FOR_COUNT; ++i) {
+    	rand();
+    }//for
 
     return p;
 }

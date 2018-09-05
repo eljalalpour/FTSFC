@@ -15,9 +15,9 @@ private:
     int _index;
 
 public:
-    NFLockFreeCounter () : _index(DEFAULT_INDEX) { };
+    NFLockFreeCounter ();
 
-    ~NFLockFreeCounter() { };
+    ~NFLockFreeCounter();
 
     const char *class_name() const { return "NFLockFreeCounter"; }
 

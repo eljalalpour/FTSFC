@@ -6,6 +6,10 @@
 
 CLICK_DECLS
 
+NFAtomicCounter::NFAtomicCounter () : _index(DEFAULT_INDEX) { };
+
+NFAtomicCounter::~NFAtomicCounter() { };
+
 int NFAtomicCounter::configure(Vector<String> &conf, ErrorHandler *errh) {
     // set index param
     Args(conf, this, errh).read_or_set("INDEX", _index, DEFAULT_INDEX);

@@ -15,9 +15,9 @@ private:
     int _index;
 
 public:
-    NFAtomicCounter () : _index(DEFAULT_INDEX) { };
+    NFAtomicCounter ();
 
-    ~NFAtomicCounter() { };
+    ~NFAtomicCounter();
 
     const char *class_name() const { return "NFAtomicCounter "; }
 

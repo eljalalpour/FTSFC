@@ -2,8 +2,8 @@
 
 #include <click/config.h>
 #include <click/element.hh>
-#inculde <atomic>
-#inculde <vector>
+#include <atomic>
+#include <vector>
 
 CLICK_DECLS
 

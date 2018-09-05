@@ -2,7 +2,6 @@
 #include <click/config.h>
 #include <click/router.hh>
 #include <click/args.hh>
-#include <string>
 #include "Transmitter.hh"
 #include "tft_lock_free_counter.hh"
 

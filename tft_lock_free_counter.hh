@@ -5,6 +5,7 @@
 #include <click/element.hh>
 #include <atomic>
 #include <vector>
+#include <string>
 
 CLICK_DECLS
 

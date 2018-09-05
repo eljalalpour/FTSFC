@@ -1,8 +1,8 @@
-#include "nf_atomic_counter.hh"
+#include "atomic_counters.hh"
 #include <click/config.h>
 #include <click/router.hh>
 #include <click/args.hh>
-#include "atomic_counters.hh"
+#include "nf_atomic_counter.hh"
 
 CLICK_DECLS
 

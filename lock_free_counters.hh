@@ -13,9 +13,9 @@ class LockFreeCounters : public Element {
 public:
     int counters[DEFAULT_SIZE];
 
-    LockFreeCounters () : counters {0} { };
+    LockFreeCounters ();
 
-    ~LockFreeCounters() { };
+    ~LockFreeCounters();
 
     const char *class_name() const { return "LockFreeCounters"; }
 
@@ -23,8 +23,7 @@ public:
 
     const char *processing() const { return AGNOSTIC; }
 
-    Packet *simple_action(Packet *p) { return p; }
+    Packet *simple_action(Packet *p);
 };
 
 CLICK_ENDDECLS
-EXPORT_ELEMENT(LockFreeCounters)

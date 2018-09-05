@@ -2,7 +2,7 @@
 
 #include <click/config.h>
 #include <click/element.hh>
-#include "lock_free_counters.cc"
+#include "lock_free_counters.hh"
 
 CLICK_DECLS
 

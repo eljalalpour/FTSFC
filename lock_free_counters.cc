@@ -6,7 +6,10 @@
 
 CLICK_DECLS
 
-LockFreeCounters::LockFreeCounters () { };
+LockFreeCounters::LockFreeCounters () {
+    for (int i = 0; i < DEFAULT_SIZE; ++i)
+        counters[i] = 0;
+};
 
 LockFreeCounters::~LockFreeCounters() { };
 

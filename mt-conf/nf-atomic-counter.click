@@ -1,4 +1,5 @@
 AddressInfo(sender 10.70.0.1);
+counters::AtomicCounters;
 
 elementclass CounterBlock {
 $index |
@@ -14,4 +15,4 @@ $index |
 
 FromDPDKDevice(0)
 -> CounterBlock(0)
--> ToDPDKDevice(0);
+-> ToDPDKDevice(0)

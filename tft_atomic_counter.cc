@@ -41,4 +41,4 @@ Packet *TFTAtomicCounter ::simple_action(Packet *p) {
 }
 
 CLICK_ENDDECLS
-EXPORT_ELEMENT(TFTLockFreeCounter )
+EXPORT_ELEMENT(TFTAtomicCounter)

@@ -10,10 +10,9 @@
 CLICK_DECLS
 
 class AtomicCounters : public Element {
-private:
+public:
     atomic_int _counters[DEFAULT_SIZE];
 
-public:
     AtomicCounters () { };
 
     ~AtomicCounters() { };

@@ -10,10 +10,9 @@
 CLICK_DECLS
 
 class LockFreeCounters : public Element {
-private:
-    int _counters[DEFAULT_SIZE];
-
 public:
+    int counters[DEFAULT_SIZE];
+
     LockFreeCounters () : _counters {0} { };
 
     ~LockFreeCounters() { };

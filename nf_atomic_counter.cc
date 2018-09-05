@@ -1,7 +1,6 @@
 #include "atomic_counters.hh"
 #include <click/config.h>
 #include <click/router.hh>
-#include <clicknet/tcp.h>
 #include <click/args.hh>
 #include "nf_atomic_counter.hh"
 
@@ -31,4 +30,4 @@ Packet *NFAtomicCounter::simple_action(Packet *p) {
 }
 
 CLICK_ENDDECLS
-EXPORT_ELEMENT(NFLockFreeCounter)
+EXPORT_ELEMENT(NFAtomicCounter)

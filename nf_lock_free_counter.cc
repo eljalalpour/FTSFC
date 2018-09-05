@@ -15,7 +15,6 @@ int NFLockFreeCounter::configure(Vector<String> &conf, ErrorHandler *errh) {
     return 0;
 }
 
-
 Packet *NFLockFreeCounter::simple_action(Packet *p) {
     LOG("--------------------");
     LOG("Begin NFLockFreeCounter with index %d:", _index);

@@ -24,6 +24,8 @@ public:
 
     const char *processing() const { return AGNOSTIC; }
 
+    int configure(Vector<String> &conf, ErrorHandler *errh);
+
     Packet *simple_action(Packet *p);
 };
 

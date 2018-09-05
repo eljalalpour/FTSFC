@@ -2,6 +2,10 @@
 
 CLICK_DECLS
 
+AtomicCounters::AtomicCounters () { };
+
+~AtomicCounters::AtomicCounters() { };
+
 Packet *AtomicCounters::simple_action(Packet *p) {
     return p;
 }

@@ -1,6 +1,5 @@
 #pragma once
 
-#include <click/config.h>
 #include <click/element.hh>
 #include <atomic>
 
@@ -12,9 +11,9 @@ class AtomicCounters : public Element {
 public:
     std::atomic_int counters[DEFAULT_SIZE];
 
-    AtomicCounters () { };
+    AtomicCounters ();
 
-    ~AtomicCounters() { };
+    ~AtomicCounters();
 
     const char *class_name() const { return "AtomicCounters"; }
 

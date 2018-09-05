@@ -8,11 +8,14 @@
 
 CLICK_DECLS
 
-#define DEFAULT_INDEX   0
+#define DEFAULT_INDEX 0
+#define DEFAULT_VALUE 1
 
 class TFTLockFreeCounter : public Element {
 private:
     int _index;
+    string _key;
+    string _val;
 
 public:
     TFTLockFreeCounter  ();

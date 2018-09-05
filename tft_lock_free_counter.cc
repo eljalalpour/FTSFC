@@ -2,11 +2,12 @@
 #include <click/config.h>
 #include <click/router.hh>
 #include <click/args.hh>
+#include "Transmitter.hh"
 #include "tft_lock_free_counter.hh"
 
 CLICK_DECLS
 
-TFTLockFreeCounter::TFTLockFreeCounter  () : _index(DEFAULT_INDEX) { };
+TFTLockFreeCounter::TFTLockFreeCounter  () : _index(DEFAULT_INDEX), _val(DEFAULT_VALUE) { };
 
 TFTLockFreeCounter ::~TFTLockFreeCounter () { };
 
@@ -24,7 +25,12 @@ Packet *TFTLockFreeCounter ::simple_action(Packet *p) {
     Router *r = this->router();
 
     LockFreeCounters *lfc = (LockFreeCounters *)(r->find("counters"));
+    Transmitter *trans = (Transmitter *)(r->find("trans"));
+
     ++lfc->counters[_index];
+    FTState state;
+    state[_index] = _val;
+    trans->send(state);
 
     LOG("End TFTLockFreeCounter %d:", _index);
     LOG("--------------------");

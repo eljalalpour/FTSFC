@@ -2,6 +2,7 @@
 
 #include <click/element.hh>
 #include <atomic>
+using namespace std;
 
 #define DEFAULT_SIZE 64
 
@@ -9,7 +10,7 @@ CLICK_DECLS
 
 class AtomicCounters : public Element {
 public:
-    std::atomic_int counters[DEFAULT_SIZE];
+    atomic_int counters[DEFAULT_SIZE];
 
     AtomicCounters ();
 

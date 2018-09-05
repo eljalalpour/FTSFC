@@ -3,7 +3,7 @@
 #include <click/router.hh>
 #include <clicknet/tcp.h>
 #include <click/args.hh>
-#include "nf_lock_free_counter.hh"
+#include "nf_atomic_counter.hh"
 
 CLICK_DECLS
 

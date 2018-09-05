@@ -7,7 +7,7 @@
 
 CLICK_DECLS
 
-TFTLockFreeCounter::TFTLockFreeCounter  () : _index(DEFAULT_INDEX), _val(DEFAULT_VALUE) { };
+TFTLockFreeCounter::TFTLockFreeCounter  () : _index(DEFAULT_INDEX) { };
 
 TFTLockFreeCounter ::~TFTLockFreeCounter () { };
 
@@ -16,6 +16,7 @@ int TFTLockFreeCounter ::configure(Vector<String> &conf, ErrorHandler *errh) {
     Args(conf, this, errh).read_or_set("INDEX", _index, DEFAULT_INDEX);
     LOG("TFTLockFreeCounter index is %d!\n", _index);
     _key = std::string(_index);
+    _val = DEFAULT_VALUE;
 
     return 0;
 }

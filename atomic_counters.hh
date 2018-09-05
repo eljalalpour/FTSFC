@@ -10,7 +10,7 @@ CLICK_DECLS
 
 class AtomicCounters : public Element {
 public:
-    std::atomic_int _counters[DEFAULT_SIZE];
+    std::atomic_int counters[DEFAULT_SIZE];
 
     AtomicCounters () { };
 

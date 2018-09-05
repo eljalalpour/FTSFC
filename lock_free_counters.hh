@@ -13,7 +13,7 @@ class LockFreeCounters : public Element {
 public:
     int counters[DEFAULT_SIZE];
 
-    LockFreeCounters () : _counters {0} { };
+    LockFreeCounters () : counters {0} { };
 
     ~LockFreeCounters() { };
 

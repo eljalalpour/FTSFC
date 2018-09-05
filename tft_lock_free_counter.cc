@@ -15,7 +15,7 @@ int TFTLockFreeCounter ::configure(Vector<String> &conf, ErrorHandler *errh) {
     // set index param
     Args(conf, this, errh).read_or_set("INDEX", _index, DEFAULT_INDEX);
     LOG("TFTLockFreeCounter index is %d!\n", _index);
-    _key = std::string(_index);
+    _key = std::to_string(_index);
     _val = DEFAULT_VALUE;
 
     return 0;

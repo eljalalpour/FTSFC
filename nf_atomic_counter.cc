@@ -1,8 +1,8 @@
-#include "atomic_counters.hh"
+#include "nf_atomic_counter.hh"
 #include <click/config.h>
 #include <click/router.hh>
 #include <click/args.hh>
-#include "nf_atomic_counter.hh"
+#include "atomic_counters.hh"
 
 CLICK_DECLS
 
@@ -17,7 +17,6 @@ int NFAtomicCounter::configure(Vector<String> &conf, ErrorHandler *errh) {
 
     return 0;
 }
-
 
 Packet *NFAtomicCounter::simple_action(Packet *p) {
     LOG("--------------------");

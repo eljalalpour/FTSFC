@@ -1,7 +1,6 @@
 #include "lock_free_counters.hh"
 #include <click/config.h>
 #include <click/router.hh>
-#include <clicknet/tcp.h>
 #include <click/args.hh>
 #include "nf_lock_free_counter.hh"
 

@@ -16,8 +16,8 @@ using std::string;
 using std::stringstream;
 using namespace FTSFC;
 
-#define ENABLE_DEBUG 1
-#define ENABLE_LOG   1
+//#define ENABLE_DEBUG 1
+//#define ENABLE_LOG   1
 
 #ifdef ENABLE_DEBUG
 #define DEBUG(...) click_chatter(__VA_ARGS__)

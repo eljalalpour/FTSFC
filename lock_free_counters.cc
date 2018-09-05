@@ -5,7 +5,7 @@ CLICK_DECLS
 
 LockFreeCounters::LockFreeCounters () : counters {0} { };
 
-~LockFreeCounters::LockFreeCounters() { };
+LockFreeCounters::~LockFreeCounters() { };
 
 Packet *LockFreeCounters::simple_action(Packet *p) {
     return p;

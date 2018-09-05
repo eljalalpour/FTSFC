@@ -1,5 +1,6 @@
 #pragma once
 
+#include "FTTypes.hh"
 #include <click/config.h>
 #include <click/element.hh>
 #include <atomic>
@@ -14,15 +15,17 @@ private:
     int _index;
 
 public:
-    NFLockFreeCounter () : _index(DEFAULT_INDEX) { };
+    NFAtomicCounter () : _index(DEFAULT_INDEX) { };
 
-    ~CounterNF() { };
+    ~NFAtomicCounter() { };
 
     const char *class_name() const { return "NFAtomicCounter "; }
 
     const char *port_count() const { return PORTS_1_1; }
 
     const char *processing() const { return AGNOSTIC; }
+
+    int configure(Vector<String> &conf, ErrorHandler *errh);
 
     Packet *simple_action(Packet *p);
 };

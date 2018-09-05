@@ -1,9 +1,6 @@
 #pragma once
 
-#include <click/config.h>
 #include <click/element.hh>
-#include <atomic>
-#include <vector>
 
 #define DEFAULT_SIZE 64
 

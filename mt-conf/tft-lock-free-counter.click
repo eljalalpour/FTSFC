@@ -1,5 +1,5 @@
 AddressInfo(sender 10.70.0.6);
-trans::Transmitter(10.70.0.12:10000);
+trans::Transmitter(10.0.7.12:10000);
 counters::AtomicCounters;
 
 elementclass CounterBlock {

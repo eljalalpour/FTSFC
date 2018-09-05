@@ -27,3 +27,4 @@ public:
 };
 
 CLICK_ENDDECLS
+EXPORT_ELEMENT(LockFreeCounters)

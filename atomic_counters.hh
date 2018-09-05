@@ -26,3 +26,4 @@ public:
 };
 
 CLICK_ENDDECLS
+EXPORT_ELEMENT(AtomicCounters)

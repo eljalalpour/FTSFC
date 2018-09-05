@@ -7,5 +7,4 @@ Packet *AtomicCounters::simple_action(Packet *p) {
 }
 
 CLICK_ENDDECLS
-
 EXPORT_ELEMENT(AtomicCounters)

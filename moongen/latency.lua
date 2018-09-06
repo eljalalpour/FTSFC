@@ -29,7 +29,6 @@ function configure(parser)
     parser:description("Generates UDP traffic and measure latencies. Edit the source to modify constants like IPs.")
     parser:option("-d --dev", "Device to transmit/receive from."):default(0):convert(tonumber)
     parser:option("-r --rate", "Transmit rate in Mbit/s."):default(10000):convert(tonumber)
-    parser:option("-f --flows", "Number of flows (randomized source IP)."):default(4):convert(tonumber)
     parser:option("-s --size", "Packet size."):default(1024):convert(tonumber)
     parser:option("-o --out", "Filename of the latency histogram."):default("latency.csv")
     parser:option("-d --duration", "Experiment duration"):default(20):convert(tonumber)
@@ -51,15 +50,9 @@ function master(args)
             dev:getTxQueue(1),
             dev:getRxQueue(1),
             args.size,
-            args.flows,
             args.duration,
             args.out)
-    --arp.startArpTask{
-    --    -- run ARP on both ports
-    --    { rxQueue = rxDev:getRxQueue(2), txQueue = rxDev:getTxQueue(2), ips = RX_IP },
-    --    -- we need an IP address to do ARP requests on this interface
-    --    { rxQueue = txDev:getRxQueue(2), txQueue = txDev:getTxQueue(2), ips = ARP_IP }
-    --}
+
     mg.waitForTasks()
     mg.stop()
 end
@@ -76,23 +69,17 @@ local function fillUdpPacket(buf, len)
     }
 end
 
-function timerSlave(txQueue, rxQueue, size, flows, duration, out)
+function timerSlave(txQueue, rxQueue, size, duration, out)
     local timestamper = ts:newUdpTimestamper(txQueue, rxQueue)
     mg.sleepMillis(1000) -- ensure that the load task is running
 
     local hist = hist:new()
-    local counter = 0
     local rateLimit = timer:new(0.001)
-    local baseIP = parseIPAddress(SRC_IP_BASE)
     local durTimeout = timer:new(duration)
-    --durTimeout.reset()
 
     while mg.running() and durTimeout:running() do
         hist:update(timestamper:measureLatency(size, function(buf)
             fillUdpPacket(buf, size)
-            --local pkt = buf:getUdpPacket()
-            --pkt.ip4.src:set(baseIP + counter)
-            --counter = incAndWrap(counter, flows)
         end))
         rateLimit:busyWait()
         rateLimit:reset()

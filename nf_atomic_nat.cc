@@ -41,7 +41,7 @@ Packet *NFAtomicNAT::simple_action(Packet *p) {
     LOG("Begin NFAtomicNAT with index %d:", _index);
     Router *r = this->router();
 
-    click_ip *iph = p->ip_header();
+    const click_ip *iph = p->ip_header();
 
     if (bad_header(iph)) {
         p->kill();

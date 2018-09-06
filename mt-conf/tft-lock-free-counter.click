@@ -1,6 +1,6 @@
 AddressInfo(sender 10.70.0.6);
 trans::Transmitter(10.0.7.12:10000);
-counters::LockFreeArray;
+counters::LockFreeCounters;
 
 elementclass CounterBlock {
 $index |
@@ -9,6 +9,7 @@ $index |
     -> MarkIPHeader(14)
     -> IPFilter(allow src sender)
     -> TFTLockFreeCounter(INDEX $index)
+    -> Print("After")
     -> MarkIPHeader(14)
     -> StoreIPAddress(10.70.0.7, src)
     -> StoreIPAddress(10.70.0.1, dst)

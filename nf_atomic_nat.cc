@@ -28,7 +28,7 @@ uint32_t NFAtomicNAT::flow_id(Packet *p) {
             ((uint64_t)flow_id.dport()) << 16;
 
     uint32_t hash_val =
-            ((uint32_t)std::hash(ip_part) % (1 << 16)) |
+            ((uint32_t)std::hash<uint64_t>(ip_part) % (1 << 16)) |
             pr_part;
 
     // Just return some random value!

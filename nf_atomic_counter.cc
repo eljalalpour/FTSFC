@@ -1,4 +1,4 @@
-#include "atomic_counters.hh"
+#include "atomic_array.hh"
 #include <click/config.h>
 #include <click/router.hh>
 #include <click/args.hh>
@@ -23,7 +23,7 @@ Packet *NFAtomicCounter::simple_action(Packet *p) {
     LOG("Begin NFAtomicCounter with index %d:", _index);
     Router *r = this->router();
 
-    AtomicCounters *afc = (AtomicCounters *)(r->find("counters"));
+    AtomicArray *afc = (AtomicArray *)(r->find("counters"));
     ++afc->counters[_index];
 
     LOG("End NFAtomicCounter %d:", _index);

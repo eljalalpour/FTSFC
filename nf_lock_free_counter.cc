@@ -1,4 +1,4 @@
-#include "lock_free_counters.hh"
+#include "lock_free_array.hh"
 #include <click/config.h>
 #include <click/router.hh>
 #include <click/args.hh>
@@ -23,7 +23,7 @@ Packet *NFLockFreeCounter::simple_action(Packet *p) {
     LOG("Begin NFLockFreeCounter with index %d:", _index);
     Router *r = this->router();
 
-    LockFreeCounters *lfc = (LockFreeCounters *)(r->find("counters"));
+    LockFreeArray *lfc = (LockFreeArray *)(r->find("counters"));
     ++lfc->counters[_index];
 
     LOG("End NFLockFreeCounter %d:", _index);

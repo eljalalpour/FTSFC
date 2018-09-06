@@ -2,20 +2,21 @@
 
 #include <click/config.h>
 #include <click/element.hh>
+#include <atomic>
 
 #define DEFAULT_SIZE 64
 
 CLICK_DECLS
 
-class LockFreeCounters : public Element {
+class AtomicArray : public Element {
 public:
-    int counters[DEFAULT_SIZE];
+    std::atomic_int counters[DEFAULT_SIZE];
 
-    LockFreeCounters ();
+    AtomicArray ();
 
-    ~LockFreeCounters();
+    ~AtomicArray();
 
-    const char *class_name() const { return "LockFreeCounters"; }
+    const char *class_name() const { return "AtomicArray"; }
 
     const char *port_count() const { return PORTS_0_0; }
 

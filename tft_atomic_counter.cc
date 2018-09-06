@@ -1,4 +1,4 @@
-#include "atomic_counters.hh"
+#include "atomic_array.hh"
 #include <click/config.h>
 #include <click/router.hh>
 #include <click/args.hh>
@@ -26,7 +26,7 @@ Packet *TFTAtomicCounter::simple_action(Packet *p) {
     LOG("Begin TFTAtomicCounter with index %d:", _index);
     Router *r = this->router();
 
-    AtomicCounters *lfc = (AtomicCounters *)(r->find("counters"));
+    AtomicArray *lfc = (AtomicArray *)(r->find("counters"));
     Transmitter *trans = (Transmitter *)(r->find("trans"));
 
     ++lfc->counters[_index];

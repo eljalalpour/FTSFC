@@ -1,4 +1,4 @@
-#include "lock_free_counters.hh"
+#include "lock_free_array.hh"
 #include <click/config.h>
 #include <click/router.hh>
 #include <click/args.hh>
@@ -26,7 +26,7 @@ Packet *TFTLockFreeCounter ::simple_action(Packet *p) {
     LOG("Begin TFTLockFreeCounter  with index %d:", _index);
     Router *r = this->router();
 
-    LockFreeCounters *lfc = (LockFreeCounters *)(r->find("counters"));
+    LockFreeArray *lfc = (LockFreeArray *)(r->find("counters"));
     Transmitter *trans = (Transmitter *)(r->find("trans"));
 
     ++lfc->counters[_index];

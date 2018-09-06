@@ -16,7 +16,7 @@ bool NFAtomicNAT::bad_header(click_ip *iph) {
 }
 
 uint32_t NFAtomicNAT::flow_id(Packet *p) {
-    // Real NAT stuff!
+    // Simulating Real NAT stuff!
     IPFlowID flow_id(p);
     uint64_t ip_part =
             (uint64_t)flow_id.saddr().addr() |

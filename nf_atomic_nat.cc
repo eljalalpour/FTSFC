@@ -6,7 +6,7 @@
 
 CLICK_DECLS
 
-NFAtomicNAT::NFAtomicNAT () : _index(DEFAULT_INDEX) { };
+NFAtomicNAT::NFAtomicNAT () { };
 
 NFAtomicNAT::~NFAtomicNAT() { };
 

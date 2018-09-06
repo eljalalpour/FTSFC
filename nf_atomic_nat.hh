@@ -1,6 +1,5 @@
 #pragma once
 
-#include "FTTypes.hh"
 #include <click/config.h>
 #include <click/element.hh>
 #include <atomic>

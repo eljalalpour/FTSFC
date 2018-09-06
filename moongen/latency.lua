@@ -89,7 +89,7 @@ end
 
 
 function timerSlave(txQueue, rxQueue, size, flows, duration, out)
-    doArp()
+    --doArp()
     if size < 84 then
         log:warn("Packet size %d is smaller than minimum timestamp size 84. Timestamped packets will be larger than load packets.", size)
         size = 84

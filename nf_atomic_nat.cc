@@ -2,6 +2,7 @@
 #include <click/config.h>
 #include <click/router.hh>
 #include <click/args.hh>
+#include <click/ipflowid.hh>
 #include "nf_atomic_nat.hh"
 
 CLICK_DECLS

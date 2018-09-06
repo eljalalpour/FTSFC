@@ -30,22 +30,25 @@ function configure(parser)
     parser:description("Generates UDP traffic and measure latencies. Edit the source to modify constants like IPs.")
     parser:option("-d --dev", "Device to transmit/receive from."):default(0):convert(tonumber)
     parser:option("-r --rate", "Transmit rate in Mbit/s."):default(10000):convert(tonumber)
-    parser:option("-s --size", "Packet size."):default(1024):convert(tonumber)
+    parser:option("-s --size", "Packet size."):default(1000):convert(tonumber)
     parser:option("-o --out", "Filename of the latency histogram."):default("latency.csv")
-    parser:option("-d --duration", "Experiment duration"):default(20):convert(tonumber)
+    parser:option("-d --duration", "Experiment duration"):default(10):convert(tonumber)
 end
 
 function master(args)
     local dev = device.config({port = args.dev, rxQueues = 2, txQueues = 2, bufSize = 9000, numBufs = 1024})
     device.waitForLinks()
+
     -- max 1kpps timestamping traffic timestamping
     -- rate will be somewhat off for high-latency links at low rates
     if args.rate > 0 then
         dev:getTxQueue(0):setRate(args.rate)
+        dev:getTxQueue(1):setRate(args.rate)
     end
+
     mg.startTask("loadSlave",
             dev:getTxQueue(0),
-            dev,
+            dev:getRxQueue(0),
             args.size,
             args.duration,
             args.out)
@@ -69,7 +72,6 @@ function loadSlave(queue, rxDev, size, duration, out)
         fillUdpPacket(buf, size)
     end)
     local bufs = mempool:bufArray()
-    local counter = 0
     local txCtr = stats:newDevTxCounter(queue, "plain")
     local rxCtr = stats:newDevRxCounter(rxDev, "plain")
 

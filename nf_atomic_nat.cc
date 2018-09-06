@@ -2,7 +2,7 @@
 #include <click/config.h>
 #include <click/router.hh>
 #include <click/args.hh>
-#include "nf_atomic_counter.hh"
+#include "nf_atomic_nat.hh"
 
 CLICK_DECLS
 

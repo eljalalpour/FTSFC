@@ -47,12 +47,12 @@ Packet *NFAtomicNAT::simple_action(Packet *p) {
     }//if
 
     // Finding flow id
-    uint32_t flow_id = flow_id(p);
+    uint32_t fid = flow_id(p);
 
     // Keep as is
     AtomicArray *afc = (AtomicArray *)(r->find("array"));
-    if (afc->counters[flow_id] != 0)
-        afc->counters[flow_id] = 1;
+    if (afc->counters[fid] != 0)
+        afc->counters[fid] = 1;
 
     LOG("End NFAtomicNAT %d:", _index);
     LOG("--------------------");

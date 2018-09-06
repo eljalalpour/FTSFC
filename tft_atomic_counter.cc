@@ -9,21 +9,21 @@ CLICK_DECLS
 
 TFTAtomicCounter::TFTAtomicCounter  () : _index(DEFAULT_INDEX) { };
 
-TFTAtomicCounter ::~TFTAtomicCounter () { };
+TFTAtomicCounter::~TFTAtomicCounter () { };
 
-int TFTAtomicCounter ::configure(Vector<String> &conf, ErrorHandler *errh) {
+int TFTAtomicCounter::configure(Vector<String> &conf, ErrorHandler *errh) {
     // set index param
     Args(conf, this, errh).read_or_set("INDEX", _index, DEFAULT_INDEX);
-    LOG("TFTLockFreeCounter index is %d!\n", _index);
+    LOG("TFTAtomicCounter index is %d!\n", _index);
     _key = std::to_string(_index);
     _val = DEFAULT_VALUE;
 
     return 0;
 }
 
-Packet *TFTAtomicCounter ::simple_action(Packet *p) {
+Packet *TFTAtomicCounter::simple_action(Packet *p) {
     LOG("--------------------");
-    LOG("Begin TFTLockFreeCounter  with index %d:", _index);
+    LOG("Begin TFTAtomicCounter with index %d:", _index);
     Router *r = this->router();
 
     AtomicCounters *lfc = (AtomicCounters *)(r->find("counters"));
@@ -34,7 +34,7 @@ Packet *TFTAtomicCounter ::simple_action(Packet *p) {
     state[_key] = _val;
     trans->send(state);
 
-    LOG("End TFTLockFreeCounter %d:", _index);
+    LOG("End TFTAtomicCounter %d:", _index);
     LOG("--------------------");
 
     return p;

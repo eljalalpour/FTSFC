@@ -37,7 +37,6 @@ end
 function master(args)
     local dev = device.config({port = args.dev, rxQueues = 2, txQueues = 2, bufSize = 9000, numBufs = 1024})
     device.waitForLinks()
-    device.waitForLinks()
 
     -- max 1kpps timestamping traffic timestamping
     -- rate will be somewhat off for high-latency links at low rates

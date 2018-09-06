@@ -90,18 +90,20 @@ end
 
 function timerSlave(txQueue, rxQueue, size, flows, duration, out)
     --doArp()
-    if size < 84 then
-        log:warn("Packet size %d is smaller than minimum timestamp size 84. Timestamped packets will be larger than load packets.", size)
-        size = 84
-    end
+    --if size < 84 then
+    --    log:warn("Packet size %d is smaller than minimum timestamp size 84. Timestamped packets will be larger than load packets.", size)
+    --    size = 84
+    --end
     local timestamper = ts:newUdpTimestamper(txQueue, rxQueue)
-    local hist = hist:new()
     mg.sleepMillis(1000) -- ensure that the load task is running
+
+    local hist = hist:new()
     local counter = 0
     local rateLimit = timer:new(0.001)
     local baseIP = parseIPAddress(SRC_IP_BASE)
     local dur_timeout = timer:new(duration)
     dur_timeout.reset()
+
     while mg.running() and dur_timeout:running() do
         hist:update(timestamper:measureLatency(size, function(buf)
             fillUdpPacket(buf, size)
@@ -109,7 +111,7 @@ function timerSlave(txQueue, rxQueue, size, flows, duration, out)
             pkt.ip4.src:set(baseIP + counter)
             counter = incAndWrap(counter, flows)
         end))
-        rateLimit:wait()
+        rateLimit:busyWait()
         rateLimit:reset()
     end
     -- print the latency stats after all the other stuff

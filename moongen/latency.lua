@@ -72,9 +72,10 @@ function timerSlave(txQueue, rxQueue, size, duration, out)
     local timestamper = ts:newUdpTimestamper(txQueue, rxQueue)
     local hist = hist:new()
     local rateLimit = timer:new(0.001)
-    local durTimeout = timer:new(duration)
 
     mg.sleepMillis(5000) -- ensure that the load task is running
+    local durTimeout = timer:new(duration)
+
     while mg.running() and durTimeout:running() do
         hist:update(timestamper:measureLatency(size, function(buf)
             fillUdpPacket(buf, size)

@@ -31,7 +31,7 @@ function configure(parser)
     parser:option("-d --dev", "Device to transmit/receive from."):default(0):convert(tonumber)
     parser:option("-r --rate", "Transmit rate in Mbit/s."):default(10000):convert(tonumber)
     parser:option("-s --size", "Packet size."):default(1000):convert(tonumber)
-    parser:option("-o --out", "Filename of the latency histogram."):default("latency.csv")
+    --parser:option("-o --out", "Filename of the latency histogram."):default("latency.csv")
     parser:option("-d --duration", "Experiment duration"):default(10):convert(tonumber)
 end
 
@@ -50,8 +50,9 @@ function master(args)
             dev:getTxQueue(0),
             dev:getRxQueue(0),
             args.size,
-            args.duration,
-            args.out)
+            args.duration)
+            --args.duration,
+            --args.out)
     mg.waitForTasks()
 end
 
@@ -67,7 +68,8 @@ local function fillUdpPacket(buf, len)
     }
 end
 
-function loadSlave(queue, rxDev, size, duration, out)
+--function loadSlave(queue, rxDev, size, duration, out)
+function loadSlave(queue, rxDev, size, duration)
     local mempool = memory.createMemPool(function(buf)
         fillUdpPacket(buf, size)
     end)
@@ -75,14 +77,10 @@ function loadSlave(queue, rxDev, size, duration, out)
     local txCtr = stats:newDevTxCounter(queue, "plain")
     local rxCtr = stats:newDevRxCounter(rxDev, "plain")
 
-    local thr_hist = hist:new()
+    --local thr_hist = hist:new()
     local dur_timeout = timer:new(duration)
 
     while mg.running() and dur_timeout:running() do
-        --for i, buf in ipairs(bufs) do
-        --    local pkt = buf:getUdpPacket()
-        --    counter = incAndWrap(counter, flows)
-        --end
         -- UDP checksums are optional, so using just IPv4 checksums would be sufficient here
         bufs:alloc(size)
         bufs:offloadUdpChecksums()
@@ -90,13 +88,13 @@ function loadSlave(queue, rxDev, size, duration, out)
         txCtr:update()
         rxCtr:update()
         --thr_hist:update(txCtr)
-        thr_hist:update(rxCtr)
+        --thr_hist:update(rxCtr)
     end
     txCtr:finalize()
     rxCtr:finalize()
 
     -- print the latency stats after all the other stuff
     mg.sleepMillis(300)
-    thr_hist:print()
-    thr_hist:save(out)
+    --thr_hist:print()
+    --thr_hist:save(out)
 end

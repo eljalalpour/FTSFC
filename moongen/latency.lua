@@ -85,7 +85,7 @@ function timerSlave(txQueue, rxQueue, size, flows, duration, out)
     local rateLimit = timer:new(0.001)
     local baseIP = parseIPAddress(SRC_IP_BASE)
     local durTimeout = timer:new(duration)
-    durTimeout.reset()
+    --durTimeout.reset()
 
     while mg.running() and durTimeout:running() do
         hist:update(timestamper:measureLatency(size, function(buf)

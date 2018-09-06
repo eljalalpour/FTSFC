@@ -10,6 +10,30 @@ NFAtomicNAT::NFAtomicNAT () : _index(DEFAULT_INDEX) { };
 
 NFAtomicNAT::~NFAtomicNAT() { };
 
+bool NFAtomicNAT::bad_header(click_ip *iph) {
+    return (iph->ip_p != IP_PROTO_TCP && iph->ip_p != IP_PROTO_UDP)
+           || !IP_FIRSTFRAG(iph);
+}
+
+uint32_t NFAtomicNAT::flow_id(Packet *p) {
+    // Real NAT stuff!
+    IPFlowID flow_id(p);
+    uint64_t ip_part =
+            (uint64_t)flow_id.saddr().addr() |
+            ((uint64_t)flow_id.daddr().addr()) << 32;
+
+    uint32_t pr_part =
+            (uint64_t)flow_id.sport() |
+            ((uint64_t)flow_id.dport()) << 16;
+
+    uint32_t hash_val =
+            ((uint32_t)std::hash(ip_part) % (1 << 16)) |
+            pr_part;
+
+    // Just return some random value!
+    return fast_random() % DEFAULT_SIZE;
+}
+
 Packet *NFAtomicNAT::simple_action(Packet *p) {
     LOG("--------------------");
     LOG("Begin NFAtomicNAT with index %d:", _index);
@@ -17,10 +41,18 @@ Packet *NFAtomicNAT::simple_action(Packet *p) {
 
     click_ip *iph = rp->ip_header();
 
+    if (bad_header(iph)) {
+        p->kill();
+        return 0;
+    }//if
 
+    // Finding flow id
+    uint32_t flow_id = flow_id(p);
 
-    AtomicArray *afc = (AtomicArray *)(r->find("counters"));
-    ++afc->counters[_index];
+    // Keep as is
+    AtomicArray *afc = (AtomicArray *)(r->find("array"));
+    if (afc->counters[flow_id] != 0)
+        afc->counters[flow_id] = 1;
 
     LOG("End NFAtomicNAT %d:", _index);
     LOG("--------------------");

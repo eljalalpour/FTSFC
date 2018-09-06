@@ -1,5 +1,5 @@
 AddressInfo(sender 10.70.0.6);
-counters::AtomicArray;
+array::AtomicArray;
 
 elementclass CounterBlock {
 $index |

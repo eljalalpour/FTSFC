@@ -8,12 +8,9 @@
 
 CLICK_DECLS
 
-#define DEFAULT_INDEX   0
+#define DEFAULT_SIZE 65536
 
 class NFAtomicNAT : public Element {
-private:
-    std::map<string, string> _table;
-
 public:
     NFAtomicNAT ();
 
@@ -26,6 +23,10 @@ public:
     const char *processing() const { return AGNOSTIC; }
 
     Packet *simple_action(Packet *p);
+
+    inline bool bad_header(click_ip *iph);
+
+    inline uint32_t flow_id(Packet *p);
 };
 
 CLICK_ENDDECLS

@@ -23,7 +23,7 @@ Packet *NFLockFreeCounter::simple_action(Packet *p) {
     LOG("Begin NFLockFreeCounter with index %d:", _index);
     Router *r = this->router();
 
-    LockFreeArray *lfc = (LockFreeArray *)(r->find("counters"));
+    LockFreeArray *lfc = (LockFreeArray *)(r->find("array"));
     ++lfc->counters[_index];
 
     LOG("End NFLockFreeCounter %d:", _index);

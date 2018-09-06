@@ -79,7 +79,6 @@ function loadSlave(queue, rxDev, size, duration, out)
     local dur_timeout = timer:new(duration)
 
     while mg.running() and dur_timeout:running() do
-        bufs:alloc(size)
         --for i, buf in ipairs(bufs) do
         --    local pkt = buf:getUdpPacket()
         --    counter = incAndWrap(counter, flows)

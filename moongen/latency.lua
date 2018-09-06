@@ -26,8 +26,7 @@ local ARP_IP	= SRC_IP_BASE
 
 function configure(parser)
     parser:description("Generates UDP traffic and measure latencies. Edit the source to modify constants like IPs.")
-    parser:option("txDev", "Device to transmit from."):default(0):convert(tonumber)
-    parser:option("rxDev", "Device to receive from."):default(0):convert(tonumber)
+    parser:option("dev", "Device to transmit/receive from."):default(0):convert(tonumber)
     parser:option("-r --rate", "Transmit rate in Mbit/s."):default(10000):convert(tonumber)
     parser:option("-f --flows", "Number of flows (randomized source IP)."):default(4):convert(tonumber)
     parser:option("-s --size", "Packet size."):default(1024):convert(tonumber)
@@ -36,23 +35,24 @@ function configure(parser)
 end
 
 function master(args)
-    --txDev = device.config{port = args.txDev, rxQueues = 2, txQueues = 2, bufSize = 9000, numBufs = 1024}
-    --rxDev = device.config{port = args.rxDev, rxQueues = 2, txQueues = 2, bufSize = 9000, numBufs = 1024}
-
-    dev = device.config{port = args.txDev, rxQueues = 2, txQueues = 2, bufSize = 9000, numBufs = 1024}
+    local dev = device.config({port = args.dev, rxQueues = 2, txQueues = 2, bufSize = 9000, numBufs = 1024})
     device.waitForLinks()
+    device.waitForLinks()
+
     -- max 1kpps timestamping traffic timestamping
     -- rate will be somewhat off for high-latency links at low rates
     if args.rate > 0 then
-        --txDev:getTxQueue(0):setRate(args.rate - (args.size + 4) * 8 / 1000)
-        dev:getTxQueue(0):setRate(args.rate - (args.size + 4) * 8 / 1000)
+        dev:getTxQueue(0):setRate(args.rate)
+        dev:getTxQueue(1):setRate(args.rate)
     end
 
     mg.startTask("timerSlave",
-            --txDev:getTxQueue(1), rxDev:getRxQueue(1),
-            dev:getTxQueue(1), dev:getRxQueue(1),
-            args.size, args.flows,
-            args.dur_timeout, args.out)
+            dev:getTxQueue(1),
+            dev:getRxQueue(1),
+            args.size,
+            args.flows,
+            args.dur_timeout,
+            args.out)
     --arp.startArpTask{
     --    -- run ARP on both ports
     --    { rxQueue = rxDev:getRxQueue(2), txQueue = rxDev:getTxQueue(2), ips = RX_IP },
@@ -60,6 +60,7 @@ function master(args)
     --    { rxQueue = txDev:getRxQueue(2), txQueue = txDev:getTxQueue(2), ips = ARP_IP }
     --}
     mg.waitForTasks()
+    mg.stop()
 end
 
 local function fillUdpPacket(buf, len)

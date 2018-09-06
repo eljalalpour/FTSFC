@@ -36,8 +36,8 @@ function configure(parser)
 end
 
 function master(args)
-    txDev = device.config{port = args.txDev, rxQueues = 3, txQueues = 3, bufSize = 9000, numBufs = 1024}
-    rxDev = device.config{port = args.rxDev, rxQueues = 3, txQueues = 3, bufSize = 9000, numBufs = 1024}
+    txDev = device.config{port = args.txDev, rxQueues = 2, txQueues = 2, bufSize = 9000, numBufs = 1024}
+    rxDev = device.config{port = args.rxDev, rxQueues = 2, txQueues = 2, bufSize = 9000, numBufs = 1024}
     device.waitForLinks()
     -- max 1kpps timestamping traffic timestamping
     -- rate will be somewhat off for high-latency links at low rates

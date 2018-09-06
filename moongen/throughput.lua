@@ -30,7 +30,7 @@ function configure(parser)
     parser:option("rxDev", "Device to receive from."):default(0):convert(tonumber)
     parser:option("-r --rate", "Transmit rate in Mbit/s."):default(10000):convert(tonumber)
     parser:option("-f --flows", "Number of flows (randomized source IP)."):default(4):convert(tonumber)
-    parser:option("-s --size", "Packet size."):default(60):convert(tonumber)
+    parser:option("-s --size", "Packet size."):default(1024):convert(tonumber)
     parser:option("-o --out", "Filename of the throughput histogram."):default("latency.csv")
     parser:option("-d --duration", "Experiment duration"):default(20)
 end

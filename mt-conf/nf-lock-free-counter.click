@@ -1,18 +1,18 @@
-AddressInfo(sender 10.70.0.6);
+AddressInfo(sender 192.168.1.101);
 array::LockFreeArray;
 
 elementclass CounterBlock {
 $index |
     input
-//    -> Print($index)
     -> MarkIPHeader(14)
     -> IPFilter(allow src sender)
+//    -> IPPrint($index)
     -> NFLockFreeCounter(INDEX $index)
     -> MarkIPHeader(14)
-    -> StoreIPAddress(10.70.0.7, src)
-    -> StoreIPAddress(10.70.0.1, dst)
-    -> StoreEtherAddress(e4:1d:2d:13:9e:d0, src)
-    -> StoreEtherAddress(e4:1d:2d:13:9e:c0, dst)
+    -> StoreIPAddress(192.168.1.107, src)
+    -> StoreIPAddress(192.168.1.101, dst)
+    -> StoreEtherAddress(0c:c4:7a:73:fa:54, src)
+    -> StoreEtherAddress(0c:c4:7a:73:fa:72, dst)
     -> output
 }
 

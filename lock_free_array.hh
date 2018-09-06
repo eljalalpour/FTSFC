@@ -3,7 +3,7 @@
 #include <click/config.h>
 #include <click/element.hh>
 
-#define DEFAULT_SIZE 64
+#define DEFAULT_SIZE 65536
 
 CLICK_DECLS
 

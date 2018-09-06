@@ -4,7 +4,7 @@
 #include <click/element.hh>
 #include <atomic>
 
-#define DEFAULT_SIZE 64
+#define DEFAULT_SIZE 65536
 
 CLICK_DECLS
 

@@ -80,7 +80,7 @@ function loadSlave(queue, rxDev, size, duration)
     --local thr_hist = hist:new()
     local dur_timeout = timer:new(duration)
 
-    mg.sleepMillis(1000) -- ensure that the load task is running
+    mg.sleepMillis(5000) -- ensure that the load task is running
 
     while mg.running() and dur_timeout:running() do
         -- UDP checksums are optional, so using just IPv4 checksums would be sufficient here

@@ -31,7 +31,7 @@ function configure(parser)
     parser:option("-f --flows", "Number of flows (randomized source IP)."):default(4):convert(tonumber)
     parser:option("-s --size", "Packet size."):default(1024):convert(tonumber)
     parser:option("-o --out", "Filename of the latency histogram."):default("latency.csv")
-    parser:option("-d --duration", "Experiment duration"):default(20)
+    parser:option("-d --duration", "Experiment duration"):default(20):convert(tonumber)
 end
 
 function master(args)
@@ -51,7 +51,7 @@ function master(args)
             dev:getRxQueue(1),
             args.size,
             args.flows,
-            args.dur_timeout,
+            args.duration,
             args.out)
     --arp.startArpTask{
     --    -- run ARP on both ports

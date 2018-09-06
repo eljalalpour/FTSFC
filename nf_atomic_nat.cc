@@ -11,7 +11,7 @@ NFAtomicNAT::NFAtomicNAT () { };
 
 NFAtomicNAT::~NFAtomicNAT() { };
 
-bool NFAtomicNAT::bad_header(click_ip *iph) {
+bool NFAtomicNAT::bad_header(const click_ip *iph) {
     return (iph->ip_p != IP_PROTO_TCP && iph->ip_p != IP_PROTO_UDP)
            || !IP_FIRSTFRAG(iph);
 }

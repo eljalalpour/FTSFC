@@ -24,7 +24,7 @@ public:
 
     Packet *simple_action(Packet *p);
 
-    inline bool bad_header(click_ip *iph);
+    inline bool bad_header(const click_ip *iph);
 
     inline uint32_t flow_id(Packet *p);
 };

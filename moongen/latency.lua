@@ -36,17 +36,21 @@ function configure(parser)
 end
 
 function master(args)
-    txDev = device.config{port = args.txDev, rxQueues = 2, txQueues = 2, bufSize = 9000, numBufs = 1024}
-    rxDev = device.config{port = args.rxDev, rxQueues = 2, txQueues = 2, bufSize = 9000, numBufs = 1024}
+    --txDev = device.config{port = args.txDev, rxQueues = 2, txQueues = 2, bufSize = 9000, numBufs = 1024}
+    --rxDev = device.config{port = args.rxDev, rxQueues = 2, txQueues = 2, bufSize = 9000, numBufs = 1024}
+
+    dev = device.config{port = args.txDev, rxQueues = 2, txQueues = 2, bufSize = 9000, numBufs = 1024}
     device.waitForLinks()
     -- max 1kpps timestamping traffic timestamping
     -- rate will be somewhat off for high-latency links at low rates
     if args.rate > 0 then
-        txDev:getTxQueue(0):setRate(args.rate - (args.size + 4) * 8 / 1000)
+        --txDev:getTxQueue(0):setRate(args.rate - (args.size + 4) * 8 / 1000)
+        dev:getTxQueue(0):setRate(args.rate - (args.size + 4) * 8 / 1000)
     end
 
     mg.startTask("timerSlave",
-            txDev:getTxQueue(1), rxDev:getRxQueue(1),
+            --txDev:getTxQueue(1), rxDev:getRxQueue(1),
+            dev:getTxQueue(1), dev:getRxQueue(1),
             args.size, args.flows,
             args.dur_timeout, args.out)
     --arp.startArpTask{

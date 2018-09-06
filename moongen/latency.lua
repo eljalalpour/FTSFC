@@ -10,7 +10,8 @@ local arp    = require "proto.arp"
 local log    = require "log"
 
 -- set addresses here
-local DST_MAC		= nil -- resolved via ARP on GW_IP or DST_IP, can be overriden with a string here
+local SRC_MAC       = "0c:c4:7a:73:fa:72"
+local DST_MAC		= "0c:c4:7a:73:fa:54" -- resolved via ARP on GW_IP or DST_IP, can be overriden with a string here
 local SRC_IP_BASE	= "192.168.1.101" -- actual address will be SRC_IP_BASE + random(0, flows)
 local DST_IP		= "192.168.1.107"
 local SRC_PORT		= 1234
@@ -65,7 +66,7 @@ end
 
 local function fillUdpPacket(buf, len)
     buf:getUdpPacket():fill{
-        ethSrc = queue,
+        ethSrc = SRC_MAC,
         ethDst = DST_MAC,
         ip4Src = SRC_IP,
         ip4Dst = DST_IP,
@@ -75,25 +76,7 @@ local function fillUdpPacket(buf, len)
     }
 end
 
-local function doArp()
-    if not DST_MAC then
-        log:info("Performing ARP lookup on %s", GW_IP)
-        DST_MAC = arp.blockingLookup(GW_IP, 5)
-        if not DST_MAC then
-            log:info("ARP lookup failed, using default destination mac address")
-            return
-        end
-    end
-    log:info("Destination mac: %s", DST_MAC)
-end
-
-
 function timerSlave(txQueue, rxQueue, size, flows, duration, out)
-    --doArp()
-    --if size < 84 then
-    --    log:warn("Packet size %d is smaller than minimum timestamp size 84. Timestamped packets will be larger than load packets.", size)
-    --    size = 84
-    --end
     local timestamper = ts:newUdpTimestamper(txQueue, rxQueue)
     mg.sleepMillis(1000) -- ensure that the load task is running
 
@@ -101,10 +84,10 @@ function timerSlave(txQueue, rxQueue, size, flows, duration, out)
     local counter = 0
     local rateLimit = timer:new(0.001)
     local baseIP = parseIPAddress(SRC_IP_BASE)
-    local dur_timeout = timer:new(duration)
-    dur_timeout.reset()
+    local durTimeout = timer:new(duration)
+    durTimeout.reset()
 
-    while mg.running() and dur_timeout:running() do
+    while mg.running() and durTimeout:running() do
         hist:update(timestamper:measureLatency(size, function(buf)
             fillUdpPacket(buf, size)
             local pkt = buf:getUdpPacket()

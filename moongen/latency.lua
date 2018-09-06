@@ -10,20 +10,20 @@ local arp    = require "proto.arp"
 local log    = require "log"
 
 -- set addresses here
-local SRC_MAC       = "0c:c4:7a:73:fa:72"
-local DST_MAC		= "0c:c4:7a:73:fa:54" -- resolved via ARP on GW_IP or DST_IP, can be overriden with a string here
-local SRC_IP_BASE	= "192.168.1.101" -- actual address will be SRC_IP_BASE + random(0, flows)
-local DST_IP		= "192.168.1.107"
-local SRC_PORT		= 1234
-local DST_PORT		= 319
+local SRC_MAC  = "0c:c4:7a:73:fa:72"
+local DST_MAC  = "0c:c4:7a:73:fa:54" -- resolved via ARP on GW_IP or DST_IP, can be overriden with a string here
+local SRC_IP   = "192.168.1.101" -- actual address will be SRC_IP_BASE + random(0, flows)
+local DST_IP   = "192.168.1.107"
+local SRC_PORT = 1234
+local DST_PORT = 319
 
 -- answer ARP requests for this IP on the rx port
 -- change this if benchmarking something like a NAT device
-local RX_IP		= DST_IP
+local RX_IP	 = DST_IP
 -- used to resolve DST_MAC
-local GW_IP		= DST_IP
+local GW_IP	 = DST_IP
 -- used as source IP to resolve GW_IP to DST_MAC
-local ARP_IP	= SRC_IP_BASE
+local ARP_IP = SRC_IP
 
 function configure(parser)
     parser:description("Generates UDP traffic and measure latencies. Edit the source to modify constants like IPs.")

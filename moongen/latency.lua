@@ -26,8 +26,8 @@ local ARP_IP	= SRC_IP_BASE
 
 function configure(parser)
     parser:description("Generates UDP traffic and measure latencies. Edit the source to modify constants like IPs.")
-    parser:argument("txDev", "Device to transmit from."):convert(tonumber)
-    parser:argument("rxDev", "Device to receive from."):convert(tonumber)
+    parser:argument("txDev", "Device to transmit from."):default(0):convert(tonumber)
+    parser:argument("rxDev", "Device to receive from."):default(0):convert(tonumber)
     parser:option("-r --rate", "Transmit rate in Mbit/s."):default(10000):convert(tonumber)
     parser:option("-f --flows", "Number of flows (randomized source IP)."):default(4):convert(tonumber)
     parser:option("-s --size", "Packet size."):default(60):convert(tonumber)

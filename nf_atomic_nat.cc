@@ -34,7 +34,7 @@ uint32_t NFAtomicNAT::flow_id(Packet *p) {
             pr_part;
 
     // Just return some random value!
-    return fast_random() % DEFAULT_SIZE;
+    return Utils::fast_random() % DEFAULT_SIZE;
 }
 
 Packet *NFAtomicNAT::simple_action(Packet *p) {

@@ -89,7 +89,7 @@ function loadSlave(queue, rxDev, size, duration, out)
         queue:send(bufs)
         txCtr:update()
         rxCtr:update()
-        thr_hist:update(txCtr)
+        --thr_hist:update(txCtr)
         thr_hist:update(rxCtr)
     end
     txCtr:finalize()

@@ -1,10 +1,12 @@
-#pragma once
+#ifndef ATOMIC_ARRAY_HH
+#define ATOMIC_ARRAY_HH
 
 #include <click/config.h>
 #include <click/element.hh>
 #include <atomic>
 
-#define DEFAULT_SIZE 65536
+#define DEFAULT_SIZE         65536
+#define DEFAULT_HANDLER_SIZE 8
 
 CLICK_DECLS
 
@@ -23,6 +25,12 @@ public:
     const char *processing() const { return AGNOSTIC; }
 
     Packet *simple_action(Packet *p);
+
+    void add_handlers();
+
+private:
+    static String read_handler(Element* e, void* thunk);
 };
 
 CLICK_ENDDECLS
+#endif

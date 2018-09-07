@@ -15,13 +15,13 @@ local SRC_MAC  = "0c:c4:7a:73:fa:72"
 local DST_MAC  = "0c:c4:7a:73:fa:54" -- resolved via ARP on GW_IP or DST_IP, can be overriden with a string here
 local SRC_IPS  = {
     "192.168.1.101",
-    "192.168.1.2",
-    "192.168.1.3",
-    "192.168.1.4",
-    "192.168.1.5",
-    "192.168.1.6",
-    "192.168.1.7",
-    "192.168.1.8",
+    "120.162.2.2",
+    "130.163.3.3",
+    "140.164.4.4",
+    "150.165.5.5",
+    "160.166.6.6",
+    "170.167.7.7",
+    "180.168.8.8",
 } -- actual address will be SRC_IP_BASE + random(0, flows)
 local DST_IP   = "192.168.1.107"
 local SRC_PORT = 1234

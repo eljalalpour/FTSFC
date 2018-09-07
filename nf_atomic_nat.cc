@@ -54,14 +54,10 @@ Packet *NFAtomicNAT::simple_action(Packet *p) {
     }//if
 
     // Finding flow id
-    uint32_t fid = (unsigned int)flow_id(p);
+    uint32_t fid = flow_id(p);
 
     // Keep as is
-    click_chatter("Before...");
     AtomicArray *afc = (AtomicArray *)(r->find("array"));
-    int ii = afc->counters[fid]
-    click_chatter("afc->counters[%d]: %d\n", fid, ii);
-
     if (afc->counters[fid] == 0)
         afc->counters[fid] = 1;
 

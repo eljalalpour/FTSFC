@@ -1,4 +1,5 @@
-#pragma once
+#ifndef LOCK_FREE_ARRAY_HH
+#define LOCK_FREE_ARRAY_HH
 
 //#include <click/config.h>
 #include <click/element.hh>
@@ -30,3 +31,4 @@ private:
 };
 
 CLICK_ENDDECLS
+#endif

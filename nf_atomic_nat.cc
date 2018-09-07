@@ -33,6 +33,10 @@ uint32_t NFAtomicNAT::flow_id(Packet *p) {
             ((uint32_t)hasher(ip_part) % (1 << 16)) |
             pr_part;
 
+    auto it = _fake_map.find(hash_val);
+    if (it == _fake_map.end())
+        _fake_map[hash_val] = 1;
+
     // Just return some random value!
     return Utils::fast_random() % DEFAULT_SIZE;
 }

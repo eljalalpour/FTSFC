@@ -6,13 +6,17 @@
 
 CLICK_DECLS
 
-NFLockFreeCounter::NFLockFreeCounter () : _index(DEFAULT_INDEX) { };
+NFLockFreeCounter::NFLockFreeCounter () { };
 
 NFLockFreeCounter::~NFLockFreeCounter() { };
 
 int NFLockFreeCounter::configure(Vector<String> &conf, ErrorHandler *errh) {
     // set index param
-    Args(conf, this, errh).read_or_set("INDEX", _index, DEFAULT_INDEX);
+//    Args(conf, this, errh).read_or_set("INDEX", _index, DEFAULT_INDEX);
+    if (Args(conf, this, errh)
+                .read("INDEX", _index)
+                .complete() < 0)
+        return -1;
     LOG("NFLockFreeCounter index is %d!\n", _index);
 
     return 0;

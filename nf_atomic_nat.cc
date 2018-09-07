@@ -54,7 +54,7 @@ Packet *NFAtomicNAT::simple_action(Packet *p) {
     }//if
 
     // Finding flow id
-    uint32_t fid = flow_id(p);
+    unsigned int fid = (unsigned int)flow_id(p);
 
     // Keep as is
     click_chatter("Before...");

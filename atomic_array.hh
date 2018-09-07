@@ -1,9 +1,9 @@
 #ifndef ATOMIC_ARRAY_HH
 #define ATOMIC_ARRAY_HH
 
+#include <atomic>
 #include <click/config.h>
 #include <click/element.hh>
-#include <atomic>
 
 #define DEFAULT_SIZE         65536
 #define DEFAULT_HANDLER_SIZE 8

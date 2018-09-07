@@ -1,10 +1,10 @@
-#include <click/config.h>
 #include "atomic_array.hh"
 #include "FTTypes.hh"
-#include "nf_atomic_nat.hh"
+#include <click/config.h>
 #include <click/router.hh>
 #include <click/args.hh>
 #include <click/ipflowid.hh>
+#include "nf_atomic_nat.hh"
 
 CLICK_DECLS
 

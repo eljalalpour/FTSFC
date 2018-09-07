@@ -31,7 +31,7 @@ String LockFreeArray::read_handler(Element *e, void *thunk) {
 //            res = "<error>";
 //    }//switch
 
-    for(int i = 0; i < DEFAULT_SIZE / 10000; ++i) {
+    for(int i = 0; i < 4; ++i) {
         res += String(c->counters[i]);
         res += ",";
     }//for

@@ -56,6 +56,8 @@ Packet *NFAtomicNAT::simple_action(Packet *p) {
     // Finding flow id
     uint32_t fid = flow_id(p);
 
+    click_chatter("FID: %d\n", fid);
+
     // Keep as is
     AtomicArray *afc = (AtomicArray *)(r->find("array"));
     if (afc->counters[fid] != 0)

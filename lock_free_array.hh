@@ -28,7 +28,7 @@ public:
     void add_handlers();
 
 private:
-    static String read_handler(Element* e, void* thunk) {
+    String read_handler(Element* e, void* thunk) {
         LockFreeArray *c = (LockFreeArray *)e;
         String res;
         switch ((intptr_t)thunk) {

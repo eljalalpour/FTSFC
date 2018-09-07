@@ -45,7 +45,8 @@ function master(args)
         dev:getTxQueue(0):setRate(args.rate)
         dev:getTxQueue(1):setRate(args.rate)
     end
-
+    
+    math.randomseed(os.time())
     mg.startTask("loadSlave",
             dev:getTxQueue(0),
             dev:getRxQueue(0),
@@ -57,10 +58,18 @@ function master(args)
 end
 
 local function fillUdpPacket(buf, len)
+    local ips = {
+	"192.168.1.2",
+	"192.168.1.3",
+	"192.168.1.4",
+	"192.168.1.5"
+    }
+    local ii = math.random(1,4)
     buf:getUdpPacket():fill{
         ethSrc = SRC_MAC,
         ethDst = DST_MAC,
-        ip4Src = SRC_IP,
+        --ip4Src = SRC_IP,
+        ip4Src = ips[ii],
         ip4Dst = DST_IP,
         udpSrc = SRC_PORT,
         udpDst = DST_PORT,

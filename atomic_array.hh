@@ -29,7 +29,7 @@ public:
     void add_handlers();
 
 private:
-//    static String read_handler(Element* e, void* thunk);
+    static String read_handler(Element* e, void* thunk);
 };
 
 CLICK_ENDDECLS

@@ -1,13 +1,10 @@
 #pragma once
 
-#include <click/config.h>
 #include <click/element.hh>
 
 #define DEFAULT_SIZE 65536
 
 CLICK_DECLS
-
-enum { H_COUNT };
 
 class LockFreeArray : public Element {
 public:
@@ -28,21 +25,7 @@ public:
     void add_handlers();
 
 private:
-    String read_handler(Element* e, void* thunk) {
-        LockFreeArray *c = (LockFreeArray *)e;
-        String res;
-        switch ((intptr_t)thunk) {
-            case H_COUNT:
-                for(int i = 0; i < DEFAULT_SIZE / 10000; ++i) {
-                    res += String(c->counters[i]);
-                    res += ",";
-                }//for
-                return res;
-
-            default:
-                return "<error>";
-        }
-    }
+    static String read_handler(Element* e, void* thunk);
 };
 
 CLICK_ENDDECLS

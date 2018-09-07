@@ -28,14 +28,6 @@ local DST_IP   = "192.168.1.107"
 local SRC_PORT = 1234
 local DST_PORT = 319
 
--- answer ARP requests for this IP on the rx port
--- change this if benchmarking something like a NAT device
-local RX_IP		= DST_IP
--- used to resolve DST_MAC
-local GW_IP		= DST_IP
--- used as source IP to resolve GW_IP to DST_MAC
-local ARP_IP	= SRC_IP
-
 function configure(parser)
     parser:description("Generates UDP traffic and measure latencies. Edit the source to modify constants like IPs.")
     parser:option("-d --dev", "Device to transmit/receive from."):default(0):convert(tonumber)
@@ -95,8 +87,8 @@ function loadSlave(queue, rxDev, size, duration)
     local dur_timeout = timer:new(duration)
     while mg.running() and dur_timeout:running() do
         -- UDP checksums are optional, so using just IPv4 checksums would be sufficient here
-        bufs:alloc(size)
         SRC_IP_INDEX = (SRC_IP_INDEX + 1) % (#SRC_IPS)
+        bufs:alloc(size)
         bufs:offloadUdpChecksums()
         queue:send(bufs)
         txCtr:update()

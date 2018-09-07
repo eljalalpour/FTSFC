@@ -15,7 +15,7 @@ Packet *LockFreeArray::simple_action(Packet *p) {
     return p;
 }
 
-enum { H_COUNT };
+enum { LFA_H_COUNT };
 
 String LockFreeArray::read_handler(Element *e, void *thunk) {
     LockFreeArray *c = (LockFreeArray *)e;
@@ -30,7 +30,7 @@ String LockFreeArray::read_handler(Element *e, void *thunk) {
 }
 
 void LockFreeArray::add_handlers() {
-    add_read_handler("count", read_handler, H_COUNT);
+    add_read_handler("count", read_handler, LFA_H_COUNT);
 }
 
 CLICK_ENDDECLS

@@ -13,7 +13,16 @@ local log    = require "log"
 -- set addresses here
 local SRC_MAC  = "0c:c4:7a:73:fa:72"
 local DST_MAC  = "0c:c4:7a:73:fa:54" -- resolved via ARP on GW_IP or DST_IP, can be overriden with a string here
-local SRC_IP   = "192.168.1.101" -- actual address will be SRC_IP_BASE + random(0, flows)
+local SRC_IPS  = {
+    "192.168.1.101",
+    "192.168.1.2",
+    "192.168.1.3",
+    "192.168.1.4",
+    "192.168.1.5",
+    "192.168.1.6",
+    "192.168.1.7",
+    "192.168.1.8",
+} -- actual address will be SRC_IP_BASE + random(0, flows)
 local DST_IP   = "192.168.1.107"
 local SRC_PORT = 1234
 local DST_PORT = 319
@@ -58,18 +67,11 @@ function master(args)
 end
 
 local function fillUdpPacket(buf, len)
-    local ips = {
-	"192.168.1.2",
-	"192.168.1.3",
-	"192.168.1.4",
-	"192.168.1.5"
-    }
-    local ii = math.random(1,4)
+    local ii = math.random(1,#SRC_IPS)
     buf:getUdpPacket():fill{
         ethSrc = SRC_MAC,
         ethDst = DST_MAC,
-        --ip4Src = SRC_IP,
-        ip4Src = ips[ii],
+        ip4Src = SRC_IPS[ii],
         ip4Dst = DST_IP,
         udpSrc = SRC_PORT,
         udpDst = DST_PORT,

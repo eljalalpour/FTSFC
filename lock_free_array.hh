@@ -1,7 +1,7 @@
 #ifndef LOCK_FREE_ARRAY_HH
 #define LOCK_FREE_ARRAY_HH
 
-//#include <click/config.h>
+#include <click/config.h>
 #include <click/element.hh>
 
 #define DEFAULT_SIZE 65536

@@ -1,6 +1,6 @@
 #pragma once
 
-#include <click/config.h>
+//#include <click/config.h>
 #include <click/element.hh>
 
 #define DEFAULT_SIZE 65536

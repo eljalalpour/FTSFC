@@ -22,6 +22,11 @@ public:
     const char *processing() const { return AGNOSTIC; }
 
     Packet *simple_action(Packet *p);
+
+    void add_handlers() CLICK_COLD;
+
+private:
+    static String read_handler(Element *, void *) CLICK_COLD;
 };
 
 CLICK_ENDDECLS

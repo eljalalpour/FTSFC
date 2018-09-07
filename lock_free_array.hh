@@ -23,10 +23,10 @@ public:
 
     Packet *simple_action(Packet *p);
 
-    void add_handlers() CLICK_COLD;
+    void add_handlers();
 
 private:
-    static String read_handler(Element *, void *) CLICK_COLD;
+    static String read_handler(Element *, void *);
 };
 
 CLICK_ENDDECLS

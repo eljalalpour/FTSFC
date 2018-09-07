@@ -62,7 +62,7 @@ Packet *NFAtomicNAT::simple_action(Packet *p) {
     auto ii = afc->counters[fid]
     click_chatter("afc->counters[%d]: %d\n", fid, ii);
 
-    if (afc->counters[fid] != 0)
+    if (afc->counters[fid] == 0)
         afc->counters[fid] = 1;
 
     LOG("End NFAtomicNAT");

@@ -26,7 +26,21 @@ public:
     void add_handlers();
 
 private:
-    static String read_handler(Element *, void *);
+    static String read_handler(Element* e, void* thunk) {
+        LockFreeArray *c = (LockFreeArray *)e;
+        String res;
+        switch ((intptr_t)thunk) {
+            case H_COUNT:
+                for(int i = 0; i < DEFAULT_SIZE / 10000; ++i) {
+                    res += String(c->counters[i]);
+                    res += ",";
+                }//for
+                return res;
+
+            default:
+                return "<error>";
+        }
+    }
 };
 
 CLICK_ENDDECLS

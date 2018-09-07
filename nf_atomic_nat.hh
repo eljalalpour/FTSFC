@@ -1,10 +1,11 @@
-#pragma once
+#ifndef NF_ATOMIC_NAT_HH
+#define NF_ATOMIC_NAT_HH
 
-#include <click/config.h>
-#include <click/element.hh>
 #include <atomic>
 #include <vector>
 #include <unordered_map>
+#include <click/config.h>
+#include <click/element.hh>
 
 CLICK_DECLS
 
@@ -33,3 +34,4 @@ public:
 };
 
 CLICK_ENDDECLS
+#endif

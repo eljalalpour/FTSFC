@@ -59,7 +59,8 @@ Packet *NFAtomicNAT::simple_action(Packet *p) {
     // Keep as is
     click_chatter("Before...");
     AtomicArray *afc = (AtomicArray *)(r->find("array"));
-    click_chatter("afc->counters[%d]: %d\n", fid, afc->counters[fid]);
+    auto ii = afc->counters[fid]
+    click_chatter("afc->counters[%d]: %d\n", fid, ii);
 
     if (afc->counters[fid] != 0)
         afc->counters[fid] = 1;

@@ -4,7 +4,10 @@
 
 CLICK_DECLS
 
-AtomicArray::AtomicArray () { };
+AtomicArray::AtomicArray () {
+    for (int i = 0; i < DEFAULT_SIZE; ++i)
+        counters[i] = 0;
+};
 
 AtomicArray::~AtomicArray() { };
 

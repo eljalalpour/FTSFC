@@ -26,7 +26,7 @@ public:
     void add_handlers() CLICK_COLD;
 
 private:
-    String read_handler(Element *, void *) CLICK_COLD;
+    static String read_handler(Element *, void *) CLICK_COLD;
 };
 
 CLICK_ENDDECLS

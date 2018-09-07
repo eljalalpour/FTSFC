@@ -14,8 +14,8 @@ Packet *AtomicArray::simple_action(Packet *p) {
 
 enum { H_COUNT };
 
-String LockFreeArray::read_handler(Element *e, void *thunk) {
-    LockFreeArray *c = (LockFreeArray *)e;
+String AtomicArray::read_handler(Element *e, void *thunk) {
+    AtomicArray *c = (AtomicArray *)e;
     String res;
 
     for(int i = 0; i < DEFAULT_HANDLER_SIZE; ++i) {

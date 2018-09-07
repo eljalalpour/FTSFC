@@ -26,11 +26,12 @@ String LockFreeArray::read_handler(Element *e, void *thunk) {
                 res += String(c->counters[i]);
                 res += ",";
             }//for
-            return res;
 
         default:
-            return "<error>";
-    }
+            res = "<error>";
+    }//switch
+
+    return res;
 }
 
 void LockFreeArray::add_handlers() {

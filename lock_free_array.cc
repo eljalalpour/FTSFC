@@ -22,9 +22,9 @@ enum { H_COUNT };
 String LockFreeArray::read_handler(Element *e, void *thunk)
 {
     LockFreeArray *c = (LockFreeArray *)e;
+    String res;
     switch ((intptr_t)thunk) {
         case H_COUNT:
-            String res("");
             for(int i = 0; i < DEFAULT_SIZE / 10000; ++i) {
                 res += String(c->counters[i]);
                 res += ",";

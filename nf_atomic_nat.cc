@@ -1,5 +1,4 @@
 #include "atomic_array.hh"
-#include "FTTypes.hh"
 #include <click/config.h>
 #include <click/router.hh>
 #include <click/args.hh>
@@ -38,7 +37,7 @@ uint32_t NFAtomicNAT::flow_id(Packet *p) {
         _fake_map[hash_val] = 1;
 
     // Just return some random value!
-    return Utils::fast_random() % DEFAULT_SIZE;
+    return hash_val % DEFAULT_SIZE;
 }
 
 Packet *NFAtomicNAT::simple_action(Packet *p) {

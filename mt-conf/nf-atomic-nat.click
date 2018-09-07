@@ -1,6 +1,6 @@
 array::AtomicArray;
 
-elementclass CounterBlock {
+elementclass NATBlock {
 $index |
     input
     -> MarkIPHeader(14)
@@ -45,42 +45,42 @@ StaticThreadSched(
     fd7 7)
 
 fd0
--> CounterBlock(0)
+-> NATBlock(0)
 -> td0;
 //-> td;
 
 
 fd1
--> CounterBlock(1)
+-> NATBlock(1)
 -> td1;
 //-> td;
 
 fd2
--> CounterBlock(2)
+-> NATBlock(2)
 -> td2;
 //-> td;
 
 fd3
--> CounterBlock(3)
+-> NATBlock(3)
 -> td3;
 //-> td;
 
 fd4
--> CounterBlock(4)
+-> NATBlock(4)
 -> td4;
 //-> td;
 
 fd5
--> CounterBlock(5)
+-> NATBlock(5)
 -> td5;
 //-> td;
 
 fd6
--> CounterBlock(6)
+-> NATBlock(6)
 -> td6;
 //-> td;
 
 fd7
--> CounterBlock(7)
+-> NATBlock(7)
 -> td7;
 //-> td;

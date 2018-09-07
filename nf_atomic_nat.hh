@@ -7,7 +7,7 @@
 
 CLICK_DECLS
 
-#define DEFAULT_SIZE 8
+#define DEFAULT_SIZE 65536
 
 class NFAtomicNAT : public Element {
 private:

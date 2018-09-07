@@ -22,7 +22,8 @@ local SRC_IPS  = {
     "160.166.6.6",
     "170.167.7.7",
     "180.168.8.8",
-} -- actual address will be SRC_IP_BASE + random(0, flows)
+}
+local SRC_IP_INDEX = 0
 local DST_IP   = "192.168.1.107"
 local SRC_PORT = 1234
 local DST_PORT = 319
@@ -67,11 +68,11 @@ function master(args)
 end
 
 local function fillUdpPacket(buf, len)
-    local ii = math.random(1,#SRC_IPS)
+    --local ii = math.random(1,#SRC_IPS)
     buf:getUdpPacket():fill{
         ethSrc = SRC_MAC,
         ethDst = DST_MAC,
-        ip4Src = SRC_IPS[ii],
+        ip4Src = SRC_IPS[SRC_IP_INDEX],
         ip4Dst = DST_IP,
         udpSrc = SRC_PORT,
         udpDst = DST_PORT,
@@ -95,6 +96,7 @@ function loadSlave(queue, rxDev, size, duration)
     while mg.running() and dur_timeout:running() do
         -- UDP checksums are optional, so using just IPv4 checksums would be sufficient here
         bufs:alloc(size)
+        SRC_IP_INDEX = (SRC_IP_INDEX + 1) % (#SRC_IPS)
         bufs:offloadUdpChecksums()
         queue:send(bufs)
         txCtr:update()

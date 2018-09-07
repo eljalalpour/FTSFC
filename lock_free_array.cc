@@ -1,5 +1,3 @@
-#pragma once
-
 #include <click/config.h>
 #include <click/element.hh>
 #include "lock_free_array.hh"
@@ -19,8 +17,7 @@ Packet *LockFreeArray::simple_action(Packet *p) {
 
 enum { H_COUNT };
 
-String LockFreeArray::read_handler(Element *e, void *thunk)
-{
+String LockFreeArray::read_handler(Element *e, void *thunk) {
     LockFreeArray *c = (LockFreeArray *)e;
     String res;
     switch ((intptr_t)thunk) {
@@ -37,8 +34,7 @@ String LockFreeArray::read_handler(Element *e, void *thunk)
 }
 
 
-void LockFreeArray::add_handlers()
-{
+void LockFreeArray::add_handlers() {
     add_read_handler("count", read_handler, H_COUNT);
 }
 

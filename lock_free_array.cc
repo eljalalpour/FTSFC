@@ -15,8 +15,6 @@ Packet *LockFreeArray::simple_action(Packet *p) {
     return p;
 }
 
-enum { H_COUNT };
-
 //String LockFreeArray::read_handler(Element *e, void *thunk) {
 //    LockFreeArray *c = (LockFreeArray *)e;
 //    String res;

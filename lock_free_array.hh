@@ -7,6 +7,8 @@
 
 CLICK_DECLS
 
+enum { H_COUNT };
+
 class LockFreeArray : public Element {
 public:
     int counters[DEFAULT_SIZE];

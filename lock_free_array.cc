@@ -1,6 +1,6 @@
 #include <click/config.h>
-#include "lock_free_array.hh"
 #include <click/handlercall.hh>
+#include "lock_free_array.hh"
 
 CLICK_DECLS
 

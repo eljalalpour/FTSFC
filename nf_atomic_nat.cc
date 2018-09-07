@@ -1,16 +1,18 @@
 #include "atomic_array.hh"
+#include "FTTypes.hh"
 #include <click/config.h>
 #include <click/router.hh>
 #include <click/args.hh>
-#include "nf_atomic_counter.hh"
+#include <click/ipflowid.hh>
+#include "nf_atomic_nat.hh"
 
 CLICK_DECLS
 
-NFAtomicNAT::NFAtomicNAT () : _index(DEFAULT_INDEX) { };
+NFAtomicNAT::NFAtomicNAT () { };
 
 NFAtomicNAT::~NFAtomicNAT() { };
 
-bool NFAtomicNAT::bad_header(click_ip *iph) {
+bool NFAtomicNAT::bad_header(const click_ip *iph) {
     return (iph->ip_p != IP_PROTO_TCP && iph->ip_p != IP_PROTO_UDP)
            || !IP_FIRSTFRAG(iph);
 }
@@ -20,18 +22,19 @@ uint32_t NFAtomicNAT::flow_id(Packet *p) {
     IPFlowID flow_id(p);
     uint64_t ip_part =
             (uint64_t)flow_id.saddr().addr() |
-            ((uint64_t)flow_id.daddr().addr()) << 32;
+            ((uint64_t)flow_id.daddr().addr() << 32);
 
     uint32_t pr_part =
             (uint64_t)flow_id.sport() |
             ((uint64_t)flow_id.dport()) << 16;
 
+    std::hash<uint64_t> hasher;
     uint32_t hash_val =
-            ((uint32_t)std::hash(ip_part) % (1 << 16)) |
+            ((uint32_t)hasher(ip_part) % (1 << 16)) |
             pr_part;
 
     // Just return some random value!
-    return fast_random() % DEFAULT_SIZE;
+    return Utils::fast_random() % DEFAULT_SIZE;
 }
 
 Packet *NFAtomicNAT::simple_action(Packet *p) {
@@ -39,7 +42,7 @@ Packet *NFAtomicNAT::simple_action(Packet *p) {
     LOG("Begin NFAtomicNAT with index %d:", _index);
     Router *r = this->router();
 
-    click_ip *iph = rp->ip_header();
+    const click_ip *iph = p->ip_header();
 
     if (bad_header(iph)) {
         p->kill();
@@ -47,12 +50,12 @@ Packet *NFAtomicNAT::simple_action(Packet *p) {
     }//if
 
     // Finding flow id
-    uint32_t flow_id = flow_id(p);
+    uint32_t fid = flow_id(p);
 
     // Keep as is
     AtomicArray *afc = (AtomicArray *)(r->find("array"));
-    if (afc->counters[flow_id] != 0)
-        afc->counters[flow_id] = 1;
+    if (afc->counters[fid] != 0)
+        afc->counters[fid] = 1;
 
     LOG("End NFAtomicNAT %d:", _index);
     LOG("--------------------");

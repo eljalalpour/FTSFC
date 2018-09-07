@@ -26,7 +26,7 @@ String AtomicArray::read_handler(Element *e, void *thunk) {
     return res;
 }
 
-void LockFreeArray::add_handlers() {
+void AtomicArray::add_handlers() {
     add_read_handler("count", read_handler, H_COUNT);
 }
 

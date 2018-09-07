@@ -12,7 +12,7 @@ local log    = require "log"
 -- set addresses here
 -- set addresses here
 local SRC_MAC  = "0c:c4:7a:73:fa:72"
-local DST_MAC  = "0c:c4:7a:73:fa:54" -- resolved via ARP on GW_IP or DST_IP, can be overriden with a string here
+local DST_MAC  = "0c:c4:7a:73:fa:54"
 local SRC_IPS  = {
     "192.168.1.101",
     "122.2.2.2",
@@ -60,7 +60,6 @@ function master(args)
 end
 
 local function fillUdpPacket(buf, len)
-    --local ii = math.random(1,#SRC_IPS)
     SRC_IP_INDEX = (SRC_IP_INDEX + 1) % (#SRC_IPS)
     buf:getUdpPacket():fill{
         ethSrc = SRC_MAC,

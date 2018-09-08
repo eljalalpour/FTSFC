@@ -1,10 +1,8 @@
-#include "FTStateElement.hh"
-#include "FTAppenderElement.hh"
 #include <click/config.h>
 #include <click/router.hh>
 #include <clicknet/tcp.h>
 #include <click/args.hh>
-#include "Transmitter.hh"
+#include "transmitter.hh"
 
 CLICK_DECLS
 
@@ -65,7 +63,7 @@ Packet *Transmitter::simple_action(Packet *p) {
     return p;
 }
 
-bool Transmitter::send(FTState& state) {
+bool Transmitter::send(State& state) {
     return _client.send(state);
 }
 

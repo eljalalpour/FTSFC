@@ -1,6 +1,6 @@
 #pragma once
 
-#include "defs.hh"
+#include "../defs.hh"
 #include <click/config.h>
 #include <click/element.hh>
 
@@ -9,16 +9,16 @@ CLICK_DECLS
 #define DEFAULT_INDEX 0
 #define DEFAULT_VALUE 1
 
-class TFTLockFreeCounter : public Element {
+class TFTAtomicCounter : public Element {
 private:
     int _index;
 
 public:
-    TFTLockFreeCounter  ();
+    TFTAtomicCounter  ();
 
-    ~TFTLockFreeCounter ();
+    ~TFTAtomicCounter ();
 
-    const char *class_name() const { return "TFTLockFreeCounter "; }
+    const char *class_name() const { return "TFTAtomicCounter "; }
 
     const char *port_count() const { return PORTS_1_1; }
 

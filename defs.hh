@@ -23,18 +23,17 @@
 
 #define CURRENT_TIMESTAMP std::chrono::high_resolution_clock::now().time_since_epoch().count()
 
-typedef int64_t Timestamp;
 typedef int State[STATE_LEN];
 
 typedef struct {
-    Timestamp timestamp;
+    int64_t timestamp;
     State state;
 } TimestampState;
 
 typedef struct {
     short ack;
-    Timestamp last_commit;
-    Timestamp timestamp;
+    int64_t last_commit;
+    int64_t timestamp;
     State state;
 } PiggyBackState;
 

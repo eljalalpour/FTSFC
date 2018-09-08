@@ -7,7 +7,7 @@ CLICK_DECLS
 Encoder::Encoder () {
     // TODO: concurrency control on initializing _msg
     // Initialize message
-    _util.random_message(_msg);
+//    _util.random_message(_msg);
 };
 
 Encoder::~Encoder() { };
@@ -17,6 +17,7 @@ Packet *Encoder::simple_action(Packet *p) {
     DEBUG("Begin Encoder");
 
     // TODO: concurrency control on reading _msg
+    _util.random_message(_msg);
     _util.print(_msg);
     _util.encode(_msg, p);
 

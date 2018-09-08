@@ -9,8 +9,9 @@
 #include <vector>
 #include <unordered_map>
 #include <chrono>
-#include <click/packet.hh>
 #include <cstdlib>
+#include <click/packet.hh>
+#include <click/random.hh>
 
 /// Useful  definitions
 #define ENABLE_DEBUG 1
@@ -170,7 +171,7 @@ public:
 
     void random_state(State& s) {
         for (int i = 0; i < STATE_LEN; i++) {
-            s[i] = i;
+            s[i] = click_random() % 100;
         }//for
     }
 

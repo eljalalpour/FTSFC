@@ -11,7 +11,7 @@
 #include <chrono>
 #include <cstdlib>
 #include <click/packet.hh>
-#include <click/random.hh>
+#include <click/glue.hh>
 
 /// Useful  definitions
 #define ENABLE_DEBUG 1

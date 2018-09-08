@@ -18,8 +18,15 @@ Packet *Encoder::simple_action(Packet *p) {
 
     // TODO: concurrency control on reading _msg
     _util.random_message(_msg);
+
+    DEBUG("Before:");
     _util.print(_msg);
     _util.encode(_msg, p);
+
+    PiggyBackMessage after;
+    _util.decode(after, p);
+    DEBUG("After:");
+    _util.print(after);
 
     DEBUG("End Encoder");
     DEBUG("--------------------");

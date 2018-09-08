@@ -59,7 +59,8 @@ typedef TimestampState Committed[MB_LEN];
 #define CAST_TO_PIGGY_BACK_STATE(x)   reinterpret_cast<PiggyBackState*>(x)
 #define CAST_TO_PIGGY_BACK_MESSAGE(x) reinterpret_cast<PiggyBackMessage*>(x)
 
-#define CAST_PACKET_TO_PIGGY_BACK_MESSAGE(p) reinterpret_cast<PiggyBackMessage*>(p->data() + DEFAULT_OFFSET)
+#define CAST_PACKET_TO_PIGGY_BACK_MESSAGE(p) reinterpret_cast<PiggyBackMessage*>
+                                                        (const_cast<unsigned char *>(p->data()) + DEFAULT_OFFSET)
 
 /// Util class to serialize, deserialize, encode, and decode states
 class Util {

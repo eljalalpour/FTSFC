@@ -10,10 +10,10 @@ Appender::~Appender() { };
 
 Packet *Appender::simple_action(Packet *p) {
     DEBUG("--------------------");
-    DEBUG("Begin Appender with index %d:", _index);
+    DEBUG("Begin Appender");
 
 
-    DEBUG("End Appender %d:", _index);
+    DEBUG("End Appender");
     DEBUG("--------------------");
 
     return p;

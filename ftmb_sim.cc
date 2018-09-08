@@ -23,11 +23,11 @@ int FTMBSim::configure(Vector<String> &conf, ErrorHandler *errh) {
 
 Packet *FTMBSim::simple_action(Packet *p) {
     DEBUG("--------------------");
-    DEBUG("Begin FTMBSim with index %d:", _index);
+    DEBUG("Begin FTMBSim");
 
     // TODO: implement periodic delay
 
-    DEBUG("End FTMBSim %d:", _index);
+    DEBUG("End FTMBSim");
     DEBUG("--------------------");
 
     return p;

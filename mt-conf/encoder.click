@@ -3,7 +3,7 @@ $index |
     input
 //    -> Print($index)
     -> MarkIPHeader(14)
-    -> Decoder()
+    -> Encoder()
     -> MarkIPHeader(14)
     -> StoreIPAddress(192.168.1.107, src)
     -> StoreIPAddress(192.168.1.108, dst)

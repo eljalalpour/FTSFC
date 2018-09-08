@@ -136,7 +136,7 @@ public:
     }
 
     inline void decode(PiggyBackMessage& s, const Packet* p) {
-        unsigned char * p_data = p->data();
+        const unsigned char *p_data = p->data();
 
         // Point to the offset where PiggyBackMessage is encoded
         p_data += DEFAULT_OFFSET;

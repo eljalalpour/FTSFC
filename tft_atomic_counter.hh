@@ -12,8 +12,6 @@ CLICK_DECLS
 class TFTAtomicCounter : public Element {
 private:
     int _index;
-    string _key;
-    string _val;
 
 public:
     TFTAtomicCounter  ();

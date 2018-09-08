@@ -1,11 +1,8 @@
 #pragma once
 
-#include "FTTypes.hh"
+#include "defs.hh"
 #include <click/config.h>
 #include <click/element.hh>
-#include <atomic>
-#include <vector>
-#include <string>
 
 CLICK_DECLS
 

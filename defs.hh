@@ -186,7 +186,7 @@ public:
         random_ts_state(ts_state);
         copy(pb_state.state, ts_state.state);
         pb_state.timestamp = ts_state.timestamp;
-        pb_state.ack = 0;
+        pb_state.ack = click_random() % MB_LEN;
     }
 
     void random_message(PiggyBackMessage& msg) {

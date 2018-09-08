@@ -14,6 +14,7 @@
 #include <click/glue.hh>
 
 /// Useful  definitions
+#define PORTS_2_1 "2/1"
 #define CURRENT_TIMESTAMP std::chrono::high_resolution_clock::now().time_since_epoch().count()
 
 #define ENABLE_DEBUG

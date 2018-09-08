@@ -5,24 +5,29 @@
 CLICK_DECLS
 
 Forwarder::Forwarder () {
-    // TODO: concurrency control on initializing _msg
     // Initialize message
     _util.init(_msg);
 };
 
 Forwarder::~Forwarder() { };
 
-Packet *Forwarder::simple_action(Packet *p) {
+void Forwarder::push(int source, Packet *p) {
     DEBUG("--------------------");
     DEBUG("Begin Forwarder");
 
-    // TODO: concurrency control on reading _msg
-    _util.encode(_msg, p);
+    if (source == 0) { // Receiving a packet from the traffic source
+        // Encode its memory of the piggyback message into the packet
+        _util.encode(_msg, p);
+        output(0).push(p);
+    }//if
+    else { //Receiving a packet from Buffer
+        // Decode and memorize the piggyback message from the packet
+        _util.decode(_msg, p);
+        p->kill();
+    }//else
 
     DEBUG("End Forwarder");
     DEBUG("--------------------");
-
-    return p;
 }
 
 CLICK_ENDDECLS

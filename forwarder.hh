@@ -11,7 +11,6 @@ CLICK_DECLS
 class Forwarder : public Element {
 private:
     Util _util;
-    // TODO: concurrency control on _msg
     PiggyBackMessage _msg;
 
 public:
@@ -21,11 +20,11 @@ public:
 
     const char *class_name() const { return "Forwarder"; }
 
-    const char *port_count() const { return PORTS_1_1; }
+    const char *port_count() const { return PORTS_2_1; }
 
     const char *processing() const { return AGNOSTIC; }
 
-    Packet *simple_action(Packet *p);
+    void push(int, Packet*);
 };
 
 CLICK_ENDDECLS

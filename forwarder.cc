@@ -23,6 +23,8 @@ void Forwarder::push(int source, Packet *p) {
     else { //Receiving a packet from Buffer
         // Decode and memorize the piggyback message from the packet
         _util.decode(_msg, p);
+
+        // Afterwards, kill the packet
         p->kill();
     }//else
 

@@ -170,7 +170,7 @@ public:
 
     void random_state(State& s) {
         for (int i = 0; i < STATE_LEN; i++) {
-            s[i] = std::rand() % 100;
+            s[i] = i;
         }//for
     }
 

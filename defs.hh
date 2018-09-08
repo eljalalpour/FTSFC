@@ -6,8 +6,8 @@
 ///     - The piggyback message always contains the piggback state of 4 middleboxes
 
 
-#define STATE_VARS_LEN  8
-#define MIDDLEBOXES_LEN 4
+#define STATE_LEN 8
+#define MB_LEN    4
 
 #include <vector>
 #include <unordered_map>
@@ -16,23 +16,7 @@
 #define Timestamp int64_t
 #define CURRENT_TIMESTAMP std::chrono::high_resolution_clock::now().time_since_epoch().count()
 
-//#define ENABLE_DEBUG 1
-//#define ENABLE_LOG   1
-
-#ifdef ENABLE_DEBUG
-#define DEBUG(...) click_chatter(__VA_ARGS__)
-#else
-#define DEBUG(...)
-#endif
-
-#ifdef ENABLE_LOG
-#define LOG(...) click_chatter(__VA_ARGS__)
-#else
-#define LOG(...)
-#endif
-
-
-typedef int[STATE_VARS_LEN] State;
+typedef int State[STATE_LEN];
 
 typedef struct {
     Timestamp timestamp;
@@ -46,14 +30,13 @@ typedef struct {
     State state;
 } PiggyBackState;
 
-typedef PiggyBackState[MBS_LEN] PiggyBackMessage;
+typedef PiggyBackState PiggyBackMessage[MB_LEN];
 
 typedef std::vector<TimestampState> TimestampStateList;
 
-typedef FTTimestampStateList[MIDDLEBOXES_LEN] Log;
+typedef TimestampStateList Log[MB_LEN];
 
-typedef TimestampState[MIDDLEBOXES_LEN] Committed;
-
+typedef TimestampState Committed[MB_LEN];
 
 #define CAST_TO_BYTES(x)              reinterpret_cast<unsigned char *>(&x)
 #define CAST_TO_STATE(x)              reinterpret_cast<State*>(x)
@@ -61,56 +44,72 @@ typedef TimestampState[MIDDLEBOXES_LEN] Committed;
 #define CAST_TO_PIGGY_BACK_STATE(x)   reinterpret_cast<PiggyBackState*>(x)
 #define CAST_TO_PIGGY_BACK_MESSAGE(x) reinterpret_cast<PiggyBackMessage*>(x)
 
-class Initializer {
+class Util {
 public:
-    void init(State &s) {
+    inline void init(State &s) {
         memset(&s, 0, sizeof(State));
     }
 
-    void init(TimestampState &s) {
+    inline void init(TimestampState &s) {
         memset(&s, 0, sizeof(TimestampState));
     }
 
-    void init(PiggyBackState &s) {
+    inline void init(PiggyBackState &s) {
         memset(&s, 0, sizeof(PiggyBackState));
     }
 
-    void init(PiggyBackMessage &s) {
+    inline void init(PiggyBackMessage &s) {
         memset(&s, 0, sizeof(PiggyBackMessage));
+    }
+
+    inline void copy(State& y, State& x) {
+        memcpy(&y, &x, sizeof(State));
+    }
+
+    inline void copy(TimestampState& y, TimestampState& x) {
+        memcpy(&y, &x, sizeof(TimestampState));
+    }
+
+    inline void copy(PiggyBackState& y, PiggyBackState& x) {
+        memcpy(&y, &x, sizeof(PiggyBackState));
+    }
+
+    inline void copy(PiggyBackMessage& y, PiggyBackMessage& x) {
+        memcpy(&y, &x, sizeof(PiggyBackState));
     }
 };
 
 class Serializer {
 public:
-    void serialize(const State &s, unsigned char *ser) {
+    inline void serialize(const State &s, unsigned char *ser) {
         memcpy(ser, &s, sizeof(State));
     }
 
-    void deserialize(State &s, const unsigned char* ser) {
+    inline void deserialize(State &s, const unsigned char* ser) {
         memcpy(&s, ser, sizeof(State));
     }
 
-    void serialize(const TimestampState &s, unsigned char *ser) {
+    inline void serialize(const TimestampState &s, unsigned char *ser) {
         memcpy(ser, &s, sizeof(TimestampState));
     }
 
-    void deserialize(TimestampState &s, const unsigned char* ser) {
+    inline void deserialize(TimestampState &s, const unsigned char* ser) {
         memcpy(&s, ser, sizeof(TimestampState));
     }
 
-    void serialize(const PiggyBackState &s, unsigned char *ser) {
+    inline void serialize(const PiggyBackState &s, unsigned char *ser) {
         memcpy(ser, &s, sizeof(PiggyBackState));
     }
 
-    void deserialize(PiggyBackState &s, const unsigned char* ser) {
+    inline void deserialize(PiggyBackState &s, const unsigned char* ser) {
         memcpy(&s, ser, sizeof(PiggyBackState));
     }
 
-    void serialize(const PiggyBackMessage &s, unsigned char *ser) {
+    inline void serialize(const PiggyBackMessage &s, unsigned char *ser) {
         memcpy(ser, &s, sizeof(PiggyBackState));
     }
 
-    void deserialize(PiggyBackMessage &s, const unsigned char* ser) {
+    inline void deserialize(PiggyBackMessage &s, const unsigned char* ser) {
         memcpy(&s, ser, sizeof(PiggyBackMessage));
     }
 };
@@ -129,21 +128,20 @@ public:
     }
 
     void random_piggy_back(PiggyBackState& pb_state) {
+        Util util;
         pb_state.last_commit = CURRENT_TIMESTAMP;
-
         TimestampState ts_state;
         random_ts_state(ts_state);
-        pb_state.state = ts_state.state;
+        util.copy(pb_state.state, ts_state.state);
         pb_state.timestamp = ts_state.timestamp;
         pb_state.ack = 0;
     }
 
     void random_message(PiggyBackMessage& msg) {
-        for (int i = 0; i < MIDDLEBOXES_LEN; ++i) {
+        for (int i = 0; i < MB_LEN; ++i) {
             random_piggy_back(msg[i]);
         }//for
     }
 };
-
 
 #endif //FTSFC_DEFS_HH

@@ -4,9 +4,7 @@
 
 CLICK_DECLS
 
-Decoder::Decoder () {
-    // TODO: concurrency control on initializing _msg
-};
+Decoder::Decoder () { };
 
 Decoder::~Decoder() { };
 
@@ -14,9 +12,7 @@ Packet *Decoder::simple_action(Packet *p) {
     DEBUG("--------------------");
     DEBUG("Begin Decoder");
 
-    // TODO: concurrency control on reading _msg
     _util.decode(_msg, p);
-    _util.print(_msg);
 
     DEBUG("End Decoder");
     DEBUG("--------------------");

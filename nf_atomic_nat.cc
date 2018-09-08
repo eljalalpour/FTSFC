@@ -43,7 +43,7 @@ uint32_t NFAtomicNAT::flow_id(Packet *p) {
 
 Packet *NFAtomicNAT::simple_action(Packet *p) {
     DEBUG("--------------------");
-    DEBUG("Begin NFAtomicNAT with index %d:", _index);
+    DEBUG("Begin NFAtomicNAT");
     Router *r = this->router();
 
     const click_ip *iph = p->ip_header();

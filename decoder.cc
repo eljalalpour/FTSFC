@@ -12,10 +12,11 @@ Packet *Decoder::simple_action(Packet *p) {
     DEBUG("--------------------");
     DEBUG("Begin Decoder");
 
-//    _util.decode(_msg, p);
-//    _util.print(_msg);
-    _cas = CAST_PACKET_TO_PIGGY_BACK_MESSAGE(p);
-    _util.print(*_cas);
+    _util.decode(_msg, p);
+    _util.print(_msg);
+    
+//    _cas = CAST_PACKET_TO_PIGGY_BACK_MESSAGE(p);
+//    _util.print(*_cas);
 
     DEBUG("End Decoder");
     DEBUG("--------------------");

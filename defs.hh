@@ -130,13 +130,9 @@ public:
     }
 
     inline void encode(const PiggyBackMessage& s, Packet* p) {
-        unsigned char * p_data = const_cast<unsigned char *>(p->data());
-
-        // Point to the offset where PiggyBackMessage is encoded
-        p_data += DEFAULT_OFFSET;
-
-        // encode PiggyBackMessage
-        serialize(s, p_data);
+        // Cast away and point to the offset where PiggyBackMessage is encoded,
+        // then encode PiggyBackMessage
+        serialize(s, CAST_AWAY_PACKET_DATA(p) + DEFAULT_OFFSET);
     }
 
     inline void decode(PiggyBackMessage& s, const Packet* p) {

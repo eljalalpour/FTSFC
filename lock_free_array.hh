@@ -23,12 +23,12 @@ public:
 
     const char *processing() const { return AGNOSTIC; }
 
-    Packet *simple_action(Packet *p);
+    Packet *simple_action(Packet *);
 
     void add_handlers();
 
 private:
-    static String read_handler(Element* e, void* thunk);
+    static String read_handler(Element*, void*);
 };
 
 CLICK_ENDDECLS

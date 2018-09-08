@@ -17,7 +17,7 @@ Packet *LockFreeArray::simple_action(Packet *p) {
 
 enum { LFA_H_COUNT };
 
-String LockFreeArray::read_handler(Element *e, void *thunk) {
+String LockFreeArray::read_handler(Element *e, void *) {
     LockFreeArray *c = (LockFreeArray *)e;
     String res;
 

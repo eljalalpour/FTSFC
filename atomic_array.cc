@@ -17,7 +17,7 @@ Packet *AtomicArray::simple_action(Packet *p) {
 
 enum { ATA_H_COUNT };
 
-String AtomicArray::read_handler(Element *e, void *thunk) {
+String AtomicArray::read_handler(Element *e, void *) {
     AtomicArray *c = (AtomicArray *)e;
     String res;
 

@@ -157,14 +157,13 @@ public:
     }
 
     void print(PiggyBackState &state) {
-        DEBUG("Ack is %d, last commit is %llu",
-              state.ack, state.last_commit);
+        DEBUG("Ack is %d, last commit is %llu", state.ack, state.last_commit);
         print(state.state);
     }
 
     void print(PiggyBackMessage &msg) {
         for (auto i = 0; i < MB_LEN; ++i) {
-            DEBUG("\nState of middlebox %d", i->first);
+            DEBUG("\nState of middlebox %d", i);
             print(msg[i]);
         }//for
     }

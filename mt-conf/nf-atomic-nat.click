@@ -4,7 +4,7 @@ elementclass NATBlock {
 $index |
     input
     -> MarkIPHeader(14)
-//    -> IPPrint($index)
+    -> IPPrint($index)
     -> NFAtomicNAT()
     -> MarkIPHeader(14)
     -> StoreIPAddress(192.168.1.107, src)

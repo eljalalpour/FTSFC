@@ -1,7 +1,7 @@
 elementclass EncoderBlock {
 $index |
     input
-//    -> Print($index)
+//    -> IPPrint($index)
     -> MarkIPHeader(14)
     -> Encoder()
     -> MarkIPHeader(14)

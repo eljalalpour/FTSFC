@@ -1,9 +1,9 @@
-AddressInfo(sender 192.168.1.108);
+AddressInfo(sender 192.168.1.107);
 
 elementclass DecoderBlock {
 $index |
     input
-//    -> Print($index)
+//    -> IPPrint($index)
     -> MarkIPHeader(14)
     -> IPFilter(allow src sender)
     -> Decoder()

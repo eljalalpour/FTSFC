@@ -1,5 +1,5 @@
 #include "atomic_array.hh"
-#include "FTTypes.hh"
+#include "defs.hh"
 #include <click/config.h>
 #include <click/router.hh>
 #include <click/args.hh>

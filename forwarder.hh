@@ -6,7 +6,12 @@
 
 CLICK_DECLS
 
-#define DEFAULT_INDEX   0
+///
+/// Because of the log propagation invariant and \texttt{Forwarder} being stateless,
+/// its threads do not need any concurrency control.
+/// They independently maintain a memory for and decode the piggybak message received
+/// from \texttt{Buffer} and encode this memory to the incoming packets.
+///
 
 class Forwarder : public Element {
 private:

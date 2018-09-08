@@ -19,7 +19,7 @@ Packet *Encoder::simple_action(Packet *p) {
     // TODO: concurrency control on reading _msg
     _util.random_message(_msg);
 
-    DEBUG("--------------------");
+    DEBUG("--------");
     DEBUG("Before:");
     _util.print(_msg);
     _util.encode(_msg, p);
@@ -27,7 +27,7 @@ Packet *Encoder::simple_action(Packet *p) {
     PiggyBackMessage after;
     _util.decode(after, p);
 
-    DEBUG("--------------------");
+    DEBUG("--------");
     DEBUG("After:");
     _util.print(after);
 

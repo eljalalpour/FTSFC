@@ -119,7 +119,7 @@ public:
     }
 
     inline void serialize(const PiggyBackMessage &s, unsigned char *ser) {
-        memcpy(ser, &s, sizeof(PiggyBackState));
+        memcpy(ser, &s, sizeof(PiggyBackMessage));
     }
 
     inline void deserialize(PiggyBackMessage &s, const unsigned char* ser) {

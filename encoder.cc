@@ -4,7 +4,9 @@
 
 CLICK_DECLS
 
-Encoder::Encoder () { };
+Encoder::Encoder () {
+    _util.random_message(_msg);
+};
 
 Encoder::~Encoder() { };
 
@@ -12,7 +14,6 @@ Packet *Encoder::simple_action(Packet *p) {
     DEBUG("--------------------");
     DEBUG("Begin Encoder");
 
-    _util.random_message(_msg);
     _util.encode(_msg, p);
 
     DEBUG("End Encoder");

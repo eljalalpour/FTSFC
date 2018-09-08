@@ -15,7 +15,7 @@ int TFTAtomicCounter::configure(Vector<String> &conf, ErrorHandler *errh) {
     //TODO
 //    // set index param
 //    Args(conf, this, errh).read_or_set("INDEX", _index, DEFAULT_INDEX);
-//    LOG("TFTAtomicCounter index is %d!\n", _index);
+//    DEBUG("TFTAtomicCounter index is %d!\n", _index);
 //    _key = std::to_string(_index);
 //    _val = DEFAULT_VALUE;
 
@@ -24,8 +24,8 @@ int TFTAtomicCounter::configure(Vector<String> &conf, ErrorHandler *errh) {
 
 Packet *TFTAtomicCounter::simple_action(Packet *p) {
     //TODO
-//    LOG("--------------------");
-//    LOG("Begin TFTAtomicCounter with index %d:", _index);
+//    DEBUG("--------------------");
+//    DEBUG("Begin TFTAtomicCounter with index %d:", _index);
 //    Router *r = this->router();
 //
 //    AtomicArray *lfc = (AtomicArray *)(r->find("array"));
@@ -36,8 +36,8 @@ Packet *TFTAtomicCounter::simple_action(Packet *p) {
 //    state[_key] = _val;
 //    trans->send(state);
 //
-//    LOG("End TFTAtomicCounter %d:", _index);
-//    LOG("--------------------");
+//    DEBUG("End TFTAtomicCounter %d:", _index);
+//    DEBUG("--------------------");
 
     return p;
 }

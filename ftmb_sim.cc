@@ -16,19 +16,19 @@ int FTMBSim::configure(Vector<String> &conf, ErrorHandler *errh) {
                 .read("DELAY", _delay)
                 .complete() < 0)
         return -1;
-    LOG("FTMBSim period is %d, delay is %d!\n", _period, _delay);
+    DEBUG("FTMBSim period is %d, delay is %d!\n", _period, _delay);
 
     return 0;
 }
 
 Packet *FTMBSim::simple_action(Packet *p) {
-    LOG("--------------------");
-    LOG("Begin FTMBSim with index %d:", _index);
+    DEBUG("--------------------");
+    DEBUG("Begin FTMBSim with index %d:", _index);
 
     // TODO: implement periodic delay
 
-    LOG("End FTMBSim %d:", _index);
-    LOG("--------------------");
+    DEBUG("End FTMBSim %d:", _index);
+    DEBUG("--------------------");
 
     return p;
 }

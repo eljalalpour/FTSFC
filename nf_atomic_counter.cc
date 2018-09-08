@@ -16,21 +16,21 @@ int NFAtomicCounter::configure(Vector<String> &conf, ErrorHandler *errh) {
                 .read("INDEX", _index)
                 .complete() < 0)
         return -1;
-    LOG("NFLockFreeCounter index is %d!\n", _index);
+    DEBUG("NFLockFreeCounter index is %d!\n", _index);
 
     return 0;
 }
 
 Packet *NFAtomicCounter::simple_action(Packet *p) {
-    LOG("--------------------");
-    LOG("Begin NFAtomicCounter with index %d:", _index);
+    DEBUG("--------------------");
+    DEBUG("Begin NFAtomicCounter with index %d:", _index);
     Router *r = this->router();
 
     AtomicArray *afc = (AtomicArray *)(r->find("array"));
     ++afc->counters[_index];
 
-    LOG("End NFAtomicCounter %d:", _index);
-    LOG("--------------------");
+    DEBUG("End NFAtomicCounter %d:", _index);
+    DEBUG("--------------------");
 
     return p;
 }

@@ -15,7 +15,7 @@ int TFTLockFreeCounter ::configure(Vector<String> &conf, ErrorHandler *errh) {
     //TODO
 //    // set index param
 //    Args(conf, this, errh).read_or_set("INDEX", _index, DEFAULT_INDEX);
-//    LOG("TFTLockFreeCounter index is %d!\n", _index);
+//    DEBUG("TFTLockFreeCounter index is %d!\n", _index);
 //    _key = std::to_string(_index);
 //    _val = DEFAULT_VALUE;
 
@@ -24,8 +24,8 @@ int TFTLockFreeCounter ::configure(Vector<String> &conf, ErrorHandler *errh) {
 
 Packet *TFTLockFreeCounter ::simple_action(Packet *p) {
     //TODO
-//    LOG("--------------------");
-//    LOG("Begin TFTLockFreeCounter  with index %d:", _index);
+//    DEBUG("--------------------");
+//    DEBUG("Begin TFTLockFreeCounter  with index %d:", _index);
 //    Router *r = this->router();
 //
 //    LockFreeArray *lfc = (LockFreeArray *)(r->find("array"));
@@ -36,8 +36,8 @@ Packet *TFTLockFreeCounter ::simple_action(Packet *p) {
 //    state[_key] = _val;
 //    trans->send(state);
 //
-//    LOG("End TFTLockFreeCounter %d:", _index);
-//    LOG("--------------------");
+//    DEBUG("End TFTLockFreeCounter %d:", _index);
+//    DEBUG("--------------------");
 
     return p;
 }

@@ -9,12 +9,12 @@ Appender::Appender () { };
 Appender::~Appender() { };
 
 Packet *Appender::simple_action(Packet *p) {
-    LOG("--------------------");
-    LOG("Begin Appender with index %d:", _index);
+    DEBUG("--------------------");
+    DEBUG("Begin Appender with index %d:", _index);
 
 
-    LOG("End Appender %d:", _index);
-    LOG("--------------------");
+    DEBUG("End Appender %d:", _index);
+    DEBUG("--------------------");
 
     return p;
 }

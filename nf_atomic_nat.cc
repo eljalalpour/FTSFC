@@ -42,8 +42,8 @@ uint32_t NFAtomicNAT::flow_id(Packet *p) {
 }
 
 Packet *NFAtomicNAT::simple_action(Packet *p) {
-    LOG("--------------------");
-    LOG("Begin NFAtomicNAT with index %d:", _index);
+    DEBUG("--------------------");
+    DEBUG("Begin NFAtomicNAT with index %d:", _index);
     Router *r = this->router();
 
     const click_ip *iph = p->ip_header();
@@ -61,8 +61,8 @@ Packet *NFAtomicNAT::simple_action(Packet *p) {
     if (afc->counters[fid] == 0)
         afc->counters[fid] = 1;
 
-    LOG("End NFAtomicNAT");
-    LOG("--------------------");
+    DEBUG("End NFAtomicNAT");
+    DEBUG("--------------------");
 
     return p;
 }

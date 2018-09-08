@@ -1,8 +1,6 @@
-#include "lock_free_array.hh"
 #include <click/config.h>
 #include <click/router.hh>
-#include <click/args.hh>
-#include "nf_lock_free_counter.hh"
+#include "appender.hh"
 
 CLICK_DECLS
 

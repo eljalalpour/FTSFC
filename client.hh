@@ -6,7 +6,6 @@
 #include <arpa/inet.h>
 #include <netinet/tcp.h>
 #include "defs.hh"
-#include "FTAppenderElement.hh"
 
 struct ServerConn {
     string ip;

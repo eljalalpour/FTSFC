@@ -4,16 +4,14 @@
 /// Assumptions:
 ///     - The state of a middlebox is a FIXED int array with 8 values (32 bytes)
 ///     - The piggyback message always contains the piggback state of 4 middleboxes
-
-
-#define STATE_LEN 8
-#define MB_LEN    4
-
 #include <vector>
 #include <unordered_map>
 #include <chrono>
 
 #define ENABLE_DEBUG 1
+#define STATE_LEN 8
+#define MB_LEN    4
+#define CURRENT_TIMESTAMP std::chrono::high_resolution_clock::now().time_since_epoch().count()
 
 #ifdef ENABLE_DEBUG
 #define DEBUG(...) click_chatter(__VA_ARGS__)
@@ -21,7 +19,6 @@
 #define DEBUG(...)
 #endif
 
-#define CURRENT_TIMESTAMP std::chrono::high_resolution_clock::now().time_since_epoch().count()
 
 typedef int State[STATE_LEN];
 

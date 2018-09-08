@@ -1,7 +1,7 @@
 #pragma once
 
-#include "FTTypes.hh"
-#include "FTClient.hh"
+#include "defs.hh"
+#include "client.hh"
 #include <click/config.h>
 #include <click/element.hh>
 #include <fstream>

@@ -14,7 +14,7 @@ Packet *Decoder::simple_action(Packet *p) {
 
     _util.decode(_msg, p);
 //    _cas = CAST_PACKET_TO_PIGGY_BACK_MESSAGE(p);
-//    _util.print(_msg);
+    _util.print(_msg);
 
     DEBUG("End Decoder");
     DEBUG("--------------------");

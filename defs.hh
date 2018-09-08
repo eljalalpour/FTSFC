@@ -14,7 +14,7 @@
 #include <click/glue.hh>
 
 /// Useful  definitions
-//#define ENABLE_DEBUG 1
+#define ENABLE_DEBUG 1
 #define CURRENT_TIMESTAMP std::chrono::high_resolution_clock::now().time_since_epoch().count()
 
 #ifdef ENABLE_DEBUG
@@ -58,6 +58,8 @@ typedef TimestampState Committed[MB_LEN];
 #define CAST_TO_TIMESTAMP_STATE(x)    reinterpret_cast<TimestampState*>(x)
 #define CAST_TO_PIGGY_BACK_STATE(x)   reinterpret_cast<PiggyBackState*>(x)
 #define CAST_TO_PIGGY_BACK_MESSAGE(x) reinterpret_cast<PiggyBackMessage*>(x)
+
+#define CAST_PACKET_TO_PIGGY_BACK_MESSAGE(x) reinterpret_cast<PiggyBackMessage*>(x + DEFAULT_OFFSET)
 
 /// Util class to serialize, deserialize, encode, and decode states
 class Util {

@@ -28,10 +28,9 @@
 #define LOG(...)
 #endif
 
-
-#define Timestamp int64_t
 #define CURRENT_TIMESTAMP std::chrono::high_resolution_clock::now().time_since_epoch().count()
 
+typedef int64_t Timestamp;
 typedef int State[STATE_LEN];
 
 typedef struct {

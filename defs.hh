@@ -17,7 +17,7 @@
 #define CURRENT_TIMESTAMP std::chrono::high_resolution_clock::now().time_since_epoch().count()
 
 #define ENABLE_DEBUG
-#ifdef ENABLE_DEBUG
+#ifdef  ENABLE_DEBUG
 #define DEBUG(...) click_chatter(__VA_ARGS__)
 #else
 #define DEBUG(...)

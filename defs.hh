@@ -14,7 +14,7 @@
 #include <click/glue.hh>
 
 /// Useful  definitions
-#define ENABLE_DEBUG 1
+//#define ENABLE_DEBUG 1
 #define CURRENT_TIMESTAMP std::chrono::high_resolution_clock::now().time_since_epoch().count()
 
 #ifdef ENABLE_DEBUG

@@ -141,7 +141,7 @@ public:
         return result;
     }
 
-    bool send(FTState& state) {
+    bool send(State& state) {
         if (_ips.size() > 1) {
             return multi_send(state);
         }//if

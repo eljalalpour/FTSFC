@@ -13,19 +13,12 @@
 #include <unordered_map>
 #include <chrono>
 
-//#define ENABLE_DEBUG 1
-//#define ENABLE_LOG   1
+#define ENABLE_DEBUG 1
 
 #ifdef ENABLE_DEBUG
 #define DEBUG(...) click_chatter(__VA_ARGS__)
 #else
 #define DEBUG(...)
-#endif
-
-#ifdef ENABLE_LOG
-#define LOG(...) click_chatter(__VA_ARGS__)
-#else
-#define LOG(...)
 #endif
 
 #define CURRENT_TIMESTAMP std::chrono::high_resolution_clock::now().time_since_epoch().count()

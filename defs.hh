@@ -15,6 +15,7 @@
 
 /// Useful  definitions
 #define PORTS_2_1 "2/1"
+#define PORTS_1_2 "1/2"
 #define CURRENT_TIMESTAMP std::chrono::high_resolution_clock::now().time_since_epoch().count()
 
 #define ENABLE_DEBUG
@@ -28,7 +29,6 @@
 #define STATE_LEN      8
 #define MB_LEN         4
 #define DEFAULT_OFFSET 76 // This value must be greater than 75
-
 
 /// State and piggyback message definitions
 typedef int State[STATE_LEN];

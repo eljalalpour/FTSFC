@@ -1,0 +1,40 @@
+cmake_minimum_required(VERSION 3.0)
+project(FTSFC)
+
+set(CMAKE_CXX_STANDARD 11)
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -lpthread -O2")
+
+include_directories(
+        ${PROTOBUF_INC}
+)
+
+add_executable(FTSFC
+        atomic_array.cc
+        atomic_array.hh
+        buffer.hh
+        buffer.cc
+        decoder.cc
+        decoder.hh
+        defs.cc
+        defs.hh
+        forwarder.cc
+        forwarder.hh
+        ftmb_sim.cc
+        ftmb_sim.hh
+        lock_free_array.cc
+        lock_free_array.hh
+        nf_atomic_counter.cc
+        nf_atomic_counter.hh
+        nf_atomic_nat.cc
+        nf_atomic_nat.hh
+        nf_lock_free_counter.cc
+        nf_lock_free_counter.hh
+        replica.cc
+        replica.hh
+        shared_atomic_state.cc
+        shared_atomic_state.hh
+        shared_lock_free_state.cc
+        shared_lock_free_state.hh)
+
+target_link_libraries(FTSFC ${PROTOBUF_LIB})
+

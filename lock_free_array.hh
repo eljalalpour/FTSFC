@@ -11,7 +11,7 @@ CLICK_DECLS
 
 class LockFreeArray : public Element {
 public:
-    int counters[DEFAULT_SIZE];
+    int array[DEFAULT_SIZE];
 
     LockFreeArray ();
 

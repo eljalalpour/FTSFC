@@ -4,22 +4,9 @@
 
 CLICK_DECLS
 
-Replica::Replica() { };
+Replica::Replica() { }
 
-Replica::~Replica() { };
-
-int Replica::configure(Vector<String> &conf, ErrorHandler *errh) {
-    // set id and f params
-    if (Args(conf, this, errh)
-                .read("ID", _id)
-                .read("F", _failure_count)
-                .complete() < 0)
-        return -1;
-
-    DEBUG("Replica ID is %d!\n", _id);
-
-    return 0;
-}
+Replica::~Replica() { }
 
 inline void Replica::_init_shared_state_pointer() {
     if (!_shared_state_init) {

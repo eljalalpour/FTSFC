@@ -6,7 +6,7 @@ CLICK_DECLS
 
 LockFreeArray::LockFreeArray () {
     for (int i = 0; i < DEFAULT_SIZE; ++i)
-        counters[i] = 0;
+        array[i] = 0;
 };
 
 LockFreeArray::~LockFreeArray() { };
@@ -15,14 +15,14 @@ Packet *LockFreeArray::simple_action(Packet *p) {
     return p;
 }
 
-enum { LFA_H_COUNT };
+enum { LFA_H_ARRAY };
 
 String LockFreeArray::read_handler(Element *e, void *) {
     LockFreeArray *c = (LockFreeArray *)e;
     String res;
 
     for(int i = 0; i < DEFAULT_HANDLER_SIZE; ++i) {
-        res += String(c->counters[i]);
+        res += String(c->array[i]);
         res += ",";
     }//for
 
@@ -30,7 +30,7 @@ String LockFreeArray::read_handler(Element *e, void *) {
 }
 
 void LockFreeArray::add_handlers() {
-    add_read_handler("count", read_handler, LFA_H_COUNT);
+    add_read_handler("array", read_handler, LFA_H_ARRAY);
 }
 
 CLICK_ENDDECLS

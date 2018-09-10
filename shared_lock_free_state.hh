@@ -3,6 +3,7 @@
 
 #include <click/config.h>
 #include <click/element.hh>
+#include <mutex>
 #include "defs.hh"
 
 CLICK_DECLS
@@ -12,17 +13,20 @@ CLICK_DECLS
 /// and performs low-level state management operations.
 ///
 
-#define LOG_ENTRY_INIT_SIZE 10000
-
 class SharedLockFreeState : public Element {
 private:
+    int _id;
+    int _failure_count;
     LogTable _log_table;
     CommitMemory _commit_memory;
+    Util _util;
 
     inline void _log(PiggybackState*, int);
 
+    void _commit(int, int64_t);
+
 public:
-    int in_operation[STATE];
+    State in_operation;
 
     SharedLockFreeState ();
 
@@ -36,21 +40,13 @@ public:
 
     Packet *simple_action(Packet *);
 
-    int configure(Vector<String> &conf, ErrorHandler *errh);
+    int configure(Vector<String> &, ErrorHandler *);
 
     void add_handlers();
 
     void process_piggyback_message(Packet*);
 
     void construct_piggyback_message(Packet*);
-
-    void log_in_operation_state();
-
-    inline void process_primary_state(PiggybackMessage*);
-
-    inline void process_seondary_state(PiggybackMessage*);
-
-    void log_in_operation_state();
 };
 
 CLICK_ENDDECLS

@@ -27,7 +27,7 @@ Packet *NFLockFreeCounter::simple_action(Packet *p) {
     Router *r = this->router();
 
     LockFreeArray *lfc = (LockFreeArray *)(r->find("array"));
-    ++lfc->counters[_index];
+    ++lfc->array[_index];
 
     DEBUG("End NFLockFreeCounter %d:", _index);
     DEBUG("--------------------");

@@ -6,7 +6,7 @@
 ///     - The piggyback message always contains the piggback state of 4 middleboxes
 ///     - Middleboxes must not modify packets
 
-#include <vector>
+#include <list>
 #include <unordered_map>
 #include <chrono>
 #include <cstdlib>
@@ -49,7 +49,7 @@ typedef struct {
 
 typedef PiggybackState PiggybackMessage[MB_LEN];
 
-typedef std::vector<TimestampState> TimestampStateList;
+typedef std::list<TimestampState> TimestampStateList;
 
 typedef TimestampStateList LogTable[MB_LEN];
 
@@ -94,6 +94,11 @@ public:
 
     inline void copy(PiggybackState& y, PiggybackState& x) {
         memcpy(&y, &x, sizeof(PiggybackState));
+    }
+
+    inline void copy(TimestampState& y, PiggybackState& x) {
+        y.timestamp = x.timestamp;
+        copy(y.state, x.state);
     }
 
     inline void copy(PiggybackMessage& y, PiggybackMessage& x) {

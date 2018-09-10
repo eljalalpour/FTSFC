@@ -58,8 +58,8 @@ Packet *NFAtomicNAT::simple_action(Packet *p) {
 
     // Keep as is
     AtomicArray *afc = (AtomicArray *)(r->find("array"));
-    if (afc->counters[fid] == 0)
-        afc->counters[fid] = 1;
+    if (afc->array[fid] == 0)
+        afc->array[fid] = 1;
 
     DEBUG("End NFAtomicNAT");
     DEBUG("--------------------");

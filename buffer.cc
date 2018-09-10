@@ -8,11 +8,11 @@ Buffer::Buffer () { };
 
 Buffer::~Buffer() { };
 
-int64_t Buffer::_last_timestamp(PiggyBackMessage& msg) {
+int64_t Buffer::_last_timestamp(PiggybackMessage& msg) {
     return msg[MB_LEN - 1].timestamp;
 }
 
-int64_t Buffer::_last_commit_timestamp(PiggyBackMessage& msg) {
+int64_t Buffer::_last_commit_timestamp(PiggybackMessage& msg) {
     return msg[MB_LEN - 1].last_commit;
 }
 

@@ -17,13 +17,13 @@ CLICK_DECLS
 
 class Buffer : public Element {
 private:
-    volatile PiggyBackMessage* _msg;
+    volatile PiggybackMessage* _msg;
 
     map<int64_t, Packet *> _packets;
 
-    inline int64_t _last_timestamp(PiggyBackMessage&);
+    inline int64_t _last_timestamp(PiggybackMessage&);
 
-    inline int64_t _last_commit_timestamp(PiggyBackMessage&);
+    inline int64_t _last_commit_timestamp(PiggybackMessage&);
 
     inline void _release(int64_t);
 

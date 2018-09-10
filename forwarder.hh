@@ -16,7 +16,7 @@ CLICK_DECLS
 class Forwarder : public Element {
 private:
     Util _util;
-    PiggyBackMessage _msg;
+    PiggybackMessage _msg;
 
 public:
     Forwarder ();

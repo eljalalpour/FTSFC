@@ -16,6 +16,8 @@
 /// Useful  definitions
 #define PORTS_2_1 "2/1"
 #define PORTS_1_2 "1/2"
+#define PORTS_2_2 "2/2"
+
 #define CURRENT_TIMESTAMP std::chrono::high_resolution_clock::now().time_since_epoch().count()
 
 #define ENABLE_DEBUG
@@ -43,25 +45,25 @@ typedef struct {
     int64_t last_commit;
     int64_t timestamp;
     State state;
-} PiggyBackState;
+} PiggybackState;
 
-typedef PiggyBackState PiggyBackMessage[MB_LEN];
+typedef PiggybackState PiggybackMessage[MB_LEN];
 
 typedef std::vector<TimestampState> TimestampStateList;
 
-typedef TimestampStateList Log[MB_LEN];
+typedef TimestampStateList LogTable[MB_LEN];
 
-typedef TimestampState Committed[MB_LEN];
+typedef TimestampState CommitMemory[MB_LEN];
 
 /// Useful casting definitions
 #define CAST_TO_BYTES(x)              reinterpret_cast<unsigned char *>(&x)
 #define CAST_TO_STATE(x)              reinterpret_cast<State*>(x)
 #define CAST_TO_TIMESTAMP_STATE(x)    reinterpret_cast<TimestampState*>(x)
-#define CAST_TO_PIGGY_BACK_STATE(x)   reinterpret_cast<PiggyBackState*>(x)
-#define CAST_TO_PIGGY_BACK_MESSAGE(x) reinterpret_cast<PiggyBackMessage*>(x)
+#define CAST_TO_PIGGY_BACK_STATE(x)   reinterpret_cast<PiggybackState*>(x)
+#define CAST_TO_PIGGY_BACK_MESSAGE(x) reinterpret_cast<PiggybackMessage*>(x)
 
 #define CAST_AWAY_PACKET_DATA(p) const_cast<unsigned char *>(p->data())
-#define CAST_PACKET_TO_PIGGY_BACK_MESSAGE(p) reinterpret_cast<PiggyBackMessage*>(CAST_AWAY_PACKET_DATA(p) + DEFAULT_OFFSET)
+#define CAST_PACKET_TO_PIGGY_BACK_MESSAGE(p) reinterpret_cast<PiggybackMessage*>(CAST_AWAY_PACKET_DATA(p) + DEFAULT_OFFSET)
 
 /// Util class to serialize, deserialize, encode, and decode states
 class Util {
@@ -74,12 +76,12 @@ public:
         memset(&s, 0, sizeof(TimestampState));
     }
 
-    inline void init(PiggyBackState &s) {
-        memset(&s, 0, sizeof(PiggyBackState));
+    inline void init(PiggybackState &s) {
+        memset(&s, 0, sizeof(PiggybackState));
     }
 
-    inline void init(PiggyBackMessage &s) {
-        memset(&s, 0, sizeof(PiggyBackMessage));
+    inline void init(PiggybackMessage &s) {
+        memset(&s, 0, sizeof(PiggybackMessage));
     }
 
     inline void copy(State& y, State& x) {
@@ -90,12 +92,12 @@ public:
         memcpy(&y, &x, sizeof(TimestampState));
     }
 
-    inline void copy(PiggyBackState& y, PiggyBackState& x) {
-        memcpy(&y, &x, sizeof(PiggyBackState));
+    inline void copy(PiggybackState& y, PiggybackState& x) {
+        memcpy(&y, &x, sizeof(PiggybackState));
     }
 
-    inline void copy(PiggyBackMessage& y, PiggyBackMessage& x) {
-        memcpy(&y, &x, sizeof(PiggyBackState));
+    inline void copy(PiggybackMessage& y, PiggybackMessage& x) {
+        memcpy(&y, &x, sizeof(PiggybackState));
     }
 
     inline void serialize(const State &s, unsigned char *ser) {
@@ -114,29 +116,29 @@ public:
         memcpy(&s, ser, sizeof(TimestampState));
     }
 
-    inline void serialize(const PiggyBackState &s, unsigned char *ser) {
-        memcpy(ser, &s, sizeof(PiggyBackState));
+    inline void serialize(const PiggybackState &s, unsigned char *ser) {
+        memcpy(ser, &s, sizeof(PiggybackState));
     }
 
-    inline void deserialize(PiggyBackState &s, const unsigned char* ser) {
-        memcpy(&s, ser, sizeof(PiggyBackState));
+    inline void deserialize(PiggybackState &s, const unsigned char* ser) {
+        memcpy(&s, ser, sizeof(PiggybackState));
     }
 
-    inline void serialize(const PiggyBackMessage &s, unsigned char *ser) {
-        memcpy(ser, &s, sizeof(PiggyBackMessage));
+    inline void serialize(const PiggybackMessage &s, unsigned char *ser) {
+        memcpy(ser, &s, sizeof(PiggybackMessage));
     }
 
-    inline void deserialize(PiggyBackMessage &s, const unsigned char* ser) {
-        memcpy(&s, ser, sizeof(PiggyBackMessage));
+    inline void deserialize(PiggybackMessage &s, const unsigned char* ser) {
+        memcpy(&s, ser, sizeof(PiggybackMessage));
     }
 
-    inline void encode(const PiggyBackMessage& s, Packet* p) {
-        // Cast away and point to the offset where PiggyBackMessage is encoded,
-        // then encode PiggyBackMessage
+    inline void encode(const PiggybackMessage& s, Packet* p) {
+        // Cast away and point to the offset where PiggybackMessage is encoded,
+        // then encode PiggybackMessage
         serialize(s, CAST_AWAY_PACKET_DATA(p) + DEFAULT_OFFSET);
     }
 
-    inline void decode(PiggyBackMessage& s, const Packet* p) {
+    inline void decode(PiggybackMessage& s, const Packet* p) {
         deserialize(s, p->data() + DEFAULT_OFFSET);
     }
 
@@ -151,12 +153,12 @@ public:
         print(ft_state.state);
     }
 
-    void print(PiggyBackState &state) {
+    void print(PiggybackState &state) {
         DEBUG("Ack is %d, last commit is %llu", state.ack, state.last_commit);
         print(state.state);
     }
 
-    void print(PiggyBackMessage &msg) {
+    void print(PiggybackMessage &msg) {
         for (auto i = 0; i < MB_LEN; ++i) {
             DEBUG("\nState of middlebox %d", i);
             print(msg[i]);
@@ -174,7 +176,7 @@ public:
         random_state(ts_state.state);
     }
 
-    void random_piggy_back(PiggyBackState& pb_state) {
+    void random_piggyback(PiggybackState& pb_state) {
         pb_state.last_commit = CURRENT_TIMESTAMP;
         TimestampState ts_state;
         random_ts_state(ts_state);
@@ -183,9 +185,9 @@ public:
         pb_state.ack = click_random() % MB_LEN;
     }
 
-    void random_message(PiggyBackMessage& msg) {
+    void random_message(PiggybackMessage& msg) {
         for (int i = 0; i < MB_LEN; ++i) {
-            random_piggy_back(msg[i]);
+            random_piggyback(msg[i]);
         }//for
     }
 };

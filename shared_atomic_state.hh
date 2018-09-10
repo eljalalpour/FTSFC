@@ -4,21 +4,17 @@
 #include <atomic>
 #include <click/config.h>
 #include <click/element.hh>
-
-#define DEFAULT_SIZE         8
-#define DEFAULT_HANDLER_SIZE 8
+#include "defs.hh"
 
 CLICK_DECLS
 
-class AtomicArray : public Element {
+class SharedAtomicState : public Element {
 public:
-    std::atomic_int array[DEFAULT_SIZE];
+    SharedAtomicState ();
 
-    AtomicArray ();
+    ~SharedAtomicState();
 
-    ~AtomicArray();
-
-    const char *class_name() const { return "AtomicArray"; }
+    const char *class_name() const { return "SharedAtomicState"; }
 
     const char *port_count() const { return PORTS_0_0; }
 
@@ -27,9 +23,6 @@ public:
     Packet *simple_action(Packet *);
 
     void add_handlers();
-
-private:
-    static String read_handler(Element*, void*);
 };
 
 CLICK_ENDDECLS

@@ -6,7 +6,7 @@ CLICK_DECLS
 
 AtomicArray::AtomicArray () {
     for (int i = 0; i < DEFAULT_SIZE; ++i)
-        counters[i] = 0;
+        array[i] = 0;
 };
 
 AtomicArray::~AtomicArray() { };
@@ -22,7 +22,7 @@ String AtomicArray::read_handler(Element *e, void *) {
     String res;
 
     for(int i = 0; i < DEFAULT_HANDLER_SIZE; ++i) {
-        res += String(c->counters[i]);
+        res += String(c->array[i]);
         res += ",";
     }//for
 

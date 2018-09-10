@@ -11,7 +11,7 @@ CLICK_DECLS
 class Encoder : public Element {
 private:
     Util _util;
-    PiggyBackMessage _msg;
+    PiggybackMessage _msg;
 
 public:
     Encoder ();

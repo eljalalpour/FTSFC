@@ -27,7 +27,7 @@ Packet *NFAtomicCounter::simple_action(Packet *p) {
     Router *r = this->router();
 
     AtomicArray *afc = (AtomicArray *)(r->find("array"));
-    ++afc->counters[_index];
+    ++afc->array[_index];
 
     DEBUG("End NFAtomicCounter %d:", _index);
     DEBUG("--------------------");

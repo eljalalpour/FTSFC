@@ -12,8 +12,8 @@ class Decoder : public Element {
 private:
     Util _util;
     // TODO: concurrency control on _msg
-    PiggyBackMessage  _msg;
-    PiggyBackMessage* _cas;
+    PiggybackMessage  _msg;
+    PiggybackMessage* _cas;
 
 public:
     Decoder ();

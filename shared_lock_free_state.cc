@@ -29,7 +29,7 @@ void SharedLockFreeState::_commit(int mb_id, int64_t timestamp) {
             break;
     }//for
 
-    if (it >= 0) {
+    if (it != _log_table[mb_id].rend()) {
         // Commit involves storing the most updated log value into commit memory
         //
         _util.copy(_commit_memory[mb_id].state, _log_table[mb_id][it]);

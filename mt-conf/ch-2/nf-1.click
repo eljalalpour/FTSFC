@@ -8,7 +8,7 @@ $index,$src_ip |
     -> IPFilter(allow udp && src 22.1.1.0/8)
     -> IPPrint($index)
     -> MarkIPHeader(14)
-//    -> NFAtomicCounter(INDEX $index)
+    -> NFAtomicCounter(INDEX $index)
     -> MarkIPHeader(14)
     -> StoreIPAddress($src_ip, src)
     -> StoreIPAddress(192.168.1.108, dst)

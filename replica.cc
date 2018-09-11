@@ -1,6 +1,5 @@
 #include <click/config.h>
 #include <click/router.hh>
-#include "../shared_lock_free_state.hh"
 #include "replica.hh"
 
 CLICK_DECLS
@@ -10,22 +9,19 @@ Replica::Replica() : _shared_state_init(false) { }
 Replica::~Replica() { }
 
 inline void Replica::_init_shared_state_pointer() {
-//    if (!_shared_state_init) {
-//        _shared_state_init = true;
-//
-//        Router *r = this->router();
-//        _shared_state = (SharedLockFreeState *)(r->find("shared_state"));
-//    }//if
+    if (!_shared_state_init) {
+        _shared_state_init = true;
+
+        Router *r = this->router();
+        _shared_state = (SharedLockFreeState *)(r->find("shared_state"));
+    }//if
 }
 
 void Replica::push(int source, Packet *p) {
     DEBUG("--------------------");
     DEBUG("Begin Replica");
 
-//    _init_shared_state_pointer();
-
-//    Router *r = this->router();
-    SharedLockFreeState* _shared_state = (SharedLockFreeState *)(this->router()->find("shared_state"));
+    _init_shared_state_pointer();
 
     if (source == INPUT_PORT_TO_PROCESS) { // Admitting a new packet
         try {

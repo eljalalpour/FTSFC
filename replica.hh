@@ -1,9 +1,9 @@
 #pragma once
 
-#include "../defs.hh"
-#include "../shared_lock_free_state.hh"
+#include "defs.hh"
 #include <click/config.h>
 #include <click/element.hh>
+#include "shared_lock_free_state.hh"
 
 CLICK_DECLS
 
@@ -26,7 +26,7 @@ CLICK_DECLS
 class Replica : public Element {
 private:
     bool _shared_state_init;
-//    SharedLockFreeState* _shared_state;
+    SharedLockFreeState* _shared_state;
     inline void _init_shared_state_pointer();
 
 public:

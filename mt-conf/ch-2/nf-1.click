@@ -38,33 +38,33 @@ td7::ToDPDKDevice(0,6);
 td8::ToDPDKDevice(0,7);
 
 fd1
--> NFBlock(0,22.1.2.1)
+-> NFBlock(0,22.2.2.1)
 -> td1;
 
 fd2
--> NFBlock(0,22.1.2.2)
+-> NFBlock(0,22.2.2.2)
 -> td2;
 
 fd3
--> NFBlock(0,22.1.2.3)
+-> NFBlock(0,22.2.2.3)
 -> td3;
 
 fd4
--> NFBlock(0,22.1.2.4)
+-> NFBlock(0,22.2.2.4)
 -> td4;
 
 fd5
--> NFBlock(0,22.1.2.5)
+-> NFBlock(0,22.2.2.5)
 -> td5;
 
 fd6
--> NFBlock(0,22.1.2.6)
+-> NFBlock(0,22.2.2.6)
 -> td6;
 
 fd7
--> NFBlock(0,22.1.2.7)
+-> NFBlock(0,22.2.2.7)
 -> td7;
 
 fd8
--> NFBlock(0,22.1.2.8)
+-> NFBlock(0,22.2.2.8)
 -> td8;

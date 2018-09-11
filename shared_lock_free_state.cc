@@ -80,7 +80,7 @@ void SharedLockFreeState::construct_piggyback_message(Packet* p) {
 
     // Since the state is small, put the whole state into the packet
     auto it = _log_table[_id].rbegin();
-    _util.copy(msg[_id].state, it->state);
+    _util.copy(msg[_id]->state, it->state);
     msg[_id]->timestamp = it->timestamp;
     msg[_id]->last_commit = _commit_memory[_id].timestamp;
     msg[_id]->ack = 1;

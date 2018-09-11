@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../defs.hh"
+#include "defs.hh"
 #include <click/config.h>
 #include <click/element.hh>
 

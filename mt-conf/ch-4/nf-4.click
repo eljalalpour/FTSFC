@@ -7,7 +7,7 @@ elementclass NFBlock {
 $index,$src_ip |
     input
     -> MarkIPHeader(14)
-    -> IPFilter(allow udp && src 1.2.0.0/16)
+    -> IPFilter(allow udp && src 1.3.0.0/16)
     -> IPPrint($index)
     -> NFAtomicCounter(INDEX $index)
     -> MarkIPHeader(14)

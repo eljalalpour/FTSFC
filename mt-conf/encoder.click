@@ -2,7 +2,7 @@ elementclass EncoderBlock {
 $index,$src_ip |
     input
     -> MarkIPHeader(14)
-    -> IPFilter(allow udp && src 22.1.0.0/16)
+    -> IPFilter(allow udp && src 22.1.1.0/8)
 //    -> IPPrint($index)
     -> Encoder()
     -> MarkIPHeader(14)
@@ -14,5 +14,5 @@ $index,$src_ip |
 }
 
 FromDPDKDevice(0)
--> EncoderBlock(0,22.1.1.1)
+-> EncoderBlock(0,22.1.2.1)
 -> ToDPDKDevice(0);

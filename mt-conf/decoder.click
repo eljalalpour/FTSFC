@@ -1,14 +1,12 @@
-AddressInfo(sender 192.168.1.107);
-
 elementclass DecoderBlock {
-$index |
+$index,$src_ip |
     input
 //    -> IPPrint($index)
     -> MarkIPHeader(14)
-    -> IPFilter(allow src sender)
+    -> IPFilter(allow udp && src 22.1.0.0/16)
     -> Decoder()
     -> MarkIPHeader(14)
-    -> StoreIPAddress(192.168.1.108, src)
+    -> StoreIPAddress($src_ip, src)
     -> StoreIPAddress(192.168.1.101, dst)
     -> StoreEtherAddress(0c:c4:7a:73:fa:6a, src)
     -> StoreEtherAddress(0c:c4:7a:73:fa:72, dst)
@@ -16,5 +14,5 @@ $index |
 }
 
 FromDPDKDevice(0)
--> DecoderBlock(0)
+-> DecoderBlock(0,22.1.1.1)
 -> ToDPDKDevice(0);

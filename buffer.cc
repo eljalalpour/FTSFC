@@ -47,8 +47,6 @@ void Buffer::push(int port, Packet*p) {
 
     DEBUG("End Buffer");
     DEBUG("--------------------");
-
-    return p;
 }
 
 CLICK_ENDDECLS

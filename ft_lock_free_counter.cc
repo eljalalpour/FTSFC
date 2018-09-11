@@ -27,7 +27,7 @@ Packet *FTLockFreeCounter::simple_action(Packet *p) {
     Router *r = this->router();
 
     SharedLockFreeState *lfs = (SharedLockFreeState *)(r->find("shared_state"));
-    ++lfs->in_operation[_index];
+    ++lfs->inoperation[_index];
 
     DEBUG("End FTLockFreeCounter %d:", _index);
     DEBUG("--------------------");

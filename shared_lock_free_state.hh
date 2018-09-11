@@ -26,7 +26,7 @@ private:
     void _commit(int, int64_t);
 
 public:
-    State in_operation;
+    State inoperation;
 
     SharedLockFreeState ();
 
@@ -43,6 +43,8 @@ public:
     int configure(Vector<String> &, ErrorHandler *);
 
     void add_handlers();
+
+    void log_inoperation_state();
 
     void process_piggyback_message(Packet*);
 

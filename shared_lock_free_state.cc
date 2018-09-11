@@ -63,6 +63,14 @@ void SharedLockFreeState::process_piggyback_message(Packet* p) {
     }//for
 }
 
+void SharedLockFreeState::log_inoperation_state() {
+    TimestampState ts;
+    ts.timestamp = CURRENT_TIMESTAMP;
+    _util.copy(ts.state, inoperation);
+
+    _log_table[_id].push_back(ts);
+}
+
 void SharedLockFreeState::construct_piggyback_message(Packet* p) {
     PiggybackMessage* msg = CAST_PACKET_TO_PIGGY_BACK_MESSAGE(p);
 
@@ -70,7 +78,11 @@ void SharedLockFreeState::construct_piggyback_message(Packet* p) {
     // process_piggyback_message
 
     // Since the state is small, put the whole state into the packet
-    _util.copy(msg[_id].state, in_operation);
+    auto it = _log_table[_id].rbegin();
+    _util.copy(msg[_id].state, it->state);
+    msg[_id]->timestamp = it->timestamp;
+    msg[_id]->last_commit = _commit_memory[_id].timestamp;
+    msg[_id]->ack = 1;
 }
 
 int SharedLockFreeState::configure(Vector<String> &conf, ErrorHandler *errh) {

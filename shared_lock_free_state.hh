@@ -42,8 +42,6 @@ public:
 
     int configure(Vector<String> &, ErrorHandler *);
 
-    void add_handlers();
-
     void log_inoperation_state();
 
     void process_piggyback_message(Packet*);

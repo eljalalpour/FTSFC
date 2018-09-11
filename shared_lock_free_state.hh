@@ -1,10 +1,10 @@
 #ifndef ATOMIC_ARRAY_HH
 #define ATOMIC_ARRAY_HH
 
+#include "defs.hh"
 #include <click/config.h>
 #include <click/element.hh>
 #include <mutex>
-#include "defs.hh"
 
 CLICK_DECLS
 

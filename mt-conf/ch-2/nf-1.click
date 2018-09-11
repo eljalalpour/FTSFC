@@ -7,7 +7,7 @@ elementclass NFBlock {
 $index,$src_ip |
     input
     -> MarkIPHeader(14)
-//    -> IPFilter(allow src 1.0.0.0/24)
+//    -> IPFilter(allow src 1.1.0.0/16)
     -> IPPrint($index)
     -> NFAtomicCounter(INDEX $index)
     -> MarkIPHeader(14)
@@ -37,33 +37,33 @@ td7::ToDPDKDevice(0,6);
 td8::ToDPDKDevice(0,7);
 
 fd1
--> NFBlock(0,22.2.2.1)
+-> NFBlock(0,1.2.1.1)
 -> td1;
 
 fd2
--> NFBlock(1,22.2.2.2)
+-> NFBlock(1,1.2.2.2)
 -> td2;
 
 fd3
--> NFBlock(2,22.2.2.3)
+-> NFBlock(2,1.2.3.3)
 -> td3;
 
 fd4
--> NFBlock(3,22.2.2.4)
+-> NFBlock(3,1.2.4.4)
 -> td4;
 
 fd5
--> NFBlock(4,22.2.2.5)
+-> NFBlock(4,1.2.5.5)
 -> td5;
 
 fd6
--> NFBlock(5,22.2.2.6)
+-> NFBlock(5,1.2.6.6)
 -> td6;
 
 fd7
--> NFBlock(6,22.2.2.7)
+-> NFBlock(6,1.2.7.7)
 -> td7;
 
 fd8
--> NFBlock(7,22.2.2.8)
+-> NFBlock(7,1.2.8.8)
 -> td8;

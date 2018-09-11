@@ -24,7 +24,7 @@ void SharedLockFreeState::_commit(int mb_id, int64_t timestamp) {
     }//
 
     auto it = _log_table[mb_id].rbegin();
-    for (; it != _log_table[mb_id].rend(); --it) {
+    for (; it != _log_table[mb_id].rend(); ++it) {
         if (timestamp >= it->timestamp)
             break;
     }//for
@@ -35,7 +35,8 @@ void SharedLockFreeState::_commit(int mb_id, int64_t timestamp) {
         _util.copy(_commit_memory[mb_id].state, it->state);
         _commit_memory[mb_id].timestamp = timestamp;
 
-        _log_table[mb_id].erase(_log_table[mb_id].begin(), it + 1);
+        // TODO: make sure it works!!
+        _log_table[mb_id].erase(_log_table[mb_id].begin(), std::next(it).base());
     }//if
 }
 

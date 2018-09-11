@@ -1,5 +1,4 @@
-#ifndef ATOMIC_ARRAY_HH
-#define ATOMIC_ARRAY_HH
+#pragma once
 
 #include <atomic>
 #include <click/config.h>

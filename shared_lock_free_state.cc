@@ -1,4 +1,5 @@
 #include <click/config.h>
+#include <click/args.h>
 #include "shared_lock_free_state.hh"
 #include <click/handlercall.hh>
 

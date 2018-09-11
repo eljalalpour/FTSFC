@@ -19,7 +19,7 @@ class Buffer : public Element {
 private:
     volatile PiggybackMessage* _msg;
 
-    map<int64_t, Packet *> _packets;
+    std::map<int64_t, Packet *> _packets;
 
     inline int64_t _last_timestamp(PiggybackMessage&);
 

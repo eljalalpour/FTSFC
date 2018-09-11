@@ -1,6 +1,6 @@
 #include <click/config.h>
-#include "shared_atomic_state.hh"
 #include <click/handlercall.hh>
+#include "shared_atomic_state.hh"
 
 CLICK_DECLS
 

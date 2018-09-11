@@ -1,5 +1,6 @@
 #include <click/config.h>
 #include <click/router.hh>
+#include "shared_lock_free_state.hh"
 #include "replica.hh"
 
 CLICK_DECLS

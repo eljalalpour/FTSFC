@@ -13,7 +13,7 @@ void SharedLockFreeState::_log(PiggybackState* p_state, int mb_id) {
 //    std::lock_guard<std::mutex> guard(_log_mutex[mb_id]);
 
     TimestampState ts_state;
-    _util.copy(ts_state, p_state);
+    _util.copy(ts_state, *p_state);
     _log_table[mb_id].push_back(ts_state);
 }
 

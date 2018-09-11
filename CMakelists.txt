@@ -34,7 +34,10 @@ add_executable(FTSFC
         shared_atomic_state.cc
         shared_atomic_state.hh
         shared_lock_free_state.cc
-        shared_lock_free_state.hh)
+        shared_lock_free_state.hh
+        ft_lock_free_counter.cc
+        ft_lock_free_counter.hh
+        )
 
 target_link_libraries(FTSFC ${PROTOBUF_LIB})
 

@@ -40,7 +40,7 @@ void Buffer::push(int port, Packet*p) {
 
     //TODO: find the best order, either first send the packet to Forwarder or release packets
     // Send a copy of the packet to Forwarder
-    TO_CHAIN_BEGIN.push(p);
+    output(TO_CHAIN_BEGIN).push(p);
 
     // Release packets in the buffer
     _release(lcts);

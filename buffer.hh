@@ -17,7 +17,7 @@ CLICK_DECLS
 
 class Buffer : public Element {
 private:
-    volatile PiggybackMessage* _msg;
+    PiggybackMessage* _msg;
 
     std::map<int64_t, Packet *> _packets;
 

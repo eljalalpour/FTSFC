@@ -1,5 +1,5 @@
-#include "shared_lock_free_state.hh"
 #include <click/config.h>
+#include "shared_lock_free_state.hh"
 #include <click/router.hh>
 #include <click/args.hh>
 #include "ft_lock_free_counter.hh"
@@ -22,15 +22,15 @@ int FTLockFreeCounter::configure(Vector<String> &conf, ErrorHandler *errh) {
 }
 
 Packet *FTLockFreeCounter::simple_action(Packet *p) {
-//    DEBUG("--------------------");
-//    DEBUG("Begin FTLockFreeCounter with index %d:", _index);
-//    Router *r = this->router();
-//
-//    SharedLockFreeState *lfs = (SharedLockFreeState *)(r->find("shared_state"));
-//    ++lfs->inoperation[_index];
-//
-//    DEBUG("End FTLockFreeCounter %d:", _index);
-//    DEBUG("--------------------");
+    DEBUG("--------------------");
+    DEBUG("Begin FTLockFreeCounter with index %d:", _index);
+    Router *r = this->router();
+
+    SharedLockFreeState *lfs = (SharedLockFreeState *)(r->find("shared_state"));
+    ++lfs->inoperation[_index];
+
+    DEBUG("End FTLockFreeCounter %d:", _index);
+    DEBUG("--------------------");
 
     return p;
 }

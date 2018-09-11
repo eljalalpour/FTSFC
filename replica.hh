@@ -1,9 +1,9 @@
 #pragma once
 
+#include "shared_lock_free_state.hh"
 #include "defs.hh"
 #include <click/config.h>
 #include <click/element.hh>
-#include "shared_lock_free_state.hh"
 
 CLICK_DECLS
 

@@ -4,7 +4,7 @@
 
 CLICK_DECLS
 
-Replica::Replica() { }
+Replica::Replica() : _shared_state_init(false) { }
 
 Replica::~Replica() { }
 

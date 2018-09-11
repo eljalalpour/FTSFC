@@ -4,7 +4,7 @@
 #include <atomic>
 #include <click/config.h>
 #include <click/element.hh>
-#include "defs.hh"
+#include "../defs.hh"
 
 CLICK_DECLS
 

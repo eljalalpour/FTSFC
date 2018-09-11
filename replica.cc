@@ -21,7 +21,10 @@ void Replica::push(int source, Packet *p) {
     DEBUG("--------------------");
     DEBUG("Begin Replica");
 
-    _init_shared_state_pointer();
+//    _init_shared_state_pointer();
+
+    Router *r = this->router();
+    SharedLockFreeState* _shared_state = (SharedLockFreeState *)(r->find("shared_state"));
 
     if (source == INPUT_PORT_TO_PROCESS) { // Admitting a new packet
         try {

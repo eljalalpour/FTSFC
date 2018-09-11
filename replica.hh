@@ -26,7 +26,7 @@ CLICK_DECLS
 class Replica : public Element {
 private:
     bool _shared_state_init;
-    SharedLockFreeState* _shared_state;
+//    SharedLockFreeState* _shared_state;
     inline void _init_shared_state_pointer();
 
 public:

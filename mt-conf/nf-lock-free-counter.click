@@ -4,6 +4,7 @@ elementclass CounterBlock {
 $index |
     input
     -> MarkIPHeader(14)
+    -> IPFilter(allow udp && src 22.1.0.0/16)
     -> IPPrint($index)
     -> NFLockFreeCounter(INDEX $index)
     -> MarkIPHeader(14)

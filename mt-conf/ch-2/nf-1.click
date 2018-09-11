@@ -9,7 +9,6 @@ $index,$src_ip |
     -> MarkIPHeader(14)
 //    -> IPFilter(allow src 1.0.0.0/24)
     -> IPPrint($index)
-    -> MarkIPHeader(14)
     -> NFAtomicCounter(INDEX $index)
     -> MarkIPHeader(14)
     -> StoreIPAddress($src_ip, src)

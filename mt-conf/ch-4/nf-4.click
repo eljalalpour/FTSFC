@@ -1,5 +1,5 @@
-// In aqua08
-// aqua07 -> aqua08 -> aqua01
+// In aqua10
+// aqua09 -> aqua10 -> aqua01
 
 array::AtomicArray;
 
@@ -13,7 +13,7 @@ $index,$src_ip |
     -> MarkIPHeader(14)
     -> StoreIPAddress($src_ip, src)
     -> StoreIPAddress(192.168.1.101, dst)
-    -> StoreEtherAddress(0c:c4:7a:73:f9:ec, src)
+    -> StoreEtherAddress(0c:c4:7a:73:fa:18, src)
     -> StoreEtherAddress(0c:c4:7a:73:fa:72, dst)
     -> output
 }
@@ -37,33 +37,33 @@ td7::ToDPDKDevice(0,6);
 td8::ToDPDKDevice(0,7);
 
 fd1
--> NFBlock(0,1.3.1.1)
+-> NFBlock(0,1.4.1.1)
 -> td1;
 
 fd2
--> NFBlock(1,1.3.2.2)
+-> NFBlock(1,1.4.2.2)
 -> td2;
 
 fd3
--> NFBlock(2,1.3.3.3)
+-> NFBlock(2,1.4.3.3)
 -> td3;
 
 fd4
--> NFBlock(3,1.3.4.4)
+-> NFBlock(3,1.4.4.4)
 -> td4;
 
 fd5
--> NFBlock(4,1.3.5.5)
+-> NFBlock(4,1.4.5.5)
 -> td5;
 
 fd6
--> NFBlock(5,1.3.6.6)
+-> NFBlock(5,1.4.6.6)
 -> td6;
 
 fd7
--> NFBlock(6,1.3.7.7)
+-> NFBlock(6,1.4.7.7)
 -> td7;
 
 fd8
--> NFBlock(7,1.3.8.8)
+-> NFBlock(7,1.4.8.8)
 -> td8;

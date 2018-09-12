@@ -54,7 +54,6 @@ void SharedLockFreeState::_commit(int mb_id, int64_t timestamp) {
 }
 
 void SharedLockFreeState::process_piggyback_message(Packet* p) {
-    DEBUG("Casting!");
     PiggybackMessage* _msg = CAST_PACKET_TO_PIGGY_BACK_MESSAGE(p);
 
     DEBUG("Message:");
@@ -66,8 +65,8 @@ void SharedLockFreeState::process_piggyback_message(Packet* p) {
     _commit(_id, _msg[_id]->timestamp);
 
     // Processing the secondary state set
-    for (auto i = 1; i <= _failure_count; ++i) {
-        auto mb_id = (_id - i) % MB_LEN;
+    for (int i = 1; i <= _failure_count; ++i) {
+        int mb_id = (_id - i) % MB_LEN;
 
         // The following part is must be placed in construct_piggyback_message,
         // but to make it faster, I perform it here:

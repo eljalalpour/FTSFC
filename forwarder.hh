@@ -16,7 +16,6 @@ CLICK_DECLS
 
 class Forwarder : public Element {
 private:
-    std::mutex _mutex;
     Util _util;
     PiggybackMessage _msg;
 

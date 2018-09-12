@@ -4,7 +4,7 @@
 shared_state::SharedLockFreeState(CHAIN 2, ID 1, F 1);
 
 elementclass FTBlock {
-$index,$src_ip |
+$index,$src_ip1,$src_ip2 |
     input
     -> MarkIPHeader(14)
     -> IPFilter(allow udp && src 1.1.0.0/16)
@@ -15,7 +15,7 @@ $index,$src_ip |
 
     // To the outside world
     buffer[0]
-    -> StoreIPAddress($src_ip, src)
+    -> StoreIPAddress($src_ip1, src)
     -> StoreIPAddress(192.168.1.101, dst)
     -> StoreEtherAddress(0c:c4:7a:73:fa:54, src)
     -> StoreEtherAddress(0c:c4:7a:73:fa:72, dst)
@@ -23,7 +23,7 @@ $index,$src_ip |
 
     // To the forwarder
     buffer[1]
-    -> StoreIPAddress($src_ip, src)
+    -> StoreIPAddress($src_ip2, src)
     -> StoreIPAddress(192.168.1.107, dst)
     -> StoreEtherAddress(0c:c4:7a:73:fa:54, src)
     -> StoreEtherAddress(0c:c4:7a:73:fa:6a, dst)
@@ -49,33 +49,33 @@ td1::ToDPDKDevice(0,0);
 // td8::ToDPDKDevice(0,7);
 
 fd1
--> FTBlock(0,1.2.1.1)
+-> FTBlock(0,1.2.1.1, 2.0.1.1)
 -> td1;
 
 // fd2
-// -> FTBlock(1,1.2.2.2)
+// -> FTBlock(1,1.2.2.2, 2.0.2.2)
 // -> td2;
 //
 // fd3
-// -> FTBlock(2,1.2.3.3)
+// -> FTBlock(2,1.2.3.3, 2.0.3.3)
 // -> td3;
 //
 // fd4
-// -> FTBlock(3,1.2.4.4)
+// -> FTBlock(3,1.2.4.4, 2.0.4.4)
 // -> td4;
 //
 // fd5
-// -> FTBlock(4,1.2.5.5)
+// -> FTBlock(4,1.2.5.5, 2.0.5.5)
 // -> td5;
 //
 // fd6
-// -> FTBlock(5,1.2.6.6)
+// -> FTBlock(5,1.2.6.6, 2.0.6.6)
 // -> td6;
 //
 // fd7
-// -> FTBlock(6,1.2.7.7)
+// -> FTBlock(6,1.2.7.7, 2.0.7.7)
 // -> td7;
 //
 // fd8
-// -> FTBlock(7,1.2.8.8)
+// -> FTBlock(7,1.2.8.8, 2.0.8.8)
 // -> td8;

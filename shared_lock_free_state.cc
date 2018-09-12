@@ -25,7 +25,7 @@ inline void SharedLockFreeState::_log(TimestampState* t_state, int mb_id) {
 }
 
 void SharedLockFreeState::_log(PiggybackState* p_state, int mb_id) {
-    _log(p_state[mb_id]->ts, mb_id);
+    _log(p_state[mb_id].ts, mb_id);
 }
 
 void SharedLockFreeState::_commit(int mb_id, int64_t timestamp) {

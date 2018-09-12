@@ -77,6 +77,8 @@ void SharedLockFreeState::process_piggyback_message(Packet* p) {
 }
 
 void SharedLockFreeState::log_inoperation_state() {
+    DEBUG("Log in operation state");
+
     TimestampState ts;
     ts.timestamp = CURRENT_TIMESTAMP;
     _util.copy(ts.state, inoperation);
@@ -85,6 +87,8 @@ void SharedLockFreeState::log_inoperation_state() {
 }
 
 void SharedLockFreeState::construct_piggyback_message(Packet* p) {
+    DEBUG("Construct piggyback message");
+
     PiggybackMessage* msg = CAST_PACKET_TO_PIGGY_BACK_MESSAGE(p);
 
     // The secondary state list and that of other middleboxes are already properly updated in

@@ -5,22 +5,20 @@ $index,$src_ip |
     input
     -> MarkIPHeader(14)
     -> filter::IPClassifier(src net 1.0.0.0/16,
-                           src net 2.0.0.0/16,
-                           -);
+                            src net 2.0.0.0/16,
+                            -);
 
     filter[2]
     -> Discard;
 
     filter[0]
-    -> IPPrint("$index, From traffic generator")
     -> [0]forwarder::Forwarder();
 
     filter[1]
-    -> IPPrint("$index, From Buffer")
     -> [1]forwarder;
 
     forwarder[0]
-    -> IPPrint("Before PMProcess")
+    -> IPPrint($index)
     -> PMProcess
     -> FTLockFreeCounter(INDEX $index)
     -> PMConstruct

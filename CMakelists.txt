@@ -37,6 +37,10 @@ add_executable(FTSFC
         shared_lock_free_state.hh
         ft_lock_free_counter.cc
         ft_lock_free_counter.hh
+        pm_process.cc
+        pm_process.hh
+        pm_construct.cc
+        pm_construct.hh
         )
 
 target_link_libraries(FTSFC ${PROTOBUF_LIB})

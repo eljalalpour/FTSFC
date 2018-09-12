@@ -27,7 +27,7 @@ void Buffer::_release(int64_t commit_timestamp) {
     }//for
 }
 
-void Buffer::push(int port, Packet*p) {
+void Buffer::push(int, Packet*p) {
     DEBUG("--------------------");
     DEBUG("Begin Buffer");
 

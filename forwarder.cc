@@ -18,6 +18,7 @@ void Forwarder::push(int source, Packet *p) {
     if (source == 0) { // Receiving a packet from the traffic source
         // Encode its memory of the piggyback message into the packet
         //TODO: make sure no lock is required for encoding and decoding
+        _util.print(_msg);
         _util.encode(_msg, p);
         output(0).push(p);
     }//if

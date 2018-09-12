@@ -9,25 +9,23 @@ SharedLockFreeState::SharedLockFreeState () { };
 SharedLockFreeState::~SharedLockFreeState() { };
 
 inline void SharedLockFreeState::_log(TimestampState* t_state, int mb_id) {
-
-}
-
-void SharedLockFreeState::_log(PiggybackState* p_state, int mb_id) {
-    // Guard the log of a replica
+//    // Guard the log of a replica
 //    std::lock_guard<std::mutex> guard(_log_mutex[mb_id]);
 
     DEBUG("Log operation!");
 
     auto it = _log_table[mb_id].rbegin();
     if (it == _log_table[mb_id].rend() ||
-        it->timestamp < p_state[mb_id].timestamp) {
+        it->timestamp < t_state->timestamp) {
 
         DEBUG("Log operation to be done!");
 
-        TimestampState ts_state;
-        _util.copy(ts_state, *p_state);
-        _log_table[mb_id].push_back(ts_state);
+        _log_table[mb_id].push_back(*ts_state);
     }//if
+}
+
+void SharedLockFreeState::_log(PiggybackState* p_state, int mb_id) {
+    _log(p_state[mb_id]->ts, mb_id);
 }
 
 void SharedLockFreeState::_commit(int mb_id, int64_t timestamp) {
@@ -62,7 +60,7 @@ void SharedLockFreeState::process_piggyback_message(Packet* p) {
     // Processing the primary state:
     // TODO: Check if this is correct? In the paper, we tell it must be _msg[mb_id].timestamp
 //    commit(_id, CURRENT_TIMESTAMP);
-    _commit(_id, _msg[_id]->timestamp);
+    _commit(_id, _msg[_id]->ts.timestamp);
 
     // Processing the secondary state set
     for (int i = 1; i <= _failure_count; ++i) {
@@ -96,8 +94,7 @@ void SharedLockFreeState::construct_piggyback_message(Packet* p) {
 
     // Since the state is small, put the whole state into the packet
     auto it = _log_table[_id].rbegin();
-    _util.copy(msg[_id]->state, it->state);
-    msg[_id]->timestamp = it->timestamp;
+    _util.copy(msg[_id]->ts, *it);
     msg[_id]->last_commit = _commit_memory[_id].timestamp;
     msg[_id]->ack = 1;
 }

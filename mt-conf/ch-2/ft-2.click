@@ -4,7 +4,7 @@
 shared_state::SharedLockFreeState(CHAIN 2, ID 1, F 1);
 
 elementclass FTBlock {
-$index,$src_ip1,$src_ip2 |
+$index,$out,$forwarder |
     input
     -> MarkIPHeader(14)
     -> IPFilter(allow udp && src 1.1.0.0/16)
@@ -16,7 +16,7 @@ $index,$src_ip1,$src_ip2 |
     // To the outside world
     buffer[0]
     -> IPPrint("To outside world!")
-    -> StoreIPAddress($src_ip1, src)
+    -> StoreIPAddress($out, src)
     -> StoreIPAddress(192.168.1.101, dst)
     -> StoreEtherAddress(0c:c4:7a:73:fa:6a, src)
     -> StoreEtherAddress(0c:c4:7a:73:fa:72, dst)
@@ -25,7 +25,7 @@ $index,$src_ip1,$src_ip2 |
     // To the forwarder
     buffer[1]
     -> IPPrint("To forwarder!")
-    -> StoreIPAddress($src_ip2, src)
+    -> StoreIPAddress($forwarder, src)
     -> StoreIPAddress(192.168.1.107, dst)
     -> StoreEtherAddress(0c:c4:7a:73:fa:6a, src)
     -> StoreEtherAddress(0c:c4:7a:73:fa:54, dst)

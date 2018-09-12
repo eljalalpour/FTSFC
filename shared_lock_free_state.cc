@@ -22,6 +22,7 @@ void SharedLockFreeState::_commit(int mb_id, int64_t timestamp) {
 //    std::lock_guard<std::mutex> guard(_log_mutex[mb_id]);
 
     if (_log_table[mb_id].empty()) {
+        DEBUG("Return");
         return;
     }//
 

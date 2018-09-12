@@ -12,9 +12,13 @@ void SharedLockFreeState::_log(PiggybackState* p_state, int mb_id) {
     // Guard the log of a replica
 //    std::lock_guard<std::mutex> guard(_log_mutex[mb_id]);
 
+    DEBUG("Log operation!");
+
     auto it = _log_table[mb_id].rbegin();
     if (it != _log_table[mb_id].rend() &&
         it->timestamp < p_state[mb_id].timestamp) {
+
+        DEBUG("Log operation to be done!")
 
         TimestampState ts_state;
         _util.copy(ts_state, *p_state);

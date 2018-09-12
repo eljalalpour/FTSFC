@@ -6,9 +6,17 @@
 
 CLICK_DECLS
 
-FTLockFreeCounter::FTLockFreeCounter () { };
+FTLockFreeCounter::FTLockFreeCounter () : _init_shared_state(false) { };
 
 FTLockFreeCounter::~FTLockFreeCounter() { };
+
+void FTLockFreeCounter::_init_shared_state() {
+    if (!_init_state) {
+        Router *r = this->router();
+        _shared_state = (SharedLockFreeState *)(r->find("shared_state"));
+        _init_state = true;
+    }//if
+}
 
 int FTLockFreeCounter::configure(Vector<String> &conf, ErrorHandler *errh) {
     // set index param
@@ -24,10 +32,10 @@ int FTLockFreeCounter::configure(Vector<String> &conf, ErrorHandler *errh) {
 Packet *FTLockFreeCounter::simple_action(Packet *p) {
     DEBUG("--------------------");
     DEBUG("Begin FTLockFreeCounter with index %d:", _index);
-    Router *r = this->router();
 
-    SharedLockFreeState *lfs = (SharedLockFreeState *)(r->find("shared_state"));
-    ++lfs->inoperation[_index];
+    _init_shared_state();
+
+    ++_shared_state->inoperation[_index];
 
     DEBUG("End FTLockFreeCounter %d:", _index);
     DEBUG("--------------------");

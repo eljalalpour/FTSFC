@@ -6,7 +6,7 @@
 
 CLICK_DECLS
 
-FTLockFreeCounter::FTLockFreeCounter () : _init_shared_state(false) { };
+FTLockFreeCounter::FTLockFreeCounter () : _init_state(false) { };
 
 FTLockFreeCounter::~FTLockFreeCounter() { };
 

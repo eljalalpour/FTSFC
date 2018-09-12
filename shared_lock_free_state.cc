@@ -29,6 +29,7 @@ void SharedLockFreeState::_commit(int mb_id, int64_t timestamp) {
     auto it = _log_table[mb_id].rbegin();
     for (; it != _log_table[mb_id].rend(); ++it) {
         DEBUG("In for");
+        DEBUG("Log table size: %d", _log_table[mb_id].size());
         if (timestamp >= it->timestamp) {
             DEBUG("In if");
             break;

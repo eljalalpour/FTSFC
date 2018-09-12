@@ -23,8 +23,8 @@ $index,$src_ip |
     -> IPPrint("Before PMProcess")
     -> MarkIPHeader(14)
     -> PMProcess
-    -> FTLockFreeCounter(INDEX $index)
-    -> PMConstruct
+//    -> FTLockFreeCounter(INDEX $index)
+//    -> PMConstruct
     -> MarkIPHeader(14)
     -> StoreIPAddress($src_ip, src)
     -> StoreIPAddress(192.168.1.108, dst)

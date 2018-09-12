@@ -64,15 +64,17 @@ void SharedLockFreeState::process_piggyback_message(Packet* p) {
     for (int i = 1; i <= _failure_count; ++i) {
         int mb_id = (_id - i + MB_LEN) % MB_LEN;
 
+        _commit(mb_id, _msg[mb_id]->last_commit);
+
+        DEBUG("Before log!");
+        _log(_msg[mb_id], mb_id);
+        DEBUG("After log!");
+
         // The following part is must be placed in construct_piggyback_message,
         // but to make it faster, I perform it here:
-
         // PART START
         ++_msg[mb_id]->ack;
         // PART END
-
-        _commit(mb_id, _msg[mb_id]->last_commit);
-        _log(_msg[mb_id], mb_id);
     }//for
 }
 

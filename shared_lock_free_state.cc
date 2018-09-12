@@ -41,6 +41,8 @@ void SharedLockFreeState::_commit(int mb_id, int64_t timestamp) {
 }
 
 void SharedLockFreeState::process_piggyback_message(Packet* p) {
+    DEBUG("Processing piggyback message!");
+
     PiggybackMessage* _msg = CAST_PACKET_TO_PIGGY_BACK_MESSAGE(p);
 
     // Processing the primary state:

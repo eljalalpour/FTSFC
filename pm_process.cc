@@ -23,12 +23,12 @@ Packet* PMProcess::simple_action(Packet *p) {
 
     _init_shared_state_pointer();
 
-//    try {
-//        _shared_state->process_piggyback_message(p);
-//    }//try
-//    catch(...) {
-//        p->kill();
-//    }//catch
+    try {
+        _shared_state->process_piggyback_message(p);
+    }//try
+    catch(...) {
+        p->kill();
+    }//catch
 
     DEBUG("End PMProcess");
     DEBUG("--------------------");

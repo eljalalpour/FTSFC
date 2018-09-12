@@ -100,7 +100,7 @@ void SharedLockFreeState::construct_piggyback_message(Packet* p) {
     msg[_id]->last_commit = _commit_memory[_id].timestamp;
     msg[_id]->ack = 1;
 
-    _util.print(msg);
+    _util.print(*msg);
 }
 
 int SharedLockFreeState::configure(Vector<String> &conf, ErrorHandler *errh) {

@@ -43,8 +43,6 @@ typedef struct {
 typedef struct {
     short ack;
     int64_t last_commit;
-//    int64_t timestamp;
-//    State state;
     TimestampState ts;
 } PiggybackState;
 
@@ -83,6 +81,10 @@ public:
 
     inline void init(PiggybackMessage &s) {
         memset(&s, 0, sizeof(PiggybackMessage));
+    }
+
+    inline void init(CommitMemory &s) {
+        memset(&s, 0, sizeof(CommitMemory));
     }
 
     inline void copy(State& y, State& x) {

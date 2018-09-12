@@ -4,7 +4,9 @@
 
 CLICK_DECLS
 
-SharedLockFreeState::SharedLockFreeState () { };
+SharedLockFreeState::SharedLockFreeState () {
+    _util.init(_commit_memory);
+};
 
 SharedLockFreeState::~SharedLockFreeState() { };
 

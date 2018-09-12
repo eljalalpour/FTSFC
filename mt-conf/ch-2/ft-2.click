@@ -23,6 +23,7 @@ $index,$src_ip1,$src_ip2 |
 
     // To the forwarder
     buffer[1]
+    -> IPPrint("To forwarder!")
     -> StoreIPAddress($src_ip2, src)
     -> StoreIPAddress(192.168.1.107, dst)
     -> StoreEtherAddress(0c:c4:7a:73:fa:6a, src)

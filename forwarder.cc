@@ -6,7 +6,8 @@ CLICK_DECLS
 
 Forwarder::Forwarder () {
     // Initialize message
-    _util.init(_msg);
+//    _util.init(_msg);
+    _util.random_message(_msg);
 };
 
 Forwarder::~Forwarder() { };

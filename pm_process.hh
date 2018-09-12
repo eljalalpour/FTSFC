@@ -30,7 +30,7 @@ public:
 
     const char *processing() const { return AGNOSTIC; }
 
-    Packet *simple_action(Packet *)
+    Packet *simple_action(Packet *);
 };
 
 CLICK_ENDDECLS

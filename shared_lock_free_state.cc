@@ -15,7 +15,7 @@ void SharedLockFreeState::_log(PiggybackState* p_state, int mb_id) {
     DEBUG("Log operation!");
 
     auto it = _log_table[mb_id].rbegin();
-    if (it != _log_table[mb_id].rend() &&
+    if (it == _log_table[mb_id].rend() ||
         it->timestamp < p_state[mb_id].timestamp) {
 
         DEBUG("Log operation to be done!");
@@ -66,9 +66,7 @@ void SharedLockFreeState::process_piggyback_message(Packet* p) {
 
         _commit(mb_id, _msg[mb_id]->last_commit);
 
-        DEBUG("Before log!");
         _log(_msg[mb_id], mb_id);
-        DEBUG("After log!");
 
         // The following part is must be placed in construct_piggyback_message,
         // but to make it faster, I perform it here:

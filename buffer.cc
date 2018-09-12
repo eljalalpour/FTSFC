@@ -39,7 +39,7 @@ int Buffer::configure(Vector<String> &conf, ErrorHandler *errh) {
                 .complete() < 0)
         return -1;
 
-    DEBUG("SharedLockFreeState is %d!\n", _id);
+    DEBUG("Chain length is %d!\n", _chain_len);
 
     return 0;
 }

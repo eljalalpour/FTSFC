@@ -25,8 +25,6 @@ Packet* PMProcess::simple_action(Packet *) {
 
     try {
         _shared_state->process_piggyback_message(p);
-
-        output(OUTPUT_PORT_TO_MIDDLEBOX).push(p);
     }//try
     catch(...) {
         p->kill();

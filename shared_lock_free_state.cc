@@ -23,36 +23,27 @@ void SharedLockFreeState::_log(PiggybackState* p_state, int mb_id) {
 }
 
 void SharedLockFreeState::_commit(int mb_id, int64_t timestamp) {
-    DEBUG("Committing %llu", timestamp);
 //    std::lock_guard<std::mutex> guard(_log_mutex[mb_id]);
 
     if (_log_table[mb_id].empty()) {
         return;
     }//
 
-    DEBUG("Log table");
     auto it = _log_table[mb_id].rbegin();
     for (; it != _log_table[mb_id].rend(); ++it) {
         DEBUG("Log table[%d] size: %d", mb_id, _log_table[mb_id].size());
         if (timestamp >= it->timestamp) {
-            DEBUG("In if");
             break;
         }//if
-        DEBUG("After if");
     }//for
 
-    DEBUG("check if there is some thing to commit");
     if (it != _log_table[mb_id].rend()) {
         // Commit involves storing the most updated log value into commit memory, setting the timestamp time, and
         // erasing committed logs.
-        DEBUG("copy commit memory using util");
         _util.copy(_commit_memory[mb_id].state, it->state);
-
-        DEBUG("commit memory");
         _commit_memory[mb_id].timestamp = timestamp;
 
         // TODO: make sure it works!!
-        DEBUG("erase from log table");
         _log_table[mb_id].erase(_log_table[mb_id].begin(), std::next(it).base());
     }//if
 }

@@ -6,6 +6,7 @@ CLICK_DECLS
 
 Forwarder::Forwarder () {
     // Initialize message
+    std::lock_guard(_mutex);
     _util.init(_msg);
 };
 
@@ -18,14 +19,20 @@ void Forwarder::push(int source, Packet *p) {
     if (source == 0) { // Receiving a packet from the traffic source
         // Encode its memory of the piggyback message into the packet
         //TODO: make sure no lock is required for encoding and decoding
-        _util.print(_msg);
-        _util.encode(_msg, p);
+        {
+            std::lock_guard(_mutex);
+            _util.print(_msg);
+            _util.encode(_msg, p);
+        }
         output(0).push(p);
     }//if
     else { //Receiving a packet from Buffer
         // Decode and memorize the piggyback message from the packet
         //TODO: make sure no lock is required for encoding and decoding
-        _util.decode(_msg, p);
+        {
+            std::lock_guard(_mutex);
+            _util.decode(_msg, p);
+        }
 
         // Afterwards, kill the packet
         p->kill();

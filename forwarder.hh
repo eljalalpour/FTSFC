@@ -3,6 +3,7 @@
 #include "defs.hh"
 #include <click/config.h>
 #include <click/element.hh>
+#include <mutex>
 
 CLICK_DECLS
 
@@ -15,6 +16,7 @@ CLICK_DECLS
 
 class Forwarder : public Element {
 private:
+    std::mutex _mutex;
     Util _util;
     PiggybackMessage _msg;
 

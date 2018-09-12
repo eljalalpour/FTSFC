@@ -20,7 +20,7 @@ private:
     CommitMemory _commit_memory;
     Util _util;
 
-    inline void _log(TimestampState*, int);
+    inline void _log(TimestampState&, int);
 
     inline void _log(PiggybackState*, int);
 

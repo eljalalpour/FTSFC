@@ -67,7 +67,7 @@ void SharedLockFreeState::process_piggyback_message(Packet* p) {
 
     // Processing the secondary state set
     for (int i = 1; i <= _failure_count; ++i) {
-        int mb_id = (_id - i) % MB_LEN;
+        int mb_id = (_id - i + MB_LEN) % MB_LEN;
 
         // The following part is must be placed in construct_piggyback_message,
         // but to make it faster, I perform it here:

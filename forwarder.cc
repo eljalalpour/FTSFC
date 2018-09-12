@@ -20,8 +20,6 @@ void Forwarder::push(int source, Packet *p) {
         //TODO: make sure no lock is required for encoding and decoding
         _util.encode(_msg, p);
 
-        _util.print(_msg);
-
         output(0).push(p);
     }//if
     else { //Receiving a packet from Buffer

@@ -5,13 +5,7 @@
 
 CLICK_DECLS
 
-FTLockFreeCounter::FTLockFreeCounter () : _init_state(false) {
-    if (!_init_state) {
-        Router *r = this->router();
-        _shared_state = (SharedLockFreeState *)(r->find("shared_state"));
-        _init_state = true;
-    }//if
-};
+FTLockFreeCounter::FTLockFreeCounter () : _init_state(false) { };
 
 FTLockFreeCounter::~FTLockFreeCounter() { };
 

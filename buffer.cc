@@ -9,7 +9,8 @@ Buffer::Buffer () { };
 Buffer::~Buffer() { };
 
 int64_t Buffer::_last_timestamp(PiggybackMessage& msg) {
-    return msg[MB_LEN - 1].timestamp;
+//    return msg[MB_LEN - 1].timestamp;
+    return msg[MB_LEN - 1].ts.timestamp;
 }
 
 int64_t Buffer::_last_commit_timestamp(PiggybackMessage& msg) {

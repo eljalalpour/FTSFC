@@ -6,8 +6,7 @@ CLICK_DECLS
 
 Forwarder::Forwarder () {
     // Initialize message
-//    _util.init(_msg);
-    _util.random_message(_msg);
+    _util.init(_msg);
 };
 
 Forwarder::~Forwarder() { };
@@ -20,12 +19,17 @@ void Forwarder::push(int source, Packet *p) {
         // Encode its memory of the piggyback message into the packet
         //TODO: make sure no lock is required for encoding and decoding
         _util.encode(_msg, p);
+
+        _util.print(_msg);
+
         output(0).push(p);
     }//if
     else { //Receiving a packet from Buffer
         // Decode and memorize the piggyback message from the packet
         //TODO: make sure no lock is required for encoding and decoding
         _util.decode(_msg, p);
+
+        _util.print(_msg);
 
         // Afterwards, kill the packet
         p->kill();

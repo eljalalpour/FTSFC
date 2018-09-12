@@ -98,8 +98,9 @@ public:
     }
 
     inline void copy(TimestampState& y, PiggybackState& x) {
-        y.timestamp = x.timestamp;
-        copy(y.state, x.state);
+//        y.timestamp = x.timestamp;
+//        copy(y.state, x.state);
+        memcpy(&y, &x.ts, sizeof(TimestampState));
     }
 
     inline void copy(PiggybackMessage& y, PiggybackMessage& x) {

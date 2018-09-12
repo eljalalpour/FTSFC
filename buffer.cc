@@ -46,9 +46,11 @@ void Buffer::push(int, Packet*p) {
 
     //TODO: find the best order, either first send the packet to Forwarder or release packets
     // Send a copy of the packet to Forwarder
-    output(TO_CHAIN_BEGIN).push(p);
+    DEBUG("Send to forwarder");
+    output(TO_FORWARDER).push(p);
 
     // Release packets in the buffer
+    DEBUG("Releasing!");
     _release(lcts);
 
     DEBUG("End Buffer");

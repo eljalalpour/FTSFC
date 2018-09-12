@@ -13,7 +13,7 @@ CLICK_DECLS
 ///
 
 #define TO_OUTSIDE_WORLD 0
-#define TO_CHAIN_BEGIN   1
+#define TO_FORWARDER   1
 
 class Buffer : public Element {
 private:

@@ -12,9 +12,11 @@ $index,$src_ip |
     -> Discard;
 
     filter[0]
+    -> IPPrint("From Traffic source")
     -> [0]forwarder::Forwarder();
 
     filter[1]
+    -> IPPrint("From Buffer")
     -> [1]forwarder;
 
     forwarder[0]

@@ -9,12 +9,11 @@ Buffer::Buffer () { };
 Buffer::~Buffer() { };
 
 int64_t Buffer::_last_timestamp(PiggybackMessage& msg) {
-//    return msg[MB_LEN - 1].timestamp;
-    return msg[MB_LEN - 1].ts.timestamp;
+    return msg[_chain_len - 1].ts.timestamp;
 }
 
 int64_t Buffer::_last_commit_timestamp(PiggybackMessage& msg) {
-    return msg[MB_LEN - 1].last_commit;
+    return msg[_chain_len - 1].last_commit;
 }
 
 void Buffer::_release(int64_t commit_timestamp) {
@@ -30,6 +29,18 @@ void Buffer::_release(int64_t commit_timestamp) {
     }//for
 
     DEBUG("Released Packets: %d!", count);
+}
+
+int Buffer::configure(Vector<String> &conf, ErrorHandler *errh) {
+    // set id and f params
+    if (Args(conf, this, errh)
+                .read("CHAIN", _chain_len)
+                .complete() < 0)
+        return -1;
+
+    DEBUG("SharedLockFreeState is %d!\n", _id);
+
+    return 0;
 }
 
 void Buffer::push(int, Packet*p) {

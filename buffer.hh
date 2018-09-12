@@ -17,6 +17,8 @@ CLICK_DECLS
 
 class Buffer : public Element {
 private:
+    int _chain_len;
+
     PiggybackMessage* _msg;
 
     std::map<int64_t, Packet *> _packets;
@@ -39,6 +41,8 @@ public:
     const char *processing() const { return AGNOSTIC; }
 
     void push(int, Packet*);
+
+    int configure(Vector<String> &, ErrorHandler *);
 };
 
 CLICK_ENDDECLS

@@ -76,6 +76,7 @@ void SharedLockFreeState::process_piggyback_message(Packet* p) {
         ++_msg[mb_id]->ack;
         // PART END
 
+        DEBUG("Before committing in for");
         _commit(mb_id, _msg[mb_id]->last_commit);
         _log(_msg[mb_id], mb_id);
     }//for

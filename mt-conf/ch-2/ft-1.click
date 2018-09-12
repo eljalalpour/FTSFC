@@ -21,7 +21,7 @@ $index,$src_ip |
 
     forwarder[0]
     -> IPPrint("Before PMProcess")
-    -> MarkIPHeader(14)
+//    -> MarkIPHeader(14)
     -> PMProcess
 //    -> FTLockFreeCounter(INDEX $index)
 //    -> PMConstruct

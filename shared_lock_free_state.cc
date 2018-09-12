@@ -29,8 +29,11 @@ void SharedLockFreeState::_commit(int mb_id, int64_t timestamp) {
     auto it = _log_table[mb_id].rbegin();
     for (; it != _log_table[mb_id].rend(); ++it) {
         DEBUG("In for");
-        if (timestamp >= it->timestamp)
+        if (timestamp >= it->timestamp) {
+            DEBUG("In if");
             break;
+        }//if
+        DEBUG("After if");
     }//for
 
     DEBUG("check if there is some thing to commit");

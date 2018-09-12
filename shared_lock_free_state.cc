@@ -53,7 +53,7 @@ void SharedLockFreeState::process_piggyback_message(Packet* p) {
 
     PiggybackMessage* _msg = CAST_PACKET_TO_PIGGY_BACK_MESSAGE(p);
 
-    _util.print(_msg);
+    _util.print(*_msg);
     // Processing the primary state:
     // TODO: Check if this is correct? In the paper, we tell it must be _msg[mb_id].timestamp
 //    commit(_id, CURRENT_TIMESTAMP);

@@ -18,24 +18,32 @@ void SharedLockFreeState::_log(PiggybackState* p_state, int mb_id) {
 }
 
 void SharedLockFreeState::_commit(int mb_id, int64_t timestamp) {
+    DEBUG("Commiting");
 //    std::lock_guard<std::mutex> guard(_log_mutex[mb_id]);
+
     if (_log_table[mb_id].empty()) {
         return;
     }//
 
+    DEBUG("Log table");
     auto it = _log_table[mb_id].rbegin();
     for (; it != _log_table[mb_id].rend(); ++it) {
         if (timestamp >= it->timestamp)
             break;
     }//for
 
+    DEBUG("check if there is some thing to commit");
     if (it != _log_table[mb_id].rend()) {
         // Commit involves storing the most updated log value into commit memory, setting the timestamp time, and
         // erasing committed logs.
+        DEBUG("copy commit memory using util");
         _util.copy(_commit_memory[mb_id].state, it->state);
+
+        DEBUG("commit memory");
         _commit_memory[mb_id].timestamp = timestamp;
 
         // TODO: make sure it works!!
+        DEBUG("erase from log table");
         _log_table[mb_id].erase(_log_table[mb_id].begin(), std::next(it).base());
     }//if
 }
@@ -44,7 +52,6 @@ void SharedLockFreeState::process_piggyback_message(Packet* p) {
     DEBUG("Processing piggyback message!");
 
     PiggybackMessage* _msg = CAST_PACKET_TO_PIGGY_BACK_MESSAGE(p);
-    DEBUG("Cast to piggyback message!");
 
     // Processing the primary state:
     // TODO: Check if this is correct? In the paper, we tell it must be _msg[mb_id].timestamp

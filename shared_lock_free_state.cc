@@ -18,7 +18,7 @@ void SharedLockFreeState::_log(PiggybackState* p_state, int mb_id) {
 }
 
 void SharedLockFreeState::_commit(int mb_id, int64_t timestamp) {
-    DEBUG("Commiting");
+    DEBUG("Committing %llu", timestamp);
 //    std::lock_guard<std::mutex> guard(_log_mutex[mb_id]);
 
     if (_log_table[mb_id].empty()) {

@@ -17,7 +17,7 @@ inline void PMProcess::_init_shared_state_pointer() {
     }//if
 }
 
-Packet* PMProcess::simple_action(Packet *) {
+Packet* PMProcess::simple_action(Packet *p) {
     DEBUG("--------------------");
     DEBUG("Begin PMProcess");
 

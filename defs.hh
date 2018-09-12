@@ -160,23 +160,23 @@ public:
 
     void print(State &state) {
         for (auto i = 0; i < STATE_LEN; ++i) {
-            DEBUG("%d: %d", i, state[i]);
+            LOG("%d: %d", i, state[i]);
         }//for
     }
 
     void print(TimestampState &ft_state) {
-        DEBUG("Timestamp %llu:", ft_state.timestamp);
+        LOG("Timestamp %llu:", ft_state.timestamp);
         print(ft_state.state);
     }
 
     void print(PiggybackState &state) {
-        DEBUG("Ack is %d, last commit is %llu", state.ack, state.last_commit);
+        LOG("Ack is %d, last commit is %llu", state.ack, state.last_commit);
         print(state.ts.state);
     }
 
     void print(PiggybackMessage &msg) {
         for (auto i = 0; i < MB_LEN; ++i) {
-            DEBUG("\nState of middlebox %d", i);
+            LOG("\nState of middlebox %d", i);
             print(msg[i]);
         }//for
     }

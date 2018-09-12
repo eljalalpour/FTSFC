@@ -18,13 +18,18 @@ int64_t Buffer::_last_commit_timestamp(PiggybackMessage& msg) {
 }
 
 void Buffer::_release(int64_t commit_timestamp) {
+    int count = 0;
     for (auto it = _packets.begin(); it != _packets.end(); /* no increment */) {
         if (it->first > commit_timestamp)
             break;
 
         output(TO_OUTSIDE_WORLD).push(it->second);
         _packets.erase(it++);
+
+        ++count;
     }//for
+
+    DEBUG("Released Packets: %d!", count);
 }
 
 void Buffer::push(int, Packet*p) {

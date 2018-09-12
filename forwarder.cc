@@ -27,6 +27,7 @@ void Forwarder::push(int source, Packet *p) {
         //TODO: make sure no lock is required for encoding and decoding
         _util.decode(_msg, p);
 
+        DEBUG("Message:");
         _util.print(_msg);
 
         // Afterwards, kill the packet

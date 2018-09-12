@@ -4,7 +4,7 @@ elementclass FTBlock {
 $index,$src_ip |
     input
     -> MarkIPHeader(14)
-    -> filter:IPClassifier(src net 1.0.0.0/16,
+    -> filter::IPClassifier(src net 1.0.0.0/16,
                            src net 2.0.0.0/16,
                            -);
 

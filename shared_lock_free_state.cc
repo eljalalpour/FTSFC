@@ -22,15 +22,13 @@ void SharedLockFreeState::_commit(int mb_id, int64_t timestamp) {
 //    std::lock_guard<std::mutex> guard(_log_mutex[mb_id]);
 
     if (_log_table[mb_id].empty()) {
-        DEBUG("Return");
         return;
     }//
 
     DEBUG("Log table");
     auto it = _log_table[mb_id].rbegin();
     for (; it != _log_table[mb_id].rend(); ++it) {
-        DEBUG("In for");
-        DEBUG("Log table size: %d", _log_table[mb_id].size());
+        DEBUG("Log table[%d] size: %d", mb_id, _log_table[mb_id].size());
         if (timestamp >= it->timestamp) {
             DEBUG("In if");
             break;

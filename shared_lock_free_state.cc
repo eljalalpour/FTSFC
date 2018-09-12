@@ -20,7 +20,7 @@ inline void SharedLockFreeState::_log(TimestampState* t_state, int mb_id) {
 
         DEBUG("Log operation to be done!");
 
-        _log_table[mb_id].push_back(*ts_state);
+        _log_table[mb_id].push_back(*t_state);
     }//if
 }
 

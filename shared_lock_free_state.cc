@@ -64,7 +64,7 @@ void SharedLockFreeState::process_piggyback_message(Packet* p) {
 
     // Processing the secondary state set
     for (int i = 1; i <= _failure_count; ++i) {
-        int mb_id = (_id - i + MB_LEN) % MB_LEN;
+        int mb_id = (_id - i + _chain_len) % _chain_len;
 
         _commit(mb_id, _msg[mb_id]->last_commit);
 
@@ -108,6 +108,7 @@ void SharedLockFreeState::construct_piggyback_message(Packet* p) {
 int SharedLockFreeState::configure(Vector<String> &conf, ErrorHandler *errh) {
     // set id and f params
     if (Args(conf, this, errh)
+                .read("CHAIN", _chain_len)
                 .read("ID", _id)
                 .read("F", _failure_count)
                 .complete() < 0)

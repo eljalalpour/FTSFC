@@ -16,6 +16,7 @@ class SharedLockFreeState : public Element {
 private:
     int _id;
     int _failure_count;
+    int _chain_len;
     LogTable _log_table;
     CommitMemory _commit_memory;
     Util _util;

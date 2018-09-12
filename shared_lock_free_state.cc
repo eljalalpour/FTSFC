@@ -44,6 +44,7 @@ void SharedLockFreeState::process_piggyback_message(Packet* p) {
     DEBUG("Processing piggyback message!");
 
     PiggybackMessage* _msg = CAST_PACKET_TO_PIGGY_BACK_MESSAGE(p);
+    DEBUG("Cast to piggyback message!");
 
     // Processing the primary state:
     // TODO: Check if this is correct? In the paper, we tell it must be _msg[mb_id].timestamp

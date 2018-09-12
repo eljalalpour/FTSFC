@@ -43,8 +43,9 @@ typedef struct {
 typedef struct {
     short ack;
     int64_t last_commit;
-    int64_t timestamp;
-    State state;
+//    int64_t timestamp;
+//    State state;
+    TimestampState ts;
 } PiggybackState;
 
 typedef PiggybackState PiggybackMessage[MB_LEN];
@@ -160,7 +161,7 @@ public:
 
     void print(PiggybackState &state) {
         DEBUG("Ack is %d, last commit is %llu", state.ack, state.last_commit);
-        print(state.state);
+        print(state.ts.state);
     }
 
     void print(PiggybackMessage &msg) {
@@ -183,11 +184,12 @@ public:
 
     void random_piggyback(PiggybackState& pb_state) {
         pb_state.last_commit = CURRENT_TIMESTAMP;
-        TimestampState ts_state;
-        random_ts_state(ts_state);
-        copy(pb_state.state, ts_state.state);
-        pb_state.timestamp = ts_state.timestamp;
         pb_state.ack = click_random() % MB_LEN;
+//        TimestampState ts_state;
+//        random_ts_state(ts_state);
+//        copy(pb_state.state, ts_state.state);
+//        pb_state.timestamp = ts_state.timestamp;
+        random_ts_state(pb_state.ts);
     }
 
     void random_message(PiggybackMessage& msg) {

@@ -12,7 +12,6 @@ $index,$src_ip |
     -> Discard;
 
     filter[0]
-    -> IPPrint("From Traffic source")
     -> [0]forwarder::Forwarder();
 
     filter[1]
@@ -20,7 +19,6 @@ $index,$src_ip |
     -> [1]forwarder;
 
     forwarder[0]
-    -> IPPrint($index)
     -> PMProcess
     -> FTLockFreeCounter(INDEX $index)
     -> PMConstruct

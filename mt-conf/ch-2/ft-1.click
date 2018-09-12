@@ -1,4 +1,4 @@
-shared_state::SharedLockFreeState(ID 0, F 1);
+shared_state::SharedLockFreeState(CHAIN 2, ID 0, F 1);
 
 elementclass FTBlock {
 $index,$src_ip |

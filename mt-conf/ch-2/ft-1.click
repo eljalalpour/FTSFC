@@ -20,6 +20,7 @@ $index,$src_ip |
     -> [1]forwarder;
 
     forwarder[0]
+    -> IPPrint("Before PMProcess")
     -> PMProcess
     -> FTLockFreeCounter(INDEX $index)
     -> PMConstruct

@@ -5,7 +5,9 @@
 
 CLICK_DECLS
 
-FTLockFreeCounter::FTLockFreeCounter () : _init_state(false) { };
+FTLockFreeCounter::FTLockFreeCounter () : _init_state(false) {
+    _init_shared_state();
+};
 
 FTLockFreeCounter::~FTLockFreeCounter() { };
 
@@ -32,7 +34,7 @@ Packet *FTLockFreeCounter::simple_action(Packet *p) {
     DEBUG("--------------------");
     DEBUG("Begin FTLockFreeCounter with index %d:", _index);
 
-    _init_shared_state();
+//    _init_shared_state();
 
     ++_shared_state->inoperation[_index];
 

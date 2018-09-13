@@ -12,6 +12,7 @@ Buffer::~Buffer() { };
 void Buffer::_release(int64_t commit_timestamp) {
 //    int count = 0;
     for (auto it = _packets.begin(); it != _packets.end(); /* no increment */) {
+        LOG("%llu vs %llu", it->first, commit_timestamp);
         if (it->first > commit_timestamp)
             break;
 

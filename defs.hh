@@ -114,13 +114,13 @@ public:
         copy(y.state, x.state);
     }
 
-    inline void copy(PiggybackMessage y, PiggybackMessage x) {
+    inline void copy(PiggybackMessage y, PiggybackMessage* x) {
 //        memcpy(y, x, sizeof(PiggybackMessage));
         for (int i = 0; i < MB_LEN; ++i) {
-            y[i].timestamp = x[i].timestamp;
-            y[i].ack = x[i].ack;
-            y[i].last_commit = x[i].last_commit;
-            copy(y[i].state, x[i].state);
+            y[i].timestamp = x[i]->timestamp;
+            y[i].ack = x[i]->ack;
+            y[i].last_commit = x[i]->last_commit;
+            copy(y[i].state, x[i]->state);
         }//for
     }
 

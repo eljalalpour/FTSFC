@@ -171,7 +171,7 @@ public:
 
     void print(PiggybackState &state) {
         LOG("Ack is %d, last commit is %llu", state.ack, state.last_commit);
-        print(state.ts.state);
+        print(state.ts);
     }
 
     void print(PiggybackMessage &msg) {

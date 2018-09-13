@@ -86,9 +86,6 @@ void SharedLockFreeState::_log_inoperation_state() {
     ts.timestamp = CURRENT_TIMESTAMP;
     _util.copy(ts.state, inoperation);
     _log_table[_id].push_back(ts);
-
-    LOG("Inoperation state of Middlebox id: %d", _id);
-    _util.print(inoperation);
 }
 
 void SharedLockFreeState::construct_piggyback_message(Packet* p) {

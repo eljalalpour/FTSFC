@@ -32,7 +32,8 @@ Packet *PMConstruct::simple_action(Packet *p) {
 
     Util util;
     LOG("After construction:");
-    util.print(*pm);
+    util.print(*pm[0]);
+    util.print(*pm[1]);
 
     return p;
 }

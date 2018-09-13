@@ -20,9 +20,9 @@ void Forwarder::push(int source, Packet *p) {
         //TODO: make sure no lock is required for encoding and decoding
         _util.encode(_msg, p);
 
-//        LOG("Forwarder Encode:");
-//        _util.print(_msg[0]);
-//        _util.print(_msg[1]);
+        LOG("Forwarder Encode:");
+        _util.print(_msg[0]);
+        _util.print(_msg[1]);
 
         output(0).push(p);
     }//if
@@ -30,9 +30,9 @@ void Forwarder::push(int source, Packet *p) {
         // Decode and memorize the piggyback message from the packet
         //TODO: make sure no lock is required for encoding and decoding
         auto msg2 = CAST_PACKET_TO_PIGGY_BACK_MESSAGE(p);
-        LOG("From casting:");
-        _util.print(*msg2[0]);
-        _util.print(*msg2[1]);
+//        LOG("From casting:");
+//        _util.print(*msg2[0]);
+//        _util.print(*msg2[1]);
 
 //        _util.copy(_msg, msg2);
 //        COPY_PIGGYBACK_MESSAGE(_msg, *msg2);
@@ -40,9 +40,9 @@ void Forwarder::push(int source, Packet *p) {
         _msg[0] = (*msg2[0]);
         _msg[1] = (*msg2[1]);
 
-        LOG("Forwarder copying:");
-        _util.print(_msg[0]);
-        _util.print(_msg[1]);
+//        LOG("Forwarder copying:");
+//        _util.print(_msg[0]);
+//        _util.print(_msg[1]);
 
 //        _util.decode(_msg, p);
 

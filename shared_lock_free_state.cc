@@ -16,7 +16,7 @@ void SharedLockFreeState::_log(State& state, int64_t timestamp, int mb_id) {
 
     auto it = _log_table[mb_id].rbegin();
     if (it == _log_table[mb_id].rend() ||
-        it->timestamp < t_state.timestamp) {
+        it->timestamp < timestamp) {
 
         _log_table[mb_id].push_back(t_state);
     }//if
@@ -26,18 +26,11 @@ void SharedLockFreeState::_log(TimestampState& t_state, int mb_id) {
 //    // Guard the log of a replica
 //    std::lock_guard<std::mutex> guard(_log_mutex[mb_id]);
 
-    DEBUG("Log operation!");
-
-    auto it = _log_table[mb_id].rbegin();
-    if (it == _log_table[mb_id].rend() ||
-        it->timestamp < t_state.timestamp) {
-
-        _log_table[mb_id].push_back(t_state);
-    }//if
+    _log(t_state.state, t_state.timestamp, mb_id);
 }
 
-void SharedLockFreeState::_log(PiggybackState* p_state, int mb_id) {
-    _log(p_state[mb_id].ts, mb_id);
+void SharedLockFreeState::_log(PiggybackState& p_state, int mb_id) {
+    _log(p_state.state, p_state.timestamp, mb_id);
 }
 
 void SharedLockFreeState::_commit(int mb_id, int64_t timestamp) {
@@ -84,7 +77,7 @@ void SharedLockFreeState::process_piggyback_message(Packet* p) {
 
         _commit(mb_id, _msg[mb_id]->last_commit);
 
-        _log(_msg[mb_id], mb_id);
+        _log(*_msg[mb_id], mb_id);
 
         // The following part is must be placed in construct_piggyback_message,
         // but to make it faster, I perform it here:

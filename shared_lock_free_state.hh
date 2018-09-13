@@ -25,7 +25,7 @@ private:
 
     inline void _log(TimestampState&, int);
 
-    inline void _log(PiggybackState*, int);
+    inline void _log(PiggybackState&, int);
 
     void _commit(int, int64_t);
 

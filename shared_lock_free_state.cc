@@ -79,12 +79,13 @@ void SharedLockFreeState::process_piggyback_message(Packet* p) {
 }
 
 void SharedLockFreeState::log_inoperation_state() {
-    DEBUG("Log in operation state");
+    DEBUG("Log inoperation state");
     LOG("Middlebox id: %d", _id);
     TimestampState ts;
     ts.timestamp = CURRENT_TIMESTAMP;
     _util.copy(ts.state, inoperation);
 
+    _util.print(inoperation);
     _log_table[_id].push_back(ts);
 }
 

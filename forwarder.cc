@@ -23,13 +23,6 @@ void Forwarder::push(int source, Packet *p) {
             (*msg2[i]) = _msg[i];
         }//for
 
-        LOG("Forwarder Encode:");
-        _util.print(*msg2[0]);
-        _util.print(*msg2[1]);
-        auto msg3 = CAST_PACKET_TO_PIGGY_BACK_MESSAGE(p);
-        _util.print(*msg3[0]);
-        _util.print(*msg3[1]);
-
         output(0).push(p);
     }//if
     else { //Receiving a packet from Buffer
@@ -40,23 +33,6 @@ void Forwarder::push(int source, Packet *p) {
         for (int i = 0; i < MB_LEN; ++i) {
             _msg[i] = (*msg2[i]);
         }//for
-
-//        LOG("From casting:");
-//        _util.print(*msg2[0]);
-//        _util.print(*msg2[1]);
-
-//        _util.copy(_msg, msg2);
-//        COPY_PIGGYBACK_MESSAGE(_msg, *msg2);
-
-//        _msg[0] = (*msg2[0]);
-//        _msg[1] = (*msg2[1]);
-
-//        LOG("Forwarder copying:");
-//        _util.print(_msg[0]);
-//        _util.print(_msg[1]);
-
-//        _util.decode(_msg, p);
-
 
         // Afterwards, kill the packet
         p->kill();

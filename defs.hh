@@ -114,14 +114,14 @@ public:
         copy(y.state, x.state);
     }
 
-    inline void copy(PiggybackMessage y, PiggybackMessage x) {
-        memcpy(y, x, sizeof(PiggybackMessage));
-    }
-
-    inline void copy(PiggybackMessage y, PiggybackMessage* x) {
-        memcpy(y, *x, sizeof(PiggybackMessage));
-    }
-
+//    inline void copy(PiggybackMessage y, PiggybackMessage x) {
+//        memcpy(y, x, sizeof(PiggybackMessage));
+//    }
+//
+//    inline void copy(PiggybackMessage y, PiggybackMessage* x) {
+//        memcpy(y, *x, sizeof(PiggybackMessage));
+//    }
+//
 //    inline void serialize(const State &s, unsigned char *ser) {
 //        memcpy(ser, &s, sizeof(State));
 //    }
@@ -153,20 +153,20 @@ public:
 //    inline void deserialize(PiggybackMessage &s, const unsigned char* ser) {
 //        memcpy(&s, ser, sizeof(PiggybackMessage));
 //    }
-
-    inline void encode(PiggybackMessage& s, Packet* p) {
-        // Cast away and point to the offset where PiggybackMessage is encoded,
-        // then encode PiggybackMessage
-//        serialize(s, CAST_AWAY_PACKET_DATA(p) + DEFAULT_OFFSET);
-        PiggybackMessage* t = CAST_PACKET_TO_PIGGY_BACK_MESSAGE(p);
-        copy(*t, s);
-    }
-
-    inline void decode(PiggybackMessage& s, const Packet* p) {
-        PiggybackMessage* t = CAST_PACKET_TO_PIGGY_BACK_MESSAGE(p);
-        copy(s, *t);
-//        deserialize(s, p->data() + DEFAULT_OFFSET);
-    }
+//
+//    inline void encode(PiggybackMessage& s, Packet* p) {
+//        // Cast away and point to the offset where PiggybackMessage is encoded,
+//        // then encode PiggybackMessage
+////        serialize(s, CAST_AWAY_PACKET_DATA(p) + DEFAULT_OFFSET);
+//        PiggybackMessage* t = CAST_PACKET_TO_PIGGY_BACK_MESSAGE(p);
+//        copy(*t, s);
+//    }
+//
+//    inline void decode(PiggybackMessage& s, const Packet* p) {
+//        PiggybackMessage* t = CAST_PACKET_TO_PIGGY_BACK_MESSAGE(p);
+//        copy(s, *t);
+////        deserialize(s, p->data() + DEFAULT_OFFSET);
+//    }
 
     void print(State &state) {
         for (auto i = 0; i < STATE_LEN; ++i) {

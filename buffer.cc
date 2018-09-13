@@ -46,6 +46,8 @@ void Buffer::push(int, Packet*p) {
     int64_t lts  = (*_msg[_chain_len - 1]).timestamp;
     int64_t lcts = (*_msg[_chain_len - 1]).last_commit;
 
+    LOG((*_msg[_chain_len - 1]));
+
     // Store the packet into buffer
     _packets[lts] = Packet::make(p->data(), p->length());
 

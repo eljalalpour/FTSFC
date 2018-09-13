@@ -6,7 +6,6 @@ CLICK_DECLS
 
 SharedLockFreeState::SharedLockFreeState () {
     _util.init(inoperation);
-    _util.init(_log_table);
     _util.init(_commit_memory);
 };
 

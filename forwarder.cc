@@ -26,6 +26,9 @@ void Forwarder::push(int source, Packet *p) {
         LOG("Forwarder Encode:");
         _util.print(*msg2[0]);
         _util.print(*msg2[1]);
+        auto msg3 = CAST_PACKET_TO_PIGGY_BACK_MESSAGE(p);
+        _util.print(*msg3[0]);
+        _util.print(*msg3[1]);
 
         output(0).push(p);
     }//if

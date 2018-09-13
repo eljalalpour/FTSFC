@@ -33,7 +33,7 @@ function configure(parser)
     parser:option("-r --rate", "Transmit rate in Mbit/s."):default(10000):convert(tonumber)
     parser:option("-s --size", "Packet size."):default(1000):convert(tonumber)
     parser:option("-o --out", "Filename of the latency histogram."):default("latency.csv")
-    parser:option("-d --duration", "Experiment duration"):default(10):convert(tonumber)
+    parser:option("-d --duration", "Experiment duration (in seconds)"):default(10):convert(tonumber)
 end
 
 function master(args)

@@ -9,14 +9,6 @@ Buffer::Buffer () { };
 
 Buffer::~Buffer() { };
 
-int64_t Buffer::_last_timestamp(PiggybackMessage& msg) {
-    return msg[_chain_len - 1].timestamp;
-}
-
-int64_t Buffer::_last_commit_timestamp(PiggybackMessage& msg) {
-    return msg[_chain_len - 1].last_commit;
-}
-
 void Buffer::_release(int64_t commit_timestamp) {
     int count = 0;
     for (auto it = _packets.begin(); it != _packets.end(); /* no increment */) {

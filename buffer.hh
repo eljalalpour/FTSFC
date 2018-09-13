@@ -23,10 +23,6 @@ private:
 
     std::map<int64_t, Packet *> _packets;
 
-    inline int64_t _last_timestamp(PiggybackMessage&);
-
-    inline int64_t _last_commit_timestamp(PiggybackMessage&);
-
     inline void _release(int64_t);
 
 public:

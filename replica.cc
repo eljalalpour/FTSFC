@@ -34,7 +34,6 @@ void Replica::push(int source, Packet *p) {
         }//catch
     }//if
     else { // Forwarding the packet to next replica
-        _shared_state->log_inoperation_state();
         _shared_state->construct_piggyback_message(p);
 
         output(OUTPUT_PORT_TO_NEXT_MIDDLEBOX).push(p);

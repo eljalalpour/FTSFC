@@ -14,10 +14,7 @@ Packet *Encoder::simple_action(Packet *p) {
     DEBUG("--------------------");
     DEBUG("Begin Encoder");
 
-//    _util.encode(_msg, p);
-    PiggybackMessage *msg = CAST_PACKET_TO_PIGGY_BACK_MESSAGE(p);
-    _util.random_state(*msg);
-    _util.print(*msg);
+    _util.encode(_msg, p);
 
     DEBUG("End Encoder");
     DEBUG("--------------------");

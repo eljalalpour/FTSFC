@@ -22,8 +22,9 @@ void Buffer::_release(int64_t commit_timestamp) {
     for (auto it = _packets.begin(); it != _packets.end(); /* no increment */) {
         if (it->first > commit_timestamp)
             break;
-
+        LOG("Before output to %d", TO_OUTSIDE_WORLD);
         output(TO_OUTSIDE_WORLD).push(it->second);
+        LOG("After output to %d", TO_OUTSIDE_WORLD);
         _packets.erase(it++);
 
         ++count;

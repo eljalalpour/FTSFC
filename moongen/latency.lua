@@ -23,7 +23,7 @@ local SRC_IPS  = {
     "1.0.8.8",
 }
 local SRC_IP_INDEX = 0
-local DST_IP   = "192.168.1.107"
+local DST_IP   = "1.0.1.107"
 local SRC_PORT = 1234
 local DST_PORT = 4321
 

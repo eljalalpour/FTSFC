@@ -72,7 +72,7 @@ typedef TimestampState CommitMemory[MB_LEN];
 #define CAST_AWAY_PACKET_DATA(p) const_cast<unsigned char *>(p->data())
 #define CAST_PACKET_TO_PIGGY_BACK_MESSAGE(p) reinterpret_cast<PiggybackMessage*>(CAST_AWAY_PACKET_DATA(p) + DEFAULT_OFFSET)
 
-#define COPY_PIGGYBACK_MESSAGE(y, x) memcp(y, x, sizeof(PiggybackMessage))
+#define COPY_PIGGYBACK_MESSAGE(y, x) memcpy(y, x, sizeof(PiggybackMessage))
 
 /// Util class to serialize, deserialize, encode, and decode states
 class Util {

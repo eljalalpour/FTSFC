@@ -181,6 +181,13 @@ public:
         }//for
     }
 
+    void print(PiggybackMessage *msg) {
+        for (int i = 0; i < MB_LEN; ++i) {
+            LOG("\nState of middlebox %d", i);
+            print(*msg[i]);
+        }//for
+    }
+
     void random_state(State& s) {
         for (int i = 0; i < STATE_LEN; i++) {
             s[i] = click_random() % 100;

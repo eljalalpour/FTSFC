@@ -15,11 +15,11 @@ $index,$out,$forwarder |
 
     // To the outside world
     buffer[0]
-    -> IPPrint("To outside world!")
     -> StoreIPAddress($out, src)
     -> StoreIPAddress(192.168.1.101, dst)
     -> StoreEtherAddress(0c:c4:7a:73:fa:6a, src)
     -> StoreEtherAddress(0c:c4:7a:73:fa:72, dst)
+    -> IPPrint("To outside world!")
     -> output;
 
     // To the forwarder
@@ -28,7 +28,7 @@ $index,$out,$forwarder |
     -> StoreIPAddress(192.168.1.107, dst)
     -> StoreEtherAddress(0c:c4:7a:73:fa:6a, src)
     -> StoreEtherAddress(0c:c4:7a:73:fa:54, dst)
-    -> IPPrint("To forwarder!")
+//    -> IPPrint("To forwarder!")
     -> output;
 }
 

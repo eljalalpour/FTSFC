@@ -28,12 +28,12 @@ Packet *PMConstruct::simple_action(Packet *p) {
     DEBUG("End PMConstruct");
     DEBUG("--------------------");
 
-    PiggybackMessage* pm = CAST_PACKET_TO_PIGGY_BACK_MESSAGE(p);
-
-    Util util;
-    LOG("After construction:");
-    util.print(*pm[0]);
-    util.print(*pm[1]);
+//    PiggybackMessage* pm = CAST_PACKET_TO_PIGGY_BACK_MESSAGE(p);
+//
+//    Util util;
+//    LOG("After construction:");
+//    util.print(*pm[0]);
+//    util.print(*pm[1]);
 
     return p;
 }

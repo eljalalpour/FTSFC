@@ -63,31 +63,31 @@ void SharedLockFreeState::_commit(int mb_id, int64_t timestamp) {
 }
 
 void SharedLockFreeState::process_piggyback_message(Packet* p) {
-    auto _msg = CAST_PACKET_TO_PIGGY_BACK_MESSAGE(p);
-
-//    LOG("In process:");
-//    _util.print(*_msg[0]);
-//    _util.print(*_msg[1]);
+    auto msg = CAST_PACKET_TO_PIGGY_BACK_MESSAGE(p);
 
     // Processing the primary state:
-    // TODO: Check if this is correct? In the paper, we tell it must be _msg[mb_id].timestamp
+    // TODO: Check if this is correct? In the paper, we tell it must be msg[mb_id].timestamp
 //    commit(_id, CURRENT_TIMESTAMP);
-    _commit(_id, _msg[_id]->timestamp);
+    _commit(_id, msg[_id]->timestamp);
 
     // Processing the secondary state set
     for (int i = 0; i <= _failure_count; ++i) {
         int mb_id = (_id - i + _chain_len) % _chain_len;
 
-        _commit(mb_id, _msg[mb_id]->last_commit);
+        _commit(mb_id, msg[mb_id]->last_commit);
 
-        _log(*_msg[mb_id], mb_id);
+        _log(*msg[mb_id], mb_id);
 
         // The following part is must be placed in construct_piggyback_message,
         // but to make it faster, I perform it here:
         // PART START
-        ++_msg[mb_id]->ack;
+        ++msg[mb_id]->ack;
         // PART END
     }//for
+
+    LOG("After processing piggyback message:");
+    _util.print(*msg[0]);
+    _util.print(*msg[1]);
 }
 
 void SharedLockFreeState::_log_inoperation_state() {
@@ -115,6 +115,10 @@ void SharedLockFreeState::construct_piggyback_message(Packet* p) {
     msg[_id]->timestamp = it->timestamp;
     msg[_id]->last_commit = _commit_memory[_id].timestamp;
     msg[_id]->ack = 1;
+
+    LOG("After construct piggyback message:");
+    _util.print(*_msg[0]);
+    _util.print(*_msg[1]);
 }
 
 int SharedLockFreeState::configure(Vector<String> &conf, ErrorHandler *errh) {

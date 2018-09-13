@@ -113,7 +113,10 @@ public:
     }
 
     inline void copy(PiggybackMessage& y, PiggybackMessage& x) {
-        memcpy(&y, &x, sizeof(PiggybackMessage));
+//        memcpy(&y, &x, sizeof(PiggybackMessage));
+        for (int i = 0; i < MB_LEN; ++i) {
+            copy(y[i], x[i]);
+        }//for
     }
 
 //    inline void serialize(const State &s, unsigned char *ser) {

@@ -26,7 +26,7 @@ local SRC_IPS  = {
 local SRC_IP_INDEX = 0
 local DST_IP   = "192.168.1.107"
 local SRC_PORT = 1234
-local DST_PORT = 319
+local DST_PORT = 4321
 
 function configure(parser)
     parser:description("Generates UDP traffic and measure latencies. Edit the source to modify constants like IPs.")

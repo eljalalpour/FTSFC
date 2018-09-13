@@ -31,12 +31,12 @@ void Forwarder::push(int source, Packet *p) {
         //TODO: make sure no lock is required for encoding and decoding
         _util.decode(_msg, p);
 
-//        LOG("Forwarder Decode:");
-//        _util.print(_msg[0]);
-//        _util.print(_msg[1]);
-        auto msg2 = CAST_PACKET_TO_PIGGY_BACK_MESSAGE(p);
-        _util.print(*msg2[0]);
-        _util.print(*msg2[1]);
+        LOG("Forwarder Decode:");
+        _util.print(_msg[0]);
+        _util.print(_msg[1]);
+//        auto msg2 = CAST_PACKET_TO_PIGGY_BACK_MESSAGE(p);
+//        _util.print(*msg2[0]);
+//        _util.print(*msg2[1]);
 
         // Afterwards, kill the packet
         p->kill();

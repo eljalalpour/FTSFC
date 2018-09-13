@@ -37,7 +37,7 @@ void Forwarder::push(int source, Packet *p) {
 //        _util.copy(_msg, msg2);
 //        COPY_PIGGYBACK_MESSAGE(_msg, *msg2);
 
-        _msg = *CAST_PACKET_TO_PIGGY_BACK_MESSAGE(p);
+        _msg = *(CAST_PACKET_TO_PIGGY_BACK_MESSAGE(p));
         LOG("Forwarder copying:");
         _util.print(_msg[0]);
         _util.print(_msg[1]);

@@ -107,7 +107,8 @@ void SharedLockFreeState::construct_piggyback_message(Packet* p) {
     msg[_id]->ack = 1;
 
     LOG("Constructed Message");
-    _util.print(*msg);
+    _util.print(*msg[0]);
+    _util.print(*msg[1]);
 }
 
 int SharedLockFreeState::configure(Vector<String> &conf, ErrorHandler *errh) {

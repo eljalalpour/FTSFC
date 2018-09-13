@@ -29,7 +29,7 @@ void Buffer::_release(int64_t commit_timestamp) {
         ++count;
     }//for
 
-    DEBUG("Released Packets: %d!", count);
+    LOG("Released Packets: %d!", count);
 }
 
 int Buffer::configure(Vector<String> &conf, ErrorHandler *errh) {
@@ -55,11 +55,6 @@ void Buffer::push(int, Packet*p) {
 
     // Store the packet into buffer
     _packets[lts] = Packet::make(p->data(), p->length());
-
-    LOG("In Buffer:");
-    Util _util;
-    _util.print(*_msg[0]);
-    _util.print(*_msg[1]);
 
     //TODO: find the best order, either first send the packet to Forwarder or release packets
     // Send a copy of the packet to Forwarder

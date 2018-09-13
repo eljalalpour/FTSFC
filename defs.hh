@@ -114,6 +114,10 @@ public:
         copy(y.state, x.state);
     }
 
+    inline void copy(PiggybackMessage y, PiggybackMessage x) {
+        memcpy(y, x, sizeof(PiggybackMessage));
+    }
+
     inline void copy(PiggybackMessage y, PiggybackMessage* x) {
         memcpy(y, *x, sizeof(PiggybackMessage));
     }

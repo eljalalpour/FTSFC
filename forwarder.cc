@@ -18,11 +18,14 @@ void Forwarder::push(int source, Packet *p) {
     if (source == 0) { // Receiving a packet from the traffic source
         // Encode its memory of the piggyback message into the packet
         //TODO: make sure no lock is required for encoding and decoding
-        _util.encode(_msg, p);
+        auto msg2 = CAST_PACKET_TO_PIGGY_BACK_MESSAGE(p);
+        for (int i = 0; i < MB_LEN; ++i) {
+            (*msg2[i]) = _msg[i];
+        }//for
 
         LOG("Forwarder Encode:");
-        _util.print(_msg[0]);
-        _util.print(_msg[1]);
+        _util.print(msg2[0]);
+        _util.print(msg2[1]);
 
         output(0).push(p);
     }//if

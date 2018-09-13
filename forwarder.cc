@@ -32,7 +32,7 @@ void Forwarder::push(int source, Packet *p) {
 
         auto msg2 = CAST_PACKET_TO_PIGGY_BACK_MESSAGE(p);
         for (int i = 0; i < MB_LEN; ++i) {
-            msg[i] = (*_msg[i]);
+            _msg[i] = (*msg2[i]);
         }//for
 
 //        LOG("From casting:");

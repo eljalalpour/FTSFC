@@ -170,8 +170,8 @@ public:
     }
 
     void print(PiggybackState &state) {
-        LOG("ack is %d, last commit is %llu, timestamp is %llu", state.ack, state.last_commit, state.ts.timestamp);
-        print(state.ts.state);
+        LOG("ack is %d, last commit is %llu, timestamp is %llu", state.ack, state.last_commit, state.timestamp);
+        print(state.state);
     }
 
     void print(PiggybackMessage &msg) {
@@ -202,11 +202,10 @@ public:
     void random_piggyback(PiggybackState& pb_state) {
         pb_state.last_commit = CURRENT_TIMESTAMP;
         pb_state.ack = click_random() % MB_LEN;
-//        TimestampState ts_state;
-//        random_ts_state(ts_state);
-//        copy(pb_state.state, ts_state.state);
-//        pb_state.timestamp = ts_state.timestamp;
-        random_ts_state(pb_state.ts);
+        TimestampState ts_state;
+        random_ts_state(ts_state);
+        copy(pb_state.state, ts_state.state);
+        pb_state.timestamp = ts_state.timestamp;
     }
 
     void random_message(PiggybackMessage& msg) {

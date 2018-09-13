@@ -10,7 +10,7 @@ Buffer::Buffer () { };
 Buffer::~Buffer() { };
 
 void Buffer::_release(int64_t commit_timestamp) {
-    int count = 0;
+//    int count = 0;
     for (auto it = _packets.begin(); it != _packets.end(); /* no increment */) {
         LOG("%llu vs %llu", it->first, commit_timestamp);
         if (it->first > commit_timestamp)
@@ -19,10 +19,10 @@ void Buffer::_release(int64_t commit_timestamp) {
         output(TO_OUTSIDE_WORLD).push(it->second);
         _packets.erase(it++);
 
-        ++count;
+//        ++count;
     }//for
 
-    LOG("Packets in buffer: %d, Released Packets: %d!", _packets.size(), count);
+//    LOG("Packets in buffer: %d, Released Packets: %d!", _packets.size(), count);
 }
 
 int Buffer::configure(Vector<String> &conf, ErrorHandler *errh) {
@@ -46,9 +46,9 @@ void Buffer::push(int, Packet*p) {
     int64_t lts  = (*_msg[_chain_len - 1]).timestamp;
     int64_t lcts = (*_msg[_chain_len - 1]).last_commit;
 
-    Util util;
-    LOG("The state of MB %d:", _chain_len - 1);
-    util.print((*_msg[_chain_len - 1]));
+//    Util util;
+//    LOG("The state of MB %d:", _chain_len - 1);
+//    util.print((*_msg[_chain_len - 1]));
 
     // Store the packet into buffer
     _packets[lts] = Packet::make(p->data(), p->length());

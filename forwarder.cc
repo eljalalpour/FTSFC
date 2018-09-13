@@ -41,7 +41,7 @@ void Forwarder::push(int source, Packet *p) {
         _util.print(_msg[0]);
         _util.print(_msg[1]);
 
-        _util.decode(_msg, p);
+//        _util.decode(_msg, p);
 
 
         // Afterwards, kill the packet

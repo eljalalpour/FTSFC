@@ -116,46 +116,50 @@ public:
         memcpy(&y, &x, sizeof(PiggybackState));
     }
 
-    inline void serialize(const State &s, unsigned char *ser) {
-        memcpy(ser, &s, sizeof(State));
-    }
+//    inline void serialize(const State &s, unsigned char *ser) {
+//        memcpy(ser, &s, sizeof(State));
+//    }
+//
+//    inline void deserialize(State &s, const unsigned char* ser) {
+//        memcpy(&s, ser, sizeof(State));
+//    }
+//
+//    inline void serialize(const TimestampState &s, unsigned char *ser) {
+//        memcpy(ser, &s, sizeof(TimestampState));
+//    }
+//
+//    inline void deserialize(TimestampState &s, const unsigned char* ser) {
+//        memcpy(&s, ser, sizeof(TimestampState));
+//    }
+//
+//    inline void serialize(const PiggybackState &s, unsigned char *ser) {
+//        memcpy(ser, &s, sizeof(PiggybackState));
+//    }
+//
+//    inline void deserialize(PiggybackState &s, const unsigned char* ser) {
+//        memcpy(&s, ser, sizeof(PiggybackState));
+//    }
+//
+//    inline void serialize(const PiggybackMessage &s, unsigned char *ser) {
+//        memcpy(ser, &s, sizeof(PiggybackMessage));
+//    }
+//
+//    inline void deserialize(PiggybackMessage &s, const unsigned char* ser) {
+//        memcpy(&s, ser, sizeof(PiggybackMessage));
+//    }
 
-    inline void deserialize(State &s, const unsigned char* ser) {
-        memcpy(&s, ser, sizeof(State));
-    }
-
-    inline void serialize(const TimestampState &s, unsigned char *ser) {
-        memcpy(ser, &s, sizeof(TimestampState));
-    }
-
-    inline void deserialize(TimestampState &s, const unsigned char* ser) {
-        memcpy(&s, ser, sizeof(TimestampState));
-    }
-
-    inline void serialize(const PiggybackState &s, unsigned char *ser) {
-        memcpy(ser, &s, sizeof(PiggybackState));
-    }
-
-    inline void deserialize(PiggybackState &s, const unsigned char* ser) {
-        memcpy(&s, ser, sizeof(PiggybackState));
-    }
-
-    inline void serialize(const PiggybackMessage &s, unsigned char *ser) {
-        memcpy(ser, &s, sizeof(PiggybackMessage));
-    }
-
-    inline void deserialize(PiggybackMessage &s, const unsigned char* ser) {
-        memcpy(&s, ser, sizeof(PiggybackMessage));
-    }
-
-    inline void encode(const PiggybackMessage& s, Packet* p) {
+    inline void encode(PiggybackMessage& s, Packet* p) {
         // Cast away and point to the offset where PiggybackMessage is encoded,
         // then encode PiggybackMessage
-        serialize(s, CAST_AWAY_PACKET_DATA(p) + DEFAULT_OFFSET);
+//        serialize(s, CAST_AWAY_PACKET_DATA(p) + DEFAULT_OFFSET);
+        PiggybackMessage* t = CAST_PACKET_TO_PIGGY_BACK_MESSAGE(p);
+        copy(*t, s);
     }
 
     inline void decode(PiggybackMessage& s, const Packet* p) {
-        deserialize(s, p->data() + DEFAULT_OFFSET);
+        PiggybackMessage* t = CAST_PACKET_TO_PIGGY_BACK_MESSAGE(p);
+        copy(s, *t);
+//        deserialize(s, p->data() + DEFAULT_OFFSET);
     }
 
     void print(State &state) {

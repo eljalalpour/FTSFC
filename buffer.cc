@@ -50,7 +50,7 @@ void Buffer::push(int, Packet*p) {
 
     // Cast the piggyback message and extract the timestamps
     _msg = CAST_PACKET_TO_PIGGY_BACK_MESSAGE(p);
-    int64_t lts  = (*_msg[_chain_len - 1]).timestamp
+    int64_t lts  = (*_msg[_chain_len - 1]).timestamp;
     int64_t lcts = (*_msg[_chain_len - 1]).last_commit;
 
     // Store the packet into buffer

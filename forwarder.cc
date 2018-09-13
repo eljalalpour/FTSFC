@@ -29,14 +29,18 @@ void Forwarder::push(int source, Packet *p) {
     else { //Receiving a packet from Buffer
         // Decode and memorize the piggyback message from the packet
         //TODO: make sure no lock is required for encoding and decoding
-        _util.decode(_msg, p);
+        auto msg2 = CAST_PACKET_TO_PIGGY_BACK_MESSAGE(p);
+//        _util.print(*msg2[0]);
+//        _util.print(*msg2[1]);
+
+        _util.copy(_msg, *msg2);
 
         LOG("Forwarder Decode:");
         _util.print(_msg[0]);
         _util.print(_msg[1]);
-//        auto msg2 = CAST_PACKET_TO_PIGGY_BACK_MESSAGE(p);
-//        _util.print(*msg2[0]);
-//        _util.print(*msg2[1]);
+
+        _util.decode(_msg, p);
+
 
         // Afterwards, kill the packet
         p->kill();

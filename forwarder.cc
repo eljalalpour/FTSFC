@@ -24,8 +24,8 @@ void Forwarder::push(int source, Packet *p) {
         }//for
 
         LOG("Forwarder Encode:");
-        _util.print(msg2[0]);
-        _util.print(msg2[1]);
+        _util.print(*msg2[0]);
+        _util.print(*msg2[1]);
 
         output(0).push(p);
     }//if

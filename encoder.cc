@@ -14,7 +14,10 @@ Packet *Encoder::simple_action(Packet *p) {
     DEBUG("--------------------");
     DEBUG("Begin Encoder");
 
-    _util.encode(_msg, p);
+    auto msg2 = CAST_PACKET_TO_PIGGY_BACK_MESSAGE(p);
+    for (int i = 0; i < MB_LEN; ++i) {
+        (*msg2[i]) = _msg[i];
+    }//for
 
     DEBUG("End Encoder");
     DEBUG("--------------------");

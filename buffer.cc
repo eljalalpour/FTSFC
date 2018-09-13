@@ -47,6 +47,7 @@ void Buffer::push(int, Packet*p) {
     int64_t lcts = (*_msg[_chain_len - 1]).last_commit;
 
     Util util;
+    LOG("The state of MB %d:", _chain_len - 1);
     util.print((*_msg[_chain_len - 1]));
 
     // Store the packet into buffer

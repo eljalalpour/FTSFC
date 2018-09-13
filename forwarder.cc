@@ -29,7 +29,7 @@ void Forwarder::push(int source, Packet *p) {
     else { //Receiving a packet from Buffer
         // Decode and memorize the piggyback message from the packet
         //TODO: make sure no lock is required for encoding and decoding
-        PiggybackMessage* msg2 = CAST_PACKET_TO_PIGGY_BACK_MESSAGE(p);
+        auto msg2 = CAST_PACKET_TO_PIGGY_BACK_MESSAGE(p);
         LOG("From casting:");
         _util.print(*msg2[0]);
         _util.print(*msg2[1]);

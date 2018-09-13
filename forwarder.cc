@@ -48,9 +48,9 @@ void Forwarder::push(int source, Packet *p) {
 //        _msg[0] = (*msg2[0]);
 //        _msg[1] = (*msg2[1]);
 
-        LOG("Forwarder copying:");
-        _util.print(_msg[0]);
-        _util.print(_msg[1]);
+//        LOG("Forwarder copying:");
+//        _util.print(_msg[0]);
+//        _util.print(_msg[1]);
 
 //        _util.decode(_msg, p);
 

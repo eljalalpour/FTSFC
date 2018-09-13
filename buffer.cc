@@ -31,7 +31,7 @@ void Buffer::_release(int64_t commit_timestamp) {
         ++count;
     }//for
 
-    LOG("Released Packets: %d!", count);
+    LOG("Packets in buffer: %d, Released Packets: %d!", _packets.size(), count);
 }
 
 int Buffer::configure(Vector<String> &conf, ErrorHandler *errh) {

@@ -56,11 +56,9 @@ void Buffer::push(int, Packet*p) {
     // Store the packet into buffer
     _packets[lts] = Packet::make(p->data(), p->length());
 
-    auto _msg2 = CAST_PACKET_TO_PIGGY_BACK_MESSAGE(p);
-    Util _util;
     LOG("In Buffer:");
-    _util.print(*_msg2[0]);
-    _util.print(*_msg2[1]);
+    _util.print(*_msg[0]);
+    _util.print(*_msg[1]);
 
     //TODO: find the best order, either first send the packet to Forwarder or release packets
     // Send a copy of the packet to Forwarder

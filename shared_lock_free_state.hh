@@ -27,6 +27,8 @@ private:
 
     void _commit(int, int64_t);
 
+    void _log_inoperation_state();
+
 public:
     State inoperation;
 
@@ -43,8 +45,6 @@ public:
     Packet *simple_action(Packet *);
 
     int configure(Vector<String> &, ErrorHandler *);
-
-    void log_inoperation_state();
 
     void process_piggyback_message(Packet*);
 

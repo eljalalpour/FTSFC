@@ -79,15 +79,16 @@ void SharedLockFreeState::process_piggyback_message(Packet* p) {
     }//for
 }
 
-void SharedLockFreeState::log_inoperation_state() {
+void SharedLockFreeState::_log_inoperation_state() {
     DEBUG("Log inoperation state");
-    LOG("Middlebox id: %d", _id);
+
     TimestampState ts;
     ts.timestamp = CURRENT_TIMESTAMP;
     _util.copy(ts.state, inoperation);
-
-    _util.print(inoperation);
     _log_table[_id].push_back(ts);
+
+    LOG("Inoperation state of Middlebox id: %d", _id);
+    _util.print(inoperation);
 }
 
 void SharedLockFreeState::construct_piggyback_message(Packet* p) {
@@ -99,6 +100,7 @@ void SharedLockFreeState::construct_piggyback_message(Packet* p) {
     // process_piggyback_message
 
     // Since the state is small, put the whole state into the packet
+    _log_inoperation_state();
     auto it = _log_table[_id].rbegin();
     _util.copy(msg[_id]->ts, *it);
     msg[_id]->last_commit = _commit_memory[_id].timestamp;
@@ -116,8 +118,6 @@ int SharedLockFreeState::configure(Vector<String> &conf, ErrorHandler *errh) {
                 .read("F", _failure_count)
                 .complete() < 0)
         return -1;
-
-    DEBUG("SharedLockFreeState is %d!\n", _id);
 
     return 0;
 }

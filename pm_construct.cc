@@ -23,7 +23,6 @@ Packet *PMConstruct::simple_action(Packet *p) {
 
     _init_shared_state_pointer();
 
-    _shared_state->log_inoperation_state();
     _shared_state->construct_piggyback_message(p);
 
     DEBUG("End PMConstruct");

@@ -104,7 +104,7 @@ void SharedLockFreeState::construct_piggyback_message(Packet* p) {
     msg[_id]->ack = 1;
 
     LOG("Constructed Message");
-    LOG("Only primary state:");
+    LOG("Only primary state %d:", _id);
     _util.print(*msg[_id]);
 
     LOG("Others:");

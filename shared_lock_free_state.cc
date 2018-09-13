@@ -65,7 +65,7 @@ void SharedLockFreeState::process_piggyback_message(Packet* p) {
     // Processing the primary state:
     // TODO: Check if this is correct? In the paper, we tell it must be _msg[mb_id].timestamp
 //    commit(_id, CURRENT_TIMESTAMP);
-    _commit(_id, _msg[_id]->ts.timestamp);
+    _commit(_id, _msg[_id]->timestamp);
 
     // Processing the secondary state set
     for (int i = 0; i <= _failure_count; ++i) {
@@ -104,7 +104,8 @@ void SharedLockFreeState::construct_piggyback_message(Packet* p) {
     _log_inoperation_state();
 
     auto it = _log_table[_id].rbegin();
-    _util.copy(msg[_id]->ts, *it);
+    _util.copy(msg[_id]->state, it->state);
+    msg[_id]->timestamp = it->timestamp;
     msg[_id]->last_commit = _commit_memory[_id].timestamp;
     msg[_id]->ack = 1;
 }

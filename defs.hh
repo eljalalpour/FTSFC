@@ -165,7 +165,7 @@ public:
     }
 
     void print(TimestampState &ft_state) {
-        LOG("Timestamp %llu:", ft_state.timestamp);
+        LOG("Timestamp: %llu", ft_state.timestamp);
         print(ft_state.state);
     }
 

@@ -20,8 +20,8 @@ int64_t Buffer::_last_commit_timestamp(PiggybackMessage& msg) {
 void Buffer::_release(int64_t commit_timestamp) {
     int count = 0;
     for (auto it = _packets.begin(); it != _packets.end(); /* no increment */) {
-        if (it->first > commit_timestamp)
-            break;
+//        if (it->first > commit_timestamp)
+//            break;
         LOG("Before output to %d", TO_OUTSIDE_WORLD);
         LOG("Packet length: %d", it->second->length());
         output(TO_OUTSIDE_WORLD).push(it->second);

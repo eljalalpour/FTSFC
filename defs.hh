@@ -113,7 +113,7 @@ public:
     }
 
     inline void copy(PiggybackMessage& y, PiggybackMessage& x) {
-        memcpy(&y, &x, sizeof(PiggybackState));
+        memcpy(&y, &x, sizeof(PiggybackMessage));
     }
 
 //    inline void serialize(const State &s, unsigned char *ser) {

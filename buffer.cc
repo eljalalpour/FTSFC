@@ -10,20 +10,18 @@ Buffer::Buffer () { };
 Buffer::~Buffer() { };
 
 void Buffer::_release(int64_t commit_timestamp) {
-    int count = 0;
+//    int count = 0;
     for (auto it = _packets.begin(); it != _packets.end(); /* no increment */) {
         if (it->first > commit_timestamp)
             break;
-        LOG("Before output to %d", TO_OUTSIDE_WORLD);
-        LOG("Packet length: %d", it->second->length());
+
         output(TO_OUTSIDE_WORLD).push(it->second);
-        LOG("After output to %d", TO_OUTSIDE_WORLD);
         _packets.erase(it++);
 
-        ++count;
+//        ++count;
     }//for
 
-    LOG("Packets in buffer: %d, Released Packets: %d!", _packets.size(), count);
+//    LOG("Packets in buffer: %d, Released Packets: %d!", _packets.size(), count);
 }
 
 int Buffer::configure(Vector<String> &conf, ErrorHandler *errh) {

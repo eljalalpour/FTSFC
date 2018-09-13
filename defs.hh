@@ -90,6 +90,10 @@ public:
         memset(&s, 0, sizeof(PiggybackMessage));
     }
 
+    inline void init(LogTable &s) {
+        memset(&s, 0, sizeof(LogTable));
+    }
+
     inline void init(CommitMemory &s) {
         memset(&s, 0, sizeof(CommitMemory));
     }

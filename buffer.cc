@@ -56,6 +56,7 @@ void Buffer::push(int, Packet*p) {
     // Store the packet into buffer
     _packets[lts] = Packet::make(p->data(), p->length());
 
+    _msg = CAST_PACKET_TO_PIGGY_BACK_MESSAGE(p);
     Util _util;
     LOG("In the buffer:");
     _util.print(*_msg[0]);

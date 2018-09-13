@@ -18,6 +18,9 @@ void SharedLockFreeState::_log(State& state, int64_t timestamp, int mb_id) {
     if (it == _log_table[mb_id].rend() ||
         it->timestamp < timestamp) {
 
+        TimestampState t_state;
+        _util.copy(t_state.state, state);
+        t_state.timestamp = timestamp;
         _log_table[mb_id].push_back(t_state);
     }//if
 }

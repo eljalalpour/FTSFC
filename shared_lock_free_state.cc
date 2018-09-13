@@ -96,19 +96,22 @@ void SharedLockFreeState::construct_piggyback_message(Packet* p) {
     // The secondary state list and that of other middleboxes are already properly updated in
     // process_piggyback_message
 
+    LOG("Before: Only primary state %d:", _id);
+    _util.print(*msg[_id]);
+
     // Since the state is small, put the whole state into the packet
     _log_inoperation_state();
+
     auto it = _log_table[_id].rbegin();
     _util.copy(msg[_id]->ts, *it);
     msg[_id]->last_commit = _commit_memory[_id].timestamp;
     msg[_id]->ack = 1;
 
-    LOG("Constructed Message");
-    LOG("Only primary state %d:", _id);
+    LOG("After: Only primary state %d:", _id);
     _util.print(*msg[_id]);
 
-    LOG("Others:");
-    _util.print(*msg);
+    _util.print(*msg[0]);
+    _util.print(*msg[1]);
 }
 
 int SharedLockFreeState::configure(Vector<String> &conf, ErrorHandler *errh) {

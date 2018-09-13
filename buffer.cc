@@ -57,8 +57,9 @@ void Buffer::push(int, Packet*p) {
     _packets[lts] = Packet::make(p->data(), p->length());
 
     Util _util;
-//    LOG("Packet in the buffer:");
-//    _util.print(*_msg);
+    LOG("In the buffer:");
+    _util.print(*_msg[0]);
+    _util.print(*_msg[1]);
 
     //TODO: find the best order, either first send the packet to Forwarder or release packets
     // Send a copy of the packet to Forwarder

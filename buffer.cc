@@ -57,6 +57,7 @@ void Buffer::push(int, Packet*p) {
     _packets[lts] = Packet::make(p->data(), p->length());
 
     LOG("In Buffer:");
+    Util _util;
     _util.print(*_msg[0]);
     _util.print(*_msg[1]);
 

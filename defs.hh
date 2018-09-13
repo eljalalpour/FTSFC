@@ -50,7 +50,8 @@ typedef struct {
 typedef struct {
     short ack;
     int64_t last_commit;
-    TimestampState ts;
+    int64_t timestamp;
+    State state;
 } PiggybackState;
 
 typedef PiggybackState PiggybackMessage[MB_LEN];

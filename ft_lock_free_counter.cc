@@ -23,6 +23,7 @@ int FTLockFreeCounter::configure(Vector<String> &conf, ErrorHandler *errh) {
                 .read("INDEX", _index)
                 .complete() < 0)
         return -1;
+
     DEBUG("FTLockFreeCounter index is %d!\n", _index);
 
     return 0;

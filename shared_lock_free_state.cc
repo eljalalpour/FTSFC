@@ -85,9 +85,9 @@ void SharedLockFreeState::process_piggyback_message(Packet* p) {
         // PART END
     }//for
 
-    LOG("After processing piggyback message:");
-    _util.print(*msg[0]);
-    _util.print(*msg[1]);
+//    LOG("After processing piggyback message:");
+//    _util.print(*msg[0]);
+//    _util.print(*msg[1]);
 }
 
 void SharedLockFreeState::_log_inoperation_state() {
@@ -116,9 +116,9 @@ void SharedLockFreeState::construct_piggyback_message(Packet* p) {
     msg[_id]->last_commit = _commit_memory[_id].timestamp;
     msg[_id]->ack = 1;
 
-    LOG("After construct piggyback message:");
-    _util.print(*msg[0]);
-    _util.print(*msg[1]);
+//    LOG("After construct piggyback message:");
+//    _util.print(*msg[0]);
+//    _util.print(*msg[1]);
 }
 
 int SharedLockFreeState::configure(Vector<String> &conf, ErrorHandler *errh) {

@@ -175,9 +175,9 @@ public:
     }
 
     void print(PiggybackMessage &msg) {
-        for (auto i = 0; i < MB_LEN; ++i) {
+        for (auto &i : msg) {
             LOG("\nState of middlebox %d", i);
-            print(msg[i]);
+            print(i);
         }//for
     }
 

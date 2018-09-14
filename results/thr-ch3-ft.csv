@@ -18,13 +18,13 @@ PMD: ixgbe_dev_link_status_print():  Port 0: Link Down
 [1;37m[INFO]  Waiting for devices to come up...[0m
 [1;37m[INFO]  Device 0 (0C:C4:7A:73:FA:72) is up: 10000 MBit/s[0m
 [1;37m[INFO]  [0;32m1 device is up.[0m[0m
-[0;34m[Device: id=0] TX[0m: 0.65 Mpps, 5202 Mbit/s (5306 Mbit/s with framing)
-[1;36m[Device: id=0] RX[0m: 0.55 Mpps, 4431 Mbit/s (4519 Mbit/s with framing)
-[0;34m[Device: id=0] TX[0m: 0.63 Mpps, 5054 Mbit/s (5155 Mbit/s with framing)
-[1;36m[Device: id=0] RX[0m: 0.57 Mpps, 4555 Mbit/s (4646 Mbit/s with framing)
-[0;34m[Device: id=0] TX[0m: 0.65 Mpps, 5202 Mbit/s (5306 Mbit/s with framing)
-[1;36m[Device: id=0] RX[0m: 0.57 Mpps, 4556 Mbit/s (4646 Mbit/s with framing)
-[0;34m[Device: id=0] TX[0m: 0.65 Mpps, 5202 Mbit/s (5306 Mbit/s with framing)
-[1;36m[Device: id=0] RX[0m: 0.57 Mpps, 4556 Mbit/s (4646 Mbit/s with framing)
-[0;34m[Device: id=0] TX[0m: 0.64 (StdDev 0.01) Mpps, 5153 (StdDev 85) Mbit/s (5255 Mbit/s with framing), total 3220875 packets with 3233758500 bytes (incl. CRC)
-[1;36m[Device: id=0] RX[0m: 0.57 (StdDev 0.00) Mpps, 4555 (StdDev 0) Mbit/s (4646 Mbit/s with framing), total 2820924 packets with 2832020739 bytes (incl. CRC)
+[0;34m[Device: id=0] TX[0m: 0.37 Mpps, 3001 Mbit/s (3060 Mbit/s with framing)
+[1;36m[Device: id=0] RX[0m: 0.32 Mpps, 2556 Mbit/s (2607 Mbit/s with framing)
+[0;34m[Device: id=0] TX[0m: 0.36 Mpps, 2916 Mbit/s (2974 Mbit/s with framing)
+[1;36m[Device: id=0] RX[0m: 0.33 Mpps, 2627 Mbit/s (2680 Mbit/s with framing)
+[0;34m[Device: id=0] TX[0m: 0.37 Mpps, 3000 Mbit/s (3060 Mbit/s with framing)
+[1;36m[Device: id=0] RX[0m: 0.33 Mpps, 2628 Mbit/s (2680 Mbit/s with framing)
+[0;34m[Device: id=0] TX[0m: 0.37 Mpps, 3001 Mbit/s (3060 Mbit/s with framing)
+[1;36m[Device: id=0] RX[0m: 0.33 Mpps, 2628 Mbit/s (2680 Mbit/s with framing)
+[0;34m[Device: id=0] TX[0m: 0.37 (StdDev 0.01) Mpps, 2972 (StdDev 49) Mbit/s (3031 Mbit/s with framing), total 1858248 packets with 1865680992 bytes (incl. CRC)
+[1;36m[Device: id=0] RX[0m: 0.33 (StdDev 0.00) Mpps, 2628 (StdDev 0) Mbit/s (2680 Mbit/s with framing), total 1627581 packets with 1633916466 bytes (incl. CRC)

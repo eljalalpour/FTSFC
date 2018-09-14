@@ -58,7 +58,7 @@ void StatsCollector::write_to_file() {
         ofs << _log_table_stats[i];
         for (int j = 0; j < _buffer; ++j)
             ofs << "," << _buffer_stats[j][i];
-        ofs << std::endl
+        ofs << std::endl;
     }//for
     ofs.close();
 

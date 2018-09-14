@@ -70,11 +70,9 @@ void StatsCollector::collect() {
     auto _shared_state_elm = (SharedLockFreeState *)(r->find("shared_state"));
     _log_table_stats.push_back(_shared_state_elm->log_table_length());
 
-    LOG("Finding buffer element");
     for (auto i = 0; i < _buffer; ++i) {
-        std::stringstream ss;
-        ss << FT_BLOCK_PREFIX << i + 1;
-        auto _buffer_elm = (Buffer *) (r->find("buffer", ss.str().c_str()));
+        String buffer_name = "b" + i;
+        auto _buffer_elm = (Buffer *) (r->find("buffer", buffer_name));
         _buffer_stats[i].push_back(_buffer_elm->length());
     }
 

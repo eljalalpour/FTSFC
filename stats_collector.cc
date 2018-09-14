@@ -1,6 +1,7 @@
 #include <click/config.h>
 #include <click/args.hh>
 #include "buffer.hh"
+#include "shared_lock_free_state.hh"
 #include "stats_collector.hh"
 
 CLICK_DECLS

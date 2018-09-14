@@ -31,7 +31,7 @@ int StatsCollector::configure(Vector<String> &conf, ErrorHandler *errh) {
     signal(SIGINT, signal_handler);
     signal(SIGTERM, signal_handler);
 
-    std::thread(StateCollector::collect, this);
+    std::thread(StatsCollector::collect, this);
 
     return 0;
 }

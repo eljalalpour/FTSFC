@@ -20,8 +20,7 @@ private:
     Vector<size_t> _buffer_stats;
     Vector<size_t> _log_table_stats;
 
-    static void* _run(void* param) {
-        StatsCollector* state_coll = static_cast<ServerConn*>(param);
+    static void _run(StatsCollector* state_coll) {
         while (true) {
             std::this_thread::sleep_for(std::chrono::seconds(state_coll->_period));
             state_coll->collect();

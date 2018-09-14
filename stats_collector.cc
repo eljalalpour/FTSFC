@@ -72,7 +72,7 @@ void StatsCollector::collect() {
 
     for (auto i = 0; i < _buffer; ++i) {
         String buffer_name = "b" + String(i) + "/";
-        LOG("Finding %d", buffer_name.c_str());
+        LOG("Finding %s", buffer_name.c_str());
         auto _buffer_elm = (Buffer *) (r->find("buffer", buffer_name));
         _buffer_stats[i].push_back(_buffer_elm->length());
     }

@@ -22,7 +22,7 @@ $index,$src_ip |
     -> [1]forwarder;
 
     forwarder[0]
-    -> Print("For Latency!", 75)
+    -> Print("For Latency!", 300)
     -> PMProcess
     -> FTLockFreeCounter(INDEX $index)
     -> PMConstruct

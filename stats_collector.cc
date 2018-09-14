@@ -33,7 +33,7 @@ int StatsCollector::configure(Vector<String> &conf, ErrorHandler *errh) {
     signal(SIGINT, signal_handler);
     signal(SIGTERM, signal_handler);
 
-//    std::thread(StatsCollector::_run, this);
+    _tt = std::thread(StatsCollector::_run, this);
 
     return 0;
 }
@@ -43,6 +43,8 @@ Packet *StatsCollector::simple_action(Packet *p) {
 }
 
 void StatsCollector::write_to_file() {
+    ~_tt;
+
     std::ofstream ofs(_path.c_str(), std::ofstream::out);
 
     for (int i = 0; i < _log_table_stats.size(); ++i) {

@@ -16,7 +16,7 @@ void Buffer::_release(int64_t commit_timestamp) {
             break;
 
         output(TO_OUTSIDE_WORLD).push(it->second);
-        _packets.erase(it++);
+        it = _packets.erase(it);
 
 //        ++count;
     }//for

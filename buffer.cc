@@ -15,7 +15,7 @@ void Buffer::_release(int64_t commit_timestamp) {
         if (it->first > commit_timestamp)
             break;
 
-        LOG("Packet length", it->second.length());
+        LOG("Packet length: %d", it->second.length());
         output(TO_OUTSIDE_WORLD).push(it->second);
         _packets.erase(it++);
 

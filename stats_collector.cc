@@ -1,6 +1,6 @@
 #include <click/config.h>
 #include <click/args.hh>
-#include "state_collector.hh"
+#include "stats_collector.hh"
 
 CLICK_DECLS
 

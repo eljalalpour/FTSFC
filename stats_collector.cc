@@ -43,7 +43,7 @@ Packet *StatsCollector::simple_action(Packet *p) {
 }
 
 void StatsCollector::write_to_file() {
-    ~_tt;
+    _tt.~thread();
 
     std::ofstream ofs(_path.c_str(), std::ofstream::out);
 

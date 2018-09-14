@@ -62,6 +62,7 @@ void StatsCollector::collect() {
     auto _shared_state_elm = (SharedLockFreeState *)(r->find("shared_state"));
     _log_table_stats.push_back(_shared_state_elm->log_table_length());
 
+    LOG("Finding buffer element");
     if (_buffer) {
         auto _buffer_elm = (Buffer * )(r->find("ftb1::buffer"));
         _buffer_stats.push_back(_buffer_elm->length());

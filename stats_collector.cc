@@ -34,9 +34,7 @@ int StatsCollector::configure(Vector<String> &conf, ErrorHandler *errh) {
     signal(SIGINT, signal_handler);
     signal(SIGTERM, signal_handler);
 
-    LOG("Before creating the thread!");
     _tt = std::thread(StatsCollector::_run, this);
-    LOG("After creating the thread!");
 
     return 0;
 }

@@ -225,4 +225,42 @@ public:
     }
 };
 
+class TimestampMeasure {
+public:
+    TimestampMeasure() : _usec_beg(0), _usec_accum(0), _count(0) { }
+
+    inline uint64_t count() {
+        return _count;
+    }
+
+    inline double time() {
+        return _usec_accum;
+    }
+
+    inline double average_time() {
+        return _usec_accum / _count;
+    }
+
+    inline String report() {
+        return String(_count) + ","
+            + String(_usec_accum) + ","
+            + String(_usec_accum / _count);
+    }
+
+protected:
+    void beg() {
+        _usec_beg = Timestamp::now();
+    }
+
+    void end() {
+        _usec_accum += Timestamp::now().doubleval() - _usec_beg;
+        _count++;
+    }
+
+private:
+    double _usec_beg;
+    double _usec_accum;
+    uint64_t _count;
+};
+
 #endif //FTSFC_DEFS_HH

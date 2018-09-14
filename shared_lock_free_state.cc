@@ -137,5 +137,9 @@ Packet *SharedLockFreeState::simple_action(Packet *p) {
     return p;
 }
 
+size_t SharedLockFreeState::log_table_length() {
+    return this->_log_table->size();
+}
+
 CLICK_ENDDECLS
 EXPORT_ELEMENT(SharedLockFreeState)

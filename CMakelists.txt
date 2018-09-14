@@ -41,6 +41,8 @@ add_executable(FTSFC
         pm_process.hh
         pm_construct.cc
         pm_construct.hh
+        stats_collector.cc
+        stats_collector.hh
         )
 
 target_link_libraries(FTSFC ${PROTOBUF_LIB})

@@ -36,6 +36,10 @@ int Buffer::configure(Vector<String> &conf, ErrorHandler *errh) {
     return 0;
 }
 
+size_t Buffer::length() {
+    return _packets.size();
+}
+
 void Buffer::push(int, Packet*p) {
     DEBUG("--------------------");
     DEBUG("Begin Buffer");

@@ -51,6 +51,8 @@ public:
     void process_piggyback_message(Packet*);
 
     void construct_piggyback_message(Packet*);
+
+    size_t log_table_length();
 };
 
 CLICK_ENDDECLS

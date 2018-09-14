@@ -39,6 +39,8 @@ public:
     void push(int, Packet*);
 
     int configure(Vector<String> &, ErrorHandler *);
+
+    size_t length();
 };
 
 CLICK_ENDDECLS

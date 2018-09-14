@@ -10,8 +10,9 @@ CLICK_DECLS
 StatsCollector* logger;
 
 void signal_handler(int signal) {
-    DEBUG("Interrupt signal (%d) received. Writing packets timestamps to file!", signal);
+    LOG("Interrupt signal (%d) received. Writing packets timestamps to file!", signal);
     logger->write_to_file();
+    LOG("After write to file");
     exit(signal);
 }
 
@@ -43,8 +44,10 @@ Packet *StatsCollector::simple_action(Packet *p) {
 }
 
 void StatsCollector::write_to_file() {
+    LOG("Calling thread destructor");
     _tt.~thread();
 
+    LOG("Writing to file!");
     std::ofstream ofs(_path.c_str(), std::ofstream::out);
 
     for (int i = 0; i < _log_table_stats.size(); ++i) {

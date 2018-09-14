@@ -1,5 +1,5 @@
 shared_state::SharedLockFreeState(CHAIN 2, ID 0, F 1);
-stats_col::StatsCollector(BUFFER False, PATH "../../FTSFC/results/ch2-lt1.txt", PERIOD 1);
+stats_col::StatsCollector(BUFFER False, PATH "../../FTSFC/results/ch2-st1.txt", PERIOD 1);
 
 elementclass FTBlock {
 $index,$src_ip |

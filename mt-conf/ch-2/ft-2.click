@@ -2,7 +2,7 @@
 // aqua07 -> aqua08 -> aqua01
 
 shared_state::SharedLockFreeState(CHAIN 2, ID 1, F 1);
-stats_col::StatsCollector(BUFFER True, PATH "../../FTSFC/results/ch2-st2.txt", PERIOD 1);
+stats_col::StatsCollector(BUFFER true, PATH "../../FTSFC/results/ch2-st2.txt", PERIOD 1);
 
 elementclass FTBlock {
 $index,$out,$forwarder |

@@ -12,8 +12,8 @@ Buffer::~Buffer() { };
 void Buffer::_release(int64_t commit_timestamp) {
 //    int count = 0;
     for (auto it = _packets.begin(); it != _packets.end(); /* no increment */) {
-        if (it->first > commit_timestamp)
-            break;
+//        if (it->first > commit_timestamp)
+//            break;
 
         output(TO_OUTSIDE_WORLD).push(it->second);
         _packets.erase(it++);

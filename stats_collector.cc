@@ -71,7 +71,7 @@ void StatsCollector::collect() {
     _log_table_stats.push_back(_shared_state_elm->log_table_length());
 
     for (auto i = 0; i < _buffer; ++i) {
-        String buffer_name = "b" + i;
+        String buffer_name = "b1";
         LOG("Finding %s!", buffer_name.c_str());
         auto _buffer_elm = (Buffer *) (r->find("buffer", buffer_name));
         _buffer_stats[i].push_back(_buffer_elm->length());

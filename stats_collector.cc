@@ -1,6 +1,7 @@
 #include <click/config.h>
 #include <click/args.hh>
 #include <click/router.hh>
+#include <sstream>
 #include "buffer.hh"
 #include "shared_lock_free_state.hh"
 #include "stats_collector.hh"
@@ -63,10 +64,13 @@ void StatsCollector::collect() {
     _log_table_stats.push_back(_shared_state_elm->log_table_length());
 
     LOG("Finding buffer element");
-    if (_buffer) {
-        auto _buffer_elm = (Buffer * )(r->find("buffer", "ftb1"));
+    for (auto i = 1; i <= _buffer; ++i) {
+        std::stringstream ss;
+        ss << "b" << i;
+        auto _buffer_elm = (Buffer *) (r->find("buffer", ss.str().c_str()));
         _buffer_stats.push_back(_buffer_elm->length());
-    }//if
+    }
+
 }
 
 CLICK_ENDDECLS

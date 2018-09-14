@@ -12,12 +12,12 @@ CLICK_DECLS
 
 class StatsCollector : public Element {
 private:
-    bool _buffer;
+    int _buffer;
     String _path;
     int _period;
     std::thread _tt;
 
-    Vector<size_t> _buffer_stats;
+    Vector<Vector<size_t>> _buffer_stats;
     Vector<size_t> _log_table_stats;
 
     static void _run(StatsCollector* state_coll) {

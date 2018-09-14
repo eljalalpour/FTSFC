@@ -64,7 +64,7 @@ void StatsCollector::collect() {
 
     LOG("Finding buffer element");
     if (_buffer) {
-        auto _buffer_elm = (Buffer * )(r->find("ftb1::buffer"));
+        auto _buffer_elm = (Buffer * )(r->find("buffer", "ftb1"));
         _buffer_stats.push_back(_buffer_elm->length());
     }//if
 }

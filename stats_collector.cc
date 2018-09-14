@@ -16,7 +16,7 @@ void signal_handler(int signal) {
 }
 
 StatsCollector::StatsCollector () {
-
+    logger = this;
 };
 
 StatsCollector::~StatsCollector() { };

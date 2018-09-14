@@ -15,6 +15,7 @@ $index,$src_ip |
     -> Discard;
 
     filter[0]
+    -> Print("For latency", 300)
     -> [0]forwarder::Forwarder();
 
     filter[1]

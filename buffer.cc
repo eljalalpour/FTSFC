@@ -53,6 +53,8 @@ void Buffer::push(int, Packet*p) {
 //    util.print((*_msg[_chain_len - 1]));
 
     // Store the packet into buffer
+//    _packets[lts] = Packet::make(p->data(), p->length());
+    std::memset(p->data() + DEFAULT_OFFSET, 0, sizeof(PiggybackMessage));
     _packets[lts] = Packet::make(p->data(), p->length());
 
     //TODO: find the best order, either first send the packet to Forwarder or release packets

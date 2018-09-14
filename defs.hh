@@ -37,7 +37,7 @@
 /// definitions of assumptions
 #define STATE_LEN      8
 #define MB_LEN         4
-#define DEFAULT_OFFSET 200 // This value must be greater than 75
+#define DEFAULT_OFFSET 76 // This value must be greater than 75
 
 /// State and piggyback message definitions
 typedef int State[STATE_LEN];

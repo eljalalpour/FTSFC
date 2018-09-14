@@ -32,6 +32,13 @@ int StatsCollector::configure(Vector<String> &conf, ErrorHandler *errh) {
                 .complete() < 0)
         return -1;
 
+    if (_buffer > 0) {
+        for (auto i = 0; i < _buffer; ++i) {
+            Vector<size_t> elem;
+            _buffer_stats.push_back(elem);
+        }//for
+    }//if
+
     signal(SIGINT, signal_handler);
     signal(SIGTERM, signal_handler);
 

@@ -11,6 +11,7 @@ $index,$out,$forwarder |
     -> PMProcess
     -> FTLockFreeCounter(INDEX $index)
     -> PMConstruct
+    -> MarkIPHeader(14)
     -> buffer::Buffer(CHAIN 2);
 
     // To the outside world

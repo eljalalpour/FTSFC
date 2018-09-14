@@ -8,8 +8,10 @@ $index,$out,$forwarder |
     input
     -> MarkIPHeader(14)
     -> IPFilter(allow udp && src 1.1.0.0/16)
+    -> MarkIPHeader(14)
     -> PMProcess
     -> FTLockFreeCounter(INDEX $index)
+    -> MarkIPHeader(14)
     -> PMConstruct
     -> MarkIPHeader(14)
     -> buffer::Buffer(CHAIN 2);

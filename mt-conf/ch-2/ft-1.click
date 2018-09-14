@@ -23,8 +23,11 @@ $index,$src_ip |
     -> [1]forwarder;
 
     forwarder[0]
+    -> MarkIPHeader(14)
     -> PMProcess
+    -> MarkIPHeader(14)
     -> FTLockFreeCounter(INDEX $index)
+    -> MarkIPHeader(14)
     -> PMConstruct
     -> MarkIPHeader(14)
     -> StoreIPAddress($src_ip, src)

@@ -16,7 +16,7 @@ void Forwarder::push(int source, Packet *p) {
     DEBUG("Begin Forwarder");
 
     if (p->length() < DEFAULT_OFFSET + sizeof(PiggybackMessage)) {
-        LOG("Smaller!")
+        LOG("Smaller!");
     }//if
 
     if (source == 0) { // Receiving a packet from the traffic source

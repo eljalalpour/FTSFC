@@ -7,7 +7,7 @@ elementclass FTBlock {
 $index,$src_ip |
     input
     -> MarkIPHeader(14)
-    -> IPPrint("For Latency!")
+    -> Print("For Latency!")
     -> filter::IPClassifier(src net 1.0.0.0/16,
                             src net 2.0.0.0/16,
                             -);
@@ -19,7 +19,7 @@ $index,$src_ip |
     -> [0]forwarder::Forwarder();
 
     filter[1]
-//    -> IPPrint("From Buffer")
+//    -> Print("From Buffer")
     -> [1]forwarder;
 
     forwarder[0]

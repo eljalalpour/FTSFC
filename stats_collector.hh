@@ -10,6 +10,8 @@
 
 CLICK_DECLS
 
+#define FT_BLOCK_PREFIX "b"
+
 class StatsCollector : public Element {
 private:
     int _buffer;

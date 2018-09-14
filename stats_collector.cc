@@ -55,10 +55,10 @@ void StatsCollector::write_to_file() {
     std::ofstream ofs(_path.c_str(), std::ofstream::out);
 
     for (int i = 0; i < _log_table_stats.size(); ++i) {
-        if (_buffer)
-            ofs << _log_table_stats[i] << "," << _buffer_stats[i] << std::endl;
-        else
-            ofs << _log_table_stats[i] << std::endl;
+        ofs << _log_table_stats[i];
+        for (int j = 0; j < _buffer; ++j)
+            ofs << "," << _buffer_stats[i];
+        ofs << std::endl
     }//for
     ofs.close();
 
@@ -73,7 +73,7 @@ void StatsCollector::collect() {
     LOG("Finding buffer element");
     for (auto i = 1; i <= _buffer; ++i) {
         std::stringstream ss;
-        ss << "b" << i;
+        ss << FT_BLOCK_PREFIX << i;
         auto _buffer_elm = (Buffer *) (r->find("buffer", ss.str().c_str()));
         _buffer_stats[i].push_back(_buffer_elm->length());
     }

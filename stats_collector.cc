@@ -45,8 +45,6 @@ Packet *StatsCollector::simple_action(Packet *p) {
 
 void StatsCollector::write_to_file() {
     LOG("Calling thread destructor");
-    _tt.~thread();
-
     LOG("Writing to file!");
     std::ofstream ofs(_path.c_str(), std::ofstream::out);
 

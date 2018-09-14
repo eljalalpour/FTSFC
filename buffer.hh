@@ -19,8 +19,6 @@ class Buffer : public Element {
 private:
     int _chain_len;
 
-    PiggybackMessage* _msg;
-
     std::map<int64_t, Packet *> _packets;
 
     inline void _release(int64_t);

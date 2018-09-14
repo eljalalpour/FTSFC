@@ -75,7 +75,7 @@ void StatsCollector::collect() {
         std::stringstream ss;
         ss << "b" << i;
         auto _buffer_elm = (Buffer *) (r->find("buffer", ss.str().c_str()));
-        _buffer_stats.push_back(_buffer_elm->length());
+        _buffer_stats[i].push_back(_buffer_elm->length());
     }
 
 }

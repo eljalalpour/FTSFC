@@ -53,7 +53,7 @@ td1::ToDPDKDevice(0,0);
 // td8::ToDPDKDevice(0,7);
 
 fd1
--> FTBlock(0,1.2.1.1,2.0.1.1)
+-> ftb1::FTBlock(0,1.2.1.1,2.0.1.1)
 -> td1;
 
 // fd2

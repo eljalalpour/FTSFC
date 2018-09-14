@@ -65,7 +65,7 @@ void StatsCollector::collect() {
     _log_table_stats.push_back(_shared_state_elm->log_table_length());
 
     if (_buffer) {
-        auto _buffer_elm = (Buffer * )(r->find("buffer"));
+        auto _buffer_elm = (Buffer * )(r->find("ftb1::buffer"));
         _buffer_stats.push_back(_buffer_elm->length());
     }//if
 }

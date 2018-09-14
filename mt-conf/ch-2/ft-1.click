@@ -7,7 +7,7 @@ elementclass FTBlock {
 $index,$src_ip |
     input
     -> MarkIPHeader(14)
-    -> Print("For Latency!")
+//    -> Print("For Latency!")
     -> filter::IPClassifier(src net 1.0.0.0/16,
                             src net 2.0.0.0/16,
                             -);
@@ -23,11 +23,8 @@ $index,$src_ip |
     -> [1]forwarder;
 
     forwarder[0]
-    -> MarkIPHeader(14)
     -> PMProcess
-    -> MarkIPHeader(14)
     -> FTLockFreeCounter(INDEX $index)
-    -> MarkIPHeader(14)
     -> PMConstruct
     -> MarkIPHeader(14)
     -> StoreIPAddress($src_ip, src)

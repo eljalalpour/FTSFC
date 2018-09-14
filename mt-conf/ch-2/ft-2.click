@@ -8,12 +8,9 @@ $index,$out,$forwarder |
     input
     -> MarkIPHeader(14)
     -> IPFilter(allow udp && src 1.1.0.0/16)
-    -> MarkIPHeader(14)
     -> PMProcess
     -> FTLockFreeCounter(INDEX $index)
-    -> MarkIPHeader(14)
     -> PMConstruct
-    -> MarkIPHeader(14)
     -> buffer::Buffer(CHAIN 2);
 
     // To the outside world
@@ -23,7 +20,7 @@ $index,$out,$forwarder |
     -> StoreIPAddress(192.168.1.101, dst)
     -> StoreEtherAddress(0c:c4:7a:73:fa:6a, src)
     -> StoreEtherAddress(0c:c4:7a:73:fa:72, dst)
-    -> Print("To outside world!")
+//    -> Print("To outside world!")
     -> output;
 
     // To the forwarder

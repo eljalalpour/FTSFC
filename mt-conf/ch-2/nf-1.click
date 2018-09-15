@@ -36,8 +36,8 @@ td2::ToDPDKDevice(0,1);
 // td7::ToDPDKDevice(0,6);
 // td8::ToDPDKDevice(0,7);
 
-// StaticThreadSched(fd1 0, fd2 1);
-StaticThreadSched(fd1 0, fd2 1, fd3 2)
+StaticThreadSched(fd1 0, fd2 1);
+// StaticThreadSched(fd1 0, fd2 1, fd3 2)
 // StaticThreadSched(fd1 0, fd2 1, fd3 2, fd4 3)
 // StaticThreadSched(fd1 0, fd2 1, fd3 2, fd4 3, fd5 4)
 // StaticThreadSched(fd1 0, fd2 1, fd3 2, fd4 3, fd5 4, fd6 5)

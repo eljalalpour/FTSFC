@@ -31,10 +31,13 @@ Packet *TFLockFreeCounter::simple_action(Packet *p) {
     DEBUG("Begin TFLockFreeCounter");
 
     _init_transmitter();
+    LOG("After init");
 
     ++ _trans->inoperation[_index];
+    LOG("After increment");
 
     _trans->send();
+    LOG("After send");
 
     DEBUG("End TFLockFreeCounter");
     DEBUG("--------------------");

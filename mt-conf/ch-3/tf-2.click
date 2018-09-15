@@ -1,5 +1,15 @@
 // In aqua08
-// aqua07 -> aqua08 -> aqua01
+// aqua07 -> aqua08 -> aqua09
+
+//
+// Check-list:
+// Transmitter dest ip
+// IPFilter src IP
+// StoreIPAddress destination IP
+// StoreEtherAddress src
+// StoreEtherAddress dst
+// TFBlock elements second arguments
+//
 
 trans::Transmitter(10.70.0.3:10000); // set replica's ip and port
 

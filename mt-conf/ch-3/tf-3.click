@@ -1,13 +1,23 @@
 // In aqua09
 // aqua08 -> aqua09 -> aqua01
 
+//
+// Check-list:
+// Transmitter dest ip
+// IPFilter src IP
+// StoreIPAddress destination IP
+// StoreEtherAddress src
+// StoreEtherAddress dst
+// TFBlock elements second arguments
+//
+
 trans::Transmitter(10.70.0.4:10000); // set replica's ip and port
 
 elementclass TFBlock {
 $index,$src_ip |
     input
     -> MarkIPHeader(14)
-    -> IPFilter(allow udp && src 1.1.0.0/16)
+    -> IPFilter(allow udp && src 1.2.0.0/16)
     -> TFLockFreeCounter(INDEX $index)
     -> MarkIPHeader(14)
     -> StoreIPAddress($src_ip, src)

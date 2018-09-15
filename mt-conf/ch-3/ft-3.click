@@ -7,7 +7,7 @@ elementclass FTBlock {
 $index,$out,$forwarder |
     input
     -> MarkIPHeader(14)
-    -> IPFilter(allow udp && src 1.3.0.0/16)
+    -> IPFilter(allow udp && src 1.2.0.0/16)
     -> PMProcess
     -> FTLockFreeCounter(INDEX $index)
     -> PMConstruct

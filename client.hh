@@ -51,7 +51,7 @@ private:
         int yes = 1;
         if (setsockopt(sock, IPPROTO_TCP, TCP_NODELAY, (char *) &yes, sizeof(int))) {
             perror("\nUnable to set TCP_NODELAY\n");
-            return NULL;
+            return 0;
         }//if
 
         struct sockaddr_in server;
@@ -76,13 +76,13 @@ private:
     }
 
     void _connect_sockets() {
-        for (auto i = 0; i < _conns.size(); ++i) {
+        for (size_t i = 0; i < _conns.size(); ++i) {
             _conns[i].socket = _connect(_conns[i].ip, _conns[i].port);
         }//for
     }
 
     void _close_sockets() {
-        for (auto i = 0; i < _conns.size(); ++i)
+        for (size_t i = 0; i < _conns.size(); ++i)
             close(_conns[i].socket);
     }
 
@@ -108,6 +108,7 @@ public:
 
         for (size_t i = 0; i < _conns.size(); ++i) {
             pthread_t thread;
+            _conns[i].state = &state;
             if(pthread_create(&thread, &attr, _send, (void *)&_conns[i])) {
                 DEBUG("Error on creating a thread for the server on %s:%d", _conns[i].ip.c_str(), _conns[i].port);
                 result = false;
@@ -148,7 +149,7 @@ public:
 //        _ips.insert(_ips.begin(), ips.begin(), ips.end());
 //        _ports.insert(_ports.begin(), ports.begin(), ports.end());
 
-        for (auto i = 0; i < ips.size(); ++i) {
+        for (size_t i = 0; i < ips.size(); ++i) {
             ServerConn conn;
             conn.ip = ips[i];
             conn.port = ports[i];

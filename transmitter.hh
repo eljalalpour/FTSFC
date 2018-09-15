@@ -5,7 +5,10 @@
 #include <click/config.h>
 #include <click/element.hh>
 #include <fstream>
-#include <map>
+#include <vector>
+
+using std::vector;
+using std::string;
 
 CLICK_DECLS
 

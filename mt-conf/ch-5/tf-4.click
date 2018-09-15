@@ -1,5 +1,5 @@
 // In aqua10
-// aqua09 -> aqua10 -> aqua11
+// aqua09 -> aqua10 -> aqua02
 
 //
 // Check-list:
@@ -21,9 +21,9 @@ $index,$src_ip |
     -> TFLockFreeCounter(INDEX $index)
     -> MarkIPHeader(14)
     -> StoreIPAddress($src_ip, src)
-    -> StoreIPAddress(192.168.1.111, dst)
+    -> StoreIPAddress(192.168.1.102, dst)
     -> StoreEtherAddress(0c:c4:7a:73:fa:18, src)
-    -> StoreEtherAddress(0c:c4:7a:73:fa:e6, dst)
+    -> StoreEtherAddress(0c:c4:7a:73:fa:dc, dst)
 //    -> IPPrint("To 5")
     -> output;
 }

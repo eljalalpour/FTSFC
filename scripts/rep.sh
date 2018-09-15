@@ -9,6 +9,9 @@ ip=$1
 dpdk=/home/eghaznavi/Milad/dpdk-stable-17.05.2/usertools
 pinglist=(
     "192.168.1.101"
+    "192.168.1.102"
+    "192.168.1.103"
+    "192.168.1.104"
     "192.168.1.107"
     "192.168.1.108"
     "192.168.1.109"
@@ -16,7 +19,7 @@ pinglist=(
     "192.168.1.111"
     "192.168.1.112"
 )
-pingcount=3
+pingcount=2
 sleeptime=3
 int="eth0"
 nic="03:00.0"

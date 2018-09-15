@@ -24,7 +24,7 @@ $index,$src_ip |
     -> StoreIPAddress(192.168.1.109, dst)
     -> StoreEtherAddress(0c:c4:7a:73:fa:6a, src)
     -> StoreEtherAddress(0c:c4:7a:73:f9:ec, dst)
-    -> IPPrint("To 3")
+//    -> IPPrint("To 3")
     -> output;
 }
 

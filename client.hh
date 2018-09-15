@@ -27,6 +27,7 @@ private:
     static void* _send(void* param) {
         ServerConn* scp = static_cast<ServerConn*>(param);
 
+        LOG("State to be sent:");
         Util _util;
         _util.print(*(scp->state));
 

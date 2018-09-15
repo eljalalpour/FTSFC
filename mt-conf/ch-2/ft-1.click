@@ -15,11 +15,11 @@ $index,$src_ip |
     -> Discard;
 
     filter[0]
-//    -> Print("For latency", 300)
+//    -> Print("latency", 300)
     -> [0]forwarder::Forwarder();
 
     filter[1]
-//    -> Print("From Buffer")
+//    -> Print("buffer")
     -> [1]forwarder;
 
     forwarder[0]

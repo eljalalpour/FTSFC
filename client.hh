@@ -76,13 +76,13 @@ private:
     }
 
     void _connect_sockets() {
-        for (int i = 0; i < _conns.size(); ++i) {
+        for (auto i = 0; i < _conns.size(); ++i) {
             _conns[i].socket = _connect(_conns[i].ip, _conns[i].port);
         }//for
     }
 
     void _close_sockets() {
-        for (int i = 0; i < _conns.size(); ++i)
+        for (auto i = 0; i < _conns.size(); ++i)
             close(_conns[i].socket);
     }
 

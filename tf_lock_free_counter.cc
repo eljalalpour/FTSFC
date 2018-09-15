@@ -14,7 +14,7 @@ TFLockFreeCounter::~TFLockFreeCounter () { };
 int TFLockFreeCounter::configure(Vector<String> &conf, ErrorHandler *errh) {
     // set index param
     Args(conf, this, errh).read_or_set("INDEX", _index, DEFAULT_INDEX);
-    DEBUG("TFLockFreeCounter index is %d!\n", _index);
+    LOG("TFLockFreeCounter index is %d!\n", _index);
 
     return 0;
 }

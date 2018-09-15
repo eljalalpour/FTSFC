@@ -1,20 +1,37 @@
-// In aqua08
-// aqua08 -> aqua09 -> aqua01
+// In aqua07
+// aqua01 -> aqua07 -> aqua08
 
-array::AtomicArray;
+shared_state::SharedLockFreeState(CHAIN 3, ID 0, F 1);
 
-elementclass NFBlock {
+elementclass FTBlock {
 $index,$src_ip |
     input
     -> MarkIPHeader(14)
-    -> IPFilter(allow udp && src 1.2.0.0/16)
-//    -> IPPrint($index)
-    -> NFAtomicCounter(INDEX $index)
+    -> filter::IPClassifier(src net 1.0.0.0/16,
+                            src net 2.0.0.0/16,
+                            -);
+
+    filter[2]
+    -> Discard;
+
+    filter[0]
+//    -> Print("For latency", 300)
+    -> [0]forwarder::Forwarder();
+
+    filter[1]
+//    -> Print("From Buffer")
+    -> [1]forwarder;
+
+    forwarder[0]
+    -> PMProcess
+    -> FTLockFreeCounter(INDEX $index)
+    -> PMConstruct
     -> MarkIPHeader(14)
     -> StoreIPAddress($src_ip, src)
-    -> StoreIPAddress(192.168.1.101, dst)
-    -> StoreEtherAddress(0c:c4:7a:73:f9:ec, src)
-    -> StoreEtherAddress(0c:c4:7a:73:fa:72, dst)
+    -> StoreIPAddress(192.168.1.108, dst)
+    -> StoreEtherAddress(0c:c4:7a:73:fa:54, src)
+    -> StoreEtherAddress(0c:c4:7a:73:fa:6a, dst)
+    -> IPPrint("To 2")
     -> output
 }
 
@@ -44,36 +61,34 @@ td1::ToDPDKDevice(0,0);
 // StaticThreadSched(fd1 0, fd2 1, fd3 2, fd4 3, fd5 4, fd6 5, fd7 6)
 // StaticThreadSched(fd1 0, fd2 1, fd3 2, fd4 3, fd5 4, fd6 5, fd7 6, fd8 7)
 
-
 fd1
--> NFBlock(0,1.3.1.1)
+-> FTBlock(0,1.1.1.1)
 -> td1;
 
 // fd2
-// -> NFBlock(1,1.3.2.2)
+// -> FTBlock(1,1.1.2.2)
 // -> td2;
 //
 // fd3
-// -> NFBlock(2,1.3.3.3)
+// -> FTBlock(2,1.1.3.3)
 // -> td3;
 //
 // fd4
-// -> NFBlock(3,1.3.4.4)
+// -> FTBlock(3,1.1.4.4)
 // -> td4;
 //
 // fd5
-// -> NFBlock(4,1.3.5.5)
+// -> FTBlock(4,1.1.5.5)
 // -> td5;
 //
 // fd6
-// -> NFBlock(5,1.3.6.6)
+// -> FTBlock(5,1.1.6.6)
 // -> td6;
 //
 // fd7
-// -> NFBlock(6,1.3.7.7)
+// -> FTBlock(6,1.1.7.7)
 // -> td7;
 //
 // fd8
-// -> NFBlock(7,1.3.8.8)
+// -> FTBlock(7,1.1.8.8)
 // -> td8;
-

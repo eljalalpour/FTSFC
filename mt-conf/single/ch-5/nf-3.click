@@ -1,7 +1,7 @@
-// In aqua08
-// aqua08 -> aqua09 -> aqua01
+// In aqua09
+// aqua08 -> aqua09 -> aqua10
 
-array::AtomicArray;
+array::LockFreeArray;
 
 elementclass NFBlock {
 $index,$src_ip |
@@ -9,12 +9,12 @@ $index,$src_ip |
     -> MarkIPHeader(14)
     -> IPFilter(allow udp && src 1.2.0.0/16)
 //    -> IPPrint($index)
-    -> NFAtomicCounter(INDEX $index)
+    -> NFLockFreeCounter(INDEX $index)
     -> MarkIPHeader(14)
     -> StoreIPAddress($src_ip, src)
-    -> StoreIPAddress(192.168.1.101, dst)
+    -> StoreIPAddress(192.168.1.110, dst)
     -> StoreEtherAddress(0c:c4:7a:73:f9:ec, src)
-    -> StoreEtherAddress(0c:c4:7a:73:fa:72, dst)
+    -> StoreEtherAddress(0c:c4:7a:73:fa:18, dst)
     -> output
 }
 
@@ -43,7 +43,6 @@ td1::ToDPDKDevice(0,0);
 // StaticThreadSched(fd1 0, fd2 1, fd3 2, fd4 3, fd5 4, fd6 5)
 // StaticThreadSched(fd1 0, fd2 1, fd3 2, fd4 3, fd5 4, fd6 5, fd7 6)
 // StaticThreadSched(fd1 0, fd2 1, fd3 2, fd4 3, fd5 4, fd6 5, fd7 6, fd8 7)
-
 
 fd1
 -> NFBlock(0,1.3.1.1)
@@ -76,4 +75,3 @@ fd1
 // fd8
 // -> NFBlock(7,1.3.8.8)
 // -> td8;
-

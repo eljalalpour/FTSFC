@@ -7,6 +7,8 @@
 #include <netinet/tcp.h>
 #include "defs.hh"
 
+using std::string;
+
 typedef struct {
     string ip;
     uint16_t port;

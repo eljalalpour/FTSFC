@@ -67,3 +67,11 @@ fd1
 // fd8
 // -> NFBlock(7,1.2.8.8)
 // -> td8;
+
+// StaticThreadSched(fd1 0, fd2 1);
+// StaticThreadSched(fd1 0, fd2 1, fd3 2)
+// StaticThreadSched(fd1 0, fd2 1, fd3 2, fd4 3)
+// StaticThreadSched(fd1 0, fd2 1, fd3 2, fd4 3, fd5 4)
+// StaticThreadSched(fd1 0, fd2 1, fd3 2, fd4 3, fd5 4, fd6 5)
+// StaticThreadSched(fd1 0, fd2 1, fd3 2, fd4 3, fd5 4, fd6 5, fd7 6)
+// StaticThreadSched(fd1 0, fd2 1, fd3 2, fd4 3, fd5 4, fd6 5, fd7 6, fd8 7)

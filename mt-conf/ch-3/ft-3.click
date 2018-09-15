@@ -21,6 +21,7 @@ $index,$out,$forwarder |
     -> StoreEtherAddress(0c:c4:7a:73:fa:6a, src)
     -> StoreEtherAddress(0c:c4:7a:73:fa:72, dst)
 //    -> Print("For latency", 300)
+    -> IPPrint("To aqua01")
     -> output;
 
     // To the forwarder
@@ -31,6 +32,7 @@ $index,$out,$forwarder |
     -> StoreEtherAddress(0c:c4:7a:73:fa:6a, src)
     -> StoreEtherAddress(0c:c4:7a:73:fa:54, dst)
 //    -> Print("To forwarder!")
+    -> IPPrint("To aqua07")
     -> output;
 }
 

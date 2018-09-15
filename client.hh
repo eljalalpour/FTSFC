@@ -138,6 +138,8 @@ public:
             return multi_send(state);
         }//if
 
+        _conns[0].state = &state;
+
         _send(&_conns[0]);
         return true;
     }

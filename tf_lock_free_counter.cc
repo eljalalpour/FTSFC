@@ -33,8 +33,6 @@ Packet *TFLockFreeCounter::simple_action(Packet *p) {
     _init_transmitter();
 
     (*_trans).inoperation[_index] ++;
-    Util _util;
-    _util.print(_trans->inoperation);
     _trans->send();
 
     DEBUG("End TFLockFreeCounter");

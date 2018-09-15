@@ -1,0 +1,44 @@
+[WARN]  malloc() allocates objects >= 1 MiB from LuaJIT memory space.
+[WARN]  Install libjemalloc if you encounter out of memory errors.
+[INFO]  Initializing DPDK. This will take a few seconds...
+EAL: Probing VFIO support...
+EAL: PCI device 0000:03:00.0 on NUMA socket 0
+EAL:   probe driver: 8086:15ad net_ixgbe
+EAL: PCI device 0000:03:00.1 on NUMA socket 0
+EAL:   probe driver: 8086:15ad net_ixgbe
+EAL: PCI device 0000:05:00.0 on NUMA socket 0
+EAL:   probe driver: 8086:1521 net_e1000_igb
+EAL: PCI device 0000:05:00.1 on NUMA socket 0
+EAL:   probe driver: 8086:1521 net_e1000_igb
+[INFO]  Found 3 usable devices:
+   Device 0: 0C:C4:7A:73:FA:72 (Intel Corporation Ethernet Connection X552/X557-AT 10GBASE-T)
+   Device 1: 0C:C4:7A:73:FA:73 (Intel Corporation Ethernet Connection X552/X557-AT 10GBASE-T)
+   Device 2: 0C:C4:7A:73:F9:47 (Intel Corporation I350 Gigabit Network Connection)
+PMD: ixgbe_dev_link_status_print():  Port 0: Link Down
+[INFO]  Waiting for devices to come up...
+[INFO]  Device 0 (0C:C4:7A:73:FA:72) is up: 10000 MBit/s
+[INFO]  1 device is up.
+[WARN]  Failed to set rate limiter on queue [TxQueue: id=0, qid=0]: Invalid argument
+[WARN]  Failed to set rate limiter on queue [TxQueue: id=0, qid=1]: Invalid argument
+[Device: id=0] TX: 1.22 Mpps, 9804 Mbit/s (10000 Mbit/s with framing)
+[Device: id=0] RX: 1.03 Mpps, 8309 Mbit/s (8474 Mbit/s with framing)
+[Device: id=0] TX: 1.18 Mpps, 9475 Mbit/s (9664 Mbit/s with framing)
+[Device: id=0] RX: 1.07 Mpps, 8585 Mbit/s (8756 Mbit/s with framing)
+[Device: id=0] TX: 1.22 Mpps, 9804 Mbit/s (10000 Mbit/s with framing)
+[Device: id=0] RX: 1.07 Mpps, 8586 Mbit/s (8757 Mbit/s with framing)
+[Device: id=0] TX: 1.22 Mpps, 9804 Mbit/s (10000 Mbit/s with framing)
+[Device: id=0] RX: 1.07 Mpps, 8586 Mbit/s (8757 Mbit/s with framing)
+[Device: id=0] TX: 1.22 Mpps, 9804 Mbit/s (10000 Mbit/s with framing)
+[Device: id=0] RX: 1.07 Mpps, 8586 Mbit/s (8757 Mbit/s with framing)
+[Device: id=0] TX: 1.22 Mpps, 9804 Mbit/s (10000 Mbit/s with framing)
+[Device: id=0] RX: 1.07 Mpps, 8586 Mbit/s (8757 Mbit/s with framing)
+[Device: id=0] TX: 1.22 Mpps, 9804 Mbit/s (10000 Mbit/s with framing)
+[Device: id=0] RX: 1.07 Mpps, 8586 Mbit/s (8757 Mbit/s with framing)
+[Device: id=0] TX: 1.22 Mpps, 9804 Mbit/s (10000 Mbit/s with framing)
+[Device: id=0] RX: 1.07 Mpps, 8586 Mbit/s (8757 Mbit/s with framing)
+[Device: id=0] TX: 1.22 Mpps, 9804 Mbit/s (10000 Mbit/s with framing)
+[Device: id=0] RX: 1.07 Mpps, 8586 Mbit/s (8757 Mbit/s with framing)
+[Device: id=0] TX: 1.22 Mpps, 9804 Mbit/s (10000 Mbit/s with framing)
+[Device: id=0] RX: 1.07 Mpps, 8586 Mbit/s (8757 Mbit/s with framing)
+[Device: id=0] TX: 1.22 (StdDev 0.01) Mpps, 9768 (StdDev 110) Mbit/s (9962 Mbit/s with framing), total 13387437 packets with 13440986748 bytes (incl. CRC)
+[Device: id=0] RX: 1.07 (StdDev 0.00) Mpps, 8586 (StdDev 0) Mbit/s (8757 Mbit/s with framing), total 11724490 packets with 11771164018 bytes (incl. CRC)

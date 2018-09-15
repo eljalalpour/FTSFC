@@ -7,6 +7,7 @@ elementclass TFBlock {
 $index,$src_ip |
     input
     -> MarkIPHeader(14)
+    -> IPFilter(allow udp && src 1.0.0.0/16)
     -> TFLockFreeCounter(INDEX $index)
     -> StoreIPAddress($src_ip, src)
     -> StoreIPAddress(192.168.1.108, dst)

@@ -32,7 +32,7 @@ function configure(parser)
     parser:description("Generates UDP traffic and measure latencies. Edit the source to modify constants like IPs.")
     parser:option("-d --dev", "Device to transmit/receive from."):default(0):convert(tonumber)
     parser:option("-r --rate", "Transmit rate in Mbit/s."):default(10000):convert(tonumber)
-    parser:option("-s --size", "Packet size."):default(1250):convert(tonumber)
+    parser:option("-s --size", "Packet size."):default(1000):convert(tonumber)
     --parser:option("-o --out", "Filename of the latency histogram."):default("latency.csv")
     parser:option("-d --duration", "Experiment duration (in seconds)"):default(10):convert(tonumber)
 end

@@ -35,7 +35,7 @@ private:
         read(scp->socket, &c, sizeof(char));
 //        DEBUG("Read from socket: %c", c);
 
-        return NULL;
+        return 0;
     }
 
     int _connect(string ip, uint16_t port) {
@@ -44,7 +44,7 @@ private:
         int sock = socket(AF_INET, SOCK_STREAM, 0);
         if (sock == -1) {
             perror("Could not create socket");
-            return NULL;
+            return 0;
         }//if
 
         // Set TCP_NODELAY
@@ -63,13 +63,13 @@ private:
         // inet_pton
         if(inet_pton(AF_INET, ip.c_str(), &server.sin_addr) <= 0) {
             perror("\n inet_pton error occured\n");
-            return NULL;
+            return 0;
         }//if
 
         // Connect to server
         if (connect(sock, (struct sockaddr *)&server, sizeof(server)) < 0) {
             perror("connect failed. Error");
-            return NULL;
+            return 0;
         }//if
 
         return sock;

@@ -1,5 +1,5 @@
 // In aqua10
-// aqua09 -> aqua10 -> aqua01
+// aqua09 -> aqua10 -> aqua11
 
 array::LockFreeArray;
 
@@ -12,7 +12,7 @@ $index,$src_ip |
     -> NFLockFreeCounter(INDEX $index)
     -> MarkIPHeader(14)
     -> StoreIPAddress($src_ip, src)
-    -> StoreIPAddress(192.168.1.101, dst)
+    -> StoreIPAddress(192.168.1.111, dst)
     -> StoreEtherAddress(0c:c4:7a:73:fa:18, src)
     -> StoreEtherAddress(0c:c4:7a:73:fa:e6, dst)
     -> output

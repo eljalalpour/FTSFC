@@ -5,7 +5,9 @@
 
 CLICK_DECLS
 
-TFLockFreeCounter::TFLockFreeCounter  () : _index(DEFAULT_INDEX) { };
+TFLockFreeCounter::TFLockFreeCounter  () {
+
+};
 
 TFLockFreeCounter::~TFLockFreeCounter () { };
 

@@ -6,7 +6,10 @@
 
 CLICK_DECLS
 
-Transmitter::Transmitter() { };
+Transmitter::Transmitter() {
+    Util _util;
+    _util.init(inoperation);
+};
 
 Transmitter::~Transmitter() { };
 

@@ -6,7 +6,7 @@ if [ "$#" -ne 1 ]; then
 fi
 
 ip=$1
-dpdk=/home/h4bian/Milad/dpdk-stable-17.05.2/usertools
+dpdk=/home/eghaznavi/Milad/dpdk-stable-17.05.2/usertools
 pinglist=(
     "192.168.1.101"
     "192.168.1.107"

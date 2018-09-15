@@ -28,7 +28,7 @@ private:
         ServerConn* scp = static_cast<ServerConn*>(param);
 
         Util _util;
-        _util.print(scp->state);
+        _util.print(*(scp->state));
 
         // Send state
         write(scp->socket, CAST_TO_BYTES(scp->state), sizeof(State));

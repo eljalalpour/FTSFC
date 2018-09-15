@@ -18,7 +18,9 @@ EAL:   probe driver: 8086:1521 net_e1000_igb
    Device 2: 0C:C4:7A:73:F9:47 (Intel Corporation I350 Gigabit Network Connection)
 PMD: ixgbe_dev_link_status_print():  Port 0: Link Down
 [INFO]  Waiting for devices to come up...
+PMD: ixgbe_dev_link_status_print():  Port 0: Link Down
 [INFO]  Device 0 (0C:C4:7A:73:FA:72) is up: 10000 MBit/s
 [INFO]  1 device is up.
-Samples: 1420, Average: 114433.3 ns, StdDev: 10335.9 ns, Quartiles: 106825.0/113800.0/121300.0 ns
+PMD: ixgbe_dev_link_status_print(): Port 0: Link Up - speed 10000 Mbps - full-duplex
+Samples: 1421, Average: 94421.1 ns, StdDev: 1424.6 ns, Quartiles: 93437.0/94438.0/95400.0 ns
 [INFO]  Saving histogram to '../../FTSFC/results/single-thread/lat-ch5-nf.csv'

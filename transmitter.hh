@@ -14,7 +14,6 @@ CLICK_DECLS
 
 class Transmitter : public Element {
 private:
-    unsigned int _counter;
     Client _client;
     vector<string> _ips;
     vector<uint16_t> _ports;
@@ -23,6 +22,8 @@ private:
     void _split(string& str, char dlm, vector<string>& tokens);
 
 public:
+    State inoperation;
+
     Transmitter();
 
     ~Transmitter();
@@ -35,7 +36,7 @@ public:
 
     Packet *simple_action(Packet *p);
 
-    bool send(State& state);
+    bool send();
 
     int configure(Vector<String> &conf, ErrorHandler *errh);
 };

@@ -21,8 +21,8 @@ void Transmitter::_print_ip_port_list() {
 }
 
 void Transmitter::_split(string& str, char dlm, vector<string>& tokens) {
-    int last_index = 0;
-    int i = 0;
+    size_t last_index = 0;
+    size_t i = 0;
     for (; i < str.size(); ++i) {
         if (str[i] == dlm && i - last_index > 0) {
             string token(str, last_index, i - last_index);
@@ -38,7 +38,7 @@ void Transmitter::_split(string& str, char dlm, vector<string>& tokens) {
     }//if
 }
 
-int Transmitter::configure(Vector<String> &conf, ErrorHandler *errh) {
+int Transmitter::configure(Vector<String> &conf, ErrorHandler *) {
 
     BoundedIntArg b_int(0, 0xFFFF);
     for (int i = 0; i < conf.size(); ++i) {
@@ -63,8 +63,8 @@ Packet *Transmitter::simple_action(Packet *p) {
     return p;
 }
 
-bool Transmitter::send(State& state) {
-    return _client.send(state);
+bool Transmitter::send() {
+    return _client.send(inoperation);
 }
 
 CLICK_ENDDECLS

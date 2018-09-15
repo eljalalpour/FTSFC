@@ -22,7 +22,7 @@ void TFLockFreeCounter::_init_transmitter() {
         Router *r = this->router();
         _trans = (Transmitter *)(r->find("trans"));
 
-        _init = true;
+        _trans_init = true;
     }//if
 }
 

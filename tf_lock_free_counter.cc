@@ -35,7 +35,7 @@ Packet *TFLockFreeCounter::simple_action(Packet *p) {
     _init_transmitter();
     LOG("After init");
 
-    (*_trans).inoperation[_index] ++;
+//    (*_trans).inoperation[_index] ++;
     LOG("After increment");
 
     _trans->send();

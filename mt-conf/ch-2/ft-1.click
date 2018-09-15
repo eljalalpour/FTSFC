@@ -52,6 +52,14 @@ td1::ToDPDKDevice(0,0);
 // td7::ToDPDKDevice(0,6);
 // td8::ToDPDKDevice(0,7);
 
+// StaticThreadSched(fd1 0, fd2 1);
+// StaticThreadSched(fd1 0, fd2 1, fd3 2)
+// StaticThreadSched(fd1 0, fd2 1, fd3 2, fd4 3)
+// StaticThreadSched(fd1 0, fd2 1, fd3 2, fd4 3, fd5 4)
+// StaticThreadSched(fd1 0, fd2 1, fd3 2, fd4 3, fd5 4, fd6 5)
+// StaticThreadSched(fd1 0, fd2 1, fd3 2, fd4 3, fd5 4, fd6 5, fd7 6)
+// StaticThreadSched(fd1 0, fd2 1, fd3 2, fd4 3, fd5 4, fd6 5, fd7 6, fd8 7)
+
 fd1
 -> FTBlock(0,1.1.1.1)
 -> td1;
@@ -83,11 +91,3 @@ fd1
 // fd8
 // -> FTBlock(7,1.1.8.8)
 // -> td8;
-
-// StaticThreadSched(fd1 0, fd2 1);
-// StaticThreadSched(fd1 0, fd2 1, fd3 2)
-// StaticThreadSched(fd1 0, fd2 1, fd3 2, fd4 3)
-// StaticThreadSched(fd1 0, fd2 1, fd3 2, fd4 3, fd5 4)
-// StaticThreadSched(fd1 0, fd2 1, fd3 2, fd4 3, fd5 4, fd6 5)
-// StaticThreadSched(fd1 0, fd2 1, fd3 2, fd4 3, fd5 4, fd6 5, fd7 6)
-// StaticThreadSched(fd1 0, fd2 1, fd3 2, fd4 3, fd5 4, fd6 5, fd7 6, fd8 7)

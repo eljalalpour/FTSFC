@@ -5,7 +5,7 @@
 #include <pthread.h>
 #include <arpa/inet.h>
 #include <netinet/tcp.h>
-#include "../defs.hh"
+#include "defs.hh"
 
 struct ServerConn {
     string ip;

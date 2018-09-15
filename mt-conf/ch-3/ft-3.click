@@ -7,7 +7,7 @@ elementclass FTBlock {
 $index,$out,$forwarder |
     input
     -> MarkIPHeader(14)
-    -> IPPrint("From 2")
+//    -> IPPrint("From 2")
     -> IPFilter(allow udp && src 1.2.0.0/16)
     -> PMProcess
     -> FTLockFreeCounter(INDEX $index)
@@ -22,7 +22,7 @@ $index,$out,$forwarder |
     -> StoreEtherAddress(0c:c4:7a:73:fa:6a, src)
     -> StoreEtherAddress(0c:c4:7a:73:fa:72, dst)
 //    -> Print("For latency", 300)
-    -> IPPrint("To 0")
+//    -> IPPrint("To 0")
     -> output;
 
     // To the forwarder
@@ -32,7 +32,7 @@ $index,$out,$forwarder |
     -> StoreIPAddress(192.168.1.107, dst)
     -> StoreEtherAddress(0c:c4:7a:73:fa:6a, src)
     -> StoreEtherAddress(0c:c4:7a:73:fa:54, dst)
-    -> IPPrint("To 1")
+//    -> IPPrint("To 1")
     -> output;
 }
 

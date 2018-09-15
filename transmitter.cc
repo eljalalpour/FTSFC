@@ -6,7 +6,7 @@
 
 CLICK_DECLS
 
-Transmitter::Transmitter() : _counter(INIT_COUNTER) {};
+Transmitter::Transmitter() { };
 
 Transmitter::~Transmitter() { };
 

@@ -2,7 +2,7 @@
 #include <click/config.h>
 #include <click/router.hh>
 #include <click/args.hh>
-#include "transmitter.hh"
+#include "../transmitter.hh"
 #include "tft_atomic_counter.hh"
 
 CLICK_DECLS

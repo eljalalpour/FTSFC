@@ -7,32 +7,26 @@
 #include <netinet/tcp.h>
 #include "defs.hh"
 
-struct ServerConn {
+typedef struct {
     string ip;
     uint16_t port;
-    State* state;
     int socket;
-};
+    State* state;
+} ServerConn;
 
 class Client {
 private:
     std::vector<pthread_t> _threads;
-    std::vector<string> _ips;
-    std::vector<uint16_t> _ports;
-    std::vector<int> _sockets;
+//    std::vector<string> _ips;
+//    std::vector<uint16_t> _ports;
+//    std::vector<int> _sockets;
+    std::vector<ServerConn> _conns;
 
     static void* _send(void* param) {
         ServerConn* scp = static_cast<ServerConn*>(param);
 
-        // Serialize state
-        string buffer;
-        Serializer serializer;
-        buffer = serializer.serialize(*scp->state);
-
         // Send state
-        size_t size = buffer.size();
-        write(scp->socket, &size, sizeof(size_t));
-        write(scp->socket, buffer.c_str(), size);
+        write(scp->socket, CAST_TO_BYTES(scp->state), sizeof(State));
 
         // Wait for the response
         char c;
@@ -80,13 +74,14 @@ private:
     }
 
     void _connect_sockets() {
-        for (int i = 0;i < _ips.size(); ++i)
-            _sockets.push_back(_connect(_ips[i], _ports[i]));
+        for (int i = 0; i < _conns.size(); ++i) {
+            _conns[i].socket = _connect(_conns[i].ip, _conns[i].port);
+        }//for
     }
 
     void _close_sockets() {
-        for (int i = 0; i < _sockets.size(); ++i)
-            close(_sockets[i]);
+        for (int i = 0; i < _conns.size(); ++i)
+            close(_conns[i].socket);
     }
 
 public:
@@ -109,16 +104,10 @@ public:
         pthread_attr_init(&attr);
         pthread_attr_setdetachstate(&attr, PTHREAD_CREATE_JOINABLE);
 
-        for (size_t i = 0; i < _ips.size(); ++i) {
-            ServerConn *conn = new ServerConn();
-            conn->state = &state;
-            conn->ip = _ips[i];
-            conn->port = _ports[i];
-            conn->socket = _sockets[i];
-
+        for (size_t i = 0; i < _conns.size(); ++i) {
             pthread_t thread;
-            if(pthread_create(&thread, &attr, _send, (void *)conn)) {
-                DEBUG("Error on creating a thread for the server on %s:%d", conn->ip.c_str(), conn->port);
+            if(pthread_create(&thread, &attr, _send, (void *)&_conns[i])) {
+                DEBUG("Error on creating a thread for the server on %s:%d", _conns[i].ip.c_str(), _conns[i].port);
                 result = false;
                 goto CLEANUP;
             }//if
@@ -128,9 +117,9 @@ public:
         // free attribute and wait for the other threads
         pthread_attr_destroy(&attr);
 
-        for(size_t i = 0; i < _ips.size(); ++i) {
+        for(size_t i = 0; i < _conns.size(); ++i) {
             if (pthread_join(_threads[i], &status)) {
-                DEBUG("Error on joining the thread on %s:%d", _ips[i].c_str(), _ports[i]);
+                DEBUG("Error on joining the thread on %s:%d", _conns[i].ip.c_str(), _conns[i].port);
                 result = false;
                 goto CLEANUP;
             }//if
@@ -142,25 +131,27 @@ public:
     }
 
     bool send(State& state) {
-        if (_ips.size() > 1) {
+        if (_conns.size() > 1) {
             return multi_send(state);
         }//if
 
-        ServerConn *conn = new ServerConn();
-        conn->state = &state;
-        conn->ip = _ips[0];
-        conn->port = _ports[0];
-        conn->socket = _sockets[0];
-        _send(conn);
+        _send(&_conns[0]);
         return true;
     }
 
     void set_ip_ports(std::vector<string>& ips, std::vector<uint16_t>& ports) {
-        _ips.clear();
-        _ports.clear();
+//        _ips.clear();
+//        _ports.clear();
+//
+//        _ips.insert(_ips.begin(), ips.begin(), ips.end());
+//        _ports.insert(_ports.begin(), ports.begin(), ports.end());
 
-        _ips.insert(_ips.begin(), ips.begin(), ips.end());
-        _ports.insert(_ports.begin(), ports.begin(), ports.end());
+        for (auto i = 0; i < ips.size(); ++i) {
+            ServerConn conn;
+            conn.ip = ips[i];
+            conn.port = ports[i];
+            _conns.push_back(conn);
+        }//for
 
         _connect_sockets();
     }

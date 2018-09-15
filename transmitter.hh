@@ -1,22 +1,18 @@
 #pragma once
 
-#include "../defs.hh"
-#include "../client.hh"
+#include "defs.hh"
+#include "client.hh"
 #include <click/config.h>
 #include <click/element.hh>
 #include <fstream>
 #include <map>
-
-#define INIT_COUNTER 0
-#define COUNTER_MB_CLASS_NAME "Transmitter"
-#define COUNTER "c"
 
 CLICK_DECLS
 
 class Transmitter : public Element {
 private:
     unsigned int _counter;
-    FTClient _client;
+    Client _client;
     vector<string> _ips;
     vector<uint16_t> _ports;
 
@@ -36,7 +32,7 @@ public:
 
     Packet *simple_action(Packet *p);
 
-    bool send(FTState& state);
+    bool send(State& state);
 
     int configure(Vector<String> &conf, ErrorHandler *errh);
 };

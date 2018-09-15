@@ -45,6 +45,8 @@ add_executable(FTSFC
         stats_collector.hh
         client.cc
         client.hh
+        transmitter.cc
+        transmitter.hh
         )
 
 target_link_libraries(FTSFC ${PROTOBUF_LIB})

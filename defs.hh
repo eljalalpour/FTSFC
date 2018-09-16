@@ -27,7 +27,7 @@
 #define LOG(...)
 #endif
 
-//#define ENABLE_DEBUG
+#define ENABLE_DEBUG
 #ifdef  ENABLE_DEBUG
 #define DEBUG(...) click_chatter(__VA_ARGS__)
 #else

@@ -1,6 +1,8 @@
-[1;33m[WARN]  malloc() allocates objects >= 1 MiB from LuaJIT memory space.[0m
-[1;33m[WARN]  Install libjemalloc if you encounter out of memory errors.[0m
-[1;37m[INFO]  Initializing DPDK. This will take a few seconds...[0m
+[WARN]  malloc() allocates objects >= 1 MiB from LuaJIT memory space.
+[WARN]  Install libjemalloc if you encounter out of memory errors.
+[INFO]  Initializing DPDK. This will take a few seconds...
+EAL: Detected 8 lcore(s)
+EAL: No free hugepages reported in hugepages-1048576kB
 EAL: Probing VFIO support...
 EAL: PCI device 0000:03:00.0 on NUMA socket 0
 EAL:   probe driver: 8086:15ad net_ixgbe
@@ -10,33 +12,15 @@ EAL: PCI device 0000:05:00.0 on NUMA socket 0
 EAL:   probe driver: 8086:1521 net_e1000_igb
 EAL: PCI device 0000:05:00.1 on NUMA socket 0
 EAL:   probe driver: 8086:1521 net_e1000_igb
-[1;37m[INFO]  Found 3 usable devices:[0m
-   Device 0: 0C:C4:7A:73:FA:72 ([0;32mIntel Corporation Ethernet Connection X552/X557-AT 10GBASE-T[0m)
-   Device 1: 0C:C4:7A:73:FA:73 ([0;32mIntel Corporation Ethernet Connection X552/X557-AT 10GBASE-T[0m)
-   Device 2: 0C:C4:7A:73:F9:47 ([0;32mIntel Corporation I350 Gigabit Network Connection[0m)
+[INFO]  Found 3 usable devices:
+   Device 0: 0C:C4:7A:73:FA:72 (Intel Corporation Ethernet Connection X552/X557-AT 10GBASE-T)
+   Device 1: 0C:C4:7A:73:FA:73 (Intel Corporation Ethernet Connection X552/X557-AT 10GBASE-T)
+   Device 2: 0C:C4:7A:73:F9:47 (Intel Corporation I350 Gigabit Network Connection)
 PMD: ixgbe_dev_link_status_print():  Port 0: Link Down
-[1;37m[INFO]  Waiting for devices to come up...[0m
-[1;37m[INFO]  Device 0 (0C:C4:7A:73:FA:72) is up: 10000 MBit/s[0m
-[1;37m[INFO]  [0;32m1 device is up.[0m[0m
-[0;34m[Device: id=0] TX[0m: 0.65 Mpps, 5202 Mbit/s (5306 Mbit/s with framing)
-[1;36m[Device: id=0] RX[0m: 0.55 Mpps, 4417 Mbit/s (4505 Mbit/s with framing)
-[0;34m[Device: id=0] TX[0m: 0.63 Mpps, 5038 Mbit/s (5138 Mbit/s with framing)
-[1;36m[Device: id=0] RX[0m: 0.57 Mpps, 4555 Mbit/s (4646 Mbit/s with framing)
-[0;34m[Device: id=0] TX[0m: 0.65 Mpps, 5202 Mbit/s (5306 Mbit/s with framing)
-[1;36m[Device: id=0] RX[0m: 0.57 Mpps, 4556 Mbit/s (4646 Mbit/s with framing)
-[0;34m[Device: id=0] TX[0m: 0.65 Mpps, 5202 Mbit/s (5306 Mbit/s with framing)
-[1;36m[Device: id=0] RX[0m: 0.57 Mpps, 4556 Mbit/s (4647 Mbit/s with framing)
-[0;34m[Device: id=0] TX[0m: 0.65 Mpps, 5202 Mbit/s (5306 Mbit/s with framing)
-[1;36m[Device: id=0] RX[0m: 0.57 Mpps, 4556 Mbit/s (4646 Mbit/s with framing)
-[0;34m[Device: id=0] TX[0m: 0.65 Mpps, 5202 Mbit/s (5306 Mbit/s with framing)
-[1;36m[Device: id=0] RX[0m: 0.57 Mpps, 4556 Mbit/s (4647 Mbit/s with framing)
-[0;34m[Device: id=0] TX[0m: 0.65 Mpps, 5202 Mbit/s (5306 Mbit/s with framing)
-[1;36m[Device: id=0] RX[0m: 0.57 Mpps, 4556 Mbit/s (4646 Mbit/s with framing)
-[0;34m[Device: id=0] TX[0m: 0.65 Mpps, 5202 Mbit/s (5306 Mbit/s with framing)
-[1;36m[Device: id=0] RX[0m: 0.57 Mpps, 4556 Mbit/s (4646 Mbit/s with framing)
-[0;34m[Device: id=0] TX[0m: 0.65 Mpps, 5202 Mbit/s (5306 Mbit/s with framing)
-[1;36m[Device: id=0] RX[0m: 0.57 Mpps, 4556 Mbit/s (4646 Mbit/s with framing)
-[0;34m[Device: id=0] TX[0m: 0.65 Mpps, 5202 Mbit/s (5306 Mbit/s with framing)
-[1;36m[Device: id=0] RX[0m: 0.57 Mpps, 4556 Mbit/s (4647 Mbit/s with framing)
-[0;34m[Device: id=0] TX[0m: 0.65 (StdDev 0.01) Mpps, 5184 (StdDev 55) Mbit/s (5287 Mbit/s with framing), total 7104636 packets with 7133054544 bytes (incl. CRC)
-[1;36m[Device: id=0] RX[0m: 0.57 (StdDev 0.00) Mpps, 4556 (StdDev 0) Mbit/s (4646 Mbit/s with framing), total 6222429 packets with 6246901784 bytes (incl. CRC)
+[INFO]  Waiting for devices to come up...
+PMD: ixgbe_dev_link_status_print():  Port 0: Link Down
+[INFO]  Device 0 (0C:C4:7A:73:FA:72) is up: 10000 MBit/s
+[INFO]  1 device is up.
+PMD: ixgbe_dev_link_status_print(): Port 0: Link Up - speed 10000 Mbps - full-duplex
+Samples: 1428, Average: 61894.6 ns, StdDev: 1051.5 ns, Quartiles: 61138.0/61900.0/62600.0 ns
+[INFO]  Saving histogram to '../../FTSFC/results/lat-ch3-ft.csv'

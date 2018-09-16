@@ -16,17 +16,27 @@ EAL:   probe driver: 8086:1521 net_e1000_igb
    Device 2: 0C:C4:7A:73:F9:47 ([0;32mIntel Corporation I350 Gigabit Network Connection[0m)
 PMD: ixgbe_dev_link_status_print():  Port 0: Link Down
 [1;37m[INFO]  Waiting for devices to come up...[0m
-PMD: ixgbe_dev_link_status_print():  Port 0: Link Down
 [1;37m[INFO]  Device 0 (0C:C4:7A:73:FA:72) is up: 10000 MBit/s[0m
 [1;37m[INFO]  [0;32m1 device is up.[0m[0m
-PMD: ixgbe_dev_link_status_print(): Port 0: Link Up - speed 10000 Mbps - full-duplex
 [0;34m[Device: id=0] TX[0m: 0.65 Mpps, 5202 Mbit/s (5306 Mbit/s with framing)
-[1;36m[Device: id=0] RX[0m: 0.55 Mpps, 4399 Mbit/s (4486 Mbit/s with framing)
-[0;34m[Device: id=0] TX[0m: 0.62 Mpps, 5015 Mbit/s (5115 Mbit/s with framing)
+[1;36m[Device: id=0] RX[0m: 0.55 Mpps, 4417 Mbit/s (4505 Mbit/s with framing)
+[0;34m[Device: id=0] TX[0m: 0.63 Mpps, 5038 Mbit/s (5138 Mbit/s with framing)
 [1;36m[Device: id=0] RX[0m: 0.57 Mpps, 4555 Mbit/s (4646 Mbit/s with framing)
 [0;34m[Device: id=0] TX[0m: 0.65 Mpps, 5202 Mbit/s (5306 Mbit/s with framing)
 [1;36m[Device: id=0] RX[0m: 0.57 Mpps, 4556 Mbit/s (4646 Mbit/s with framing)
 [0;34m[Device: id=0] TX[0m: 0.65 Mpps, 5202 Mbit/s (5306 Mbit/s with framing)
+[1;36m[Device: id=0] RX[0m: 0.57 Mpps, 4556 Mbit/s (4647 Mbit/s with framing)
+[0;34m[Device: id=0] TX[0m: 0.65 Mpps, 5202 Mbit/s (5306 Mbit/s with framing)
 [1;36m[Device: id=0] RX[0m: 0.57 Mpps, 4556 Mbit/s (4646 Mbit/s with framing)
-[0;34m[Device: id=0] TX[0m: 0.64 (StdDev 0.01) Mpps, 5140 (StdDev 108) Mbit/s (5242 Mbit/s with framing), total 3215961 packets with 3228824844 bytes (incl. CRC)
-[1;36m[Device: id=0] RX[0m: 0.57 (StdDev 0.00) Mpps, 4555 (StdDev 0) Mbit/s (4646 Mbit/s with framing), total 2816586 packets with 2827696299 bytes (incl. CRC)
+[0;34m[Device: id=0] TX[0m: 0.65 Mpps, 5202 Mbit/s (5306 Mbit/s with framing)
+[1;36m[Device: id=0] RX[0m: 0.57 Mpps, 4556 Mbit/s (4647 Mbit/s with framing)
+[0;34m[Device: id=0] TX[0m: 0.65 Mpps, 5202 Mbit/s (5306 Mbit/s with framing)
+[1;36m[Device: id=0] RX[0m: 0.57 Mpps, 4556 Mbit/s (4646 Mbit/s with framing)
+[0;34m[Device: id=0] TX[0m: 0.65 Mpps, 5202 Mbit/s (5306 Mbit/s with framing)
+[1;36m[Device: id=0] RX[0m: 0.57 Mpps, 4556 Mbit/s (4646 Mbit/s with framing)
+[0;34m[Device: id=0] TX[0m: 0.65 Mpps, 5202 Mbit/s (5306 Mbit/s with framing)
+[1;36m[Device: id=0] RX[0m: 0.57 Mpps, 4556 Mbit/s (4646 Mbit/s with framing)
+[0;34m[Device: id=0] TX[0m: 0.65 Mpps, 5202 Mbit/s (5306 Mbit/s with framing)
+[1;36m[Device: id=0] RX[0m: 0.57 Mpps, 4556 Mbit/s (4647 Mbit/s with framing)
+[0;34m[Device: id=0] TX[0m: 0.65 (StdDev 0.01) Mpps, 5184 (StdDev 55) Mbit/s (5287 Mbit/s with framing), total 7104636 packets with 7133054544 bytes (incl. CRC)
+[1;36m[Device: id=0] RX[0m: 0.57 (StdDev 0.00) Mpps, 4556 (StdDev 0) Mbit/s (4646 Mbit/s with framing), total 6222429 packets with 6246901784 bytes (incl. CRC)

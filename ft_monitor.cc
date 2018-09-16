@@ -1,7 +1,7 @@
 #include <click/config.h>
 #include <click/router.hh>
 #include <click/args.hh>
-#include "ft_lock_free_counter.hh"
+#include "ft_monitor.hh"
 
 CLICK_DECLS
 

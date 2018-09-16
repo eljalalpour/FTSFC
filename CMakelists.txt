@@ -51,6 +51,8 @@ add_executable(FTSFC
         tf_lock_free_counter.hh
         ft_nat.cc
         ft_nat.hh
+        ft_monitor.cc
+        ft_monitor.hh
         )
 
 target_link_libraries(FTSFC ${PROTOBUF_LIB})

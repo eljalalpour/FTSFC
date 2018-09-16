@@ -15,7 +15,7 @@ Packet *Encoder::simple_action(Packet *p) {
     DEBUG("Begin Encoder");
 
     auto msg2 = CAST_PACKET_TO_PIGGY_BACK_MESSAGE(p);
-    for (int i = 0; i < MB_LEN; ++i) {
+    for (int i = 0; i < MAX_CHAIN_LEN; ++i) {
         (*msg2[i]) = _msg[i];
     }//for
 

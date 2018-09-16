@@ -36,7 +36,7 @@
 
 /// definitions of assumptions
 #define STATE_LEN      8
-#define MB_LEN         5
+#define MAX_CHAIN_LEN  5
 #define DEFAULT_OFFSET 76 // This value must be greater than 75
 
 /// State and piggyback message definitions
@@ -54,13 +54,13 @@ typedef struct {
     State state;
 } PiggybackState;
 
-typedef PiggybackState PiggybackMessage[MB_LEN];
+typedef PiggybackState PiggybackMessage[MAX_CHAIN_LEN];
 
 typedef std::list<TimestampState> TimestampStateList;
 
-typedef TimestampStateList LogTable[MB_LEN];
+typedef TimestampStateList LogTable[MAX_CHAIN_LEN];
 
-typedef TimestampState CommitMemory[MB_LEN];
+typedef TimestampState CommitMemory[MAX_CHAIN_LEN];
 
 /// Useful casting definitions
 #define CAST_TO_BYTES(x)              reinterpret_cast<unsigned char *>(&x)
@@ -185,14 +185,14 @@ public:
     }
 
     void print(PiggybackMessage &msg) {
-        for (auto i = 0; i < MB_LEN; ++i) {
+        for (auto i = 0; i < MAX_CHAIN_LEN; ++i) {
             LOG("\nState of middlebox %d", i);
             print(msg[i]);
         }//for
     }
 
     void print(PiggybackMessage *msg) {
-        for (int i = 0; i < MB_LEN; ++i) {
+        for (int i = 0; i < MAX_CHAIN_LEN; ++i) {
             LOG("\nState of middlebox %d", i);
             print(*msg[i]);
         }//for
@@ -211,7 +211,7 @@ public:
 
     void random_piggyback(PiggybackState& pb_state) {
         pb_state.last_commit = CURRENT_TIMESTAMP;
-        pb_state.ack = click_random() % MB_LEN;
+        pb_state.ack = click_random() % MAX_CHAIN_LEN;
         TimestampState ts_state;
         random_ts_state(ts_state);
         copy(pb_state.state, ts_state.state);
@@ -219,7 +219,7 @@ public:
     }
 
     void random_message(PiggybackMessage& msg) {
-        for (int i = 0; i < MB_LEN; ++i) {
+        for (int i = 0; i < MAX_CHAIN_LEN; ++i) {
             random_piggyback(msg[i]);
         }//for
     }

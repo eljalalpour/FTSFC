@@ -16,6 +16,8 @@ CLICK_DECLS
 
 class Forwarder : public Element {
 private:
+    int _chain_len;
+
     Util _util;
     PiggybackMessage _msg;
 

@@ -11,6 +11,15 @@ Forwarder::Forwarder () {
 
 Forwarder::~Forwarder() { };
 
+int Forwarder::configure(Vector<String> &conf, ErrorHandler *errh) {
+    // set id and f params
+    Args(conf, this, errh).read_or_set("CHAIN", _chain_len, MB_LEN);
+
+    DEBUG("Chain length is %d!\n", _chain_len);
+
+    return 0;
+}
+
 void Forwarder::push(int source, Packet *p) {
     DEBUG("--------------------");
     DEBUG("Begin Forwarder");
@@ -19,7 +28,7 @@ void Forwarder::push(int source, Packet *p) {
         // Encode its memory of the piggyback message into the packet
         //TODO: make sure no lock is required for encoding and decoding
         auto msg2 = CAST_PACKET_TO_PIGGY_BACK_MESSAGE(p);
-        for (int i = 0; i < MB_LEN; ++i) {
+        for (int i = 0; i < _chain_len; ++i) {
             (*msg2[i]) = _msg[i];
         }//for
 
@@ -30,7 +39,7 @@ void Forwarder::push(int source, Packet *p) {
         //TODO: make sure no lock is required for encoding and decoding
 
         auto msg2 = CAST_PACKET_TO_PIGGY_BACK_MESSAGE(p);
-        for (int i = 0; i < MB_LEN; ++i) {
+        for (int i = 0; i < _chain_len; ++i) {
             _msg[i] = (*msg2[i]);
         }//for
 

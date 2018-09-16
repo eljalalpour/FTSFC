@@ -16,7 +16,7 @@ $index,$src_ip |
 
     filter[0]
 //    -> Print("latency", 300)
-    -> [0]forwarder::Forwarder();
+    -> [0]forwarder::Forwarder(CHAIN 2);
 
     filter[1]
 //    -> Print("buffer")

@@ -9,7 +9,7 @@ $index,$out |
     -> MarkIPHeader(14)
     -> IPFilter(allow udp && src 1.1.0.0/16)
     -> PMProcess
-    -> FTLockFreeCounter(INDEX $index)
+    -> FTMonitor(INDEX $index)
     -> PMConstruct
     -> MarkIPHeader(14)
     -> StoreIPAddress($out, src)

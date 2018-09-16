@@ -1,0 +1,24 @@
+[WARN]  malloc() allocates objects >= 1 MiB from LuaJIT memory space.
+[WARN]  Install libjemalloc if you encounter out of memory errors.
+[INFO]  Initializing DPDK. This will take a few seconds...
+EAL: Detected 8 lcore(s)
+EAL: No free hugepages reported in hugepages-1048576kB
+EAL: Probing VFIO support...
+EAL: PCI device 0000:03:00.0 on NUMA socket 0
+EAL:   probe driver: 8086:15ad net_ixgbe
+EAL: PCI device 0000:03:00.1 on NUMA socket 0
+EAL:   probe driver: 8086:15ad net_ixgbe
+EAL: PCI device 0000:05:00.0 on NUMA socket 0
+EAL:   probe driver: 8086:1521 net_e1000_igb
+EAL: PCI device 0000:05:00.1 on NUMA socket 0
+EAL:   probe driver: 8086:1521 net_e1000_igb
+[INFO]  Found 3 usable devices:
+   Device 0: 0C:C4:7A:73:FA:72 (Intel Corporation Ethernet Connection X552/X557-AT 10GBASE-T)
+   Device 1: 0C:C4:7A:73:FA:73 (Intel Corporation Ethernet Connection X552/X557-AT 10GBASE-T)
+   Device 2: 0C:C4:7A:73:F9:47 (Intel Corporation I350 Gigabit Network Connection)
+PMD: ixgbe_dev_link_status_print():  Port 0: Link Down
+[INFO]  Waiting for devices to come up...
+[INFO]  Device 0 (0C:C4:7A:73:FA:72) is up: 10000 MBit/s
+[INFO]  1 device is up.
+Samples: 1423, Average: 61258.7 ns, StdDev: 1115.7 ns, Quartiles: 60475.0/61200.0/61975.0 ns
+[INFO]  Saving histogram to '../../FTSFC/results/single-thread/lat-real-nf.csv'

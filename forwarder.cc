@@ -13,8 +13,10 @@ Forwarder::Forwarder () {
 Forwarder::~Forwarder() { };
 
 int Forwarder::configure(Vector<String> &conf, ErrorHandler *errh) {
-    // set id and f params
-    Args(conf, this, errh).read_or_set("CHAIN", _chain_len, MB_LEN);
+    if (Args(conf, this, errh)
+                .read("CHAIN", _chain_len)
+                .complete() < 0)
+        return -1;
 
     LOG("Forwarder: Chain length is %d!\n", _chain_len);
 

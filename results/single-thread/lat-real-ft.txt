@@ -22,5 +22,5 @@ PMD: ixgbe_dev_link_status_print():  Port 0: Link Down
 [INFO]  Device 0 (0C:C4:7A:73:FA:72) is up: 10000 MBit/s
 [INFO]  1 device is up.
 PMD: ixgbe_dev_link_status_print(): Port 0: Link Up - speed 10000 Mbps - full-duplex
-Samples: 1426, Average: 64409.5 ns, StdDev: 1137.4 ns, Quartiles: 63625.0/64425.0/65187.0 ns
+Samples: 1427, Average: 64209.3 ns, StdDev: 1151.0 ns, Quartiles: 63438.0/64187.0/64975.0 ns
 [INFO]  Saving histogram to '../../FTSFC/results/single-thread/lat-real-ft.csv'

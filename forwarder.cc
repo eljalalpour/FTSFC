@@ -1,5 +1,6 @@
 #include <click/config.h>
 #include <click/router.hh>
+#include <click/args.hh>
 #include "forwarder.hh"
 
 CLICK_DECLS

@@ -1,4 +1,5 @@
-#pragma once
+#ifndef NF_ATOMIC_NAT_HH
+#define NF_ATOMIC_NAT_HH
 
 #include <unordered_map>
 #include <click/config.h>
@@ -29,3 +30,4 @@ public:
 };
 
 CLICK_ENDDECLS
+#endif

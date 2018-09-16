@@ -1,4 +1,5 @@
-#pragma once
+#ifndef FT_NAT_HH
+#define FT_NAT_HH
 
 #include <unordered_map>
 #include <click/config.h>
@@ -37,3 +38,4 @@ public:
 };
 
 CLICK_ENDDECLS
+#endif

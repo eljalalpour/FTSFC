@@ -8,7 +8,7 @@
 CLICK_DECLS
 
 #define DEFAULT_INDEX 0
-#define FOR_COUNT     0
+#define FOR_COUNT     10000
 
 
 class FTMonitor : public Element {

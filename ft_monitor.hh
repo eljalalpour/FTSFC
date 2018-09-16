@@ -7,15 +7,12 @@
 
 CLICK_DECLS
 
-#define DEFAULT_INDEX 0
-#define FOR_COUNT     1000
-
-
 class FTMonitor : public Element {
 private:
     bool _init_state;
     SharedLockFreeState* _shared_state;
     int _index;
+    int _for_count;
 
     inline void _init_shared_state();
 

@@ -21,6 +21,7 @@ int FTMonitor::configure(Vector<String> &conf, ErrorHandler *errh) {
     // set index param
     if (Args(conf, this, errh)
                 .read("INDEX", _index)
+                .read("FOR", _for_count)
                 .complete() < 0)
         return -1;
 
@@ -37,7 +38,7 @@ Packet *FTMonitor::simple_action(Packet *p) {
 
     ++_shared_state->inoperation[_index];
 
-    for (int i = 0; i < FOR_COUNT; ++i) {
+    for (int i = 0; i < _for_count; ++i) {
         rand();
     }//for
 

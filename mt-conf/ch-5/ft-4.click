@@ -1,5 +1,5 @@
 // In aqua10
-// aqua09 -> aqua10 -> aqua02
+// aqua09 -> aqua10 -> aqua03
 //
 
 //
@@ -24,9 +24,9 @@ $index,$out |
     -> PMConstruct
     -> MarkIPHeader(14)
     -> StoreIPAddress($out, src)
-    -> StoreIPAddress(192.168.1.102, dst)
+    -> StoreIPAddress(192.168.1.103, dst)
     -> StoreEtherAddress(0c:c4:7a:73:fa:18, src)
-    -> StoreEtherAddress(0c:c4:7a:73:fa:dc, dst)
+    -> StoreEtherAddress(0c:c4:7a:73:fa:26, dst)
 //    -> IPPrint("To 4")
     -> output;
 }

@@ -11,6 +11,7 @@ $index,$src_ip |
                          12/0806 20/0002,
                          12/0800,
                          -);
+
     ip_from_extern :: IPClassifier(
                         dst tcp ssh,
                         dst tcp www or https,

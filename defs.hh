@@ -20,7 +20,7 @@
 
 #define CURRENT_TIMESTAMP std::chrono::high_resolution_clock::now().time_since_epoch().count()
 
-//#define ENABLE_LOG
+#define ENABLE_LOG
 #ifdef  ENABLE_LOG
 #define LOG(...) click_chatter(__VA_ARGS__)
 #else

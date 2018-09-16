@@ -16,7 +16,7 @@ int Forwarder::configure(Vector<String> &conf, ErrorHandler *errh) {
     // set id and f params
     Args(conf, this, errh).read_or_set("CHAIN", _chain_len, MB_LEN);
 
-    DEBUG("Chain length is %d!\n", _chain_len);
+    LOG("Chain length is %d!\n", _chain_len);
 
     return 0;
 }

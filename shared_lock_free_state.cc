@@ -63,13 +63,16 @@ void SharedLockFreeState::_commit(int mb_id, int64_t timestamp) {
 }
 
 void SharedLockFreeState::process_piggyback_message(Packet* p) {
+    LOG("Before casting");
     auto msg = CAST_PACKET_TO_PIGGY_BACK_MESSAGE(p);
 
     // Processing the primary state:
     // TODO: Check if this is correct? In the paper, we tell it must be msg[mb_id].timestamp
 //    commit(_id, CURRENT_TIMESTAMP);
+    LOG("Before commit");
     _commit(_id, msg[_id]->timestamp);
 
+    LOG("Before for");
     // Processing the secondary state set
     for (int i = 1; i <= _failure_count; ++i) {
         int mb_id = (_id - i + _chain_len) % _chain_len;

@@ -3,7 +3,7 @@
 
 /// Assumptions:
 ///     - The state of a middlebox is a FIXED int array with 8 values (32 bytes)
-///     - The piggyback message always contains the piggback state of 4 middleboxes
+///     - The piggyback message always contains the piggback state of 5 middleboxes
 ///     - Middleboxes must not modify packets
 
 #include <list>
@@ -72,7 +72,7 @@ typedef TimestampState CommitMemory[MB_LEN];
 #define CAST_AWAY_PACKET_DATA(p) const_cast<unsigned char *>(p->data())
 #define CAST_PACKET_TO_PIGGY_BACK_MESSAGE(p) reinterpret_cast<PiggybackMessage*>(CAST_AWAY_PACKET_DATA(p) + DEFAULT_OFFSET)
 
-#define COPY_PIGGYBACK_MESSAGE(y, x) memcpy(y, x, 224)
+#define COPY_PIGGYBACK_MESSAGE(y, x) memcpy(y, x, sizeof(PiggybackMessage))
 
 /// Util class to serialize, deserialize, encode, and decode states
 class Util {

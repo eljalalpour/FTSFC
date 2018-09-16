@@ -4,14 +4,14 @@
 #include <unordered_map>
 #include <click/config.h>
 #include <click/element.hh>
-#include "shared_lock_free_state.hh"
+//#include "shared_lock_free_state.hh"
 
 CLICK_DECLS
 
 class FTNAT : public Element {
 private:
     bool _init_state;
-    SharedLockFreeState* _shared_state;
+//    SharedLockFreeState* _shared_state;
     int _index;
     std::unordered_map<uint32_t, bool> _fake_map;
 

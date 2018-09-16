@@ -14,7 +14,7 @@ private:
 //    SharedLockFreeState* _shared_state;
 //    std::unordered_map<uint32_t, bool> _fake_map;
 
-    inline void _init_shared_state();
+//    inline void _init_shared_state();
 
 public:
     FTNAT ();
@@ -29,9 +29,9 @@ public:
 
     Packet *simple_action(Packet *p);
 
-    inline bool bad_header(const click_ip *iph);
-
-    inline uint32_t flow_id(Packet *p);
+//    inline bool bad_header(const click_ip *iph);
+//
+//    inline uint32_t flow_id(Packet *p);
 };
 
 CLICK_ENDDECLS

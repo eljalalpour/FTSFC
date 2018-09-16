@@ -1,5 +1,5 @@
-#ifndef FSFC_FT_NAT_HH
-#define FSFC_FT_NAT_HH
+#ifndef FTSFC_FT_NAT_HH
+#define FTSFC_FT_NAT_HH
 
 //#include <unordered_map>
 #include <click/config.h>

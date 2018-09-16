@@ -1,38 +1,22 @@
 // In aqua07
-// aqua01 -> aqua07 -> aqua08
-// aqua09 -> aqua07;
-
-shared_state::SharedLockFreeState(CHAIN 3, ID 0, F 1);
+// aqua01 -> aqua07 -> aqua01
 
 elementclass FTBlock {
 $index,$src_ip |
     input
     -> MarkIPHeader(14)
     -> filter::IPClassifier(src net 1.0.0.0/16,
-                            src net 2.0.0.0/16,
                             -);
 
-    filter[2]
+    filter[1]
     -> Discard;
 
     filter[0]
-//    -> Print("For latency", 300)
-    -> [0]forwarder::Forwarder(CHAIN 3);
-
-    filter[1]
-//    -> Print("From Buffer")
-    -> [1]forwarder;
-
-    forwarder[0]
-    -> PMProcess
-    -> FTLockFreeCounter(INDEX $index)
-    -> PMConstruct
     -> MarkIPHeader(14)
     -> StoreIPAddress($src_ip, src)
-    -> StoreIPAddress(192.168.1.108, dst)
+    -> StoreIPAddress(192.168.1.101, dst)
     -> StoreEtherAddress(0c:c4:7a:73:fa:54, src)
-    -> StoreEtherAddress(0c:c4:7a:73:fa:6a, dst)
-//    -> IPPrint("To 2")
+    -> StoreEtherAddress(0c:c4:7a:73:fa:72, dst)
     -> output
 }
 

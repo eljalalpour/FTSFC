@@ -1,5 +1,6 @@
 // In aqua09
 // aqua08 -> aqua09 -> aqua01
+//                  -> aqua07
 
 shared_state::SharedLockFreeState(CHAIN 3, ID 2, F 1);
 
@@ -19,7 +20,7 @@ $index,$out,$forwarder |
     -> MarkIPHeader(14)
     -> StoreIPAddress($out, src)
     -> StoreIPAddress(192.168.1.101, dst)
-    -> StoreEtherAddress(0c:c4:7a:73:fa:6a, src)
+    -> StoreEtherAddress(0c:c4:7a:73:f9:ec, src)
     -> StoreEtherAddress(0c:c4:7a:73:fa:72, dst)
 //    -> Print("For latency", 300)
 //    -> IPPrint("To 0")
@@ -30,7 +31,7 @@ $index,$out,$forwarder |
     -> MarkIPHeader(14)
     -> StoreIPAddress($forwarder, src)
     -> StoreIPAddress(192.168.1.107, dst)
-    -> StoreEtherAddress(0c:c4:7a:73:fa:6a, src)
+    -> StoreEtherAddress(0c:c4:7a:73:f9:ec, src)
     -> StoreEtherAddress(0c:c4:7a:73:fa:54, dst)
 //    -> IPPrint("To 1")
     -> output;

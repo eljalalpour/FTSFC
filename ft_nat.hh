@@ -1,7 +1,7 @@
 #ifndef FSFC_FT_NAT_HH
 #define FSFC_FT_NAT_HH
 
-#include <unordered_map>
+//#include <unordered_map>
 #include <click/config.h>
 #include <click/element.hh>
 //#include "shared_lock_free_state.hh"
@@ -12,7 +12,7 @@ class FTNAT : public Element {
 private:
     bool _init_state;
 //    SharedLockFreeState* _shared_state;
-    std::unordered_map<uint32_t, bool> _fake_map;
+//    std::unordered_map<uint32_t, bool> _fake_map;
 
     inline void _init_shared_state();
 

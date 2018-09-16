@@ -1,7 +1,5 @@
-#include "defs.hh"
 #include <click/config.h>
 #include <click/router.hh>
-#include <click/args.hh>
 #include <click/ipflowid.hh>
 #include "ft_nat.hh"
 
@@ -22,18 +20,6 @@ void FTNAT::_init_shared_state() {
         _shared_state = (SharedLockFreeState *)(r->find("shared_state"));
         _init_state = true;
     }//if
-}
-
-int FTNAT::configure(Vector<String> &conf, ErrorHandler *errh) {
-    // set index param
-    if (Args(conf, this, errh)
-                .read("INDEX", _index)
-                .complete() < 0)
-        return -1;
-
-    DEBUG("FTNAT index is %d!\n", _index);
-
-    return 0;
 }
 
 uint32_t FTNAT::flow_id(Packet *p) {
@@ -62,7 +48,7 @@ uint32_t FTNAT::flow_id(Packet *p) {
 
 Packet *FTNAT::simple_action(Packet *p) {
     DEBUG("--------------------");
-    DEBUG("Begin FTNAT with index %d:", _index);
+    DEBUG("Begin FTNAT");
 
     _init_shared_state();
 

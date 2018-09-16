@@ -18,7 +18,7 @@ filter[1]
 -> [1]forwarder;
 
 forwarder[0]
--> ta::TimestampAcc
+-> ta::TimestampAccum
 -> MarkIPHeader(14)
 -> StoreIPAddress($src_ip, src)
 -> StoreIPAddress(192.168.1.108, dst)

@@ -27,20 +27,15 @@ $index,$src_ip |
 
     filter[0]
 //    -> Print("For latency", 300)
-    -> Print("Before [0]forwarder")
     -> [0]forwarder::Forwarder(CHAIN 5);
 
     filter[1]
 //    -> Print("From Buffer")
-    -> Print("Before [1]forwarder")
     -> [1]forwarder;
 
     forwarder[0]
-    -> Print("Before PM Process")
     -> PMProcess
-    -> Print("Before Counter")
     -> FTLockFreeCounter(INDEX $index)
-    -> Print("Before Construct")
     -> PMConstruct
     -> MarkIPHeader(14)
     -> StoreIPAddress($src_ip, src)

@@ -32,6 +32,8 @@ public:
 
     const char *processing() const { return AGNOSTIC; }
 
+    int Forwarder::configure(Vector<String> &, ErrorHandler *);
+
     void push(int, Packet*);
 };
 

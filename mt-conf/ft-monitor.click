@@ -9,7 +9,7 @@ $index,$out |
     -> MarkIPHeader(14)
     -> IPFilter(allow udp && src 1.1.0.0/16)
     -> PMProcess
-    -> FTMonitor(INDEX $index, FOR 50)
+    -> FTMonitor(INDEX $index, FOR 40)
     -> PMConstruct
     -> MarkIPHeader(14)
     -> StoreIPAddress($out, src)

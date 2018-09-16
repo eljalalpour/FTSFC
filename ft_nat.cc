@@ -58,7 +58,7 @@ uint32_t FTNAT::flow_id(Packet *p) {
         _fake_map[hash_val] = 1;
 
     // Just return some random value!
-    return hash_val % DEFAULT_SIZE;
+    return hash_val % STATE_LEN;
 }
 
 Packet *FTNAT::simple_action(Packet *p) {
@@ -66,8 +66,6 @@ Packet *FTNAT::simple_action(Packet *p) {
     DEBUG("Begin FTNAT with index %d:", _index);
 
     _init_shared_state();
-
-    Router *r = this->router();
 
     const click_ip *iph = p->ip_header();
 

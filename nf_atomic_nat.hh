@@ -1,13 +1,10 @@
-#ifndef NF_ATOMIC_NAT_HH
-#define NF_ATOMIC_NAT_HH
+#pragma once
 
 #include <unordered_map>
 #include <click/config.h>
 #include <click/element.hh>
 
 CLICK_DECLS
-
-#define DEFAULT_SIZE 8
 
 class NFAtomicNAT : public Element {
 private:
@@ -32,4 +29,3 @@ public:
 };
 
 CLICK_ENDDECLS
-#endif

@@ -38,7 +38,7 @@ uint32_t NFAtomicNAT::flow_id(Packet *p) {
         _fake_map[hash_val] = 1;
 
     // Just return some random value!
-    return hash_val % DEFAULT_SIZE;
+    return hash_val % STATE_LEN;
 }
 
 Packet *NFAtomicNAT::simple_action(Packet *p) {

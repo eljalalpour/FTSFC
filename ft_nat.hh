@@ -7,8 +7,6 @@
 
 CLICK_DECLS
 
-#define DEFAULT_SIZE 8
-
 class FTNAT : public Element {
 private:
     bool _init_state;

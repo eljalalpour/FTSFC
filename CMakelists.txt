@@ -49,6 +49,8 @@ add_executable(FTSFC
         transmitter.hh
         tf_lock_free_counter.cc
         tf_lock_free_counter.hh
+        ft_nat.cc
+        ft_nat.hh
         )
 
 target_link_libraries(FTSFC ${PROTOBUF_LIB})

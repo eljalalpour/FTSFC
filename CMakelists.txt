@@ -57,6 +57,8 @@ add_executable(FTSFC
         nf_monitor.hh
         nf_nat.cc
         nf_nat.hh
+        tf_monitor.cc
+        tf_monitor.hh
         )
 
 target_link_libraries(FTSFC ${PROTOBUF_LIB})

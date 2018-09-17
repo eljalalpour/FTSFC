@@ -35,7 +35,7 @@ private:
 //        read(scp->socket, &c, sizeof(char));
 //        DEBUG("Read from socket: %c", c);
 
-        send(scp->socket, &(scp->state), sizeof(State), 0);
+        send(scp->socket, CAST_TO_BYTES((scp->state), sizeof(State), 0);
 
         return 0;
     }

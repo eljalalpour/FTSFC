@@ -37,7 +37,7 @@ private:
         ServerConn* scp = static_cast<ServerConn*>(param);
         // Wait for the response
         char c;
-        auto n = read(scp->socket, &c, sizeof(char));
+        read(scp->socket, &c, sizeof(char));
 //        DEBUG("Read from socket: %c", c);
         scp->sent_packets = 0;
     }

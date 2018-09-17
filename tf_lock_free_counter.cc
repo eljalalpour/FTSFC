@@ -50,7 +50,7 @@ Packet *TFLockFreeCounter::simple_action(Packet *p) {
         _queued_packets = 0;
     }//else
 
-    LOG("Queued packets: %d!", _queued_packets);
+//    LOG("Queued packets: %d!", _queued_packets);
     _queue[_queued_packets++] = Packet::make(p->data(), p->length());
     p->kill();
 

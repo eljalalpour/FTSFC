@@ -42,7 +42,7 @@ void TFLockFreeCounter::push(int, Packet*p) {
         _trans->recv();
 
         for (int i = 0; i < _queued_packets; ++i) {
-            output.push(_queue[i]);
+            output(0).push(_queue[i]);
             _queue[i] = 0;
         }//for
 

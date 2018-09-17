@@ -1,6 +1,7 @@
 #include <click/config.h>
 #include <click/router.hh>
 #include <click/args.hh>
+#include <click/packet_anno.hh>
 #include "buffer.hh"
 
 CLICK_DECLS
@@ -14,7 +15,6 @@ void Buffer::_release(int64_t commit_timestamp) {
     for (auto it = _packets.begin(); it != _packets.end(); /* no increment */) {
 //        if (it->first > commit_timestamp)
 //            break;
-
         output(TO_OUTSIDE_WORLD).push(it->second);
         it = _packets.erase(it);
 //        ++count;
@@ -53,7 +53,9 @@ void Buffer::push(int, Packet*p) {
 //    util.print((*_msg[_chain_len - 1]));
 
     // Store the packet into buffer
-    _packets[lts] = Packet::make(p->data(), p->length());
+    auto q = Packet::make(p->data(), p->length());
+    q->timestamp_anno().assign_now();
+    _packets[lts] = q;
 
     //TODO: find the best order, either first send the packet to Forwarder or release packets
     // Send a copy of the packet to Forwarder

@@ -38,7 +38,7 @@
 #define STATE_LEN      8
 #define MAX_CHAIN_LEN  5
 #define DEFAULT_OFFSET 76 // This value must be greater than 75
-#define QUEUE_LEN      10
+#define QUEUE_LEN      30
 
 /// State and piggyback message definitions
 typedef int State[STATE_LEN];

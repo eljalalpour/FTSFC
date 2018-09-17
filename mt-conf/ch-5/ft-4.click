@@ -14,10 +14,10 @@
 
 shared_state::SharedLockFreeState(CHAIN 5, ID 3, F 1);
 
-stats_coll::StatsCollector(BUFFER 0,
-                          STATE 1,
-                          PATH ../../FTSFC/results/single-thread/ch5-st1.csv,
-                          PERIOD 500)
+// stats_coll::StatsCollector(BUFFER 0,
+//                          STATE 1,
+//                          PATH ../../FTSFC/results/single-thread/ch5-st1.csv,
+//                          PERIOD 500)
 
 elementclass FTBlock {
 $index,$out |

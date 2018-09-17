@@ -23,8 +23,8 @@ FromDPDKDevice(0)
 
 // To the outside world
 buffer[0]
--> ta::TimestampAccum
 -> MarkIPHeader(14)
+-> ta::TimestampAccum
 -> StoreIPAddress(1.4.0.0, src)
 -> StoreIPAddress(192.168.1.101, dst)
 -> StoreEtherAddress(0c:c4:7a:73:fa:18, src)

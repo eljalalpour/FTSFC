@@ -1,5 +1,5 @@
-// In aqua10
-// aqua09 -> aqua10 -> aqua01
+// In aqua11
+// aqua10 -> aqua11 -> aqua01
 
 //
 // Check-list:
@@ -22,7 +22,7 @@ $index,$src_ip |
     -> MarkIPHeader(14)
     -> StoreIPAddress($src_ip, src)
     -> StoreIPAddress(192.168.1.101, dst)
-    -> StoreEtherAddress(0c:c4:7a:73:fa:dc, src)
+    -> StoreEtherAddress(0c:c4:7a:73:fa:e6, src)
     -> StoreEtherAddress(0c:c4:7a:73:fa:72, dst)
 //    -> IPPrint("To 0")
     -> output;

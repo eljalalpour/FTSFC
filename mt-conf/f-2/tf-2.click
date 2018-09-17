@@ -11,7 +11,7 @@
 // TFBlock elements second arguments
 //
 
-trans::Transmitter(10.70.0.3:10000); // set replica's ip and port
+trans::Transmitter(10.70.0.3:10000, 10.70.0.4:20000); // set replica's ip and port
 
 elementclass TFBlock {
 $index,$src_ip |

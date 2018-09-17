@@ -26,11 +26,11 @@ $index,$src_ip |
     -> Discard;
 
     filter[0]
-    -> Print("From 0", 300)
+    -> IPPrint("From 0", 300)
     -> [0]forwarder::Forwarder(CHAIN 5);
 
     filter[1]
-    -> Print("From 5")
+    -> IPPrint("From 5")
     -> [1]forwarder;
 
     forwarder[0]

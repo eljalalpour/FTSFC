@@ -224,6 +224,24 @@ public:
             random_piggyback(msg[i]);
         }//for
     }
+
+    void split(string& str, char dlm, vector<string>& tokens) {
+        size_t last_index = 0;
+        size_t i = 0;
+        for (; i < str.size(); ++i) {
+            if (str[i] == dlm && i - last_index > 0) {
+                string token(str, last_index, i - last_index);
+                tokens.push_back(token);
+                last_index = i + 1;
+            }//if
+        }//for
+
+        if (i - last_index > 0) {
+            string token(str, last_index, i - last_index);
+            tokens.push_back(token);
+            last_index = i + 1;
+        }//if
+    }
 };
 
 //class TimestampMeasure {

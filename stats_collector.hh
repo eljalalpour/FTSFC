@@ -11,7 +11,7 @@
 CLICK_DECLS
 
 #define FT_BLOCK_PREFIX "b"
-#define INVALID_LOG -1
+#define INVALID_LOG 0
 #define SHARED_STATE "shared_state"
 #define BUFFER "buffer"
 

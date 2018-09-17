@@ -26,8 +26,7 @@ void TFLockFreeCounter::_init_transmitter() {
     }//if
 }
 
-
-Packet *TFLockFreeCounter::simple_action(Packet *p) {
+void TFLockFreeCounter::push(int, Packet*p) {
     DEBUG("--------------------");
     DEBUG("Begin TFLockFreeCounter");
 
@@ -56,8 +55,6 @@ Packet *TFLockFreeCounter::simple_action(Packet *p) {
 
     DEBUG("End TFLockFreeCounter");
     DEBUG("--------------------");
-
-    return p;
 }
 
 CLICK_ENDDECLS

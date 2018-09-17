@@ -35,7 +35,7 @@ public:
 
     int configure(Vector<String> &, ErrorHandler *);
 
-    Packet *simple_action(Packet *);
+    void push(int, Packet*);
 };
 
 CLICK_ENDDECLS

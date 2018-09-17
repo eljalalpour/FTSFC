@@ -14,7 +14,6 @@ typedef struct {
     uint16_t port;
     int socket;
     State* state;
-    int sent_packets;
 } ServerConn;
 
 class Client {
@@ -30,16 +29,15 @@ private:
 
         // Send state
         write(scp->socket, CAST_TO_BYTES(scp->state), sizeof(State));
-        ++scp->sent_packets;
-    }
 
-    static void* _recv(void* param) {
-        ServerConn* scp = static_cast<ServerConn*>(param);
-        // Wait for the response
+//        // Wait for the response
         char c;
         read(scp->socket, &c, sizeof(char));
 //        DEBUG("Read from socket: %c", c);
-        scp->sent_packets = 0;
+
+//        send(scp->socket, CAST_TO_BYTES((scp->state), sizeof(State), 0);
+
+        return 0;
     }
 
     int _connect(string ip, uint16_t port) {
@@ -148,11 +146,6 @@ public:
         return true;
     }
 
-    bool recv() {
-        _recv(&_conns[0]);
-        return true;
-    }
-
     void set_ip_ports(std::vector<string>& ips, std::vector<uint16_t>& ports) {
 //        _ips.clear();
 //        _ports.clear();
@@ -164,7 +157,6 @@ public:
             ServerConn conn;
             conn.ip = ips[i];
             conn.port = ports[i];
-            conn.sent_packets = 0;
             _conns.push_back(conn);
         }//for
 

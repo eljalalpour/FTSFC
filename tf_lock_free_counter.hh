@@ -17,9 +17,6 @@ private:
 
     Transmitter *_trans;
 
-    Packet* _queue[QUEUE_LEN];
-    int _queued_packets;
-
     inline void _init_transmitter();
 
 public:
@@ -35,7 +32,7 @@ public:
 
     int configure(Vector<String> &, ErrorHandler *);
 
-    void push(int, Packet*);
+    Packet *simple_action(Packet *);
 };
 
 CLICK_ENDDECLS

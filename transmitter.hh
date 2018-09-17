@@ -38,8 +38,6 @@ public:
 
     bool send();
 
-    bool recv();
-
     int configure(Vector<String> &conf, ErrorHandler *errh);
 };
 

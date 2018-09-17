@@ -40,8 +40,6 @@ private:
         auto n = read(scp->socket, &c, sizeof(char));
 //        DEBUG("Read from socket: %c", c);
         scp->sent_packets = 0;
-
-        return n != 0;
     }
 
     int _connect(string ip, uint16_t port) {
@@ -152,6 +150,7 @@ public:
 
     bool recv() {
         _recv(&_conns[0]);
+        return true;
     }
 
     void set_ip_ports(std::vector<string>& ips, std::vector<uint16_t>& ports) {

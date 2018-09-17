@@ -41,7 +41,7 @@ private:
 //        DEBUG("Read from socket: %c", c);
         scp->sent_packets = 0;
 
-        return n >= 0;
+        return n != 0;
     }
 
     int _connect(string ip, uint16_t port) {

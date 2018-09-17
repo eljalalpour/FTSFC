@@ -39,6 +39,7 @@ Packet *TFLockFreeCounter::simple_action(Packet *p) {
             _trans->send();
         }//for
 
+        LOG("Wait to receive!");
         _trans->recv();
 
         for (int i = 0; i < _queued_packets; ++i) {

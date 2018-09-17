@@ -70,5 +70,9 @@ bool Transmitter::send() {
     return _client.send(inoperation);
 }
 
+bool Transmitter::recv() {
+    return _client.recv();
+}
+
 CLICK_ENDDECLS
 EXPORT_ELEMENT(Transmitter)

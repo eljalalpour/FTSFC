@@ -5,7 +5,7 @@
 
 CLICK_DECLS
 
-TFLockFreeCounter::TFLockFreeCounter  () : _trans_init(false) { };
+TFLockFreeCounter::TFLockFreeCounter  () : _trans_init(false), _queued_packets(0) { };
 
 TFLockFreeCounter::~TFLockFreeCounter () { };
 
@@ -26,14 +26,31 @@ void TFLockFreeCounter::_init_transmitter() {
     }//if
 }
 
+
 Packet *TFLockFreeCounter::simple_action(Packet *p) {
     DEBUG("--------------------");
     DEBUG("Begin TFLockFreeCounter");
 
-    _init_transmitter();
+    if (_queued_packets >= QUEUE_LEN) {
+        _init_transmitter();
 
-    (*_trans).inoperation[_index] ++;
-    _trans->send();
+        for (int i = 0; i < _queued_packets; ++i) {
+            (*_trans).inoperation[_index]++;
+            _trans->send();
+        }//for
+
+        _trans->recv();
+
+        for (int i = 0; i < _queued_packets; ++i) {
+            output.push(_queue[i]);
+            _queue[i] = 0;
+        }//for
+
+        _queued_packets = 0;
+    }//else
+
+    _queue[_queued_packets++] = Packet::make(p->data(), p->length());
+    p->kill();
 
     DEBUG("End TFLockFreeCounter");
     DEBUG("--------------------");

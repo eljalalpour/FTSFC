@@ -18,7 +18,7 @@ $index,$src_ip |
     input
     -> MarkIPHeader(14)
     -> IPFilter(allow udp && src 1.2.0.0/16)
-    -> TFLockFreeCounter(INDEX $index)
+    -> TFNAT
     -> MarkIPHeader(14)
     -> StoreIPAddress($src_ip, src)
     -> StoreIPAddress(192.168.1.101, dst)

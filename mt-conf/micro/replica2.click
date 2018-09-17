@@ -16,7 +16,7 @@ shared_state::SharedLockFreeState(CHAIN 2, ID 1, F 1);
 FromDPDKDevice(0,0)
 -> MarkIPHeader(14)
 -> IPFilter(allow udp && src 1.2.0.0/16)
--> TimestampStore
+-> SetTimestamp
 -> PMProcess
 -> PMConstruct
 -> ta::TimestampAccum

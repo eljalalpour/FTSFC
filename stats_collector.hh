@@ -11,10 +11,14 @@
 CLICK_DECLS
 
 #define FT_BLOCK_PREFIX "b"
+#define INVALID_LOG -1
+#define SHARED_STATE "shared_state"
+#define BUFFER "buffer"
 
 class StatsCollector : public Element {
 private:
     int _buffer;
+    int _state;
     String _path;
     int _period;
     std::thread _tt;
@@ -24,7 +28,7 @@ private:
 
     static void _run(StatsCollector* state_coll) {
         while (true) {
-            std::this_thread::sleep_for(std::chrono::seconds(state_coll->_period));
+            std::this_thread::sleep_for(std::chrono::milliseconds(state_coll->_period));
             state_coll->collect();
         }//while
     }

@@ -27,6 +27,7 @@ int StatsCollector::configure(Vector<String> &conf, ErrorHandler *errh) {
     // set id and f params
     if (Args(conf, this, errh)
                 .read("BUFFER", _buffer)
+                .read("STATE", _state)
                 .read("PATH", _path)
                 .read("PERIOD", _period)
                 .complete() < 0)
@@ -67,12 +68,22 @@ void StatsCollector::write_to_file() {
 
 void StatsCollector::collect() {
     Router *r = this->router();
-    auto _shared_state_elm = (SharedLockFreeState *)(r->find("shared_state"));
-    _log_table_stats.push_back(_shared_state_elm->log_table_length());
 
-    for (auto i = 0; i < _buffer; ++i) {
-        String buffer_name = "b" + String(i + 1) + "/";
-        auto _buffer_elm = (Buffer *) (r->find("buffer", buffer_name));
+    if (_state > 0) {
+        auto _shared_state_elm = (SharedLockFreeState *) (r->find(SHARED_STATE));
+        _log_table_stats.push_back(_shared_state_elm->log_table_length());
+    }//if
+    else {
+        _log_table_stats.push_back(INVALID_LOG);
+    }//else
+
+    if (_buffer == 1) {
+        auto _buffer_elm = (Buffer *) (r->find(BUFFER));
+        _buffer_stats[0].push_back(_buffer_elm->length());
+    }//if
+    for (auto i = 0; i < _buffer && _buffer > 1; ++i) {
+        String block = FT_BLOCK_PREFIX + String(i + 1) + "/";
+        auto _buffer_elm = (Buffer *) (r->find(BUFFER, block));
         _buffer_stats[i].push_back(_buffer_elm->length());
     }
 

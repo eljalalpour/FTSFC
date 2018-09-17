@@ -31,9 +31,9 @@ private:
         write(scp->socket, CAST_TO_BYTES(scp->state), sizeof(State));
 
 //        // Wait for the response
-//        char c;
-//        read(scp->socket, &c, sizeof(char));
-//        DEBUG("Read from socket: %c", c);
+        char c;
+        read(scp->socket, &c, sizeof(char));
+        DEBUG("Read from socket: %c", c);
 
         return 0;
     }

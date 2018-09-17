@@ -19,6 +19,7 @@ $index,$out |
     input
     -> MarkIPHeader(14)
     -> IPFilter(allow udp && src 1.3.0.0/16)
+    -> IPPrint("From 3")
     -> PMProcess
     -> FTLockFreeCounter(INDEX $index)
     -> PMConstruct

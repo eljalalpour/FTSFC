@@ -12,7 +12,7 @@
 // StoreIPAddress dst mac
 //
 
-stats_coll:StatsCollector(BUFFER 1,
+stats_coll::StatsCollector(BUFFER 1,
                           STATE 0,
                           PATH ../../FTSFC/results/single-thread/buffer.csv,
                           PERIOD 500)

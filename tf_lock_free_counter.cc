@@ -30,27 +30,48 @@ void TFLockFreeCounter::push(int, Packet*p) {
     DEBUG("--------------------");
     DEBUG("Begin TFLockFreeCounter");
 
-    if (_queued_packets >= QUEUE_LEN) {
-        _init_transmitter();
+    _queue[_queued_packets++] = p;
+    while (_queued_packets < QUEUE_LEN) {
+        _queue[_queued_packets++] = input(0).pull();
+    }//while
 
-        for (int i = 0; i < _queued_packets; ++i) {
-            (*_trans).inoperation[_index]++;
-            _trans->send();
-        }//for
+    _init_transmitter();
 
-        _trans->recv();
+    for (int i = 0; i < _queued_packets; ++i) {
+        (*_trans).inoperation[_index]++;
+        _trans->send();
+    }//for
 
-        for (int i = 0; i < _queued_packets; ++i) {
-            output(0).push(_queue[i]);
-            _queue[i] = 0;
-        }//for
+    _trans->recv();
 
-        _queued_packets = 0;
-    }//else
+    for (int i = 0; i < _queued_packets; ++i) {
+        output(0).push(_queue[i]);
+        _queue[i] = 0;
+    }//for
+
+    _queued_packets = 0;
+
+//    if (_queued_packets >= QUEUE_LEN) {
+//        _init_transmitter();
+//
+//        for (int i = 0; i < _queued_packets; ++i) {
+//            (*_trans).inoperation[_index]++;
+//            _trans->send();
+//        }//for
+//
+//        _trans->recv();
+//
+//        for (int i = 0; i < _queued_packets; ++i) {
+//            output(0).push(_queue[i]);
+//            _queue[i] = 0;
+//        }//for
+//
+//        _queued_packets = 0;
+//    }//else
 
 //    LOG("Queued packets: %d!", _queued_packets);
-    _queue[_queued_packets++] = Packet::make(p->data(), p->length());
-    p->kill();
+//    _queue[_queued_packets++] = Packet::make(p->data(), p->length());
+//    p->kill();
 
     DEBUG("End TFLockFreeCounter");
     DEBUG("--------------------");

@@ -12,6 +12,9 @@ CLICK_DECLS
 /// and performs low-level state management operations.
 ///
 
+
+#define LOG_TABLE_CONTROL 34
+
 class SharedLockFreeState : public Element {
 private:
     int _id;

@@ -96,7 +96,11 @@ void SharedLockFreeState::_log_inoperation_state() {
     TimestampState ts;
     ts.timestamp = CURRENT_TIMESTAMP;
     _util.copy(ts.state, inoperation);
-    _log_table[_id].push_back(ts);
+
+    // TODO: remove this part
+    if(_log_table[_id].size() < 34) {
+        _log_table[_id].push_back(ts);
+    }//if
 }
 
 void SharedLockFreeState::construct_piggyback_message(Packet* p) {

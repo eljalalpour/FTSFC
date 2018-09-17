@@ -27,15 +27,15 @@ private:
     static void* _send(void* param) {
         ServerConn* scp = static_cast<ServerConn*>(param);
 
-//        // Send state
-//        write(scp->socket, CAST_TO_BYTES(scp->state), sizeof(State));
-//
-////        // Wait for the response
-//        char c;
-//        read(scp->socket, &c, sizeof(char));
+        // Send state
+        write(scp->socket, CAST_TO_BYTES(scp->state), sizeof(State));
+
+//        // Wait for the response
+        char c;
+        read(scp->socket, &c, sizeof(char));
 //        DEBUG("Read from socket: %c", c);
 
-        send(scp->socket, CAST_TO_BYTES((scp->state), sizeof(State), 0);
+//        send(scp->socket, CAST_TO_BYTES((scp->state), sizeof(State), 0);
 
         return 0;
     }

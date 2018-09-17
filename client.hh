@@ -74,6 +74,8 @@ private:
             return 0;
         }//if
 
+        LOG("Connected to %s:%d", ip.c_str(), port);
+
         return sock;
     }
 

@@ -78,8 +78,13 @@ void StatsCollector::collect() {
     }//else
 
     if (_buffer == 1) {
-        auto _buffer_elm = (Buffer *) (r->find(BUFFER));
-        _buffer_stats[0].push_back(_buffer_elm->length());
+        try {
+            auto _buffer_elm = (Buffer *) (r->find(BUFFER));
+            _buffer_stats[0].push_back(_buffer_elm->length());
+        }//try
+        catch(...) {
+            LOG("%s not found, searching for %s", BUFFER, (FT_BLOCK_PREFIX + String(1) + "/").c_str());
+        }//catch
     }//if
     for (auto i = 0; i < _buffer && _buffer > 1; ++i) {
         String block = FT_BLOCK_PREFIX + String(i + 1) + "/";

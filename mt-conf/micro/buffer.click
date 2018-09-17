@@ -13,8 +13,6 @@
 //
 
 
-shared_state::SharedLockFreeState(CHAIN 4, ID 3, F 1);
-
 FromDPDKDevice(0)
 -> MarkIPHeader(14)
 -> IPFilter(allow udp && src 1.3.0.0/16)

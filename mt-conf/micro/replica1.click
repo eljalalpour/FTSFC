@@ -20,7 +20,7 @@ FromDPDKDevice(0)
 -> PMConstruct
 -> MarkIPHeader(14)
 -> ta::TimestampAccum
--> StoreIPAddress(1.2.0.0, src)
+-> StoreIPAddress(1.2.1.1, src)
 -> StoreIPAddress(192.168.1.109, dst)
 -> StoreEtherAddress(0c:c4:7a:73:fa:6a, src)
 -> StoreEtherAddress(0c:c4:7a:73:f9:ec, dst)

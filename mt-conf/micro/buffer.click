@@ -25,7 +25,7 @@ FromDPDKDevice(0)
 buffer[0]
 -> MarkIPHeader(14)
 -> ta::TimestampAccum
--> StoreIPAddress(1.4.0.0, src)
+-> StoreIPAddress(1.4.1.1, src)
 -> StoreIPAddress(192.168.1.101, dst)
 -> StoreEtherAddress(0c:c4:7a:73:fa:18, src)
 -> StoreEtherAddress(0c:c4:7a:73:fa:72, dst)
@@ -34,7 +34,7 @@ buffer[0]
 // To the forwarder
 buffer[1]
 -> MarkIPHeader(14)
--> StoreIPAddress(1.4.0.0, src)
+-> StoreIPAddress(2.0.1.1, src)
 -> StoreIPAddress(192.168.1.107, dst)
 -> StoreEtherAddress(0c:c4:7a:73:fa:18, src)
 -> StoreEtherAddress(0c:c4:7a:73:fa:54, dst)

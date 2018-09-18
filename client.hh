@@ -3,6 +3,8 @@
 #include <vector>
 #include <string>
 #include <pthread.h>
+#include <mutex>
+#include <condition_variable>
 #include <arpa/inet.h>
 #include <netinet/tcp.h>
 #include "defs.hh"
@@ -13,16 +15,18 @@ typedef struct {
     string ip;
     uint16_t port;
     int socket;
-    State* state;
 } ServerConn;
 
 class Client {
 private:
     std::vector<pthread_t> _threads;
-//    std::vector<string> _ips;
-//    std::vector<uint16_t> _ports;
-//    std::vector<int> _sockets;
     std::vector<ServerConn> _conns;
+
+    bool _ready;
+    std::condition_variable _ready_cv;
+    std::mutex _ready_mtx;
+
+    State* _state_to_be_sent;
 
     static void* _send(void* param) {
         ServerConn* scp = static_cast<ServerConn*>(param);
@@ -30,14 +34,30 @@ private:
         // Send state
         write(scp->socket, CAST_TO_BYTES(scp->state), sizeof(State));
 
-//        // Wait for the response
+        // Wait for the response
         char c;
         read(scp->socket, &c, sizeof(char));
-//        DEBUG("Read from socket: %c", c);
-
-//        send(scp->socket, CAST_TO_BYTES((scp->state), sizeof(State), 0);
-
         return 0;
+    }
+
+    void _send(ServerConn& scp, State& _state_to_be_sent) {
+        // Send state
+        write(scp.socket, CAST_TO_BYTES(_state_to_be_sent), sizeof(State));
+
+        char c;
+        read(scp.socket, &c, sizeof(char));
+    }
+
+    void _send_for_ever(int _id) {
+        while(true) {
+            std::unique_lock<std::mutex> lock(_ready_mtx);
+            while(!_ready) {
+                _ready_cv.wait(lock);
+            }//while
+
+            _send(_conns[_id], *_state_to_be_sent);
+
+        }//while
     }
 
     int _connect(string ip, uint16_t port) {
@@ -91,7 +111,10 @@ private:
     }
 
 public:
-    Client() { };
+    Client() {
+        _ready = false;
+
+    };
 
     ~Client() {
         _close_sockets();
@@ -148,13 +171,11 @@ public:
         return true;
     }
 
-    void set_ip_ports(std::vector<string>& ips, std::vector<uint16_t>& ports) {
-//        _ips.clear();
-//        _ports.clear();
-//
-//        _ips.insert(_ips.begin(), ips.begin(), ips.end());
-//        _ports.insert(_ports.begin(), ports.begin(), ports.end());
+    void create_threads() {
 
+    }
+
+    void set_ip_ports(std::vector<string>& ips, std::vector<uint16_t>& ports) {
         for (size_t i = 0; i < ips.size(); ++i) {
             ServerConn conn;
             conn.ip = ips[i];
@@ -163,5 +184,7 @@ public:
         }//for
 
         _connect_sockets();
+
+        create_threads();
     }
 };

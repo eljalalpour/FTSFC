@@ -62,7 +62,8 @@ void Buffer::push(int, Packet*p) {
 
     // Release packets in the buffer
     DEBUG("Releasing!");
-    _release(lcts);
+//    _release(lcts);
+    output(TO_OUTSIDE_WORLD).push(p);
 
     DEBUG("End Buffer");
     DEBUG("--------------------");

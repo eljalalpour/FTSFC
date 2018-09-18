@@ -192,6 +192,7 @@ public:
 //    }
 
     void multi_send(State& state) {
+        LOG("Multi send");
         {// Produce the state and notify the senders
             _state_to_be_sent = &state;
             _pending_workers = _conns.size();

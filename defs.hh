@@ -152,7 +152,7 @@ public:
 
     typename vector<value_type>::iterator rbegin() {
         if (empty())
-            return _elems.rbegin();
+            return _elems.end();
         return (_elems.begin() + _convert_index(_size - 1));
     }//if
 };

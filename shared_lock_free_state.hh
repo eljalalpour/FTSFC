@@ -12,8 +12,6 @@ CLICK_DECLS
 /// and performs low-level state management operations.
 ///
 
-
-
 class SharedLockFreeState : public Element {
 private:
     int _id;

@@ -4,7 +4,7 @@
 
 CLICK_DECLS
 
-SharedLockFreeState::SharedLockFreeState () : _log_table() {
+SharedLockFreeState::SharedLockFreeState () {
     _util.init(inoperation);
     _util.init(_commit_memory);
 };
@@ -15,7 +15,7 @@ void SharedLockFreeState::_log(State& state, int64_t timestamp, int mb_id) {
     DEBUG("Log operation!");
 
     auto it = _log_table[mb_id].rbegin();
-    if (_log_table[mb_id].empty() ||
+    if (it == _log_table[mb_id].rend() ||
         it->timestamp < timestamp) {
 
         TimestampState t_state;
@@ -44,38 +44,21 @@ void SharedLockFreeState::_commit(int mb_id, int64_t timestamp) {
         return;
     }//
 
-//    auto it = _log_table[mb_id].rbegin();
-//    for (; it != _log_table[mb_id].rend(); ++it) {
-//        if (timestamp >= it->timestamp) {
-//            break;
-//        }//if
-//    }//for
-//
-//    if (it != _log_table[mb_id].rend()) {
-//        // Commit involves storing the most updated log value into commit memory, setting the timestamp time, and
-//        // erasing committed logs.
-//        _util.copy(_commit_memory[mb_id].state, it->state);
-//        _commit_memory[mb_id].timestamp = timestamp;
-//
-//        // TODO: make sure it works!!
-//        _log_table[mb_id].erase(_log_table[mb_id].begin(), std::next(it).base());
-//    }//if
-
-    int i = (int) (_log_table[mb_id].size()) - 1;
-    for (; i >= 0; --i) {
-        if (timestamp >= _log_table[mb_id][i].timestamp) {
+    auto it = _log_table[mb_id].rbegin();
+    for (; it != _log_table[mb_id].rend(); ++it) {
+        if (timestamp >= it->timestamp) {
             break;
         }//if
     }//for
 
-    if (i != -1) {
+    if (it != _log_table[mb_id].rend()) {
         // Commit involves storing the most updated log value into commit memory, setting the timestamp time, and
         // erasing committed logs.
-        _util.copy(_commit_memory[mb_id].state, _log_table[mb_id][i].state);
+        _util.copy(_commit_memory[mb_id].state, it->state);
         _commit_memory[mb_id].timestamp = timestamp;
 
         // TODO: make sure it works!!
-        _log_table[mb_id].erase((size_t)(i + 1));
+        _log_table[mb_id].erase(_log_table[mb_id].begin(), std::next(it).base());
     }//if
 }
 
@@ -123,9 +106,6 @@ void SharedLockFreeState::_log_inoperation_state() {
     if (!_log_table[_id].full()) {
         _log_table[_id].push_back(ts);
     }//if
-//    else {
-//        LOG("Full log table!");
-//    }//else
 }
 
 void SharedLockFreeState::construct_piggyback_message(Packet* p) {

@@ -58,10 +58,8 @@ private:
 
     void _send(ServerConn& scp, State& _state_to_be_sent) {
         // Send state
-        LOG("Sending...");
         write(scp.socket, CAST_TO_BYTES(_state_to_be_sent), sizeof(State));
 
-        LOG("Receiving...");
         char c;
         read(scp.socket, &c, sizeof(char));
     }
@@ -77,11 +75,9 @@ private:
             // Send state to be replicated
             _send(_conns[_id], *_state_to_be_sent);
 
-            LOG("To wake up client!");
             {// Let the Client know that this process has finished its task
                 std::lock_guard<std::mutex> lock_guard(_pending_workers_mtx);
                 -- _pending_workers;
-                LOG("Pending workers: %d", _pending_workers);
                 if (_pending_workers == 0) {//if no other sender exists, notify the client
                     {
                         std::lock_guard<std::mutex> lock(_ready_mtx);
@@ -89,7 +85,6 @@ private:
                         _ready = 0;
                     }//{
                     _pending_workers_cv.notify_one();
-                    LOG("Notify the client");
                 }//if
                 else {
                     {// Remember that it already processed the data
@@ -134,8 +129,6 @@ private:
             perror("connect failed. Error");
             return 0;
         }//if
-
-        LOG("Connected to %s:%d", ip.c_str(), port);
 
         return sock;
     }
@@ -209,8 +202,6 @@ public:
 //    }
 
     void multi_send(State& state) {
-        LOG("Multi send");
-        LOG("---------------------");
         {// Produce the state and notify the senders
             _state_to_be_sent = &state;
             _pending_workers = _conns.size();

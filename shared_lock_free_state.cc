@@ -4,7 +4,7 @@
 
 CLICK_DECLS
 
-SharedLockFreeState::SharedLockFreeState () {
+SharedLockFreeState::SharedLockFreeState () : _log_table(LOG_TABLE_SIZE) {
     _util.init(inoperation);
     _util.init(_commit_memory);
 };
@@ -115,7 +115,7 @@ void SharedLockFreeState::_log_inoperation_state() {
     _util.copy(ts.state, inoperation);
 
     // TODO: remove this part
-    if(_log_table[_id].size() < 34) {
+    if(_log_table[_id].size() < LOG_TABLE_SIZE) {
         _log_table[_id].push_back(ts);
     }//if
 }

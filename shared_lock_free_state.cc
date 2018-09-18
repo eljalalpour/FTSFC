@@ -4,7 +4,7 @@
 
 CLICK_DECLS
 
-SharedLockFreeState::SharedLockFreeState () : _log_table(LOG_TABLE_SIZE) {
+SharedLockFreeState::SharedLockFreeState () : _log_table() {
     _util.init(inoperation);
     _util.init(_commit_memory);
 };

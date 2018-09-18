@@ -68,7 +68,7 @@ private:
         while(true) {
             {// Wait until there is some state to be sent
                 std::unique_lock<std::mutex> lock(_ready_mtx);
-                // The worker also checks its
+                // The worker also checks its own bit
                 _ready_cv.wait(lock, [&](){ return K_TH_BIT(_ready, _id) > 0;});
             }//{
 
@@ -87,7 +87,7 @@ private:
                     _pending_workers_cv.notify_one();
                 }//if
                 else {
-                    {// Remember that it already processed the data
+                    {// Remember that it have already processed the data
                         std::lock_guard<std::mutex> lock(_ready_mtx);
                         _ready = RESET_K_TH_BIT(_ready, _id);
                     }//{
@@ -150,6 +150,59 @@ private:
         }//for
     }
 
+//    void _multi_send(State &state) {
+//        {// Produce the state and notify the senders
+//            _state_to_be_sent = &state;
+//            _pending_workers = _conns.size();
+//
+//            std::unique_lock<std::mutex> lock(_ready_mtx);
+//            // Set all bits to 1, to let all the workers know that the data is ready for them
+//            _ready = SET_ALL_BITS;
+//            _ready_cv.notify_all();
+//        }// {
+//        {// Wait for senders to finish their tasks
+//            std::unique_lock<std::mutex> lock(_pending_workers_mtx);
+//            _pending_workers_cv.wait(lock, [&](){ return _pending_workers == 0;});
+//        }// {
+//    }
+
+    void _multi_send(State &state) {
+        bool result = true;
+        pthread_attr_t attr;
+        void *status;
+
+        // Initialize and set thread joinable
+        pthread_attr_init(&attr);
+        pthread_attr_setdetachstate(&attr, PTHREAD_CREATE_JOINABLE);
+
+        for (size_t i = 0; i < _conns.size(); ++i) {
+            pthread_t thread;
+            _conns[i].state = &state;
+            if(pthread_create(&thread, &attr, _send, (void *)&_conns[i])) {
+                DEBUG("Error on creating a thread for the server on %s:%d", _conns[i].ip.c_str(), _conns[i].port);
+                result = false;
+                goto CLEANUP;
+            }//if
+            _threads.push_back(thread);
+        }//for
+
+        // free attribute and wait for the other threads
+        pthread_attr_destroy(&attr);
+
+        for(size_t i = 0; i < _conns.size(); ++i) {
+            if (pthread_join(_threads[i], &status)) {
+                DEBUG("Error on joining the thread on %s:%d", _conns[i].ip.c_str(), _conns[i].port);
+                result = false;
+                goto CLEANUP;
+            }//if
+        }//for
+
+    CLEANUP:
+        _threads.clear();
+        return result;
+    }
+
+
 public:
     Client() {
         _ready = false;
@@ -165,61 +218,9 @@ public:
         set_ip_ports(ips, ports);
     }
 
-//    bool multi_send(State &state) {
-//        bool result = true;
-//        pthread_attr_t attr;
-//        void *status;
-//
-//        // Initialize and set thread joinable
-//        pthread_attr_init(&attr);
-//        pthread_attr_setdetachstate(&attr, PTHREAD_CREATE_JOINABLE);
-//
-//        for (size_t i = 0; i < _conns.size(); ++i) {
-//            pthread_t thread;
-//            _conns[i].state = &state;
-//            if(pthread_create(&thread, &attr, _send, (void *)&_conns[i])) {
-//                DEBUG("Error on creating a thread for the server on %s:%d", _conns[i].ip.c_str(), _conns[i].port);
-//                result = false;
-//                goto CLEANUP;
-//            }//if
-//            _threads.push_back(thread);
-//        }//for
-//
-//        // free attribute and wait for the other threads
-//        pthread_attr_destroy(&attr);
-//
-//        for(size_t i = 0; i < _conns.size(); ++i) {
-//            if (pthread_join(_threads[i], &status)) {
-//                DEBUG("Error on joining the thread on %s:%d", _conns[i].ip.c_str(), _conns[i].port);
-//                result = false;
-//                goto CLEANUP;
-//            }//if
-//        }//for
-//
-//    CLEANUP:
-//        _threads.clear();
-//        return result;
-//    }
-
-    void multi_send(State& state) {
-        {// Produce the state and notify the senders
-            _state_to_be_sent = &state;
-            _pending_workers = _conns.size();
-
-            std::unique_lock<std::mutex> lock(_ready_mtx);
-            // Set all bits to 1, to let all the workers know that the data is ready for them
-            _ready = SET_ALL_BITS;
-            _ready_cv.notify_all();
-        }// {
-        {// Wait for senders to finish their tasks
-            std::unique_lock<std::mutex> lock(_pending_workers_mtx);
-            _pending_workers_cv.wait(lock, [&](){ return _pending_workers == 0;});
-        }// {
-    }
-
     void send(State& state) {
         if (_conns.size() > 1) {
-            return multi_send(state);
+            return _multi_send(state);
         }//if
         else {
             _send(_conns[0], state);

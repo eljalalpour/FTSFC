@@ -67,6 +67,7 @@ private:
             // Send state to be replicated
             _send(_conns[_id], *_state_to_be_sent);
 
+            LOG("To wake of client!");
             {// Let the Client know that this process has finished its task
                 std::lock_guard<std::mutex> lock_guard(_pending_workers_mtx);
                 -- _pending_workers;

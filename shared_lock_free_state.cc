@@ -118,6 +118,11 @@ void SharedLockFreeState::_log_inoperation_state() {
 //    if(_log_table[_id].size() < LOG_TABLE_CON_SIZE) {
 //        _log_table[_id].push_back(ts);
 //    }//if
+
+    // TODO: remove this part
+    if (!_log_table[_id].full()) {
+        _log_table[_id].push_back(ts);
+    }//if
 }
 
 void SharedLockFreeState::construct_piggyback_message(Packet* p) {

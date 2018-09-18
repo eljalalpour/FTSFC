@@ -210,6 +210,7 @@ public:
         }//else
     }
 
+    // This function must be called only once
     void set_ip_ports(std::vector<string>& ips, std::vector<uint16_t>& ports) {
         for (size_t i = 0; i < ips.size(); ++i) {
             ServerConn conn;
@@ -217,6 +218,9 @@ public:
             conn.port = ports[i];
             _conns.push_back(conn);
         }//for
+
+        _pending_workers = _conns.size();
+        _ready = false;
 
         _connect_sockets();
         _create_threads();

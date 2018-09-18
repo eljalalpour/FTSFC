@@ -36,7 +36,7 @@ public:
 
     Packet *simple_action(Packet *p);
 
-    bool send();
+    void send();
 
     int configure(Vector<String> &conf, ErrorHandler *errh);
 };

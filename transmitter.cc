@@ -66,8 +66,8 @@ Packet *Transmitter::simple_action(Packet *p) {
     return p;
 }
 
-bool Transmitter::send() {
-    return _client.send(inoperation);
+void Transmitter::send() {
+    _client.send(inoperation);
 }
 
 CLICK_ENDDECLS

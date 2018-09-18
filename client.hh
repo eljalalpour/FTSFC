@@ -70,12 +70,14 @@ private:
             {// Let the Client know that this process has finished its task
                 std::lock_guard<std::mutex> lock_guard(_pending_workers_mtx);
                 -- _pending_workers;
+                LOG("Pending workers: %d", _pending_workers);
                 if (_pending_workers == 0) {//if no other sender exists, notify the client
                     {
                         std::lock_guard<std::mutex> lock(_ready_mtx);
                         _ready = false;
                     }//{
                     _pending_workers_cv.notify_one();
+                    LOG("Notify the client");
                 }//if
             }//}
         }//while

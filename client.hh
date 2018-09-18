@@ -7,9 +7,11 @@
 #include <condition_variable>
 #include <arpa/inet.h>
 #include <netinet/tcp.h>
+#include <thread>
 #include "defs.hh"
 
 using std::string;
+using std::thread;
 
 typedef struct {
     string ip;
@@ -20,12 +22,16 @@ typedef struct {
 
 class Client {
 private:
-    std::vector<pthread_t> _threads;
+    std::vector<std::thread> _threads;
     std::vector<ServerConn> _conns;
 
-    bool _ready;
+    volatile bool _ready;
     std::condition_variable _ready_cv;
     std::mutex _ready_mtx;
+
+    size_t _pending_workers;
+    std::condition_variable _pending_workers_cv;
+    std::mutex _pending_workers_mtx;
 
     State* _state_to_be_sent;
 
@@ -51,13 +57,25 @@ private:
 
     void _send_for_ever(int _id) {
         while(true) {
-            std::unique_lock<std::mutex> lock(_ready_mtx);
-            while(!_ready) {
-                _ready_cv.wait(lock);
-            }//while
+            {// Wait until there is some state to be sent
+                std::unique_lock<std::mutex> lock(_ready_mtx);
+                _ready_cv.wait(lock, [&](){ return _ready;});
+            }//{
 
+            // Send state to be replicated
             _send(_conns[_id], *_state_to_be_sent);
 
+            {// Let the Client know that this process has finished its task
+                std::lock_guard<std::mutex> lock_guard(_pending_workers_mtx);
+                -- _pending_workers;
+                if (_pending_workers == 0) {//if no other sender exists, notify the client
+                    {
+                        std::lock_guard<std::mutex> lock(_ready_mtx);
+                        _ready = false;
+                    }//{
+                    _pending_workers_cv.notify_one();
+                }//if
+            }//}
         }//while
     }
 
@@ -111,9 +129,16 @@ private:
             close(_conns[i].socket);
     }
 
+    void _create_threads() {
+        for (size_t i = 0; i < _conns.size(); ++i) {
+            _threads.push_back(std::thread(&Client::_send_for_ever, this, i));
+        }//for
+    }
+
 public:
     Client() {
         _ready = false;
+        _pending_workers = 0;
 
     };
 
@@ -125,55 +150,64 @@ public:
         set_ip_ports(ips, ports);
     }
 
-    bool multi_send(State &state) {
-        bool result = true;
-        pthread_attr_t attr;
-        void *status;
+//    bool multi_send(State &state) {
+//        bool result = true;
+//        pthread_attr_t attr;
+//        void *status;
+//
+//        // Initialize and set thread joinable
+//        pthread_attr_init(&attr);
+//        pthread_attr_setdetachstate(&attr, PTHREAD_CREATE_JOINABLE);
+//
+//        for (size_t i = 0; i < _conns.size(); ++i) {
+//            pthread_t thread;
+//            _conns[i].state = &state;
+//            if(pthread_create(&thread, &attr, _send, (void *)&_conns[i])) {
+//                DEBUG("Error on creating a thread for the server on %s:%d", _conns[i].ip.c_str(), _conns[i].port);
+//                result = false;
+//                goto CLEANUP;
+//            }//if
+//            _threads.push_back(thread);
+//        }//for
+//
+//        // free attribute and wait for the other threads
+//        pthread_attr_destroy(&attr);
+//
+//        for(size_t i = 0; i < _conns.size(); ++i) {
+//            if (pthread_join(_threads[i], &status)) {
+//                DEBUG("Error on joining the thread on %s:%d", _conns[i].ip.c_str(), _conns[i].port);
+//                result = false;
+//                goto CLEANUP;
+//            }//if
+//        }//for
+//
+//    CLEANUP:
+//        _threads.clear();
+//        return result;
+//    }
 
-        // Initialize and set thread joinable
-        pthread_attr_init(&attr);
-        pthread_attr_setdetachstate(&attr, PTHREAD_CREATE_JOINABLE);
+    void multi_send(State& state) {
+        {// Produce the state and notify the senders
+            _state_to_be_sent = &state;
+            _pending_workers = _conns.size();
 
-        for (size_t i = 0; i < _conns.size(); ++i) {
-            pthread_t thread;
-            _conns[i].state = &state;
-            if(pthread_create(&thread, &attr, _send, (void *)&_conns[i])) {
-                DEBUG("Error on creating a thread for the server on %s:%d", _conns[i].ip.c_str(), _conns[i].port);
-                result = false;
-                goto CLEANUP;
-            }//if
-            _threads.push_back(thread);
-        }//for
-
-        // free attribute and wait for the other threads
-        pthread_attr_destroy(&attr);
-
-        for(size_t i = 0; i < _conns.size(); ++i) {
-            if (pthread_join(_threads[i], &status)) {
-                DEBUG("Error on joining the thread on %s:%d", _conns[i].ip.c_str(), _conns[i].port);
-                result = false;
-                goto CLEANUP;
-            }//if
-        }//for
-
-    CLEANUP:
-        _threads.clear();
-        return result;
+            std::unique_lock<std::mutex> lock(_ready_mtx);
+            _ready = true;
+            _ready_cv.notify_all();
+        }// {
+        {// Wait for senders to finish their tasks
+            std::unique_lock<std::mutex> lock(_pending_workers_mtx);
+            _pending_workers_cv.wait(lock, [&](){ return _pending_workers == 0;});
+        }// {
     }
 
-    bool send(State& state) {
+    void send(State& state) {
         if (_conns.size() > 1) {
             return multi_send(state);
         }//if
-
-        _conns[0].state = &state;
-
-        _send(&_conns[0]);
-        return true;
-    }
-
-    void create_threads() {
-
+        else {
+            _send(_conns[0], state);
+        }//else
     }
 
     void set_ip_ports(std::vector<string>& ips, std::vector<uint16_t>& ports) {
@@ -185,7 +219,6 @@ public:
         }//for
 
         _connect_sockets();
-
-        create_threads();
+        _create_threads();
     }
 };

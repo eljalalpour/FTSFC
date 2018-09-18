@@ -35,22 +35,24 @@ private:
 
     State* _state_to_be_sent;
 
-    static void* _send(void* param) {
-        ServerConn* scp = static_cast<ServerConn*>(param);
-
-        // Send state
-        write(scp->socket, CAST_TO_BYTES(scp->state), sizeof(State));
-
-        // Wait for the response
-        char c;
-        read(scp->socket, &c, sizeof(char));
-        return 0;
-    }
+//    static void* _send(void* param) {
+//        ServerConn* scp = static_cast<ServerConn*>(param);
+//
+//        // Send state
+//        write(scp->socket, CAST_TO_BYTES(scp->state), sizeof(State));
+//
+//        // Wait for the response
+//        char c;
+//        read(scp->socket, &c, sizeof(char));
+//        return 0;
+//    }
 
     void _send(ServerConn& scp, State& _state_to_be_sent) {
         // Send state
+        LOG("Sending...");
         write(scp.socket, CAST_TO_BYTES(_state_to_be_sent), sizeof(State));
 
+        LOG("Receiving...");
         char c;
         read(scp.socket, &c, sizeof(char));
     }

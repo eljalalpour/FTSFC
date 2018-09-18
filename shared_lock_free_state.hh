@@ -13,7 +13,6 @@ CLICK_DECLS
 ///
 
 
-#define LOG_TABLE_SIZE 34
 
 class SharedLockFreeState : public Element {
 private:

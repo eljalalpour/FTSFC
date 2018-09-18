@@ -13,6 +13,12 @@
 using std::string;
 using std::thread;
 
+// Note that n and k must be of type size_t
+#define K_TH_BIT(n,k)       ((n & ( 1 << k )) >> k)
+#define RESET_K_TH_BIT(n,k) (n &= ~(1UL << k))
+#define SET_K_TH_BIT(n,k)   (n |= 1UL << k)
+#define SET_ALL_BITS -1
+
 typedef struct {
     string ip;
     uint16_t port;
@@ -25,11 +31,14 @@ private:
     std::vector<std::thread> _threads;
     std::vector<ServerConn> _conns;
 
-    volatile bool _ready;
+    /// \texttt{_ready} shows that if the data is ready for consumption
+    /// Further, \texttt{_ready} is a bitset whose i-th bit shows that whether
+    /// i-th thread has already consumed the data
+    volatile size_t _ready;
     std::condition_variable _ready_cv;
     std::mutex _ready_mtx;
 
-    size_t _pending_workers;
+    volatile size_t _pending_workers;
     std::condition_variable _pending_workers_cv;
     std::mutex _pending_workers_mtx;
 
@@ -61,13 +70,14 @@ private:
         while(true) {
             {// Wait until there is some state to be sent
                 std::unique_lock<std::mutex> lock(_ready_mtx);
-                _ready_cv.wait(lock, [&](){ return _ready;});
+                // The worker also checks its
+                _ready_cv.wait(lock, [&](){ return K_TH_BIT(_ready, _id) > 0;});
             }//{
 
             // Send state to be replicated
             _send(_conns[_id], *_state_to_be_sent);
 
-            LOG("To wake of client!");
+            LOG("To wake up client!");
             {// Let the Client know that this process has finished its task
                 std::lock_guard<std::mutex> lock_guard(_pending_workers_mtx);
                 -- _pending_workers;
@@ -75,11 +85,18 @@ private:
                 if (_pending_workers == 0) {//if no other sender exists, notify the client
                     {
                         std::lock_guard<std::mutex> lock(_ready_mtx);
-                        _ready = false;
+                        // Clear _ready bitset
+                        _ready = 0;
                     }//{
                     _pending_workers_cv.notify_one();
                     LOG("Notify the client");
                 }//if
+                else {
+                    {// Remember that it already processed the data
+                        std::lock_guard<std::mutex> lock(_ready_mtx);
+                        _ready = RESET_K_TH_BIT(_ready, _id);
+                    }//{
+                }//else
             }//}
         }//while
     }
@@ -199,7 +216,8 @@ public:
             _pending_workers = _conns.size();
 
             std::unique_lock<std::mutex> lock(_ready_mtx);
-            _ready = true;
+            // Set all bits to 1, to let all the workers know that the data is ready for them
+            _ready = SET_ALL_BITS;
             _ready_cv.notify_all();
         }// {
         {// Wait for senders to finish their tasks

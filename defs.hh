@@ -88,12 +88,7 @@ public:
             _tail(0),
             _elems(max_size, value_type()) { }
 
-    FTVector():
-            _max_size(LOG_TABLE_MAX_SIZE),
-            _size(0),
-            _head(0),
-            _tail(0),
-            _elems(LOG_TABLE_MAX_SIZE, value_type()) { }
+    FTVector(): FTVector(LOG_TABLE_MAX_SIZE) { }
 
     void push_back(const value_type& val) {
         if (full()) {

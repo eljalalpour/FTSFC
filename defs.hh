@@ -12,6 +12,9 @@
 #include <cstdlib>
 #include <click/packet.hh>
 #include <click/glue.hh>
+#include <vector>
+
+using std::vector;
 
 /// Useful  definitions
 #define PORTS_2_1 "2/1"
@@ -57,7 +60,100 @@ typedef struct {
 
 typedef PiggybackState PiggybackMessage[MAX_CHAIN_LEN];
 
-typedef std::list<TimestampState> TimestampStateList;
+template <typename value_type>
+class FTVector {
+private:
+    std::vector<value_type> _elems;
+    size_t _head;
+    size_t _tail;
+    size_t _max_size;
+    size_t _size;
+
+    inline void _pushed_back () {
+        ++_size;
+        _tail = (_tail + 1) % _max_size;
+    }
+
+    inline size_t _convert_index (const size_t& i) {
+        return (_head + i) % _max_size;
+    }
+
+public:
+    FTVector(size_t max_size):
+            _max_size(max_size),
+            _size(0),
+            _head(0),
+            _tail(0),
+            _elems(max_size, value_type()) { }
+
+    void push_back(const value_type& val) {
+        if (full()) {
+            throw "No empty space!";
+        }//if
+
+        if (empty()) {
+            _head = 0;
+            _tail = 0;
+        }//if
+
+        _elems[_tail] = val;
+        _pushed_back();
+    }
+
+    void push_back (value_type&& val) {
+        if (full()) {
+            throw "No empty space!";
+        }//if
+
+        if (empty()) {
+            _head = 0;
+            _tail = 0;
+        }//if
+
+        _elems[_tail] = val;
+        _pushed_back();
+    }
+
+    inline size_t size() {
+        return _size;
+    }
+
+    void erase(size_t count) {
+        if (count > _size) {
+            throw "Big vector!";
+        }//if
+
+        _head = (_head + count) % _max_size;
+        _size -= count;
+    }
+
+    inline bool empty() {
+        return _size == 0;
+    }
+
+    inline bool full() {
+        return _size == _max_size;
+    }
+
+    value_type &operator[](const size_t i) {
+        if( i >= _size ) {
+            throw "Index out of bound!";
+        }
+        return _elems[_convert_index(i)];
+    }
+
+    typename vector<value_type>::iterator iterator(size_t index) {
+        return (_elems.begin() + _convert_index(index));
+    }//if
+
+    typename vector<value_type>::iterator rbegin() {
+        if (empty())
+            return _elems.rbegin();
+        return (_elems.begin() + _convert_index(_size - 1));
+    }//if
+};
+
+typedef FTVector<TimestampState> TimestampStateList;
 
 typedef TimestampStateList LogTable[MAX_CHAIN_LEN];
 
@@ -225,6 +321,8 @@ public:
         }//for
     }
 };
+
+
 
 //class TimestampMeasure {
 //public:

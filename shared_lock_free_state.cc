@@ -15,7 +15,7 @@ void SharedLockFreeState::_log(State& state, int64_t timestamp, int mb_id) {
     DEBUG("Log operation!");
 
     auto it = _log_table[mb_id].rbegin();
-    if (it == _log_table[mb_id].rend() ||
+    if (_log_table[mb_id].empty() ||
         it->timestamp < timestamp) {
 
         TimestampState t_state;
@@ -44,21 +44,38 @@ void SharedLockFreeState::_commit(int mb_id, int64_t timestamp) {
         return;
     }//
 
-    auto it = _log_table[mb_id].rbegin();
-    for (; it != _log_table[mb_id].rend(); ++it) {
-        if (timestamp >= it->timestamp) {
+//    auto it = _log_table[mb_id].rbegin();
+//    for (; it != _log_table[mb_id].rend(); ++it) {
+//        if (timestamp >= it->timestamp) {
+//            break;
+//        }//if
+//    }//for
+//
+//    if (it != _log_table[mb_id].rend()) {
+//        // Commit involves storing the most updated log value into commit memory, setting the timestamp time, and
+//        // erasing committed logs.
+//        _util.copy(_commit_memory[mb_id].state, it->state);
+//        _commit_memory[mb_id].timestamp = timestamp;
+//
+//        // TODO: make sure it works!!
+//        _log_table[mb_id].erase(_log_table[mb_id].begin(), std::next(it).base());
+//    }//if
+
+    int i = (int) (_log_table[mb_id].size()) - 1;
+    for (; i >= 0; --i) {
+        if (timestamp >= _log_table[mb_id][i].timestamp) {
             break;
         }//if
     }//for
 
-    if (it != _log_table[mb_id].rend()) {
+    if (i != -1) {
         // Commit involves storing the most updated log value into commit memory, setting the timestamp time, and
         // erasing committed logs.
-        _util.copy(_commit_memory[mb_id].state, it->state);
+        _util.copy(_commit_memory[mb_id].state, _log_table[mb_id][i].state);
         _commit_memory[mb_id].timestamp = timestamp;
 
         // TODO: make sure it works!!
-        _log_table[mb_id].erase(_log_table[mb_id].begin(), std::next(it).base());
+        _log_table[mb_id].erase((size_t)(i + 1));
     }//if
 }
 

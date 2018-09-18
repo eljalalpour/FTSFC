@@ -29,7 +29,7 @@ private:
 
     void _commit(int, int64_t);
 
-    void _log_inoperation_state();
+    bool _log_inoperation_state();
 
 public:
     State inoperation;
@@ -50,7 +50,7 @@ public:
 
     void process_piggyback_message(Packet*);
 
-    void construct_piggyback_message(Packet*);
+    bool construct_piggyback_message(Packet*);
 
     size_t log_table_length();
 };

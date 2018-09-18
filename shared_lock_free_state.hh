@@ -29,7 +29,7 @@ private:
 
     void _commit(int, int64_t);
 
-    bool _log_inoperation_state();
+    void _log_inoperation_state();
 
 public:
     State inoperation;

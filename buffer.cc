@@ -43,6 +43,14 @@ void Buffer::push(int, Packet*p) {
     DEBUG("--------------------");
     DEBUG("Begin Buffer");
 
+    //TODO: find the best order, either first send the packet to Forwarder or release packets
+    // Send a copy of the packet to Forwarder
+    DEBUG("Send to forwarder");
+    // TODO: remove clone
+    output(TO_FORWARDER).push(p->clone());
+
+    // Release packets in the buffer
+    DEBUG("Releasing!");
     // Cast the piggyback message and extract the timestamps
     PiggybackMessage* _msg = CAST_PACKET_TO_PIGGY_BACK_MESSAGE(p);
     int64_t lts  = (*_msg[_chain_len - 1]).timestamp;
@@ -53,18 +61,9 @@ void Buffer::push(int, Packet*p) {
 //    util.print((*_msg[_chain_len - 1]));
 
     // Store the packet into buffer
-    _packets[lts] = Packet::make(p->data(), p->length());
+    _packets[lts] = p;
 
-    //TODO: find the best order, either first send the packet to Forwarder or release packets
-    // Send a copy of the packet to Forwarder
-    DEBUG("Send to forwarder");
-    // TODO: remove clone
-    output(TO_FORWARDER).push(p->clone());
-
-    // Release packets in the buffer
-    DEBUG("Releasing!");
-//    _release(lcts);
-    output(TO_OUTSIDE_WORLD).push(p);
+    _release(lcts);
 
     DEBUG("End Buffer");
     DEBUG("--------------------");

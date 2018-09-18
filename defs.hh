@@ -42,7 +42,7 @@ using std::vector;
 #define MAX_CHAIN_LEN      5
 #define DEFAULT_OFFSET     76 // This value must be greater than 75
 #define QUEUE_LEN          30
-#define LOG_TABLE_MAX_SIZE 1000
+#define LOG_TABLE_MAX_SIZE 10000
 #define LOG_TABLE_CON_SIZE 34
 
 /// State and piggyback message definitions

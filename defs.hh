@@ -38,12 +38,12 @@ using std::vector;
 #endif
 
 /// definitions of assumptions
-#define STATE_LEN      8
-#define MAX_CHAIN_LEN  5
-#define DEFAULT_OFFSET 76 // This value must be greater than 75
-#define QUEUE_LEN      30
-#define LOG_TABLE_SIZE 34
-
+#define STATE_LEN          8
+#define MAX_CHAIN_LEN      5
+#define DEFAULT_OFFSET     76 // This value must be greater than 75
+#define QUEUE_LEN          30
+#define LOG_TABLE_MAX_SIZE 1000
+#define LOG_TABLE_CON_SIZE 34
 
 /// State and piggyback message definitions
 typedef int State[STATE_LEN];
@@ -89,11 +89,11 @@ public:
             _elems(max_size, value_type()) { }
 
     FTVector():
-            _max_size(LOG_TABLE_SIZE),
+            _max_size(LOG_TABLE_MAX_SIZE),
             _size(0),
             _head(0),
             _tail(0),
-            _elems(LOG_TABLE_SIZE, value_type()) { }
+            _elems(LOG_TABLE_MAX_SIZE, value_type()) { }
 
     void push_back(const value_type& val) {
         if (full()) {

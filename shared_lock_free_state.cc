@@ -115,7 +115,7 @@ void SharedLockFreeState::_log_inoperation_state() {
     _util.copy(ts.state, inoperation);
 
     // TODO: remove this part
-    if(_log_table[_id].size() < LOG_TABLE_SIZE) {
+    if(_log_table[_id].size() < LOG_TABLE_CON_SIZE) {
         _log_table[_id].push_back(ts);
     }//if
 }

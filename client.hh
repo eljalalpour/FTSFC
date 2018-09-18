@@ -7,7 +7,7 @@
 #include <condition_variable>
 #include <arpa/inet.h>
 #include <netinet/tcp.h>
-#include <thread>
+//#include <thread>
 #include "defs.hh"
 
 using std::string;
@@ -28,7 +28,8 @@ typedef struct {
 
 class Client {
 private:
-    std::vector<std::thread> _threads;
+//    std::vector<std::thread> _threads;
+    std::vector<pthread_t> _threads;
     std::vector<ServerConn> _conns;
 
     /// \texttt{_ready} shows that if the data is ready for consumption
@@ -44,57 +45,57 @@ private:
 
     State* _state_to_be_sent;
 
-//    static void* _send(void* param) {
-//        ServerConn* scp = static_cast<ServerConn*>(param);
-//
+    static void* _send(void* param) {
+        ServerConn* scp = static_cast<ServerConn*>(param);
+
+        // Send state
+        write(scp->socket, CAST_TO_BYTES(scp->state), sizeof(State));
+
+        // Wait for the response
+        char c;
+        read(scp->socket, &c, sizeof(char));
+        return 0;
+    }
+
+//    void _send(ServerConn& scp, State& _state_to_be_sent) {
 //        // Send state
-//        write(scp->socket, CAST_TO_BYTES(scp->state), sizeof(State));
+//        write(scp.socket, CAST_TO_BYTES(_state_to_be_sent), sizeof(State));
 //
-//        // Wait for the response
 //        char c;
-//        read(scp->socket, &c, sizeof(char));
-//        return 0;
+//        read(scp.socket, &c, sizeof(char));
 //    }
 
-    void _send(ServerConn& scp, State& _state_to_be_sent) {
-        // Send state
-        write(scp.socket, CAST_TO_BYTES(_state_to_be_sent), sizeof(State));
-
-        char c;
-        read(scp.socket, &c, sizeof(char));
-    }
-
-    void _send_for_ever(int _id) {
-        while(true) {
-            {// Wait until there is some state to be sent
-                std::unique_lock<std::mutex> lock(_ready_mtx);
-                // The worker also checks its own bit
-                _ready_cv.wait(lock, [&](){ return K_TH_BIT(_ready, _id) > 0;});
-            }//{
-
-            // Send state to be replicated
-            _send(_conns[_id], *_state_to_be_sent);
-
-            {// Let the Client know that this process has finished its task
-                std::lock_guard<std::mutex> lock_guard(_pending_workers_mtx);
-                -- _pending_workers;
-                if (_pending_workers == 0) {//if no other sender exists, notify the client
-                    {
-                        std::lock_guard<std::mutex> lock(_ready_mtx);
-                        // Clear _ready bitset
-                        _ready = 0;
-                    }//{
-                    _pending_workers_cv.notify_one();
-                }//if
-                else {
-                    {// Remember that it have already processed the data
-                        std::lock_guard<std::mutex> lock(_ready_mtx);
-                        _ready = RESET_K_TH_BIT(_ready, _id);
-                    }//{
-                }//else
-            }//}
-        }//while
-    }
+//    void _send_for_ever(int _id) {
+//        while(true) {
+//            {// Wait until there is some state to be sent
+//                std::unique_lock<std::mutex> lock(_ready_mtx);
+//                // The worker also checks its own bit
+//                _ready_cv.wait(lock, [&](){ return K_TH_BIT(_ready, _id) > 0;});
+//            }//{
+//
+//            // Send state to be replicated
+//            _send(_conns[_id], *_state_to_be_sent);
+//
+//            {// Let the Client know that this process has finished its task
+//                std::lock_guard<std::mutex> lock_guard(_pending_workers_mtx);
+//                -- _pending_workers;
+//                if (_pending_workers == 0) {//if no other sender exists, notify the client
+//                    {
+//                        std::lock_guard<std::mutex> lock(_ready_mtx);
+//                        // Clear _ready bitset
+//                        _ready = 0;
+//                    }//{
+//                    _pending_workers_cv.notify_one();
+//                }//if
+//                else {
+//                    {// Remember that it have already processed the data
+//                        std::lock_guard<std::mutex> lock(_ready_mtx);
+//                        _ready = RESET_K_TH_BIT(_ready, _id);
+//                    }//{
+//                }//else
+//            }//}
+//        }//while
+//    }
 
     int _connect(string ip, uint16_t port) {
         // Create socket
@@ -144,11 +145,11 @@ private:
             close(_conns[i].socket);
     }
 
-    void _create_threads() {
-        for (size_t i = 0; i < _conns.size(); ++i) {
-            _threads.push_back(std::thread(&Client::_send_for_ever, this, i));
-        }//for
-    }
+//    void _create_threads() {
+//        for (size_t i = 0; i < _conns.size(); ++i) {
+//            _threads.push_back(std::thread(&Client::_send_for_ever, this, i));
+//        }//for
+//    }
 
 //    void _multi_send(State &state) {
 //        {// Produce the state and notify the senders
@@ -199,7 +200,6 @@ private:
 
     CLEANUP:
         _threads.clear();
-        return result;
     }
 
 
@@ -223,7 +223,8 @@ public:
             return _multi_send(state);
         }//if
         else {
-            _send(_conns[0], state);
+            _conns[0].state = &state;
+            _send(&_conns[0]);
         }//else
     }
 
@@ -240,6 +241,6 @@ public:
         _ready = false;
 
         _connect_sockets();
-        _create_threads();
+//        _create_threads();
     }
 };

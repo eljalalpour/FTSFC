@@ -15,6 +15,7 @@ typedef struct {
     string ip;
     uint16_t port;
     int socket;
+    State* state;
 } ServerConn;
 
 class Client {

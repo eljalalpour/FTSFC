@@ -23,9 +23,7 @@ Packet *PMConstruct::simple_action(Packet *p) {
 
     _init_shared_state_pointer();
 
-    if (!_shared_state->construct_piggyback_message(p)) {
-        return 0;
-    }//if
+    _shared_state->construct_piggyback_message(p);
 
     DEBUG("End PMConstruct");
     DEBUG("--------------------");

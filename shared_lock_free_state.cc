@@ -96,16 +96,15 @@ void SharedLockFreeState::_log_inoperation_state() {
     TimestampState ts;
     ts.timestamp = CURRENT_TIMESTAMP;
     _util.copy(ts.state, inoperation);
-    _log_table[_id].push_back(ts);
+
+    // TODO: remove this part
+    if(_log_table[_id].size() < LOG_TABLE_CONTROL) {
+        _log_table[_id].push_back(ts);
+    }//if
 }
 
-bool SharedLockFreeState::construct_piggyback_message(Packet* p) {
+void SharedLockFreeState::construct_piggyback_message(Packet* p) {
     DEBUG("Construct piggyback message");
-
-    // Control the log table growth
-    if(_log_table[_id].size() >= LOG_TABLE_MAX_SIZE) {
-       return false;
-    }//if
 
     PiggybackMessage* msg = CAST_PACKET_TO_PIGGY_BACK_MESSAGE(p);
 
@@ -124,8 +123,6 @@ bool SharedLockFreeState::construct_piggyback_message(Packet* p) {
 //    LOG("After construct piggyback message:");
 //    _util.print(*msg[0]);
 //    _util.print(*msg[1]);
-
-    return true;
 }
 
 int SharedLockFreeState::configure(Vector<String> &conf, ErrorHandler *errh) {

@@ -12,6 +12,9 @@ CLICK_DECLS
 /// and performs low-level state management operations.
 ///
 
+
+#define LOG_TABLE_CONTROL 100
+
 class SharedLockFreeState : public Element {
 private:
     int _id;
@@ -50,7 +53,7 @@ public:
 
     void process_piggyback_message(Packet*);
 
-    bool construct_piggyback_message(Packet*);
+    void construct_piggyback_message(Packet*);
 
     size_t log_table_length();
 };

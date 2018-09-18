@@ -24,6 +24,7 @@ FromDPDKDevice(0,0)
 -> IPFilter(allow udp && src 1.2.0.0/16)
 -> SetTimestamp
 -> PMProcess
+-> FTLockFreeCounter(0)
 -> PMConstruct
 -> ta::TimestampAccum
 -> MarkIPHeader(14)

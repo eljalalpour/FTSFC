@@ -42,11 +42,10 @@ Packet *FTMBSim::simple_action(Packet *p) {
         _last_snapshot_timestamp = Timestamp::now();
     }//if
 
-    auto now = Timestamp::now();
-    auto passed = (now - _last_snapshot_timestamp).usec();
+    auto passed = (Timestamp::now() - _last_snapshot_timestamp).usec();
     if (passed >= _period) {
         usleep(_delay);
-        _last_snapshot_timestamp = now;
+        _last_snapshot_timestamp = Timestamp::now();
     }//if
 
     Router *r = this->router();

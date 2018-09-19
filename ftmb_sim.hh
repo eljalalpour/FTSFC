@@ -14,7 +14,7 @@ class FTMBSim : public Element {
 private:
     int _period;
     int _delay;
-    int _shift;
+    int _first_delay;
     bool _first_packet_seen;
 
     Timestamp _last_snapshot_timestamp;

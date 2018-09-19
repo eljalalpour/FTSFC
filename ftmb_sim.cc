@@ -15,7 +15,7 @@ int FTMBSim::configure(Vector<String> &conf, ErrorHandler *errh) {
     if (Args(conf, this, errh)
                 .read("PERIOD", _period)
                 .read("DELAY", _delay)
-                .read("SHIFT", _shift)
+                .read("FIRST_DELAY", _first_delay)
                 .complete() < 0)
         return -1;
 
@@ -38,7 +38,7 @@ Packet *FTMBSim::simple_action(Packet *p) {
         _last_snapshot_timestamp = Timestamp::now();
 
         // Sleep for shift
-        auto random_sleep = _shift * MS2US;
+        auto random_sleep = _first_delay * MS2US;
         usleep(random_sleep);
     }//if
 

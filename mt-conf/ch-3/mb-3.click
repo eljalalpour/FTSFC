@@ -9,7 +9,7 @@ $index,$src_ip |
     -> MarkIPHeader(14)
     -> IPFilter(allow udp && src 1.2.0.0/16)
 //    -> IPPrint($index)
-    -> FTMBSim(PERIOD 20, DELAY 6, FIRST_DELAY 0)
+    -> FTMBSim(PERIOD 20, DELAY 6, FIRST_DELAY -1)
     -> MarkIPHeader(14)
     -> StoreIPAddress($src_ip, src)
     -> StoreIPAddress(192.168.1.101, dst)

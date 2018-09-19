@@ -22,6 +22,7 @@ int FTMBSim::configure(Vector<String> &conf, ErrorHandler *errh) {
     // Config parameters are in ms, convert them to us
     _period *= MS2US;
     _delay *= MS2US;
+    _first_delay *= MS2US;
     _first_packet_seen = false;
 
     DEBUG("FTMBSim period is %d, delay is %d!\n", _period, _delay);
@@ -35,8 +36,7 @@ Packet *FTMBSim::simple_action(Packet *p) {
 
     if (!_first_packet_seen) {
         // Sleep for shift
-        auto random_sleep = _first_delay * MS2US;
-        usleep(random_sleep);
+        usleep(_first_delay);
 
         _first_packet_seen = true;
         _last_snapshot_timestamp = Timestamp::now();

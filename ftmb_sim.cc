@@ -35,15 +35,15 @@ Packet *FTMBSim::simple_action(Packet *p) {
     DEBUG("Begin FTMBSim");
 
     if (!_first_packet_seen) {
-        // Sleep for shift
-        usleep(_first_delay);
-
         _first_packet_seen = true;
         _last_snapshot_timestamp = Timestamp::now();
     }//if
+    else {
+        _first_delay = 0;
+    }//else
 
     auto passed = (Timestamp::now() - _last_snapshot_timestamp).usec();
-    if (passed >= _period) {
+    if (passed >= _period + _first_delay) {
         usleep(_delay);
         _last_snapshot_timestamp = Timestamp::now();
     }//if

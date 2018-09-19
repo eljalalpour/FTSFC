@@ -43,6 +43,11 @@ Packet *FTMBSim::simple_action(Packet *p) {
         _last_snapshot_timestamp = now;
     }//if
 
+    Router *r = this->router();
+
+    LockFreeArray *lfc = (LockFreeArray *)(r->find("array"));
+    ++lfc->array[0];
+
     DEBUG("End FTMBSim");
     DEBUG("--------------------");
 

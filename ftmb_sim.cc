@@ -1,7 +1,8 @@
+#include "lock_free_array.hh"
 #include <click/config.h>
 #include <click/router.hh>
 #include <click/args.hh>
-#include "ftmb_sim.hh"
+
 
 CLICK_DECLS
 

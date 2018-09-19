@@ -4,6 +4,7 @@
 #include <click/config.h>
 #include <click/element.hh>
 #include <click/timestamp.hh>
+#include "nf_lock_free_counter.hh"
 
 CLICK_DECLS
 

@@ -35,6 +35,10 @@ Packet *FTMBSim::simple_action(Packet *p) {
     if (!_first_packet_seen) {
         _first_packet_seen = true;
         _last_snapshot_timestamp = Timestamp::now();
+
+        // Randomly sleep
+        auto random_sleep = (click_random() % MAX_RANDOM_SLEEP_MS) * MS2US;
+        usleep(random_sleep);
     }//if
 
     auto now = Timestamp::now();

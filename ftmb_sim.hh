@@ -8,7 +8,8 @@
 
 CLICK_DECLS
 
-#define MS2US   1000
+#define MS2US               1000
+#define MAX_RANDOM_SLEEP_MS 10
 
 class FTMBSim : public Element {
 private:

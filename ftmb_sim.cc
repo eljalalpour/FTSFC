@@ -34,12 +34,12 @@ Packet *FTMBSim::simple_action(Packet *p) {
     DEBUG("Begin FTMBSim");
 
     if (!_first_packet_seen) {
-        _first_packet_seen = true;
-        _last_snapshot_timestamp = Timestamp::now();
-
         // Sleep for shift
         auto random_sleep = _first_delay * MS2US;
         usleep(random_sleep);
+
+        _first_packet_seen = true;
+        _last_snapshot_timestamp = Timestamp::now();
     }//if
 
     auto now = Timestamp::now();

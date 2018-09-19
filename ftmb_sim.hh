@@ -9,12 +9,12 @@
 CLICK_DECLS
 
 #define MS2US               1000
-#define MAX_RANDOM_SLEEP_MS 10
 
 class FTMBSim : public Element {
 private:
     int _period;
     int _delay;
+    int _shift;
     bool _first_packet_seen;
 
     Timestamp _last_snapshot_timestamp;

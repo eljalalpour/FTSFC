@@ -1,6 +1,8 @@
 // In aqua07
 // aqua01 -> aqua07 -> aqua08
 
+array::AtomicArray;
+
 elementclass NFBlock {
 $index,$src_ip |
     input

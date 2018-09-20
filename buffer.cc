@@ -43,7 +43,10 @@ void Buffer::push(int, Packet*p) {
     DEBUG("--------------------");
     DEBUG("Begin Buffer");
 
-    output(TO_FORWARDER).push(p->clone());
+//    output(TO_FORWARDER).push(p->clone());
+
+    Packet* q = Packet::make(p->data(), DEFAULT_OFFSET + sizeof(PiggybackMessage));
+    output(TO_FORWARDER).push(q);
 
     // Cast the piggyback message and extract the timestamps
     PiggybackMessage* _msg = CAST_PACKET_TO_PIGGY_BACK_MESSAGE(p);

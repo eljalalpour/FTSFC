@@ -35,7 +35,8 @@ Packet *FTLockFreeCounter::simple_action(Packet *p) {
 
     _init_shared_state();
 
-    ++_shared_state->inoperation[_index];
+//    ++_shared_state->_inoperation[_index];
+    _shared_state->increment(_index);
 
     DEBUG("End FTLockFreeCounter %d:", _index);
     DEBUG("--------------------");

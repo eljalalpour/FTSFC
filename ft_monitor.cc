@@ -36,7 +36,8 @@ Packet *FTMonitor::simple_action(Packet *p) {
 
     _init_shared_state();
 
-    ++_shared_state->inoperation[_index];
+//    ++_shared_state->_inoperation[_index];
+    _shared_state->increment(_index);
 
     for (int i = 0; i < _for_count; ++i) {
         rand();

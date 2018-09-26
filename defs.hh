@@ -10,6 +10,7 @@
 #include <unordered_map>
 #include <chrono>
 #include <cstdlib>
+#include <mutex>
 #include <click/packet.hh>
 #include <click/glue.hh>
 
@@ -17,6 +18,12 @@
 #define PORTS_2_1 "2/1"
 #define PORTS_1_2 "1/2"
 #define PORTS_2_2 "2/2"
+
+// Note that n and k must be of type size_t
+#define K_TH_BIT(n,k)       ((n & ( 1 << k )) >> k)
+#define RESET_K_TH_BIT(n,k) (n &= ~(1UL << k))
+#define SET_K_TH_BIT(n,k)   (n |= 1UL << k)
+#define SET_ALL_BITS -1
 
 #define CURRENT_TIMESTAMP std::chrono::high_resolution_clock::now().time_since_epoch().count()
 
@@ -62,7 +69,11 @@ typedef std::list<TimestampState> TimestampStateList;
 
 typedef TimestampStateList LogTable[MAX_CHAIN_LEN];
 
+typedef std::mutex LogTableMutex[MAX_CHAIN_LEN];
+
 typedef TimestampState CommitMemory[MAX_CHAIN_LEN];
+
+typedef std::mutex CommitMemoryMutex[MAX_CHAIN_LEN];
 
 /// Useful casting definitions
 #define CAST_TO_BYTES(x)              reinterpret_cast<unsigned char *>(&x)

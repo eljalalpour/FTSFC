@@ -13,12 +13,6 @@
 using std::string;
 using std::thread;
 
-// Note that n and k must be of type size_t
-#define K_TH_BIT(n,k)       ((n & ( 1 << k )) >> k)
-#define RESET_K_TH_BIT(n,k) (n &= ~(1UL << k))
-#define SET_K_TH_BIT(n,k)   (n |= 1UL << k)
-#define SET_ALL_BITS -1
-
 typedef struct {
     string ip;
     uint16_t port;

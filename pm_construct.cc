@@ -17,13 +17,22 @@ inline void PMConstruct::_init_shared_state_pointer() {
     }//if
 }
 
+int PMConstruct::configure(Vector<String> &conf, ErrorHandler *errh) {
+    // set index param
+    Args(conf, this, errh).read_or_set("ID", _thread_id, DEFAULT_ID);
+
+    DEBUG("PMConstruct id is %d!\n", _thread_id);
+
+    return 0;
+}
+
 Packet *PMConstruct::simple_action(Packet *p) {
     DEBUG("--------------------");
     DEBUG("Begin PMConstruct");
 
     _init_shared_state_pointer();
 
-    _shared_state->construct_piggyback_message(p);
+    _shared_state->construct_piggyback_message(p, _thread_id);
 
     DEBUG("End PMConstruct");
     DEBUG("--------------------");

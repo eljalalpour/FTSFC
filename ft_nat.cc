@@ -62,8 +62,11 @@ Packet *FTNAT::simple_action(Packet *p) {
     // Finding flow id
     uint32_t fid = flow_id(p);
 
-    if (_shared_state->inoperation[fid] == 0)
-        _shared_state->inoperation[fid] = 1;
+//    if (_shared_state->_inoperation[fid] == 0) {
+//        _shared_state->_inoperation[fid] = 1;
+    if (_shared_state->read(fid) == 0) {
+        _shared_state->increment(fid);
+    }//if
 
     DEBUG("End FTNAT");
     DEBUG("--------------------");

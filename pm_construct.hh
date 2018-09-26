@@ -13,8 +13,11 @@ CLICK_DECLS
 /// These operations are offloaded to class SharedLockFreeState. 
 ///
 
+#define DEFAULT_ID 0
+
 class PMConstruct : public Element {
 private:
+    int _thread_id;
     bool _shared_state_init;
     SharedLockFreeState* _shared_state;
     inline void _init_shared_state_pointer();
@@ -29,6 +32,8 @@ public:
     const char *port_count() const { return PORTS_1_1; }
 
     const char *processing() const { return AGNOSTIC; }
+
+    int configure(Vector<String> &conf, ErrorHandler *errh);
 
     Packet *simple_action(Packet *);
 };

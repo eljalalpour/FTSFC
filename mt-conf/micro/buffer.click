@@ -35,7 +35,7 @@ buffer[0]
 -> ToDPDKDevice(0);
 
 // To the forwarder
-buffer[1]
+buffer[1] -> Truncate(380)
 -> MarkIPHeader(14)
 -> StoreIPAddress(2.0.1.1, src)
 -> StoreIPAddress(192.168.1.107, dst)

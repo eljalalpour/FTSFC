@@ -79,9 +79,9 @@ public:
 
     size_t log_table_length();
 
-    inline int read(int&);
+    inline int read(int);
 
-    inline void increment(int&);
+    inline void increment(int);
 };
 
 CLICK_ENDDECLS

@@ -174,11 +174,11 @@ size_t SharedLockFreeState::log_table_length() {
     return this->_log_table->size();
 }
 
-int SharedLockFreeState::read(int &index) {
+int SharedLockFreeState::read(int index) {
     return _inoperation[index];
 }
 
-void SharedLockFreeState::increment(int& index) {
+void SharedLockFreeState::increment(int index) {
     {// Wait until no thread is capturing inoperation state
         std::unique_lock<std::mutex> lock(_capture_inop_phase_mtx);
         _capture_inop_phase_cv.wait(lock, [&](){ _capture_inop_phase == NOT_CAPTURING; });

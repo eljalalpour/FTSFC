@@ -46,7 +46,7 @@
 #define MAX_CHAIN_LEN      5
 #define DEFAULT_OFFSET     76 // This value must be greater than 75
 #define QUEUE_LEN          30
-#define LOG_TABLE_MAX_SIZE 1000
+#define LOG_TABLE_RES_SIZE 10000
 
 /// State and piggyback message definitions
 typedef int State[STATE_LEN];
@@ -129,6 +129,12 @@ public:
     inline void copy(TimestampState& y, PiggybackState& x) {
         y.timestamp = x.timestamp;
         copy(y.state, x.state);
+    }
+
+    inline void reserve(LogTable& lt) {
+        for (auto &i : lt) {
+            i.reserve(LOG_TABLE_RES_SIZE);
+        }//for
     }
 
 //    inline void copy(PiggybackMessage y, PiggybackMessage x) {

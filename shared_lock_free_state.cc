@@ -47,15 +47,34 @@ void SharedLockFreeState::_commit(int mb_id, int64_t timestamp) {
         return;
     }//
 
-    auto it = _log_table[mb_id].rbegin();
-    // TODO: the search can be optimized
-    for (; it != _log_table[mb_id].rend(); ++it) {
-        if (timestamp >= it->timestamp) {
-            break;
-        }//if
-    }//for
+//    auto it = _log_table[mb_id].rbegin();
+//    // TODO: the search can be optimized
+//    for (; it != _log_table[mb_id].rend(); ++it) {
+//        if (timestamp >= it->timestamp) {
+//            break;
+//        }//if
+//    }//for
+//
+//    if (it != _log_table[mb_id].rend()) {
+//        // Commit involves storing the most updated log value into commit memory,
+//        // setting the timestamp time, and
+//        // erasing committed logs.
+//        {
+//            // storing the most updated log value into commit memory
+//            std::lock_guard<std::mutex> commit_guard(_commit_memory_mutex[mb_id]);
+//            _util.copy(_commit_memory[mb_id].state, it->state);
+//            _commit_memory[mb_id].timestamp = timestamp;
+//        }//{
+//
+//        _log_table[mb_id].erase(_log_table[mb_id].begin(), std::next(it).base());
+//    }//if
 
-    if (it != _log_table[mb_id].rend()) {
+    // Find the last log that its timestamp is higher than the given timestamp
+    auto it = std::lower_bound(_log_table[mb_id].begin(), _log_table[mb_id].end(),
+                               [&](const TimestampState &ts) { return timestamp < ts.timestamp;});
+
+    if (it != _log_table[mb_id].begin() ||
+        _log_table[mb_id].begin()->timestamp <= timestamp) {
         // Commit involves storing the most updated log value into commit memory,
         // setting the timestamp time, and
         // erasing committed logs.
@@ -66,8 +85,9 @@ void SharedLockFreeState::_commit(int mb_id, int64_t timestamp) {
             _commit_memory[mb_id].timestamp = timestamp;
         }//{
 
-        _log_table[mb_id].erase(_log_table[mb_id].begin(), std::next(it).base());
+        _log_table[mb_id].erase(_log_table[mb_id].begin(), std::advance(it, 1));
     }//if
+
 }
 
 void SharedLockFreeState::process_piggyback_message(Packet* p) {

@@ -3,7 +3,7 @@
 #include "defs.hh"
 #include <click/config.h>
 #include <click/element.hh>
-//#include <mutex>
+#include <mutex>
 
 CLICK_DECLS
 

@@ -70,8 +70,7 @@ void SharedLockFreeState::_commit(int mb_id, int64_t timestamp) {
 //    }//if
 
     // Find the last log that its timestamp is higher than the given timestamp
-    auto it = std::lower_bound(_log_table[mb_id].begin(), _log_table[mb_id].end(),
-                               [timestamp](const int64_t& t, const TimestampState &ts) { return t < ts.timestamp;});
+    auto it = std::lower_bound(_log_table[mb_id].begin(), _log_table[mb_id].end(), timestamp);
 
     if (it != _log_table[mb_id].begin() ||
         _log_table[mb_id].begin()->timestamp <= timestamp) {

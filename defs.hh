@@ -6,7 +6,7 @@
 ///     - The piggyback message always contains the piggback state of 5 middleboxes
 ///     - Middleboxes must not modify packets
 
-#include <list>
+#include <vector>
 #include <unordered_map>
 #include <chrono>
 #include <cstdlib>
@@ -51,12 +51,16 @@
 /// State and piggyback message definitions
 typedef int State[STATE_LEN];
 
-typedef struct {
+typedef struct TimestampState {
     int64_t timestamp;
     State state;
+
+    friend bool operator < (const TimestampState& me, const int64_t& t) {
+        return me.timestamp < t;
+    }
 } TimestampState;
 
-typedef struct {
+typedef struct PiggybackState {
     short ack;
     int64_t last_commit;
     int64_t timestamp;
@@ -65,7 +69,7 @@ typedef struct {
 
 typedef PiggybackState PiggybackMessage[MAX_CHAIN_LEN];
 
-typedef std::list<TimestampState> TimestampStateList;
+typedef std::vector<TimestampState> TimestampStateList;
 
 typedef TimestampStateList LogTable[MAX_CHAIN_LEN];
 

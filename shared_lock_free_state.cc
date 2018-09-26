@@ -99,7 +99,7 @@ void SharedLockFreeState::process_piggyback_message(Packet* p) {
 void SharedLockFreeState::_capture_inoperation_state(State& state, int thread_id) {
     {// Wait until no thread is modifying inoperation state
         std::unique_lock<std::mutex> lock(_modifying_phase_mtx);
-        _modifying_phase_cv.wait(lock, [&](){ _modifying_phase == NOT_MODIFYING;});
+        _modifying_phase_cv.wait(lock, [&](){ return _modifying_phase == NOT_MODIFYING;});
     }//{
 
     {// Let other threads know that this thread with id thread_id
@@ -181,7 +181,7 @@ int SharedLockFreeState::read(int index) {
 void SharedLockFreeState::increment(int index) {
     {// Wait until no thread is capturing inoperation state
         std::unique_lock<std::mutex> lock(_capture_inop_phase_mtx);
-        _capture_inop_phase_cv.wait(lock, [&](){ _capture_inop_phase == NOT_CAPTURING; });
+        _capture_inop_phase_cv.wait(lock, [&](){ return _capture_inop_phase == NOT_CAPTURING; });
     }//{
 
     {// Let other threads know that this thread is modifying some state variable

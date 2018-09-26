@@ -64,8 +64,8 @@ Packet *FTNAT::simple_action(Packet *p) {
 
 //    if (_shared_state->_inoperation[fid] == 0) {
 //        _shared_state->_inoperation[fid] = 1;
-    if (_shared_state->read((int)fid) == 0) {
-        _shared_state->increment((int)fid);
+    if (_shared_state->read(fid) == 0) {
+        _shared_state->increment(fid);
     }//if
 
     DEBUG("End FTNAT");

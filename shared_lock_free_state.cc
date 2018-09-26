@@ -85,7 +85,7 @@ void SharedLockFreeState::_commit(int mb_id, int64_t timestamp) {
             _commit_memory[mb_id].timestamp = timestamp;
         }//{
 
-        _log_table[mb_id].erase(_log_table[mb_id].begin(), it + 1);
+        _log_table[mb_id].erase(_log_table[mb_id].begin(), it);
     }//if
 
 }

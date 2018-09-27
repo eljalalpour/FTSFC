@@ -2,6 +2,7 @@
 #include <click/router.hh>
 #include <click/args.hh>
 #include <click/packet_anno.hh>
+#include <click/error.hh>
 #include "buffer.hh"
 
 CLICK_DECLS

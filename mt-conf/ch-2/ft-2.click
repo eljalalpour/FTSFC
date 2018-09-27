@@ -24,7 +24,8 @@ $index,$out,$forwarder |
     -> output;
 
     // To the forwarder
-    buffer[1] -> Truncate(380)
+    buffer[1]
+    -> Truncate(380)
     -> MarkIPHeader(14)
     -> StoreIPAddress($forwarder, src)
     -> StoreIPAddress(192.168.1.107, dst)

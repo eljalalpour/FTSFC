@@ -2,7 +2,7 @@
 
 #include "defs.hh"
 //#include <map>
-#include <vector>
+#include <queue>
 #include <click/config.h>
 #include <click/element.hh>
 #include <click/standard/storage.hh>
@@ -23,13 +23,23 @@ private:
     int _chain_len;
 
 //    std::map<int64_t, Packet *> _packets;
-    std::vector<int64_t> _timestamps;
+    std::queue<int64_t> _timestamps;
     Packet* volatile * _q;
 
     inline void _release(int64_t);
 
-    inline Packet* deq();
-    inline bool enq(Packet*);
+    inline Packet* deq() {
+        Storage::index_type h = head(), t = tail();
+        if (h != t) {
+            Packet *p = _q[h];
+            set_head(next_i(h));
+            assert(p);
+            return p;
+        }//if
+        else {
+            return 0;
+        }//else
+    }
 
 public:
     Buffer ();

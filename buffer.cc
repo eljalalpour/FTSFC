@@ -22,16 +22,17 @@ int Buffer::initialize(ErrorHandler *errh)  {
 
 
 void Buffer::_release(int64_t commit_timestamp) {
-//    int count = 0;
-    for (auto it = _packets.begin(); it != _packets.end(); /* no increment */) {
-        if (it->first > commit_timestamp)
-            break;
-        output(TO_OUTSIDE_WORLD).push(it->second);
-        it = _packets.erase(it);
-//        ++count;
-    }//for
+////    int count = 0;
+//    for (auto it = _packets.begin(); it != _packets.end(); /* no increment */) {
+//        if (it->first > commit_timestamp)
+//            break;
+//        output(TO_OUTSIDE_WORLD).push(it->second);
+//        it = _packets.erase(it);
+////        ++count;
+//    }//for
+//
+////    LOG("Packets in buffer: %d, Released Packets: %d!", _packets.size(), count);
 
-//    LOG("Packets in buffer: %d, Released Packets: %d!", _packets.size(), count);
 }
 
 int Buffer::configure(Vector<String> &conf, ErrorHandler *errh) {
@@ -61,31 +62,20 @@ void Buffer::push(int, Packet*p) {
     int64_t lts  = (*_msg[_chain_len - 1]).timestamp;
     int64_t lcts = (*_msg[_chain_len - 1]).last_commit;
 
-//    // Store the packet into buffer
-//    _packets[lts] = p;
-//
-//    // Release packets from the buffer
-//    _release(lcts);
-
-    _timestamps.push_back(lts);
-
-    // If you change this code, also change NotifierQueue::push()
-    // and FullNoteQueue::push().
+    // Store packet into the buffer
     Storage::index_type h = head(), t = tail(), nt = next_i(t);
-
-    // should this stuff be in SimpleQueue::enq?
     if (nt != h) {
         _q[t] = p;
         set_tail(nt);
 
-        int s = size(h, nt);
-        if (s > _highwater_length)
-            _highwater_length = s;
+        _timestamps.push(lts);
+    }// if
 
-    } else {
-        // if (!(_drops % 100))
-//        checked_output_push(1, p);
-    }
+    // Release packets
+    while(!_timestamps.empty() && _timestamps.front() <= lcts) {
+        output(TO_OUTSIDE_WORLD).push(deq());
+        _timestamps.pop();
+    }//while
 
     DEBUG("End Buffer");
     DEBUG("--------------------");

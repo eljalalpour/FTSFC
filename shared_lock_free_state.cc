@@ -125,12 +125,12 @@ void SharedLockFreeState::_log_inoperation_state(int thread_id) {
     std::lock_guard<std::mutex> log_guard(_log_table_mutex[_id]);
 
     // TODO: remove if condition
-    if(_log_table[_id].size() < LOG_TABLE_CONTROL) {
+//    if(_log_table[_id].size() < LOG_TABLE_CONTROL) {
         TimestampState ts;
         _capture_inoperation_state(ts.state, thread_id);
         ts.timestamp = CURRENT_TIMESTAMP;
         _log_table[_id].push_back(ts);
-    }//if
+//    }//if
 }
 
 void SharedLockFreeState::construct_piggyback_message(Packet* p, int thread_id) {

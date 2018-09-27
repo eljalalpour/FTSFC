@@ -56,7 +56,7 @@ typedef struct TimestampState {
     State state;
 
     friend bool operator < (const TimestampState& me, const int64_t& t) {
-        return me.timestamp < t;
+        return me.timestamp > t;
     }
 } TimestampState;
 

@@ -2,38 +2,25 @@
 #include <click/router.hh>
 #include <click/args.hh>
 #include <click/packet_anno.hh>
-#include <click/error.hh>
 #include "buffer.hh"
 
 CLICK_DECLS
 
-Buffer::Buffer () : _q(0) {
-    _timestamps.reserve(INIT_TIMESTAMPS_SIZE);
-};
+Buffer::Buffer () { };
 
 Buffer::~Buffer() { };
 
-int Buffer::initialize(ErrorHandler *errh)  {
-    assert(!_q && head() == 0 && tail() == 0);
-    _q = (Packet **) CLICK_LALLOC(sizeof(Packet *) * (INIT_TIMESTAMPS_SIZE + 1));
-    if (_q == 0)
-        return errh->error("out of memory");
-    return 0;
-}
-
-
 void Buffer::_release(int64_t commit_timestamp) {
-////    int count = 0;
-//    for (auto it = _packets.begin(); it != _packets.end(); /* no increment */) {
-//        if (it->first > commit_timestamp)
-//            break;
-//        output(TO_OUTSIDE_WORLD).push(it->second);
-//        it = _packets.erase(it);
-////        ++count;
-//    }//for
-//
-////    LOG("Packets in buffer: %d, Released Packets: %d!", _packets.size(), count);
+//    int count = 0;
+    for (auto it = _packets.begin(); it != _packets.end(); /* no increment */) {
+        if (it->first > commit_timestamp)
+            break;
+        output(TO_OUTSIDE_WORLD).push(it->second);
+        it = _packets.erase(it);
+//        ++count;
+    }//for
 
+//    LOG("Packets in buffer: %d, Released Packets: %d!", _packets.size(), count);
 }
 
 int Buffer::configure(Vector<String> &conf, ErrorHandler *errh) {
@@ -63,20 +50,11 @@ void Buffer::push(int, Packet*p) {
     int64_t lts  = (*_msg[_chain_len - 1]).timestamp;
     int64_t lcts = (*_msg[_chain_len - 1]).last_commit;
 
-    // Store packet into the buffer
-    Storage::index_type h = head(), t = tail(), nt = next_i(t);
-    if (nt != h) {
-        _q[t] = p;
-        set_tail(nt);
+    // Store the packet into buffer
+    _packets[lts] = p;
 
-        _timestamps.push(lts);
-    }// if
-
-    // Release packets
-    while(!_timestamps.empty() && _timestamps.front() <= lcts) {
-        output(TO_OUTSIDE_WORLD).push(deq());
-        _timestamps.pop();
-    }//while
+    // Release packets from the buffer
+    _release(lcts);
 
     DEBUG("End Buffer");
     DEBUG("--------------------");

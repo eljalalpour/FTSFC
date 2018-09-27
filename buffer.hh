@@ -1,9 +1,11 @@
 #pragma once
 
 #include "defs.hh"
-#include <map>
+//#include <map>
+#include <vector>
 #include <click/config.h>
 #include <click/element.hh>
+#include <click/standard/storage.hh>
 
 CLICK_DECLS
 
@@ -14,19 +16,27 @@ CLICK_DECLS
 
 #define TO_OUTSIDE_WORLD 0
 #define TO_FORWARDER   1
+#define INIT_TIMESTAMPS_SIZE 1000000
 
-class Buffer : public Element {
+class Buffer : public Element, public Storage {
 private:
     int _chain_len;
 
-    std::map<int64_t, Packet *> _packets;
+//    std::map<int64_t, Packet *> _packets;
+    std::vector<int64_t> _timestamps;
+    Packet* volatile * _q;
 
     inline void _release(int64_t);
+
+    inline Packet* deq();
+    inline bool enq(Packet*);
 
 public:
     Buffer ();
 
     ~Buffer();
+
+    int initialize(ErrorHandler*) CLICK_COLD;
 
     const char *class_name() const { return "Buffer"; }
 

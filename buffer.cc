@@ -6,9 +6,20 @@
 
 CLICK_DECLS
 
-Buffer::Buffer () { };
+Buffer::Buffer () : _q(0) {
+    _timestamps.reserve(INIT_TIMESTAMPS_SIZE);
+};
 
 Buffer::~Buffer() { };
+
+int Buffer::initialize(ErrorHandler *errh)  {
+    assert(!_q && head() == 0 && tail() == 0);
+    _q = (Packet **) CLICK_LALLOC(sizeof(Packet *) * (INIT_TIMESTAMPS_SIZE + 1));
+    if (_q == 0)
+        return errh->error("out of memory");
+    return 0;
+}
+
 
 void Buffer::_release(int64_t commit_timestamp) {
 //    int count = 0;
@@ -50,11 +61,31 @@ void Buffer::push(int, Packet*p) {
     int64_t lts  = (*_msg[_chain_len - 1]).timestamp;
     int64_t lcts = (*_msg[_chain_len - 1]).last_commit;
 
-    // Store the packet into buffer
-    _packets[lts] = p;
+//    // Store the packet into buffer
+//    _packets[lts] = p;
+//
+//    // Release packets from the buffer
+//    _release(lcts);
 
-    // Release packets from the buffer
-    _release(lcts);
+    _timestamps.push_back(lts);
+
+    // If you change this code, also change NotifierQueue::push()
+    // and FullNoteQueue::push().
+    Storage::index_type h = head(), t = tail(), nt = next_i(t);
+
+    // should this stuff be in SimpleQueue::enq?
+    if (nt != h) {
+        _q[t] = p;
+        set_tail(nt);
+
+        int s = size(h, nt);
+        if (s > _highwater_length)
+            _highwater_length = s;
+
+    } else {
+        // if (!(_drops % 100))
+//        checked_output_push(1, p);
+    }
 
     DEBUG("End Buffer");
     DEBUG("--------------------");

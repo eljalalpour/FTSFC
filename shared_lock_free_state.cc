@@ -23,13 +23,9 @@ void SharedLockFreeState::_log(State& state, int64_t timestamp, int mb_id) {
     std::lock_guard<std::mutex> log_guard(_log_table_mutex[mb_id]);
 
     auto it = _log_table[mb_id].rbegin();
-    if (it == _log_table[mb_id].rend() ||
+    if (_log_table[mb_id].empty() ||
         it->timestamp < timestamp) {
-        // TODO: this part can be optimized
-        TimestampState t_state;
-        _util.copy(t_state.state, state);
-        t_state.timestamp = timestamp;
-        _log_table[mb_id].push_back(t_state);
+        _log_table[mb_id].emplace_back(timestamp, state);
     }//if
 }
 
@@ -47,7 +43,7 @@ void SharedLockFreeState::_commit(int mb_id, int64_t timestamp) {
 
     if (_log_table[mb_id].empty()) {
         return;
-    }//
+    }//if
 
     // Find the last log that its timestamp is higher than the given timestamp
     auto it = std::lower_bound(_log_table[mb_id].begin(), _log_table[mb_id].end(), timestamp);
@@ -92,10 +88,6 @@ void SharedLockFreeState::process_piggyback_message(Packet* p) {
         ++msg[mb_id]->ack;
         // PART END
     }//for
-
-//    LOG("After processing piggyback message:");
-//    _util.print(*msg[0]);
-//    _util.print(*msg[1]);
 }
 
 void SharedLockFreeState::_capture_inoperation_state(State& state, int thread_id) {
@@ -150,10 +142,6 @@ void SharedLockFreeState::construct_piggyback_message(Packet* p, int thread_id) 
     msg[_id]->timestamp = inop_log->timestamp;
     msg[_id]->last_commit = _commit_memory[_id].timestamp;
     msg[_id]->ack = 1;
-
-//    LOG("After construct piggyback message:");
-//    _util.print(*msg[0]);
-//    _util.print(*msg[1]);
 }
 
 int SharedLockFreeState::configure(Vector<String> &conf, ErrorHandler *errh) {

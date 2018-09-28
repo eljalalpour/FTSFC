@@ -55,8 +55,15 @@ typedef struct TimestampState {
     int64_t timestamp;
     State state;
 
+    TimestampState() { }
+
+    TimestampState(int64_t timestamp, State& state) {
+        this->timestamp = timestamp;
+        std::memcpy(this->state, state, sizeof(State));
+    }
+
     friend bool operator < (const TimestampState& me, const int64_t& t) {
-        return me.timestamp > t;
+        return me.timestamp < t;
     }
 } TimestampState;
 
@@ -137,60 +144,6 @@ public:
         }//for
     }
 
-//    inline void copy(PiggybackMessage y, PiggybackMessage x) {
-//        memcpy(y, x, sizeof(PiggybackMessage));
-//    }
-//
-//    inline void copy(PiggybackMessage y, PiggybackMessage* x) {
-//        memcpy(y, *x, sizeof(PiggybackMessage));
-//    }
-//
-//    inline void serialize(const State &s, unsigned char *ser) {
-//        memcpy(ser, &s, sizeof(State));
-//    }
-//
-//    inline void deserialize(State &s, const unsigned char* ser) {
-//        memcpy(&s, ser, sizeof(State));
-//    }
-//
-//    inline void serialize(const TimestampState &s, unsigned char *ser) {
-//        memcpy(ser, &s, sizeof(TimestampState));
-//    }
-//
-//    inline void deserialize(TimestampState &s, const unsigned char* ser) {
-//        memcpy(&s, ser, sizeof(TimestampState));
-//    }
-//
-//    inline void serialize(const PiggybackState &s, unsigned char *ser) {
-//        memcpy(ser, &s, sizeof(PiggybackState));
-//    }
-//
-//    inline void deserialize(PiggybackState &s, const unsigned char* ser) {
-//        memcpy(&s, ser, sizeof(PiggybackState));
-//    }
-//
-//    inline void serialize(const PiggybackMessage &s, unsigned char *ser) {
-//        memcpy(ser, &s, sizeof(PiggybackMessage));
-//    }
-//
-//    inline void deserialize(PiggybackMessage &s, const unsigned char* ser) {
-//        memcpy(&s, ser, sizeof(PiggybackMessage));
-//    }
-//
-//    inline void encode(PiggybackMessage& s, Packet* p) {
-//        // Cast away and point to the offset where PiggybackMessage is encoded,
-//        // then encode PiggybackMessage
-////        serialize(s, CAST_AWAY_PACKET_DATA(p) + DEFAULT_OFFSET);
-//        PiggybackMessage* t = CAST_PACKET_TO_PIGGY_BACK_MESSAGE(p);
-//        copy(*t, s);
-//    }
-//
-//    inline void decode(PiggybackMessage& s, const Packet* p) {
-//        PiggybackMessage* t = CAST_PACKET_TO_PIGGY_BACK_MESSAGE(p);
-//        copy(s, *t);
-////        deserialize(s, p->data() + DEFAULT_OFFSET);
-//    }
-
     void print(State &state) {
         for (auto i = 0; i < STATE_LEN; ++i) {
             LOG("%d: %d", i, state[i]);
@@ -247,43 +200,5 @@ public:
         }//for
     }
 };
-
-//class TimestampMeasure {
-//public:
-//    TimestampMeasure() : _usec_beg(0), _usec_accum(0), _count(0) { }
-//
-//    inline uint64_t count() {
-//        return _count;
-//    }
-//
-//    inline double time() {
-//        return _usec_accum;
-//    }
-//
-//    inline double average_time() {
-//        return _usec_accum / _count;
-//    }
-//
-//    inline String report() {
-//        return String(_count) + ","
-//            + String(_usec_accum) + ","
-//            + String(_usec_accum / _count);
-//    }
-//
-//protected:
-//    void beg() {
-//        _usec_beg = Timestamp::now();
-//    }
-//
-//    void end() {
-//        _usec_accum += Timestamp::now().doubleval() - _usec_beg;
-//        _count++;
-//    }
-//
-//private:
-//    double _usec_beg;
-//    double _usec_accum;
-//    uint64_t _count;
-//};
 
 #endif //FTSFC_DEFS_HH

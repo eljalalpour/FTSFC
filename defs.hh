@@ -59,7 +59,7 @@ typedef struct TimestampState {
 
     TimestampState(int64_t timestamp, State& state) {
         this->timestamp = timestamp;
-        std::memcpy(this->state, state, sizeof(State));
+        memcpy(this->state, state, sizeof(State));
     }
 
     friend bool operator < (const TimestampState& me, const int64_t& t) {

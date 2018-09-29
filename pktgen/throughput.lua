@@ -19,24 +19,24 @@ local SRC_IPS  = {
 }
 local SRC_IP_INDEX = 0
 local SRC_IP   = "1.0.1.1"
-local NET_MASK = 8
+local NET_MASK = "/8"
 local DST_IP   = "10.70.0.7"
 local SRC_PORT = 1234
 local DST_PORT = 4321
 
-sendport	= 0;
-recvport	= 0;
-pkt_size	= 64;
-local dstip = "10.10.0.100";
-local srcip = "10.10.0.101";
-local netmask = "/24";
-total_time = 0;
+function configure(parser)
+    parser:description("Generates UDP traffic and measure throughput. Edit the source to modify constants like IPs.")
+    parser:option("-d --dev", "Device to transmit/receive from."):default(0):convert(tonumber)
+    parser:option("-r --rate", "Transmit rate in Mbit/s."):default(10000):convert(tonumber)
+    parser:option("-s --size", "Packet size."):default(1000):convert(tonumber)
+    parser:option("-d --duration", "Experiment duration (in seconds)"):default(10):convert(tonumber)
+end
 
 local function default_options(sendport, recvport)
     pktgen.screen(SCREEN_OPTION);
     pktgen.set_ipaddr(sendport, "src", SRC_IP..NET_MASK);
     pktgen.set_ipaddr(sendport, "dst", DST_IP);
-    pktgen.set_mac   (sendport, DST_MAC);
+    pktgen.set_mac(sendport, DST_MAC);
     pktgen.set_proto(sendport..","..recvport, "udp");
 end
 
@@ -45,13 +45,13 @@ local function set_options(sendport, rate, pktSize)
     pktgen.set(sendport, "size", pktSize);
 end
 
-local function sendPls(sendport, sendrate, pktsize, seconds)
+local function send(sendport, sendrate, pkt_size, seconds)
     local report_file = io.open("report.csv", "w")
     io.output(report_file)
 
     pktgen.start(sendport);
 
-    set_options(sendport, sendrate, pktsize)
+    set_options(sendport, sendrate, pkt_size)
 
     --printf("After start. delay for %d seconds\n", durationMs);
     pktgen.delay(20000);
@@ -73,9 +73,13 @@ local function sendPls(sendport, sendrate, pktsize, seconds)
 end
 
 
-
 function main()
 
+
+    rate = 100; size = 64; seconds = 60;
+    printf("Runnning at rate %d, size %d, for %d secs\n", rate, size, seconds);
+    send(rate, size, seconds);
+    io.output(io.stdout);
 
     local sending = 0;
     local trlst = Set(time_step, pcnt_rate);
@@ -116,21 +120,13 @@ function main()
     -- Stop the port and do some cleanup
     pktgen.stop(sendport);
     sending = 0;
+
+    printf("done\n");
 end
 
 main();
 
---function configure(parser)
---    parser:description("Generates UDP traffic and measure throughput. Edit the source to modify constants like IPs.")
---    parser:option("-d --dev", "Device to transmit/receive from."):default(0):convert(tonumber)
---    parser:option("-r --rate", "Transmit rate in Mbit/s."):default(10000):convert(tonumber)
---    parser:option("-s --size", "Packet size."):default(1000):convert(tonumber)
---    parser:option("-d --duration", "Experiment duration (in seconds)"):default(10):convert(tonumber)
---end
 
-rate = 100; size = 64; seconds = 60;
-printf("Runnning at rate %d, size %d, for %d secs\n", rate, size, seconds);
-sendPls(rate, size, seconds);
-io.output(io.stdout);
-printf("done\n");
+
+
 

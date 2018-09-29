@@ -32,11 +32,12 @@ local srcip = "10.10.0.101";
 local netmask = "/24";
 total_time = 0;
 
-local function default_options(sendport)
+local function default_options(sendport, recvport)
     pktgen.screen(SCREEN_OPTION);
     pktgen.set_ipaddr(sendport, "src", SRC_IP..NET_MASK);
     pktgen.set_ipaddr(sendport, "dst", DST_IP);
     pktgen.set_mac   (sendport, DST_MAC);
+    pktgen.set_proto(sendport..","..recvport, "udp");
 end
 
 local function set_options(sendport, rate, pktSize)
@@ -44,32 +45,37 @@ local function set_options(sendport, rate, pktSize)
     pktgen.set(sendport, "size", pktSize);
 end
 
-local function sendPls(dev, sendRate, pktSize, seconds)
-    pktgen.start(dev);
+local function sendPls(sendport, sendrate, pktsize, seconds)
+    local report_file = io.open("report.csv", "w")
+    io.output(report_file)
+
+    pktgen.start(sendport);
+
+    set_options(sendport, sendrate, pktsize)
+
     --printf("After start. delay for %d seconds\n", durationMs);
     pktgen.delay(20000);
     --prints("pktStats", pktgen.pktStats("all"));
     --prints("portRates", pktgen.portStats("all", "rate"));
     for i = 1,seconds,1
     do
-        io.write(pktgen.portStats("all","rate")[0]["pkts_rx"],",",pktgen.portStats("all","rate")[0]["mbits_rx"],"\n" );
+        io.write(
+                pktgen.portStats("all","rate")[0]["pkts_rx"],",",
+                pktgen.portStats("all","rate")[0]["mbits_rx"],"\n");
         pktgen.delay(600);
     end
 
     pktgen.stop("all");
 
     pktgen.clear("all");
-    --    pktgen.cls();
-    --    pktgen.reset("all");
 
-    io.close(file);
+    io.close(report_file);
 end
 
 
 
 function main()
-    local report_file = io.open("report.csv", "w")
-    io.output(report_file)
+
 
     local sending = 0;
     local trlst = Set(time_step, pcnt_rate);

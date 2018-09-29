@@ -32,7 +32,6 @@ local srcip = "10.10.0.101";
 local netmask = "/24";
 total_time = 0;
 
-
 local function default_options(sendport)
     pktgen.screen(SCREEN_OPTION);
     pktgen.set_ipaddr(sendport, "src", SRC_IP..NET_MASK);
@@ -45,13 +44,8 @@ local function set_options(sendport, rate, pktSize)
     pktgen.set(sendport, "size", pktSize);
 end
 
-local function sendPls(sendRate, pktSize, seconds)
-
-    pktgen.set("1", "rate", sendRate);
-    pktgen.set("1", "size", pktSize);
-
-
-    pktgen.start("1");
+local function sendPls(dev, sendRate, pktSize, seconds)
+    pktgen.start(dev);
     --printf("After start. delay for %d seconds\n", durationMs);
     pktgen.delay(20000);
     --prints("pktStats", pktgen.pktStats("all"));

@@ -6,8 +6,8 @@ local argparse = require "argparse"
 
 local SCREEN_OPTION = "on"
 -- set addresses here
-local SRC_MAC  = "0c:c4:7a:73:fa:72"
-local DST_MAC  = "0c:c4:7a:73:fa:54"
+local SRC_MAC  = "e4:1d:2d:13:9e:b0" -- Aqua05
+local DST_MAC  = "0c:c4:7a:73:fa:54" -- Aqua07
 local SRC_IPS  = {
     "1.0.1.1",
     "1.0.2.2",
@@ -26,18 +26,24 @@ local SRC_PORT = 1234
 local DST_PORT = 4321
 local DELAY = 20000
 local SAMPLE_PERIOD = 500
+local LINK_CAP = 40000
 
 function configure()
     local parser = argparse()
 
     parser:description("Generates UDP traffic and measure throughput.")
     parser:option("-d --dev", "Device to transmit/receive from."):default(0):convert(tonumber)
-    parser:option("-r --rate", "Transmit rate in Mbit/s."):default(10000):convert(tonumber)
+    parser:option("-r --rate", "Transmit rate in Mbit/s."):default(10000.0):convert(tonumber)
     parser:option("-s --size", "Packet size."):default(1000):convert(tonumber)
     parser:option("-d --duration", "Experiment duration (in seconds)"):default(10):convert(tonumber)
     parser:option("-o --out", "Filename of the throughput report."):default("throughput.csv")
 
-    return parser.parse()
+    local args = parser.parse()
+
+    -- Convert the rate to the percentage of the link capacity assuming that the 40Gig NIC is being used
+    args.rate = args.rate / LINK_CAP
+
+    return args
 end
 
 local function default_options(send_dev, recv_dev)

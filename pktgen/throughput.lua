@@ -1,7 +1,8 @@
 -- CGCS Demo script
 package.path = package.path ..";?.lua;test/?.lua;app/?.lua;../?.lua"
 
-require "Pktgen";
+local pktgen = require "Pktgen";
+local argparse = require "argparse"
 
 local SCREEN_OPTION = "on"
 -- set addresses here
@@ -24,40 +25,40 @@ local DST_IP   = "10.70.0.7"
 local SRC_PORT = 1234
 local DST_PORT = 4321
 
-function configure(parser)
-    parser:description("Generates UDP traffic and measure throughput. Edit the source to modify constants like IPs.")
+function configure()
+    local parser = argparse()
+
+    parser:description("Generates UDP traffic and measure throughput.")
     parser:option("-d --dev", "Device to transmit/receive from."):default(0):convert(tonumber)
     parser:option("-r --rate", "Transmit rate in Mbit/s."):default(10000):convert(tonumber)
     parser:option("-s --size", "Packet size."):default(1000):convert(tonumber)
     parser:option("-d --duration", "Experiment duration (in seconds)"):default(10):convert(tonumber)
+    parser:option("-o --out", "Filename of the throughput histogram."):default("throughput.csv")
+
+    return parser.parse()
 end
 
-local function default_options(sendport, recvport)
+local function default_options(send_dev, recv_dev)
     pktgen.screen(SCREEN_OPTION);
-    pktgen.set_ipaddr(sendport, "src", SRC_IP..NET_MASK);
-    pktgen.set_ipaddr(sendport, "dst", DST_IP);
-    pktgen.set_mac(sendport, DST_MAC);
-    pktgen.set_proto(sendport..","..recvport, "udp");
+    pktgen.set_ipaddr(send_dev, "src", SRC_IP..NET_MASK);
+    pktgen.set_ipaddr(send_dev, "dst", DST_IP);
+    pktgen.set_mac(send_dev, DST_MAC);
+    pktgen.set_proto(send_dev ..",".. recv_dev, "udp");
 end
 
-local function set_options(sendport, rate, pktSize)
-    pktgen.set(sendport, "rate", rate);
-    pktgen.set(sendport, "size", pktSize);
+local function set_options(dev, rate, pkt_size)
+    pktgen.set(dev, "rate", rate);
+    pktgen.set(dev, "size", pkt_size);
 end
 
-local function send(sendport, sendrate, pkt_size, seconds)
-    local report_file = io.open("report.csv", "w")
+local function send(dev, duration, output)
+    local report_file = io.open(output, "w")
     io.output(report_file)
 
-    pktgen.start(sendport);
-
-    set_options(sendport, sendrate, pkt_size)
-
-    --printf("After start. delay for %d seconds\n", durationMs);
+    pktgen.start(dev);
     pktgen.delay(20000);
-    --prints("pktStats", pktgen.pktStats("all"));
-    --prints("portRates", pktgen.portStats("all", "rate"));
-    for i = 1,seconds,1
+
+    for i = 1, duration,1
     do
         io.write(
                 pktgen.portStats("all","rate")[0]["pkts_rx"],",",
@@ -66,60 +67,17 @@ local function send(sendport, sendrate, pkt_size, seconds)
     end
 
     pktgen.stop("all");
-
-    pktgen.clear("all");
-
     io.close(report_file);
 end
 
 
 function main()
+    local args = configure()
+    printf("Runnning at rate %d, size %d, for %d seconds\n", args.rate, args.size, args.duration);
 
-
-    rate = 100; size = 64; seconds = 60;
-    printf("Runnning at rate %d, size %d, for %d secs\n", rate, size, seconds);
-    send(rate, size, seconds);
-    io.output(io.stdout);
-
-    local sending = 0;
-    local trlst = Set(time_step, pcnt_rate);
-
-    -- Stop the port sending and reset to
-    pktgen.stop(sendport);
-    sleep(2);					-- Wait for stop to happen (not really needed)
-
-    -- Set up the default packet size fixed value for now.
-    pktgen.set(sendport, "size", pkt_size);
-
-    pktgen.set_ipaddr(sendport, "dst", dstip);
-    pktgen.set_ipaddr(sendport, "src", srcip..netmask);
-
-    pktgen.set_proto(sendport..","..recvport, "udp");
-
-    total_time = 0;
-    -- v is the table to values created by the Set(x,y) function
-    for _,v in pairs(trlst) do
-
-        printf("   Percent load %d for %d seconds\n", v.rate, v.timo);
-
-        -- Set the rate to the new value
-        pktgen.set(sendport, "rate", v.rate);
-
-        -- If not sending packets start sending them
-        if ( sending == 0 ) then
-            pktgen.start(sendport);
-            sending = 1;
-        end
-
-        -- Sleep until we need to move to the next rate and timeout
-        sleep(v.timo);
-        total_time = total_time + v.timo;
-
-    end
-
-    -- Stop the port and do some cleanup
-    pktgen.stop(sendport);
-    sending = 0;
+    default_options(args.dev, args.dev)
+    set_options(args.dev, args.send_rate, args.pkt_size)
+    send(args.dev, args.duration, args.output)
 
     printf("done\n");
 end

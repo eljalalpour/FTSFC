@@ -24,6 +24,8 @@ local NET_MASK = "/8"
 local DST_IP   = "10.70.0.7"
 local SRC_PORT = 1234
 local DST_PORT = 4321
+local DELAY = 20000
+local SAMPLE_PERIOD = 500
 
 function configure()
     local parser = argparse()
@@ -33,7 +35,7 @@ function configure()
     parser:option("-r --rate", "Transmit rate in Mbit/s."):default(10000):convert(tonumber)
     parser:option("-s --size", "Packet size."):default(1000):convert(tonumber)
     parser:option("-d --duration", "Experiment duration (in seconds)"):default(10):convert(tonumber)
-    parser:option("-o --out", "Filename of the throughput histogram."):default("throughput.csv")
+    parser:option("-o --out", "Filename of the throughput report."):default("throughput.csv")
 
     return parser.parse()
 end
@@ -53,33 +55,33 @@ end
 
 local function send(dev, duration, output)
     local report_file = io.open(output, "w")
-    io.output(report_file)
-
     pktgen.start(dev);
-    pktgen.delay(20000);
+    printf("Waiting for device to come up!")
+    pktgen.delay(DELAY);
 
+    io.output(report_file)
     for i = 1, duration,1
     do
         io.write(
-                pktgen.portStats("all","rate")[0]["pkts_rx"],",",
-                pktgen.portStats("all","rate")[0]["mbits_rx"],"\n");
-        pktgen.delay(600);
+                pktgen.portStats("all", "rate")[0]["pkts_rx"], ",",
+                pktgen.portStats("all", "rate")[0]["mbits_rx"], "\n");
+        pktgen.delay(SAMPLE_PERIOD);
     end
+    io.close(report_file);
 
     pktgen.stop("all");
-    io.close(report_file);
 end
 
 
 function main()
     local args = configure()
-    printf("Runnning at rate %d, size %d, for %d seconds\n", args.rate, args.size, args.duration);
+    printf("Running at rate %d and packet-size %d for %d seconds!\n", args.rate, args.size, args.duration);
 
     default_options(args.dev, args.dev)
     set_options(args.dev, args.send_rate, args.pkt_size)
     send(args.dev, args.duration, args.output)
 
-    printf("done\n");
+    printf("Done!\n");
 end
 
 main();

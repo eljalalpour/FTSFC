@@ -29,7 +29,7 @@ fd2::FromDPDKDevice(0,1);
 
 td1::ToDPDKDevice(0,0);
 td2::ToDPDKDevice(0,1);
-td3::ToDPDKDevice(0,2);
+// td3::ToDPDKDevice(0,2);
 // td4::ToDPDKDevice(0,3);
 // td5::ToDPDKDevice(0,4);
 // td6::ToDPDKDevice(0,5);

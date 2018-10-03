@@ -8,7 +8,6 @@ local SIZE = 1000;
 local DURATION = 10;
 local OUTPUT_FILE = "throughput.csv";
 
-local SCREEN_OPTION = "on";
 local SRC_MAC  = "f4:52:14:69:a5:20"; -- Aqua01
 local DST_MAC  = "e4:1d:2d:13:9e:d0"; -- Aqua07
 local SRC_IP = "1.0.1.1"
@@ -19,8 +18,6 @@ local NET_MASK = "/16";
 local DST_IP   = "10.70.0.7";
 local DELAY = 2000;
 local SAMPLE_PERIOD = 1000;
-local LINK_CAP = 40000;
-
 
 function configure()
     local args = {

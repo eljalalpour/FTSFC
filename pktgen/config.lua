@@ -49,6 +49,9 @@ function set_options(dev, rate, pkt_size)
     pktgen.set(dev, "rate", rate);
     pktgen.set(dev, "size", pkt_size);
 
+    pktgen.set_range(dev, "on")
+    pktgen.process(dev, "on");
+
 end
 
 function main()

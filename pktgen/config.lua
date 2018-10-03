@@ -5,8 +5,6 @@ require "Pktgen";
 local DEVICE = "0";
 local RATE = 100;
 local SIZE = 1000;
-local DURATION = 10;
-local OUTPUT_FILE = "throughput.csv";
 
 local SRC_MAC  = "f4:52:14:69:a5:20"; -- Aqua01
 local DST_MAC  = "e4:1d:2d:13:9e:d0"; -- Aqua07
@@ -16,16 +14,12 @@ local SRC_IP_MAX = "1.0.254.254"
 local SRC_IP_INC = "0.0.0.1"
 local NET_MASK = "/16";
 local DST_IP   = "10.70.0.7";
-local DELAY = 2000;
-local SAMPLE_PERIOD = 1000;
 
 function configure()
     local args = {
         ["dev"] = DEVICE,
         ["rate"] = RATE,
         ["size"] = SIZE,
-        ["duration"] = DURATION,
-        ["out"] = OUTPUT_FILE
     };
 
     return args
@@ -47,10 +41,6 @@ function set_options(dev, rate, pkt_size)
     pktgen.dst_ip(dev, "max", DST_IP);
     
     pktgen.pkt_size(dev, "start", pkt_size);
-
-    pktgen.delay(DELAY);
-
-    pktgen.page("main");
 
     pktgen.set_ipaddr(dev, "src", SRC_IP..NET_MASK);
     pktgen.set_ipaddr(dev, "dst", DST_IP);

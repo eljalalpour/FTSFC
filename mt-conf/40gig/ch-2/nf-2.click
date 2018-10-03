@@ -20,7 +20,7 @@ $index,$src_ip |
 
 fd1::FromDPDKDevice(0,0);
 fd2::FromDPDKDevice(0,1);
-fd3::FromDPDKDevice(0,2);
+// fd3::FromDPDKDevice(0,2);
 // fd4::FromDPDKDevice(0,3);
 // fd5::FromDPDKDevice(0,4);
 // fd6::FromDPDKDevice(0,5);
@@ -36,8 +36,8 @@ td3::ToDPDKDevice(0,2);
 // td7::ToDPDKDevice(0,6);
 // td8::ToDPDKDevice(0,7);
 
-// StaticThreadSched(fd1 0, fd2 1);
-StaticThreadSched(fd1 0, fd2 1, fd3 2)
+StaticThreadSched(fd1 0, fd2 1);
+// StaticThreadSched(fd1 0, fd2 1, fd3 2)
 // StaticThreadSched(fd1 0, fd2 1, fd3 2, fd4 3)
 // StaticThreadSched(fd1 0, fd2 1, fd3 2, fd4 3, fd5 4)
 // StaticThreadSched(fd1 0, fd2 1, fd3 2, fd4 3, fd5 4, fd6 5)
@@ -46,16 +46,18 @@ StaticThreadSched(fd1 0, fd2 1, fd3 2)
 
 fd1
 -> NFBlock(0,1.2.1.1)
+-> c1::Counter
 -> td1;
 
 fd2
 -> NFBlock(0,1.2.2.2)
+-> c2::Counter
 -> td2;
 
-fd3
--> NFBlock(0,1.2.3.3)
--> td3;
-
+// fd3
+// -> NFBlock(0,1.2.3.3)
+// -> td3;
+//
 // fd4
 // -> NFBlock(3,1.2.4.4)
 // -> td4;

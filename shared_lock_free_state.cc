@@ -79,12 +79,6 @@ void SharedLockFreeState::process_piggyback_message(Packet* p) {
         _commit(mb_id, msg[mb_id]->last_commit);
 
         _log(*msg[mb_id], mb_id);
-
-        // The following part is must be placed in construct_piggyback_message,
-        // but to make it faster, I perform it here:
-        // PART START
-        ++msg[mb_id]->ack;
-        // PART END
     }//for
 }
 
@@ -129,7 +123,6 @@ void SharedLockFreeState::construct_piggyback_message(Packet* p, int thread_id) 
     _util.copy(msg[_id]->state, inop_log->state);
     msg[_id]->timestamp = inop_log->timestamp;
     msg[_id]->last_commit = _commit_memory[_id].timestamp;
-    msg[_id]->ack = 1;
 }
 
 int SharedLockFreeState::configure(Vector<String> &conf, ErrorHandler *errh) {

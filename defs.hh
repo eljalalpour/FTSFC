@@ -81,7 +81,6 @@ typedef struct TimestampState {
 } TimestampState;
 
 typedef struct PiggybackState {
-    short ack;
     int64_t last_commit;
     int64_t timestamp;
     State state;

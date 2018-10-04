@@ -22,7 +22,7 @@ int PMConstruct::configure(Vector<String> &conf, ErrorHandler *errh) {
     // set index param
     Args(conf, this, errh).read_or_set("ID", _thread_id, DEFAULT_ID);
 
-    DEBUG("PMConstruct id is %d!\n", _thread_id);
+    LOG("PMConstruct thread id is %d!\n", _thread_id);
 
     return 0;
 }

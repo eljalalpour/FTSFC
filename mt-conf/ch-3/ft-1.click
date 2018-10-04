@@ -26,7 +26,7 @@ $index,$src_ip |
     forwarder[0]
     -> PMProcess
     -> FTLockFreeCounter(INDEX $index)
-    -> PMConstruct
+    -> PMConstruct(ID $index)
     -> MarkIPHeader(14)
     -> StoreIPAddress($src_ip, src)
     -> StoreIPAddress(192.168.1.108, dst)

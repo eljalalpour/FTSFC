@@ -20,7 +20,7 @@ $index,$out |
     -> IPFilter(allow udp && src 1.2.0.0/16)
     -> PMProcess
     -> FTLockFreeCounter(INDEX $index)
-    -> PMConstruct
+    -> PMConstruct(ID $index)
     -> MarkIPHeader(14)
     -> StoreIPAddress($out, src)
     -> StoreIPAddress(192.168.1.110, dst)

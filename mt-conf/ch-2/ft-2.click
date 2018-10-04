@@ -11,7 +11,7 @@ $index,$out,$forwarder |
     -> IPFilter(allow udp && src 1.1.0.0/16)
     -> PMProcess
     -> FTLockFreeCounter(INDEX $index)
-    -> PMConstruct
+    -> PMConstruct(ID $index)
     -> buffer::Buffer(CHAIN 2);
 
     // To the outside world
@@ -26,7 +26,7 @@ $index,$out,$forwarder |
 
     // To the forwarder
     buffer[1]
-    -> Truncate(380)
+//    -> Truncate(380)
     -> MarkIPHeader(14)
     -> StoreIPAddress($forwarder, src)
     -> StoreIPAddress(192.168.1.107, dst)

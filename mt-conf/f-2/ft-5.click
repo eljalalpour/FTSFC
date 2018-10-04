@@ -28,7 +28,7 @@ $index,$out,$forwarder |
 //    -> IPPrint("From 4")
     -> PMProcess
     -> FTLockFreeCounter(INDEX $index)
-    -> PMConstruct
+    -> PMConstruct(ID $index)
     -> buffer::Buffer(CHAIN 5);
 
     // To the outside world

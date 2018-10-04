@@ -54,7 +54,7 @@ $index,$src_ip |
     ip_from_extern[4] -> Discard; // non TCP or UDP traffic is dropped
 
     ip_from_extern[3]
-    -> PMConstruct
+    -> PMConstruct(ID $index)
     -> MarkIPHeader(14)
     -> StoreIPAddress($src_ip, src)
     -> StoreIPAddress(192.168.1.108, dst)

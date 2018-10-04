@@ -12,7 +12,7 @@ $out,$forwarder |
     -> IPFilter(allow udp && src 1.2.0.0/16)
     -> PMProcess
     -> FTNAT
-    -> PMConstruct
+    -> PMConstruct(ID $index)
     -> buffer::Buffer(CHAIN 3);
 
     // To the outside world

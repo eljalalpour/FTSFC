@@ -23,7 +23,7 @@ $index,$out,$forwarder |
     -> IPFilter(allow udp && src 1.3.0.0/16)
     -> PMProcess
     -> FTLockFreeCounter(INDEX $index)
-    -> PMConstruct
+    -> PMConstruct(ID $index)
     -> buffer::Buffer(CHAIN 4);
 
     // To the outside world

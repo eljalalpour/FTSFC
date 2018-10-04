@@ -25,7 +25,7 @@ $index,$out |
 //    -> IPPrint("Form 1")
     -> PMProcess
     -> FTLockFreeCounter(INDEX $index)
-    -> PMConstruct
+    -> PMConstruct(ID $index)
     -> MarkIPHeader(14)
     -> StoreIPAddress($out, src)
     -> StoreIPAddress(10.70.0.9, dst)

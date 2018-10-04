@@ -65,6 +65,10 @@ typedef struct TimestampState {
     friend bool operator < (const TimestampState& me, const int64_t& t) {
         return me.timestamp < t;
     }
+
+    friend bool operator > (const TimestampState& me, const int64_t& t) {
+        return me.timestamp > t;
+    }
 } TimestampState;
 
 typedef struct PiggybackState {

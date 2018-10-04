@@ -53,9 +53,7 @@ private:
 
     void _commit(int, int64_t);
 
-    inline void _capture_inoperation_state(State&, int=0);
-
-    void _log_inoperation_state(int=0);
+    inline void _capture_inoperation_state(int=0);
 
 public:
 

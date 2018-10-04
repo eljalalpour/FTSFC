@@ -88,7 +88,8 @@ void SharedLockFreeState::process_piggyback_message(Packet* p) {
     }//for
 }
 
-void SharedLockFreeState::_capture_inoperation_state(State& state, int thread_id) {
+void SharedLockFreeState::_capture_inoperation_state(int thread_id) {
+    DEBUG("Capture _inoperation state");
     {// Wait until no thread is modifying inoperation state
         std::unique_lock<std::mutex> lock(_modifying_phase_mtx);
         _modifying_phase_cv.wait(lock, [&](){ return _modifying_phase == NOT_MODIFYING;});
@@ -100,8 +101,10 @@ void SharedLockFreeState::_capture_inoperation_state(State& state, int thread_id
         _capture_inop_phase = SET_K_TH_BIT(_capture_inop_phase, thread_id);
     }//{
 
-    // Capture the inoperation state
-    _util.copy(state, _inoperation);
+    { // Capture in-operation state in the Log table
+        std::lock_guard <std::mutex> log_guard(_log_table_mutex[_id]);
+        _log_table[_id].emplace_back(CURRENT_TIMESTAMP, _inoperation);
+    }// {
 
     {// Let other threads know that this thread with id thread_id
         // has finished capturing the inoperation state
@@ -111,19 +114,6 @@ void SharedLockFreeState::_capture_inoperation_state(State& state, int thread_id
     }//{
 }
 
-void SharedLockFreeState::_log_inoperation_state(int thread_id) {
-    DEBUG("Log _inoperation state");
-    std::lock_guard<std::mutex> log_guard(_log_table_mutex[_id]);
-
-    // TODO: remove if condition
-//    if(_log_table[_id].size() < LOG_TABLE_CONTROL) {
-        TimestampState ts;
-        _capture_inoperation_state(ts.state, thread_id);
-        ts.timestamp = CURRENT_TIMESTAMP;
-        _log_table[_id].push_back(ts);
-//    }//if
-}
-
 void SharedLockFreeState::construct_piggyback_message(Packet* p, int thread_id) {
     DEBUG("Construct piggyback message");
 
@@ -131,9 +121,8 @@ void SharedLockFreeState::construct_piggyback_message(Packet* p, int thread_id) 
 
     // The secondary state list and that of other middleboxes are already properly updated in
     // process_piggyback_message
-
     // Since the state is small, put the whole state into the packet
-    _log_inoperation_state(thread_id);
+    _capture_inoperation_state(thread_id);
 
     // Set the piggyback message from the log table (that of the primary state)
     auto inop_log = _log_table[_id].rbegin();

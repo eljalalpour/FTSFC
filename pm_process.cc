@@ -28,6 +28,7 @@ Packet* PMProcess::simple_action(Packet *p) {
     }//try
     catch(...) {
         p->kill();
+        return 0;
     }//catch
 
     DEBUG("End PMProcess");

@@ -45,23 +45,21 @@ void SharedLockFreeState::_commit(int mb_id, int64_t timestamp) {
         return;
     }//if
 
-    // Find the last log that its timestamp is higher than the given timestamp
-    auto it = std::lower_bound(_log_table[mb_id].begin(), _log_table[mb_id].end(), timestamp);
+    // Find the first log whose timestamp is higher than the given timestamp
+    auto it = std::upper_bound(_log_table[mb_id].begin(), _log_table[mb_id].end(), timestamp);
 
-    if (it != _log_table[mb_id].begin() ||
-        _log_table[mb_id].begin()->timestamp <= timestamp) {
+    if (it != _log_table[mb_id].begin()) {
         // Commit involves storing the most updated log value into commit memory,
         // setting the timestamp time, and
         // erasing committed logs.
+        std::advance(it, -1);
         {
             // storing the most updated log value into commit memory
             std::lock_guard<std::mutex> commit_guard(_commit_memory_mutex[mb_id]);
             _util.copy(_commit_memory[mb_id].state, it->state);
             _commit_memory[mb_id].timestamp = timestamp;
         }//{
-
-        if (it != _log_table[mb_id].end())
-            std::advance(it, 1);
+        std::advance(it, 1);
 
         _log_table[mb_id].erase(_log_table[mb_id].begin(), it);
     }//if
@@ -109,6 +107,7 @@ void SharedLockFreeState::_capture_inoperation_state(State& state, int thread_id
         // has finished capturing the inoperation state
         std::lock_guard<std::mutex> lock(_capture_inop_phase_mtx);
         _capture_inop_phase = RESET_K_TH_BIT(_capture_inop_phase, thread_id);
+        _capture_inop_phase_cv.notify_all();
     }//{
 }
 
@@ -184,6 +183,7 @@ void SharedLockFreeState::increment(int index) {
     {// Let other threads know that this thread has finished processing state variable
         std::lock_guard<std::mutex> lock(_modifying_phase_mtx);
         _modifying_phase = RESET_K_TH_BIT(_modifying_phase, index);
+        _modifying_phase_cv.notify_all();
     }// {
 }
 

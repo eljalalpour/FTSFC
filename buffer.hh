@@ -2,6 +2,7 @@
 
 #include "defs.hh"
 #include <map>
+#include <queue>
 #include <click/config.h>
 #include <click/element.hh>
 
@@ -19,7 +20,9 @@ class Buffer : public Element {
 private:
     int _chain_len;
 
-    std::map<int64_t, Packet *> _packets;
+//    std::map<int64_t, Packet *> _packets;
+    std::queue<int64_t> _timestamps;
+    std::queue<Packet*> _packets;
 
     inline void _release(int64_t);
 

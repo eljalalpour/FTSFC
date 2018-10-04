@@ -11,11 +11,14 @@ Buffer::Buffer () { };
 Buffer::~Buffer() { };
 
 void Buffer::_release(int64_t commit_timestamp) {
-    for (auto it = _packets.begin(); it != _packets.end(); /* no increment */) {
-        if (it->first > commit_timestamp)
+    while(!_timestamps.empty()) {
+        if (_timestamps.front() > commit_timestamp)
             break;
-        output(TO_OUTSIDE_WORLD).push(it->second);
-        it = _packets.erase(it);
+
+        output(TO_OUTSIDE_WORLD).push(_packets.front());
+
+        _timestamps.pop();
+        _packets.pop();
     }//for
 }
 
@@ -43,14 +46,13 @@ void Buffer::push(int, Packet*p) {
 
     // Cast the piggyback message and extract the timestamps
     PiggybackMessage* _msg = CAST_PACKET_TO_PIGGY_BACK_MESSAGE(p);
-    int64_t lts  = (*_msg[_chain_len - 1]).timestamp;
-    int64_t lcts = (*_msg[_chain_len - 1]).last_commit;
-
-    // Store the packet into buffer
-    _packets[lts] = p;
 
     // Release packets from the buffer
-    _release(lcts);
+    _release((*_msg[_chain_len - 1]).last_commit);
+
+    // Store the packet into buffer
+    _timestamps.push((*_msg[_chain_len - 1]).timestamp);
+    _packets.push(p);
 
     DEBUG("End Buffer");
     DEBUG("--------------------");

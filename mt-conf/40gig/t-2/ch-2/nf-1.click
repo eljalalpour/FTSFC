@@ -26,7 +26,6 @@ td2::ToDPDKDevice(0,1);
 
 StaticThreadSched(fd1 0, fd2 1);
 
-
 fd1
 -> NFBlock(0,1.1.1.1)
 -> td1;

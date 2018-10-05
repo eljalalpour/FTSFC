@@ -32,12 +32,10 @@ StaticThreadSched(fd1 0, fd2 1, fd3 2, fd4 3)
 
 fd1
 -> NFBlock(0,1.1.1.1)
--> c1::Counter
 -> td1;
 
 fd2
 -> NFBlock(0,1.1.2.2)
--> c2::Counter
 -> td2;
 
 fd3

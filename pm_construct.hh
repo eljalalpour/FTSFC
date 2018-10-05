@@ -13,8 +13,6 @@ CLICK_DECLS
 /// These operations are offloaded to class SharedLockFreeState. 
 ///
 
-#define DEFAULT_ID 0
-
 class PMConstruct : public Element {
 private:
     int _thread_id;

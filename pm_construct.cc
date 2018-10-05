@@ -20,7 +20,10 @@ inline void PMConstruct::_init_shared_state_pointer() {
 
 int PMConstruct::configure(Vector<String> &conf, ErrorHandler *errh) {
     // set index param
-    Args(conf, this, errh).read_or_set("ID", _thread_id, DEFAULT_ID);
+    if (Args(conf, this, errh)
+                .read("ID", _thread_id)
+                .complete() < 0)
+        return -1;
 
     LOG("PMConstruct thread id is %d!\n", _thread_id);
 

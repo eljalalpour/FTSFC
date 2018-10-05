@@ -14,7 +14,11 @@ CLICK_DECLS
 ///
 
 #define TO_OUTSIDE_WORLD 0
-#define TO_FORWARDER   1
+#define TO_FORWARDER     1
+#define PAD              16
+#define MAC_HEAD_SIZE    14
+#define UDP_HEAD_OFFSET_AFTER_MAC_HEAD 1
+#define DEFAULT_CRC 0
 
 class Buffer : public Element {
 private:
@@ -25,6 +29,7 @@ private:
     std::queue<Packet*> _packets;
 
     inline void _release(int64_t);
+    inline void _send_to_forwarder(Packet*);
 
 public:
     Buffer ();

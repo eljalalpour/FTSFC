@@ -22,6 +22,20 @@ void Buffer::_release(int64_t commit_timestamp) {
     }//for
 }
 
+void Buffer::_send_to_forwarder(Packet* p) {
+    auto n = DEFAULT_OFFSET + sizeof(PiggybackMessage) + PAD;
+    auto q = Packet::make(p->data(), n);
+    click_ip *ip = reinterpret_cast<click_ip *>(q->data() + MAC_HEAD_SIZE);
+    click_udp *udp = reinterpret_cast<click_udp *>(ip + UDP_HEAD_OFFSET_AFTER_MAC_HEAD);
+    udp->uh_ulen = htons(q->length() - MAC_HEAD_SIZE - sizeof(click_ip));
+    udp->uh_sum = DEFAULT_CRC;
+    ip->ip_hl = sizeof(click_ip) >> 2;
+    ip->ip_len = htons(q->length() - MAC_HEAD_SIZE);
+    ip->ip_sum = DEFAULT_CRC;
+
+    output(TO_FORWARDER).push(q);
+}
+
 int Buffer::configure(Vector<String> &conf, ErrorHandler *errh) {
     // set id and f params
     if (Args(conf, this, errh)
@@ -42,7 +56,7 @@ void Buffer::push(int, Packet*p) {
     DEBUG("--------------------");
     DEBUG("Begin Buffer");
 
-    output(TO_FORWARDER).push(p->clone());
+    _send_to_forwarder(p);
 
     // Cast the piggyback message and extract the timestamps
     PiggybackMessage* _msg = CAST_PACKET_TO_PIGGY_BACK_MESSAGE(p);

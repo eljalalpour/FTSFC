@@ -61,7 +61,7 @@ add_executable(FTSFC
         tf_monitor.hh
         tf_nat.cc
         tf_nat.hh
-        )
+        not-worked-ideas/ft/buffer.cc)
 
 target_link_libraries(FTSFC ${PROTOBUF_LIB})
 

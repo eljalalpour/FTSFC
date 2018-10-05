@@ -2,6 +2,8 @@
 #include <click/router.hh>
 #include <click/args.hh>
 #include <click/packet_anno.hh>
+#include <clicknet/ip.h>
+#include <clicknet/udp.h>
 #include "buffer.hh"
 
 CLICK_DECLS

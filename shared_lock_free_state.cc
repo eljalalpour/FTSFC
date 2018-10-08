@@ -4,7 +4,7 @@
 
 CLICK_DECLS
 
-//#define ENABLE_MULTI_THREADING 0
+//#define ENABLE_MULTI_THREADING 1
 
 SharedLockFreeState::SharedLockFreeState () {
     _util.init(_inoperation);

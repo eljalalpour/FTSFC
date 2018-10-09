@@ -8,7 +8,6 @@ CLICK_DECLS
 
 SharedLockFreeState::SharedLockFreeState() {
     _util.init(_inoperation);
-    _util.init(_commit_memory);
 
     // No thread at the beginning is modifying in-operation state or
     // is capturing the inoperation state

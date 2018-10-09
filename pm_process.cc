@@ -6,6 +6,7 @@ CLICK_DECLS
 
 PMProcess::PMProcess() : _shared_state_init(false) {
     Util _util;
+    _util.init(_commit_memory);
     _util.reserve(_log_table);
 }
 

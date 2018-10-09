@@ -88,7 +88,7 @@ void SharedLockFreeState::process_piggyback_message(Packet *p, LogTable& log_tab
     for (int i = 1; i <= _failure_count; ++i) {
         int mb_id = (_id - i + _chain_len) % _chain_len;
 
-        _commit_secondary(mb_id, msg[mb_id]->last_commit);
+        _commit_secondary(mb_id, msg[mb_id]->last_commit, log_table, commit_memory);
 
         _log_secondary_state(msg[mb_id]->state, msg[mb_id]->timestamp, mb_id, log_table);
     }//for

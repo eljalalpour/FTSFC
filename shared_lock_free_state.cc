@@ -18,14 +18,9 @@ SharedLockFreeState::SharedLockFreeState() {
     _util.reserve(_log_table);
 };
 
-SharedLockFreeState::~SharedLockFreeState() {};
+SharedLockFreeState::~SharedLockFreeState() { };
 
-void SharedLockFreeState::_log(State &state, int64_t timestamp, int mb_id) {
-//    DEBUG("Log operation!");
-#ifdef ENABLE_MULTI_THREADING
-    std::lock_guard<std::mutex> log_guard(_log_table_mutex[mb_id]);
-#endif
-
+void SharedLockFreeState::_log_secondary_state(State &state, int64_t timestamp, int mb_id) {
     auto it = _log_table[mb_id].rbegin();
     if (_log_table[mb_id].empty() ||
         it->timestamp < timestamp) {
@@ -33,20 +28,11 @@ void SharedLockFreeState::_log(State &state, int64_t timestamp, int mb_id) {
     }//if
 }
 
-void SharedLockFreeState::_log(TimestampState &t_state, int mb_id) {
-    _log(t_state.state, t_state.timestamp, mb_id);
+void SharedLockFreeState::_log_secondary_state(PiggybackState &p_state, int mb_id) {
+    _log_secondary_state(p_state.state, p_state.timestamp, mb_id);
 }
 
-void SharedLockFreeState::_log(PiggybackState &p_state, int mb_id) {
-    _log(p_state.state, p_state.timestamp, mb_id);
-}
-
-void SharedLockFreeState::_commit(int mb_id, int64_t timestamp) {
-#ifdef ENABLE_MULTI_THREADING
-    std::lock_guard<std::mutex> log_guard(_log_table_mutex[mb_id]);
-#endif
-//    DEBUG("The size of the log table of MB %d: %d", mb_id, _log_table[mb_id].size());
-
+void SharedLockFreeState::_commit_secondary(int mb_id, int64_t timestamp) {
     if (_log_table[mb_id].empty()) {
         return;
     }//if
@@ -59,34 +45,59 @@ void SharedLockFreeState::_commit(int mb_id, int64_t timestamp) {
         // setting the timestamp time, and
         // erasing committed logs.
         std::advance(it, -1);
-        {
-            // storing the most updated log value into commit memory
-#ifdef ENABLE_MULTI_THREADING
-            std::lock_guard<std::mutex> commit_guard(_commit_memory_mutex[mb_id]);
-#endif
-            _util.copy(_commit_memory[mb_id].state, it->state);
-            _commit_memory[mb_id].timestamp = timestamp;
-        }//{
+        _util.copy(_commit_memory[mb_id].state, it->state);
+        _commit_memory[mb_id].timestamp = timestamp;
         std::advance(it, 1);
 
         _log_table[mb_id].erase(_log_table[mb_id].begin(), it);
     }//if
+}
 
+void SharedLockFreeState::_commit_primary(int64_t timestamp) {
+#ifdef ENABLE_MULTI_THREADING
+    std::lock_guard<std::mutex> log_guard(_primary_log_mutex);
+#endif
+//    DEBUG("The size of the log table of MB %d: %d", mb_id, _log_table[mb_id].size());
+
+    if (_log_table[_id].empty()) {
+        return;
+    }//if
+
+    // Find the first log whose timestamp is higher than the given timestamp
+    auto it = std::upper_bound(_log_table[_id].begin(), _log_table[_id].end(), timestamp);
+
+    if (it != _log_table[_id].begin()) {
+        // Commit involves storing the most updated log value into commit memory,
+        // setting the timestamp time, and
+        // erasing committed logs.
+        std::advance(it, -1);
+        {
+            // storing the most updated log value into commit memory
+#ifdef ENABLE_MULTI_THREADING
+            std::lock_guard<std::mutex> commit_guard(_primary_commit_mutex);
+#endif
+            _util.copy(_commit_memory[_id].state, it->state);
+            _commit_memory[_id].timestamp = timestamp;
+        }//{
+        std::advance(it, 1);
+
+        _log_table[_id].erase(_log_table[_id].begin(), it);
+    }//if
 }
 
 void SharedLockFreeState::process_piggyback_message(Packet *p) {
     auto msg = CAST_PACKET_TO_PIGGY_BACK_MESSAGE(p);
 
     // Processing the primary state:
-    _commit(_id, msg[_id]->timestamp);
+    _commit_primary(msg[_id]->timestamp);
 
     // Processing the secondary state set
     for (int i = 1; i <= _failure_count; ++i) {
         int mb_id = (_id - i + _chain_len) % _chain_len;
 
-        _commit(mb_id, msg[mb_id]->last_commit);
+        _commit_secondary(mb_id, msg[mb_id]->last_commit);
 
-        _log(*msg[mb_id], mb_id);
+        _log_secondary_state(*msg[mb_id], mb_id);
     }//for
 }
 
@@ -110,7 +121,7 @@ void SharedLockFreeState::_capture_inoperation_state(Packet *p, int thread_id) {
     msg[_id]->timestamp = CURRENT_TIMESTAMP;
 
     { // Capture in-operation state in the Log table
-        std::lock_guard <std::mutex> log_guard(_log_table_mutex[_id]);
+        std::lock_guard <std::mutex> log_guard(_primary_log_mutex);
         _log_table[_id].emplace_back(msg[_id]->timestamp, msg[_id]->state);
     }// {
 
@@ -128,7 +139,7 @@ void SharedLockFreeState::_capture_inoperation_state(Packet *p, int thread_id) {
 void SharedLockFreeState::_commit_timestamp(Packet *p) {
     PiggybackMessage *msg = CAST_PACKET_TO_PIGGY_BACK_MESSAGE(p);
 #ifdef ENABLE_MULTI_THREADING
-    std::lock_guard<std::mutex> commit_guard(_commit_memory_mutex[_id]);
+    std::lock_guard<std::mutex> commit_guard(_primary_commit_mutex);
 #endif
     msg[_id]->last_commit = _commit_memory[_id].timestamp;
 }

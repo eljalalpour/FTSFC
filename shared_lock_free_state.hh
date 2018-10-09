@@ -29,10 +29,10 @@ private:
     int _chain_len;
 
     LogTable _log_table;
-    LogTableMutex _log_table_mutex;
+    std::mutex _primary_log_mutex;
 
     CommitMemory _commit_memory;
-    CommitMemoryMutex _commit_memory_mutex;
+    std::mutex _primary_commit_mutex;
 
     State _inoperation;
     volatile size_t _modifying_phase;
@@ -45,13 +45,13 @@ private:
 
     Util _util;
 
-    inline void _log(State&, int64_t, int);
+    inline void _log_secondary_state(State &, int64_t, int);
 
-    inline void _log(TimestampState&, int);
+    inline void _log_secondary_state(PiggybackState &, int);
 
-    inline void _log(PiggybackState&, int);
+    void _commit_primary(int64_t);
 
-    void _commit(int, int64_t);
+    void _commit_secondary(int, int64_t);
 
     inline void _capture_inoperation_state(Packet *, int=0);
 

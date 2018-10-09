@@ -114,7 +114,7 @@ void SharedLockFreeState::_capture_inoperation_state(Packet *p, int thread_id) {
     msg[_id]->timestamp = CURRENT_TIMESTAMP;
 
     { // Capture in-operation state in the Log table
-//        std::lock_guard <std::mutex> log_guard(_primary_log_mutex);
+        std::lock_guard <std::mutex> log_guard(_primary_log_mutex);
         _primary_log.emplace_back(msg[_id]->timestamp, msg[_id]->state);
     }// {
 

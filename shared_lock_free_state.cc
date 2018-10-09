@@ -4,9 +4,9 @@
 
 CLICK_DECLS
 
-//#define ENABLE_MULTI_THREADING 1
+#define ENABLE_MULTI_THREADING 1
 
-SharedLockFreeState::SharedLockFreeState () {
+SharedLockFreeState::SharedLockFreeState() {
     _util.init(_inoperation);
     _util.init(_commit_memory);
 
@@ -18,13 +18,13 @@ SharedLockFreeState::SharedLockFreeState () {
     _util.reserve(_log_table);
 };
 
-SharedLockFreeState::~SharedLockFreeState() { };
+SharedLockFreeState::~SharedLockFreeState() {};
 
-void SharedLockFreeState::_log(State& state, int64_t timestamp, int mb_id) {
+void SharedLockFreeState::_log(State &state, int64_t timestamp, int mb_id) {
 //    DEBUG("Log operation!");
-    #ifdef ENABLE_MULTI_THREADING
+#ifdef ENABLE_MULTI_THREADING
     std::lock_guard<std::mutex> log_guard(_log_table_mutex[mb_id]);
-    #endif
+#endif
 
     auto it = _log_table[mb_id].rbegin();
     if (_log_table[mb_id].empty() ||
@@ -33,18 +33,18 @@ void SharedLockFreeState::_log(State& state, int64_t timestamp, int mb_id) {
     }//if
 }
 
-void SharedLockFreeState::_log(TimestampState& t_state, int mb_id) {
+void SharedLockFreeState::_log(TimestampState &t_state, int mb_id) {
     _log(t_state.state, t_state.timestamp, mb_id);
 }
 
-void SharedLockFreeState::_log(PiggybackState& p_state, int mb_id) {
+void SharedLockFreeState::_log(PiggybackState &p_state, int mb_id) {
     _log(p_state.state, p_state.timestamp, mb_id);
 }
 
 void SharedLockFreeState::_commit(int mb_id, int64_t timestamp) {
-    #ifdef ENABLE_MULTI_THREADING
+#ifdef ENABLE_MULTI_THREADING
     std::lock_guard<std::mutex> log_guard(_log_table_mutex[mb_id]);
-    #endif
+#endif
 //    DEBUG("The size of the log table of MB %d: %d", mb_id, _log_table[mb_id].size());
 
     if (_log_table[mb_id].empty()) {
@@ -61,9 +61,9 @@ void SharedLockFreeState::_commit(int mb_id, int64_t timestamp) {
         std::advance(it, -1);
         {
             // storing the most updated log value into commit memory
-	    #ifdef ENABLE_MULTI_THREADING
+#ifdef ENABLE_MULTI_THREADING
             std::lock_guard<std::mutex> commit_guard(_commit_memory_mutex[mb_id]);
-	    #endif
+#endif
             _util.copy(_commit_memory[mb_id].state, it->state);
             _commit_memory[mb_id].timestamp = timestamp;
         }//{
@@ -74,7 +74,7 @@ void SharedLockFreeState::_commit(int mb_id, int64_t timestamp) {
 
 }
 
-void SharedLockFreeState::process_piggyback_message(Packet* p) {
+void SharedLockFreeState::process_piggyback_message(Packet *p) {
     auto msg = CAST_PACKET_TO_PIGGY_BACK_MESSAGE(p);
 
     // Processing the primary state:
@@ -90,9 +90,9 @@ void SharedLockFreeState::process_piggyback_message(Packet* p) {
     }//for
 }
 
-void SharedLockFreeState::_capture_inoperation_state(int thread_id) {
+void SharedLockFreeState::_capture_inoperation_state(Packet *p, int thread_id) {
     DEBUG("Capture _inoperation state");
-    #ifdef ENABLE_MULTI_THREADING
+#ifdef ENABLE_MULTI_THREADING
     {// Wait until no thread is modifying inoperation state
         std::unique_lock<std::mutex> lock(_modifying_phase_mtx);
         _modifying_phase_cv.wait(lock, [&](){ return _modifying_phase == NOT_MODIFYING;});
@@ -104,9 +104,14 @@ void SharedLockFreeState::_capture_inoperation_state(int thread_id) {
         _capture_inop_phase = SET_K_TH_BIT(_capture_inop_phase, thread_id);
     }//{
 
+    // Capture the in-operation state
+    PiggybackMessage *msg = CAST_PACKET_TO_PIGGY_BACK_MESSAGE(p);
+    _util.copy(msg[_id]->state, _inoperation);
+    msg[_id]->timestamp = CURRENT_TIMESTAMP;
+
     { // Capture in-operation state in the Log table
         std::lock_guard <std::mutex> log_guard(_log_table_mutex[_id]);
-        _log_table[_id].emplace_back(CURRENT_TIMESTAMP, _inoperation);
+        _log_table[_id].emplace_back(msg[_id]->timestamp, msg[_id]->state);
     }// {
 
     {// Let other threads know that this thread with id thread_id
@@ -115,29 +120,29 @@ void SharedLockFreeState::_capture_inoperation_state(int thread_id) {
         _capture_inop_phase = RESET_K_TH_BIT(_capture_inop_phase, thread_id);
         _capture_inop_phase_cv.notify_all();
     }//{
-    #else
+#else
     _log_table[_id].emplace_back(CURRENT_TIMESTAMP, _inoperation);
-    #endif
+#endif
 }
 
-void SharedLockFreeState::construct_piggyback_message(Packet* p, int thread_id) {
-    DEBUG("Construct piggyback message");
-
-    PiggybackMessage* msg = CAST_PACKET_TO_PIGGY_BACK_MESSAGE(p);
-
-    // The secondary state list and that of other middleboxes are already properly updated in
-    // process_piggyback_message
-    // Since the state is small, put the whole state into the packet
-    _capture_inoperation_state(thread_id);
-
-    // Set the piggyback message from the log table (that of the primary state)
-    auto inop_log = _log_table[_id].rbegin();
-    _util.copy(msg[_id]->state, inop_log->state);
-    msg[_id]->timestamp = inop_log->timestamp;
+void SharedLockFreeState::_commit_timestamp(Packet *p) {
+    PiggybackMessage *msg = CAST_PACKET_TO_PIGGY_BACK_MESSAGE(p);
+#ifdef ENABLE_MULTI_THREADING
+    std::lock_guard<std::mutex> commit_guard(_commit_memory_mutex[_id]);
+#endif
     msg[_id]->last_commit = _commit_memory[_id].timestamp;
 }
 
-int SharedLockFreeState::configure(Vector<String> &conf, ErrorHandler *errh) {
+void SharedLockFreeState::construct_piggyback_message(Packet *p, int thread_id) {
+    DEBUG("Construct piggyback message");
+
+    // The secondary state list and that of other middleboxes are already properly updated in
+    // process_piggyback_message
+    _capture_inoperation_state(p, thread_id);
+    _commit_timestamp(p);
+}
+
+int SharedLockFreeState::configure(Vector <String> &conf, ErrorHandler *errh) {
     // set id and f params
     if (Args(conf, this, errh)
                 .read("CHAIN", _chain_len)
@@ -162,7 +167,7 @@ int SharedLockFreeState::read(int index) {
 }
 
 void SharedLockFreeState::increment(int index) {
-    #ifdef ENABLE_MULTI_THREADING
+#ifdef ENABLE_MULTI_THREADING
     {// Wait until no thread is capturing inoperation state
         std::unique_lock<std::mutex> lock(_capture_inop_phase_mtx);
         _capture_inop_phase_cv.wait(lock, [&](){ return _capture_inop_phase == NOT_CAPTURING; });
@@ -180,9 +185,9 @@ void SharedLockFreeState::increment(int index) {
         _modifying_phase = RESET_K_TH_BIT(_modifying_phase, index);
         _modifying_phase_cv.notify_all();
     }// {
-    #else
+#else
     ++_inoperation[index];
-    #endif
+#endif
 }
 
 CLICK_ENDDECLS

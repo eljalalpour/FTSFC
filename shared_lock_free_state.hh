@@ -53,7 +53,9 @@ private:
 
     void _commit(int, int64_t);
 
-    inline void _capture_inoperation_state(int=0);
+    inline void _capture_inoperation_state(Packet *, int=0);
+
+    inline void _commit_timestamp(Packet*);
 
 public:
 

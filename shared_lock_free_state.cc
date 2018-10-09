@@ -135,7 +135,7 @@ void SharedLockFreeState::_commit_timestamp(Packet *p) {
 #ifdef ENABLE_MULTI_THREADING
     std::lock_guard<std::mutex> commit_guard(_primary_commit_mutex);
 #endif
-    msg[_id]->last_commit = _commit_memory[_id].timestamp;
+    msg[_id]->last_commit = _primary_commit.timestamp;
 }
 
 void SharedLockFreeState::construct_piggyback_message(Packet *p, int thread_id) {
@@ -164,7 +164,7 @@ Packet *SharedLockFreeState::simple_action(Packet *p) {
 }
 
 size_t SharedLockFreeState::log_table_length() {
-    return this->_primary_log->size();
+    return this->_primary_log.size();
 }
 
 int SharedLockFreeState::read(int index) {

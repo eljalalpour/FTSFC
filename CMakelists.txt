@@ -29,8 +29,6 @@ add_executable(FTSFC
         nf_atomic_nat.hh
         nf_lock_free_counter.cc
         nf_lock_free_counter.hh
-        replica.cc
-        replica.hh
         shared_atomic_state.cc
         shared_atomic_state.hh
         shared_lock_free_state.cc

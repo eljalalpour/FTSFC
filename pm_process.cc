@@ -24,7 +24,7 @@ Packet* PMProcess::simple_action(Packet *p) {
     _init_shared_state_pointer();
 
     try {
-        _shared_state->process_piggyback_message(p);
+        _shared_state->process_piggyback_message(p, _log_table, _commit_memory);
     }//try
     catch(...) {
         p->kill();

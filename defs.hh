@@ -92,11 +92,7 @@ typedef std::vector<TimestampState> TimestampStateList;
 
 typedef TimestampStateList LogTable[MAX_CHAIN_LEN];
 
-typedef std::mutex LogTableMutex[MAX_CHAIN_LEN];
-
 typedef TimestampState CommitMemory[MAX_CHAIN_LEN];
-
-typedef std::mutex CommitMemoryMutex[MAX_CHAIN_LEN];
 
 /// Useful casting definitions
 #define CAST_TO_BYTES(x)              reinterpret_cast<unsigned char *>(&x)

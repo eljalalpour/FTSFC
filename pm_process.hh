@@ -9,7 +9,9 @@ CLICK_DECLS
 
 ///
 /// Class PMProcess performs the piggyback message process
-/// This element does not manage the state and perform no concurrency controls.
+/// This element does not manage the primary state and perform no concurrency controls.
+/// This element maintains the secondary state log and commit table, since they can be maintained
+/// per thread.
 /// These operations are offloaded to class SharedLockFreeState. 
 ///
 
@@ -17,6 +19,10 @@ class PMProcess : public Element {
 private:
     bool _shared_state_init;
     SharedLockFreeState* _shared_state;
+
+    LogTable _log_table;
+    CommitMemory _commit_memory;
+
     inline void _init_shared_state_pointer();
 
 public:

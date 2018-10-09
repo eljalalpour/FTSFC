@@ -28,10 +28,10 @@ private:
     int _failure_count;
     int _chain_len;
 
-    LogTable _log_table;
+    TimestampStateList _primary_log;
     std::mutex _primary_log_mutex;
 
-    CommitMemory _commit_memory;
+    TimestampState _primary_commit;
     std::mutex _primary_commit_mutex;
 
     State _inoperation;
@@ -45,13 +45,11 @@ private:
 
     Util _util;
 
-    inline void _log_secondary_state(State &, int64_t, int);
-
-    inline void _log_secondary_state(PiggybackState &, int);
+    inline void _log_secondary_state(State &, int64_t, int, LogTable&);
 
     void _commit_primary(int64_t);
 
-    void _commit_secondary(int, int64_t);
+    void _commit_secondary(int, int64_t, LogTable&, CommitMemory& );
 
     inline void _capture_inoperation_state(Packet *, int=0);
 
@@ -73,7 +71,7 @@ public:
 
     int configure(Vector<String> &, ErrorHandler *);
 
-    void process_piggyback_message(Packet*);
+    void process_piggyback_message(Packet*, LogTable&, CommitMemory&);
 
     void construct_piggyback_message(Packet*, int=0);
 

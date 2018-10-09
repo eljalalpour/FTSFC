@@ -4,7 +4,10 @@
 
 CLICK_DECLS
 
-PMProcess::PMProcess() : _shared_state_init(false) { }
+PMProcess::PMProcess() : _shared_state_init(false) {
+    Util _util;
+    _util.reserve(_log_table);
+}
 
 PMProcess::~PMProcess() { }
 

@@ -14,8 +14,6 @@ SharedLockFreeState::SharedLockFreeState() {
     // is capturing the inoperation state
     _modifying_phase = 0;
     _capture_inop_phase = 0;
-
-    _util.reserve(_log_table);
 };
 
 SharedLockFreeState::~SharedLockFreeState() { };

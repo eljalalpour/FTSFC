@@ -166,7 +166,7 @@ Packet *SharedLockFreeState::simple_action(Packet *p) {
 }
 
 size_t SharedLockFreeState::log_table_length() {
-    return this->_log_table->size();
+    return this->_primary_log->size();
 }
 
 int SharedLockFreeState::read(int index) {

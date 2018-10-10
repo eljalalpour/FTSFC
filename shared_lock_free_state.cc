@@ -4,7 +4,7 @@
 
 CLICK_DECLS
 
-#define ENABLE_MULTI_THREADING 1
+//#define ENABLE_MULTI_THREADING 1
 
 SharedLockFreeState::SharedLockFreeState() {
     _util.init(_inoperation);
@@ -125,7 +125,10 @@ void SharedLockFreeState::_capture_inoperation_state(Packet *p, int thread_id) {
 //        _capture_inop_phase_cv.notify_all();
 //    }//{
 #else
-    _log_table[_id].emplace_back(CURRENT_TIMESTAMP, _inoperation);
+    PiggybackMessage *msg = CAST_PACKET_TO_PIGGY_BACK_MESSAGE(p);
+    _util.copy(msg[_id]->state, _inoperation);
+    msg[_id]->timestamp = CURRENT_TIMESTAMP;
+    _primary_log.emplace_back(msg[_id]->timestamp, msg[_id]->state);
 #endif
 }
 

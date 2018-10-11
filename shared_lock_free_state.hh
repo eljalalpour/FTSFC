@@ -24,7 +24,12 @@ CLICK_DECLS
 #define NOT_CAPTURING     0
 
 typedef std::shared_mutex LogMutex;
+typedef std::shared_lock<LogMutex> LogReadLock;
+typedef std::lock_guard<LogMutex>  LogWriteLock;
+
 typedef std::shared_mutex CommitMutex;
+typedef std::shared_lock<CommitMutex> CommitReadLock;
+typedef std::lock_guard<CommitMutex>  CommitWriteLock;
 
 class SharedLockFreeState : public Element {
 private:

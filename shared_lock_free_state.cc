@@ -55,7 +55,7 @@ void SharedLockFreeState::_commit_primary(int64_t timestamp) {
 
     {
 #ifdef ENABLE_MULTI_THREADING
-        std::shared_lock<LogMutex> log_read_guard(_primary_log_mutex);
+        LogReadLock log_read_guard(_primary_log_mutex);
 #endif
 
         if (_primary_log.empty()) {
@@ -74,7 +74,7 @@ void SharedLockFreeState::_commit_primary(int64_t timestamp) {
             size = _primary_log.size();
 
 #ifdef ENABLE_MULTI_THREADING
-            std::lock_guard<CommitMutex> commit_write_guard(_primary_commit_mutex);
+            CommitWriteLock commit_write_guard(_primary_commit_mutex);
 #endif
             _util.copy(_primary_commit.state, (it - 1)->state);
             _primary_commit.timestamp = timestamp;
@@ -83,7 +83,7 @@ void SharedLockFreeState::_commit_primary(int64_t timestamp) {
 
 #ifdef ENABLE_MULTI_THREADING
     {
-        std::lock_guard<LogMutex> log_write_guard(_primary_log_mutex);
+        LogWriteLock log_write_guard(_primary_log_mutex);
         // Check if still the found iterator is valid, and erase the log list
         if (size == _primary_log.size() &&
             it != _primary_log.begin() &&
@@ -153,7 +153,7 @@ void SharedLockFreeState::_capture_inoperation_state(Packet *p, int thread_id) {
 void SharedLockFreeState::_commit_timestamp(Packet *p) {
     PiggybackMessage *msg = CAST_PACKET_TO_PIGGY_BACK_MESSAGE(p);
 #ifdef ENABLE_MULTI_THREADING
-    std::shared_lock<CommitMutex> commit_read_guard(_primary_commit_mutex);
+    CommitReadLock commit_read_guard(_primary_commit_mutex);
 #endif
     msg[_id]->last_commit = _primary_commit.timestamp;
 }
@@ -185,7 +185,7 @@ Packet *SharedLockFreeState::simple_action(Packet *p) {
 
 size_t SharedLockFreeState::log_table_length() {
 #ifdef ENABLE_MULTI_THREADING
-    std::shared_lock<LogMutex> log_read_guard(_primary_log_mutex);
+    LogReadLock log_read_guard(_primary_log_mutex);
 #endif
 
     return this->_primary_log.size();

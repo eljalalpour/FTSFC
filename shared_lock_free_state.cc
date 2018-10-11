@@ -69,16 +69,15 @@ void SharedLockFreeState::_commit_primary(int64_t timestamp) {
             // Commit involves storing the most updated log value into commit memory,
             // setting the timestamp time, and
             // erasing committed logs.
-            {
-                // storing the most updated log value into commit memory
+            // storing the most updated log value into commit memory
+            ts = (it - 1)->timestamp;
+            size = _primary_log.size();
+
 #ifdef ENABLE_MULTI_THREADING
-                std::lock_guard<std::mutex> commit_guard(_primary_commit_mutex);
+            std::lock_guard<CommitMutex> commit_write_guard(_primary_commit_mutex);
 #endif
-                ts = (it - 1)->timestamp;
-                size = _primary_log.size();
-                _util.copy(_primary_commit.state, (it - 1)->state);
-                _primary_commit.timestamp = timestamp;
-            }//{
+            _util.copy(_primary_commit.state, (it - 1)->state);
+            _primary_commit.timestamp = timestamp;
         }//if
     }//{
 
@@ -154,7 +153,7 @@ void SharedLockFreeState::_capture_inoperation_state(Packet *p, int thread_id) {
 void SharedLockFreeState::_commit_timestamp(Packet *p) {
     PiggybackMessage *msg = CAST_PACKET_TO_PIGGY_BACK_MESSAGE(p);
 #ifdef ENABLE_MULTI_THREADING
-    std::lock_guard<std::mutex> commit_guard(_primary_commit_mutex);
+    std::shared_lock<CommitMutex> commit_read_guard(_primary_commit_mutex);
 #endif
     msg[_id]->last_commit = _primary_commit.timestamp;
 }

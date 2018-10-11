@@ -4,6 +4,7 @@
 #include <click/config.h>
 #include <click/element.hh>
 #include <mutex>
+#include <shared_mutex>
 #include <condition_variable>
 
 CLICK_DECLS
@@ -22,6 +23,9 @@ CLICK_DECLS
 #define NOT_MODIFYING     0
 #define NOT_CAPTURING     0
 
+typedef std::shared_mutex LogMutex;
+typedef std::mutex CommitMutex;
+
 class SharedLockFreeState : public Element {
 private:
     int _id;
@@ -29,10 +33,10 @@ private:
     int _chain_len;
 
     TimestampStateList _primary_log;
-    std::mutex _primary_log_mutex;
+    LogMutex _primary_log_mutex;
 
     TimestampState _primary_commit;
-    std::mutex _primary_commit_mutex;
+    CommitMutex _primary_commit_mutex;
 
     State _inoperation;
     volatile size_t _modifying_phase;

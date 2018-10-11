@@ -4,7 +4,7 @@
 
 CLICK_DECLS
 
-//#define ENABLE_MULTI_THREADING 1
+#define ENABLE_MULTI_THREADING 1
 
 SharedLockFreeState::SharedLockFreeState() {
     _util.init(_inoperation);
@@ -25,7 +25,8 @@ void SharedLockFreeState::_log_secondary_state(State &state, int64_t timestamp, 
     }//if
 }
 
-void SharedLockFreeState::_commit_secondary(int mb_id, int64_t timestamp, LogTable& log_table, CommitMemory& commit_memory) {
+void SharedLockFreeState::_commit_secondary(int mb_id, int64_t timestamp,
+        LogTable& log_table, CommitMemory& commit_memory) {
     if (log_table[mb_id].empty()) {
         return;
     }//if
@@ -47,35 +48,42 @@ void SharedLockFreeState::_commit_secondary(int mb_id, int64_t timestamp, LogTab
 }
 
 void SharedLockFreeState::_commit_primary(int64_t timestamp) {
-#ifdef ENABLE_MULTI_THREADING
-    std::lock_guard<std::mutex> log_guard(_primary_log_mutex);
-#endif
 //    DEBUG("The size of the log table of MB %d: %d", mb_id, _log_table[mb_id].size());
+    TimestampStateList::iterator it;
 
-    if (_primary_log.empty()) {
-        return;
-    }//if
-
-    // Find the first log whose timestamp is higher than the given timestamp
-    auto it = std::upper_bound(_primary_log.begin(), _primary_log.end(), timestamp);
-
-    if (it != _primary_log.begin()) {
-        // Commit involves storing the most updated log value into commit memory,
-        // setting the timestamp time, and
-        // erasing committed logs.
-        std::advance(it, -1);
-        {
-            // storing the most updated log value into commit memory
+    {
 #ifdef ENABLE_MULTI_THREADING
-            std::lock_guard<std::mutex> commit_guard(_primary_commit_mutex);
+        std::shared_lock<LogMutex> log_read_guard(_primary_log_mutex);
 #endif
-            _util.copy(_primary_commit.state, it->state);
-            _primary_commit.timestamp = timestamp;
-        }//{
-        std::advance(it, 1);
 
+        if (_primary_log.empty()) {
+            return;
+        }//if
+
+        // Find the first log whose timestamp is higher than the given timestamp
+        it = std::upper_bound(_primary_log.begin(), _primary_log.end(), timestamp);
+
+        if (it != _primary_log.begin()) {
+            // Commit involves storing the most updated log value into commit memory,
+            // setting the timestamp time, and
+            // erasing committed logs.
+            {
+                // storing the most updated log value into commit memory
+#ifdef ENABLE_MULTI_THREADING
+                std::lock_guard<std::mutex> commit_guard(_primary_commit_mutex);
+#endif
+                _util.copy(_primary_commit.state, (it - 1)->state);
+                _primary_commit.timestamp = timestamp;
+            }//{
+        }//if
+    }
+    {
+#ifdef ENABLE_MULTI_THREADING
+        std::lock_guard<LogMutex> log_write_guard(_primary_log_mutex);
+#endif
+        // TODO: fix this by checking if it is still valid
         _primary_log.erase(_primary_log.begin(), it);
-    }//if
+    }
 }
 
 void SharedLockFreeState::process_piggyback_message(Packet *p, LogTable& log_table, CommitMemory& commit_memory) {
@@ -114,7 +122,7 @@ void SharedLockFreeState::_capture_inoperation_state(Packet *p, int thread_id) {
     msg[_id]->timestamp = CURRENT_TIMESTAMP;
 
     { // Capture in-operation state in the Log table
-        std::lock_guard <std::mutex> log_guard(_primary_log_mutex);
+        std::lock_guard <LogMutex> log_write_guard(_primary_log_mutex);
         _primary_log.emplace_back(msg[_id]->timestamp, msg[_id]->state);
     }// {
 

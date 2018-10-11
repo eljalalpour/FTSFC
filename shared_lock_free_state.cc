@@ -174,6 +174,10 @@ Packet *SharedLockFreeState::simple_action(Packet *p) {
 }
 
 size_t SharedLockFreeState::log_table_length() {
+#ifdef ENABLE_MULTI_THREADING
+    std::shared_lock<LogMutex> log_read_guard(_primary_log_mutex);
+#endif
+
     return this->_primary_log.size();
 }
 

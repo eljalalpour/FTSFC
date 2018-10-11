@@ -1,6 +1,6 @@
 // In aqua08
-// aqua07 -> aqua08 -> aqua01
-//                  -> aqua07
+// aqua09 -> aqua10 -> aqua01
+//                  -> aqua09
 
 shared_state::SharedLockFreeState(CHAIN 2, ID 1, F 1);
 

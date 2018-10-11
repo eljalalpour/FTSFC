@@ -50,6 +50,8 @@ void SharedLockFreeState::_commit_secondary(int mb_id, int64_t timestamp,
 void SharedLockFreeState::_commit_primary(int64_t timestamp) {
 //    DEBUG("The size of the log table of MB %d: %d", mb_id, _log_table[mb_id].size());
     TimestampStateList::iterator it;
+    int64_t ts = -1;
+    size_t size = -1;
 
     {
 #ifdef ENABLE_MULTI_THREADING
@@ -72,18 +74,27 @@ void SharedLockFreeState::_commit_primary(int64_t timestamp) {
 #ifdef ENABLE_MULTI_THREADING
                 std::lock_guard<std::mutex> commit_guard(_primary_commit_mutex);
 #endif
+                ts = (it - 1)->timestamp;
+                size = _primary_log.size();
                 _util.copy(_primary_commit.state, (it - 1)->state);
                 _primary_commit.timestamp = timestamp;
             }//{
         }//if
-    }
-    {
+    }//{
+
 #ifdef ENABLE_MULTI_THREADING
+    {
         std::lock_guard<LogMutex> log_write_guard(_primary_log_mutex);
+        // Check if still the found iterator is valid, and erase the log list
+        if (size == _primary_log.size() &&
+            it != _primary_log.begin() &&
+            ts == (it - 1)->timestamp) {
+            _primary_log.erase(_primary_log.begin(), it);
+        }//if
+    }//{
+#else
+    _primary_log.erase(_primary_log.begin(), it);
 #endif
-        // TODO: fix this by checking if it is still valid
-        _primary_log.erase(_primary_log.begin(), it);
-    }
 }
 
 void SharedLockFreeState::process_piggyback_message(Packet *p, LogTable& log_table, CommitMemory& commit_memory) {

@@ -74,11 +74,13 @@ function send(dev, duration, out)
 
     printf("Sending traffic...\n");
     io.output(report_file);
-    for i = 1, duration, 1
+    for i = 0, duration, 1
     do
-        io.write(
-                pktgen.portStats(dev, "rate")[0]["pkts_rx"], ",",
-                pktgen.portStats(dev, "rate")[0]["mbits_rx"], "\n");
+        if i >= 1 then
+            io.write(
+                    pktgen.portStats(dev, "rate")[0]["pkts_rx"], ",",
+                    pktgen.portStats(dev, "rate")[0]["mbits_rx"], "\n");
+        end
         pktgen.delay(SAMPLE_PERIOD);
     end
     io.output(io.stdout);

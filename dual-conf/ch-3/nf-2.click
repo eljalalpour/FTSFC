@@ -27,14 +27,14 @@ fd1::FromDPDKDevice(1,0);
 // fd7::FromDPDKDevice(1,6);
 // fd8::FromDPDKDevice(1,7);
 
-td1::ToDPDKDevice(0,0);
-// td2::ToDPDKDevice(0,1);
-// td3::ToDPDKDevice(0,2);
-// td4::ToDPDKDevice(0,3);
-// td5::ToDPDKDevice(0,4);
-// td6::ToDPDKDevice(0,5);
-// td7::ToDPDKDevice(0,6);
-// td8::ToDPDKDevice(0,7);
+td1::ToDPDKDevice(1,0);
+// td2::ToDPDKDevice(1,1);
+// td3::ToDPDKDevice(1,2);
+// td4::ToDPDKDevice(1,3);
+// td5::ToDPDKDevice(1,4);
+// td6::ToDPDKDevice(1,5);
+// td7::ToDPDKDevice(1,6);
+// td8::ToDPDKDevice(1,7);
 
 // StaticThreadSched(fd1 0, fd2 1);
 // StaticThreadSched(fd1 0, fd2 1, fd3 2)

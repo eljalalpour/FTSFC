@@ -48,16 +48,17 @@ function set_options(dev, rate, pkt_size)
     
     pktgen.pkt_size(dev, "start", pkt_size);
 
-    pktgen.delay(DELAY);
-
-    pktgen.page("main");
-
     pktgen.set_ipaddr(dev, "src", SRC_IP..NET_MASK);
     pktgen.set_ipaddr(dev, "dst", DST_IP);
     pktgen.set_mac(dev, DST_MAC);
     pktgen.set_proto(dev ..",".. dev, "udp");
     pktgen.set(dev, "rate", rate);
     pktgen.set(dev, "size", pkt_size);
+
+    pktgen.set_range(dev, "on")
+    pktgen.process(dev, "on");
+
+    pktgen.delay(DELAY);
 
 end
 

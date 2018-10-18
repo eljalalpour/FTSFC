@@ -15,14 +15,14 @@ $index |
     -> output
 }
 
-fd0::FromDPDKDevice(0,0);
-fd1::FromDPDKDevice(0,1);
-fd2::FromDPDKDevice(0,2);
-fd3::FromDPDKDevice(0,3);
-fd4::FromDPDKDevice(0,4);
-fd5::FromDPDKDevice(0,5);
-fd6::FromDPDKDevice(0,6);
-fd7::FromDPDKDevice(0,7);
+fd0::FromDPDKDevice(1,0);
+fd1::FromDPDKDevice(1,1);
+fd2::FromDPDKDevice(1,2);
+fd3::FromDPDKDevice(1,3);
+fd4::FromDPDKDevice(1,4);
+fd5::FromDPDKDevice(1,5);
+fd6::FromDPDKDevice(1,6);
+fd7::FromDPDKDevice(1,7);
 
 td0::ToDPDKDevice(0,0);
 td1::ToDPDKDevice(0,1);

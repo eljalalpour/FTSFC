@@ -77,9 +77,7 @@ function send(dev, duration, out)
     for i = 0, duration, 1
     do
         if i >= 1 then
-            io.write(
-                    pktgen.portStats(dev, "rate")[0]["pkts_rx"], ",",
-                    pktgen.portStats(dev, "rate")[0]["mbits_rx"], "\n");
+            io.write(pktgen.portStats(dev, "rate")[0]["mbits_rx"], "\n");
         end
         pktgen.delay(SAMPLE_PERIOD);
     end

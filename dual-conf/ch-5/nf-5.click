@@ -1,5 +1,5 @@
 // In aqua02
-// aqua09 -> aqua02 -> aqua01
+// aqua10 -> aqua11 -> aqua01
 
 array::AtomicArray;
 
@@ -13,7 +13,7 @@ $index,$src_ip |
     -> MarkIPHeader(14)
     -> StoreIPAddress($src_ip, src)
     -> StoreIPAddress(10.70.0.1, dst)
-    -> StoreEtherAddress(e4:1d:2d:13:9c:30, src)
+    -> StoreEtherAddress(e4:1d:2d:13:9e:e0, src)
     -> StoreEtherAddress(f4:52:14:69:a5:20, dst)
     -> output
 }

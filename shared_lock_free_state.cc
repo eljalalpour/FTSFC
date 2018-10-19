@@ -41,8 +41,9 @@ void SharedLockFreeState::_capture_inoperation_state(Packet *p, int thread_id) {
         std::lock_guard<std::mutex> lock(_inop_mtx);
 #endif
         _util.copy(msg[_id]->state, _inoperation);
-        msg[_id]->timestamp = CURRENT_TIMESTAMP;
     }
+
+    msg[_id]->timestamp = CURRENT_TIMESTAMP;
 }
 
 void SharedLockFreeState::construct_piggyback_message(Packet *p, int thread_id) {
@@ -76,10 +77,8 @@ int SharedLockFreeState::read(int index) {
 void SharedLockFreeState::increment(int index) {
 #ifdef ENABLE_MULTI_THREADING
     std::lock_guard<std::mutex> lock(_inop_mtx);
-    ++_inoperation[index];
-#else
-    ++_inoperation[index];
 #endif
+    ++_inoperation[index];
 }
 
 CLICK_ENDDECLS

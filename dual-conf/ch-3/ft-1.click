@@ -2,14 +2,14 @@
 // aqua01 -> aqua07 -> aqua08
 // aqua09 -> aqua07;
 
-shared_state::SharedLockFreeState(CHAIN 2, ID 0, F 1);
+shared_state::SharedLockFreeState(CHAIN 3, ID 0, F 1);
 
 elementclass FTBlock {
 $queue, $index, $src_ip |
     ld1::FromDPDKDevice(0, $queue);
     fd1::FromDPDKDevice(1, $queue);
     td1::ToDPDKDevice(1, $queue);
-    forwarder::Forwarder(CHAIN 2);
+    forwarder::Forwarder(CHAIN 3);
 
     ld1
     -> MarkIPHeader(14)

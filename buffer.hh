@@ -23,8 +23,9 @@ CLICK_DECLS
 class Buffer : public Element {
 private:
     int _chain_len;
+    int _batch_counter;
+    int _batch_size;
 
-//    std::map<int64_t, Packet *> _packets;
     std::queue<int64_t> _timestamps;
     std::queue<Packet*> _packets;
 

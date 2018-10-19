@@ -8,7 +8,7 @@
 
 CLICK_DECLS
 
-Buffer::Buffer () { };
+Buffer::Buffer () _batch_counter(0) { };
 
 Buffer::~Buffer() { };
 
@@ -25,6 +25,9 @@ void Buffer::_release(int64_t commit_timestamp) {
 }
 
 void Buffer::_send_to_forwarder(Packet* p) {
+    if (_batch_counter++ % _batch_size != 0)
+        return;
+
     auto n = DEFAULT_OFFSET + sizeof(PiggybackMessage) + PAD;
     auto q = Packet::make(p->data(), n);
     click_ip *ip = reinterpret_cast<click_ip *>(q->data() + MAC_HEAD_SIZE);
@@ -42,6 +45,7 @@ int Buffer::configure(Vector<String> &conf, ErrorHandler *errh) {
     // set id and f params
     if (Args(conf, this, errh)
                 .read("CHAIN", _chain_len)
+                .read("BATCH", _batch_size)
                 .complete() < 0)
         return -1;
 

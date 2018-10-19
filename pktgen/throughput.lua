@@ -4,7 +4,7 @@ require "Pktgen";
 
 local DEVICE = "0";
 local RATE = 100;
-local SIZE = 1000;
+local SIZE = 1350;
 local DURATION = 10;
 local OUTPUT_FILE = "throughput.csv";
 

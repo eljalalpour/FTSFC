@@ -146,10 +146,10 @@ public:
         print(ft_state.state);
     }
 
-    void print(PiggybackMessage *msg) {
+    void print(PiggybackMessage &msg) {
         for (int i = 0; i < MAX_CHAIN_LEN; ++i) {
             LOG("\nState of middlebox %d", i);
-            print(*msg[i]);
+            print(msg[i]);
         }//for
     }
 

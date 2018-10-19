@@ -14,7 +14,7 @@ $queue, $index, $out, $forwarder |
     fd1
     -> MarkIPHeader(14)
     -> IPFilter(allow udp && src 1.1.0.0/16)
-    -> IPPrint("From the first")
+//    -> IPPrint("From the first")
     -> PMProcess
     -> FTLockFreeCounter(INDEX $index)
     -> PMConstruct(ID $index)
@@ -27,7 +27,7 @@ $queue, $index, $out, $forwarder |
     -> StoreIPAddress(10.70.0.1, dst)
     -> StoreEtherAddress(f4:52:14:5a:90:70, src)
     -> StoreEtherAddress(f4:52:14:69:a5:20, dst)
-    -> Print("To outside world")
+//    -> IPPrint("To outside world")
     -> td1;
 
     // To the forwarder
@@ -37,7 +37,7 @@ $queue, $index, $out, $forwarder |
     -> StoreIPAddress(192.168.1.107, dst)
     -> StoreEtherAddress(0c:c4:7a:73:fa:6a, src)
     -> StoreEtherAddress(0c:c4:7a:73:fa:54, dst)
-    -> IPPrint("To the first")
+//    -> IPPrint("To the first")
     -> bd1;
 }
 

@@ -13,7 +13,7 @@ $queue, $index, $src_ip |
     ld1
     -> MarkIPHeader(14)
     -> IPFilter(allow udp && src 2.0.0.0/16)
-    -> IPPrint("From the buffer")
+//    -> IPPrint("From the buffer")
     -> [1]forwarder;
 
     fd1

@@ -24,7 +24,8 @@ int FTMBSim::configure(Vector<String> &conf, ErrorHandler *errh) {
     _delay *= MS2US;
     _first_packet_seen = false;
 
-    DEBUG("FTMBSim period is %d, delay is %d!\n", _period, _delay);
+    LOG("FTMBSim period is %d, delay is %d, per packet latency is %d!\n",
+            _period, _delay, _per_packet_latency);
 
     return 0;
 }

@@ -1,0 +1,8 @@
+Snapshot periods:
+    20, 50, 100, and 200ms
+
+Per Snapshot Added latency:
+    up to 6 ms
+
+Per packet added latency:
+    30 uc

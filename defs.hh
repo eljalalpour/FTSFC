@@ -146,11 +146,6 @@ public:
         print(ft_state.state);
     }
 
-    void print(PiggybackState &state) {
-        LOG("last commit is %llu, timestamp is %llu", state.last_commit, state.timestamp);
-        print(state.state);
-    }
-
     void print(PiggybackMessage *msg) {
         for (int i = 0; i < MAX_CHAIN_LEN; ++i) {
             LOG("\nState of middlebox %d", i);

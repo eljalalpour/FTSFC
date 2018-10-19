@@ -27,7 +27,7 @@ private:
     State _inoperation;
     std::mutex _inop_mtx;
 
-    int64 _commit_timestamp;
+    int64_t _commit_timestamp;
     std::mutex _commit_mtx;
 
     Util _util;

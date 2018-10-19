@@ -5,8 +5,6 @@
 
 CLICK_DECLS
 
-#define ENABLE_MULTI_THREADING 1
-
 SharedLockFreeState::SharedLockFreeState() {
     _util.init(_inoperation);
     _commit_timestamp = 0;
@@ -68,17 +66,6 @@ int SharedLockFreeState::configure(Vector <String> &conf, ErrorHandler *errh) {
 
 Packet *SharedLockFreeState::simple_action(Packet *p) {
     return p;
-}
-
-int SharedLockFreeState::read(int index) {
-    return _inoperation[index];
-}
-
-void SharedLockFreeState::increment(int index) {
-#ifdef ENABLE_MULTI_THREADING
-    std::lock_guard<std::mutex> lock(_inop_mtx);
-#endif
-    ++_inoperation[index];
 }
 
 CLICK_ENDDECLS

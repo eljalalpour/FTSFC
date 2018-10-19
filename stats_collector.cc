@@ -69,13 +69,13 @@ void StatsCollector::write_to_file() {
 void StatsCollector::collect() {
     Router *r = this->router();
 
-    if (_state > 0) {
-        auto _shared_state_elm = (SharedLockFreeState *) (r->find(SHARED_STATE));
-        _log_table_stats.push_back(_shared_state_elm->log_table_length());
-    }//if
-    else {
-        _log_table_stats.push_back(INVALID_LOG);
-    }//else
+//    if (_state > 0) {
+//        auto _shared_state_elm = (SharedLockFreeState *) (r->find(SHARED_STATE));
+//        _log_table_stats.push_back(_shared_state_elm->log_table_length());
+//    }//if
+//    else {
+//        _log_table_stats.push_back(INVALID_LOG);
+//    }//else
 
     if (_buffer == 1) {
         try {

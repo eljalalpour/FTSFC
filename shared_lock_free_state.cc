@@ -9,6 +9,7 @@ CLICK_DECLS
 
 SharedLockFreeState::SharedLockFreeState() {
     _util.init(_inoperation);
+    _commit_timestamp = 0;
 };
 
 SharedLockFreeState::~SharedLockFreeState() { };
@@ -18,27 +19,30 @@ void SharedLockFreeState::process_piggyback_message(Packet *p, PiggybackMessage&
 
     // Processing the secondary state set
     COPY_PIGGYBACK_MESSAGE(log_table, msg);
-//    auto end = std::min(_id - 1, _chain_len - 1);
-//    auto len = std::min(_failure_count, _chain_len + _failure_count - _id);
-//    for (int i = end; i > (end - len) && i >= 0; --i) {
-//        log_table[i] = (*msg[i]);
-//    }//for
+
+    {//
+#ifdef ENABLE_MULTI_THREADING
+        std::lock_guard<std::mutex> lock(_commit_mtx);
+#endif
+        if (_commit_timestamp < log_table[_id].timestamp)
+            _commit_timestamp = log_table[_id].timestamp;
+
+        // This part must be done in construct piggyback message, but we perform it here for performance reasons
+        msg[_id]->last_commit = _commit_timestamp;
+    }
 }
 
 void SharedLockFreeState::_capture_inoperation_state(Packet *p, int thread_id) {
     DEBUG("Capture _inoperation state");
     PiggybackMessage *msg = CAST_PACKET_TO_PIGGY_BACK_MESSAGE(p);
 
-#ifdef ENABLE_MULTI_THREADING
     {
+#ifdef ENABLE_MULTI_THREADING
         std::lock_guard<std::mutex> lock(_inop_mtx);
-        _util.copy(msg[_id]->state, _inoperation);
-    }
-    msg[_id]->timestamp = CURRENT_TIMESTAMP;
-#else
-    _util.copy(msg[_id]->state, _inoperation);
-    msg[_id]->timestamp = CURRENT_TIMESTAMP;
 #endif
+        _util.copy(msg[_id]->state, _inoperation);
+        msg[_id]->timestamp = CURRENT_TIMESTAMP;
+    }
 }
 
 void SharedLockFreeState::construct_piggyback_message(Packet *p, int thread_id) {

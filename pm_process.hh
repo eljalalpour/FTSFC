@@ -20,7 +20,7 @@ private:
     bool _shared_state_init;
     SharedLockFreeState* _shared_state;
 
-    LogTable _log_table;
+    PiggybackMessage _log_table;
 
     inline void _init_shared_state_pointer();
 

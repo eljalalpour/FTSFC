@@ -80,12 +80,19 @@ typedef struct TimestampState {
     }
 } TimestampState;
 
-typedef TimestampState PiggybackMessage[MAX_CHAIN_LEN];
+typedef struct PiggybackState {
+    int64_t last_commit;
+    int64_t timestamp;
+    State state;
+} PiggybackState;
+
+typedef PiggybackState PiggybackMessage[MAX_CHAIN_LEN];
 
 /// Useful casting definitions
 #define CAST_TO_BYTES(x)              reinterpret_cast<unsigned char *>(&x)
 #define CAST_TO_STATE(x)              reinterpret_cast<State*>(x)
 #define CAST_TO_TIMESTAMP_STATE(x)    reinterpret_cast<TimestampState*>(x)
+#define CAST_TO_PIGGY_BACK_STATE(x)   reinterpret_cast<PiggybackState*>(x)
 #define CAST_TO_PIGGY_BACK_MESSAGE(x) reinterpret_cast<PiggybackMessage*>(x)
 
 #define CAST_AWAY_PACKET_DATA(p) const_cast<unsigned char *>(p->data())
@@ -103,6 +110,10 @@ public:
         memset(&s, 0, sizeof(TimestampState));
     }
 
+    inline void init(PiggybackState &s) {
+        memset(&s, 0, sizeof(PiggybackState));
+    }
+
     inline void init(PiggybackMessage &s) {
         memset(&s, 0, sizeof(PiggybackMessage));
     }
@@ -115,10 +126,19 @@ public:
         memcpy(&y, &x, sizeof(TimestampState));
     }
 
+    inline void copy(PiggybackState& y, PiggybackState& x) {
+        memcpy(&y, &x, sizeof(PiggybackState));
+    }
+
     void print(State &state) {
         for (auto i = 0; i < STATE_LEN; ++i) {
             LOG("%d: %d", i, state[i]);
         }//for
+    }
+
+    void print(PiggybackState &state) {
+        LOG("last commit is %llu, timestamp is %llu", state.last_commit, state.timestamp);
+        print(state.state);
     }
 
     void print(TimestampState &ft_state) {
@@ -126,11 +146,9 @@ public:
         print(ft_state.state);
     }
 
-    void print(PiggybackMessage &msg) {
-        for (auto i = 0; i < MAX_CHAIN_LEN; ++i) {
-            LOG("\nState of middlebox %d", i);
-            print(msg[i]);
-        }//for
+    void print(PiggybackState &state) {
+        LOG("last commit is %llu, timestamp is %llu", state.last_commit, state.timestamp);
+        print(state.state);
     }
 
     void print(PiggybackMessage *msg) {
@@ -151,9 +169,17 @@ public:
         random_state(ts_state.state);
     }
 
+    void random_piggyback(PiggybackState& pb_state) {
+        pb_state.last_commit = CURRENT_TIMESTAMP;
+        TimestampState ts_state;
+        random_ts_state(ts_state);
+        copy(pb_state.state, ts_state.state);
+        pb_state.timestamp = ts_state.timestamp;
+    }
+
     void random_message(PiggybackMessage& msg) {
         for (int i = 0; i < MAX_CHAIN_LEN; ++i) {
-            random_ts_state(msg[i]);
+            random_piggyback(msg[i]);
         }//for
     }
 };

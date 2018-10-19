@@ -11,6 +11,9 @@ CLICK_DECLS
 class NFLockFreeCounter : public Element {
 private:
     int _index;
+    bool _init_state;
+    LockFreeArray* _shared_state;
+    inline void _init_shared_state();
 
 public:
     NFLockFreeCounter ();

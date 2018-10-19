@@ -18,7 +18,7 @@ CLICK_DECLS
 /// \end{itemize}
 ///
 
-#define ENABLE_MULTI_THREADING 1
+//#define ENABLE_MULTI_THREADING 1
 
 class SharedLockFreeState : public Element {
 private:
@@ -57,6 +57,9 @@ public:
     void construct_piggyback_message(Packet*, int=0);
 
     inline int read(int index) {
+    #ifdef ENABLE_MULTI_THREADING
+        std::lock_guard<std::mutex> lock(_inop_mtx);
+    #endif
         return _inoperation[index];
     }
 

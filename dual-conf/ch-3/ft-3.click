@@ -4,7 +4,6 @@
 
 shared_state::SharedLockFreeState(CHAIN 3, ID 2, F 1);
 
-
 elementclass FTBlock {
 $queue, $index, $out, $forwarder |
     fd1::FromDPDKDevice(1,$queue);

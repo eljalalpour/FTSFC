@@ -1,0 +1,2 @@
+Packet size 1350
+Sending rate 100%

@@ -15,7 +15,6 @@ class FTMBSim : public Element {
 private:
     int _period;
     int _delay;
-    int _first_delay;
     bool _first_packet_seen;
 
     bool _init_state;

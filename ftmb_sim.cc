@@ -15,14 +15,12 @@ int FTMBSim::configure(Vector<String> &conf, ErrorHandler *errh) {
     if (Args(conf, this, errh)
                 .read("PERIOD", _period)
                 .read("DELAY", _delay)
-                .read("FIRST_DELAY", _first_delay)
                 .complete() < 0)
         return -1;
 
     // Config parameters are in ms, convert them to us
     _period *= MS2US;
     _delay *= MS2US;
-    _first_delay *= MS2US;
     _first_packet_seen = false;
 
     DEBUG("FTMBSim period is %d, delay is %d!\n", _period, _delay);
@@ -45,17 +43,10 @@ Packet *FTMBSim::simple_action(Packet *p) {
     if (!_first_packet_seen) {
         _first_packet_seen = true;
         _last_snapshot_timestamp = Timestamp::now();
-
-        if (_first_delay == -1) {
-            _first_delay = click_random() % MAX_FIRST_DELAY_MS;
-        }//if
     }//if
-    else {
-        _first_delay = 0;
-    }//else
 
     auto passed = (Timestamp::now() - _last_snapshot_timestamp).usec();
-    if (passed >= _period + _first_delay) {
+    if (passed >= _period) {
         usleep(_delay);
         _last_snapshot_timestamp = Timestamp::now();
     }//if

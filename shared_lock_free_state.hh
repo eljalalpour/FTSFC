@@ -16,11 +16,7 @@ CLICK_DECLS
 ///     \item We assume that a middlebox during processing a packet modifies the in-operation state only once.
 ///     \item The above modification is performed using increment function
 /// \end{itemize}
-
-
-#define LOG_TABLE_CONTROL 100
-#define NOT_MODIFYING     0
-#define NOT_CAPTURING     0
+///
 
 class SharedLockFreeState : public Element {
 private:
@@ -28,32 +24,12 @@ private:
     int _failure_count;
     int _chain_len;
 
-    TimestampStateList _primary_log;
-    std::mutex _primary_log_mutex;
-
-    TimestampState _primary_commit;
-    std::mutex _primary_commit_mutex;
-
     State _inoperation;
-    volatile size_t _modifying_phase;
-    std::condition_variable _modifying_phase_cv;
-    std::mutex _modifying_phase_mtx;
-
-    volatile size_t _capture_inop_phase;
-    std::condition_variable _capture_inop_phase_cv;
-    std::mutex _capture_inop_phase_mtx;
+    std::mutex _inop_mtx;
 
     Util _util;
 
-    inline void _log_secondary_state(State &, int64_t, int, LogTable&);
-
-    void _commit_primary(int64_t);
-
-    void _commit_secondary(int, int64_t, LogTable&, CommitMemory& );
-
     inline void _capture_inoperation_state(Packet *, int=0);
-
-    inline void _commit_timestamp(Packet*);
 
 public:
 
@@ -71,11 +47,9 @@ public:
 
     int configure(Vector<String> &, ErrorHandler *);
 
-    void process_piggyback_message(Packet*, LogTable&, CommitMemory&);
+    void process_piggyback_message(Packet*, PiggybackMessage&);
 
     void construct_piggyback_message(Packet*, int=0);
-
-    size_t log_table_length();
 
     int read(int);
 

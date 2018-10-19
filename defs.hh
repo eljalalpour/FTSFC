@@ -80,30 +80,16 @@ typedef struct TimestampState {
     }
 } TimestampState;
 
-typedef struct PiggybackState {
-    int64_t last_commit;
-    int64_t timestamp;
-    State state;
-} PiggybackState;
-
-typedef PiggybackState PiggybackMessage[MAX_CHAIN_LEN];
-
-typedef std::vector<TimestampState> TimestampStateList;
-
-typedef TimestampStateList LogTable[MAX_CHAIN_LEN];
-
-typedef TimestampState CommitMemory[MAX_CHAIN_LEN];
+typedef TimestampState PiggybackMessage[MAX_CHAIN_LEN];
 
 /// Useful casting definitions
 #define CAST_TO_BYTES(x)              reinterpret_cast<unsigned char *>(&x)
 #define CAST_TO_STATE(x)              reinterpret_cast<State*>(x)
 #define CAST_TO_TIMESTAMP_STATE(x)    reinterpret_cast<TimestampState*>(x)
-#define CAST_TO_PIGGY_BACK_STATE(x)   reinterpret_cast<PiggybackState*>(x)
 #define CAST_TO_PIGGY_BACK_MESSAGE(x) reinterpret_cast<PiggybackMessage*>(x)
 
 #define CAST_AWAY_PACKET_DATA(p) const_cast<unsigned char *>(p->data())
 #define CAST_PACKET_TO_PIGGY_BACK_MESSAGE(p) reinterpret_cast<PiggybackMessage*>(CAST_AWAY_PACKET_DATA(p) + DEFAULT_OFFSET)
-
 #define COPY_PIGGYBACK_MESSAGE(y, x) memcpy(y, x, sizeof(PiggybackMessage))
 
 /// Util class to serialize, deserialize, encode, and decode states
@@ -117,16 +103,8 @@ public:
         memset(&s, 0, sizeof(TimestampState));
     }
 
-    inline void init(PiggybackState &s) {
-        memset(&s, 0, sizeof(PiggybackState));
-    }
-
     inline void init(PiggybackMessage &s) {
         memset(&s, 0, sizeof(PiggybackMessage));
-    }
-
-    inline void init(CommitMemory &s) {
-        memset(&s, 0, sizeof(CommitMemory));
     }
 
     inline void copy(State& y, State& x) {
@@ -135,21 +113,6 @@ public:
 
     inline void copy(TimestampState& y, TimestampState& x) {
         memcpy(&y, &x, sizeof(TimestampState));
-    }
-
-    inline void copy(PiggybackState& y, PiggybackState& x) {
-        memcpy(&y, &x, sizeof(PiggybackState));
-    }
-
-    inline void copy(TimestampState& y, PiggybackState& x) {
-        y.timestamp = x.timestamp;
-        copy(y.state, x.state);
-    }
-
-    inline void reserve(LogTable& lt) {
-        for (auto &i : lt) {
-            i.reserve(LOG_TABLE_RES_SIZE);
-        }//for
     }
 
     void print(State &state) {
@@ -161,11 +124,6 @@ public:
     void print(TimestampState &ft_state) {
         LOG("Timestamp: %llu", ft_state.timestamp);
         print(ft_state.state);
-    }
-
-    void print(PiggybackState &state) {
-        LOG("last commit is %llu, timestamp is %llu", state.last_commit, state.timestamp);
-        print(state.state);
     }
 
     void print(PiggybackMessage &msg) {
@@ -193,17 +151,9 @@ public:
         random_state(ts_state.state);
     }
 
-    void random_piggyback(PiggybackState& pb_state) {
-        pb_state.last_commit = CURRENT_TIMESTAMP;
-        TimestampState ts_state;
-        random_ts_state(ts_state);
-        copy(pb_state.state, ts_state.state);
-        pb_state.timestamp = ts_state.timestamp;
-    }
-
     void random_message(PiggybackMessage& msg) {
         for (int i = 0; i < MAX_CHAIN_LEN; ++i) {
-            random_piggyback(msg[i]);
+            random_ts_state(msg[i]);
         }//for
     }
 };

@@ -21,7 +21,6 @@ private:
     SharedLockFreeState* _shared_state;
 
     LogTable _log_table;
-    CommitMemory _commit_memory;
 
     inline void _init_shared_state_pointer();
 

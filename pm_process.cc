@@ -6,8 +6,7 @@ CLICK_DECLS
 
 PMProcess::PMProcess() : _shared_state_init(false) {
     Util _util;
-    _util.init(_commit_memory);
-    _util.reserve(_log_table);
+    _util.init(_log_table);
 }
 
 PMProcess::~PMProcess() { }
@@ -28,7 +27,7 @@ Packet* PMProcess::simple_action(Packet *p) {
     _init_shared_state_pointer();
 
     try {
-        _shared_state->process_piggyback_message(p, _log_table, _commit_memory);
+        _shared_state->process_piggyback_message(p, _log_table);
     }//try
     catch(...) {
         p->kill();

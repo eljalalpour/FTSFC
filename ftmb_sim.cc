@@ -22,7 +22,6 @@ int FTMBSim::configure(Vector<String> &conf, ErrorHandler *errh) {
     // Config parameters are in ms, convert them to us
     _period *= MS2US;
     _delay *= MS2US;
-    _per_packet_latency *= MS2US;
     _first_packet_seen = false;
 
     DEBUG("FTMBSim period is %d, delay is %d!\n", _period, _delay);

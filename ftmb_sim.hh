@@ -13,9 +13,9 @@ CLICK_DECLS
 
 class FTMBSim : public Element {
 private:
-    int _period;
-    int _delay;
-    float _per_packet_latency;
+    int _period; // In mili-seconds
+    int _delay; // In mili-seconds
+    int _per_packet_latency; // In micro-seconds
     bool _first_packet_seen;
 
     bool _init_state;

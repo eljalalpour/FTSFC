@@ -17,6 +17,14 @@ bool NFNAT::bad_header(const click_ip *iph) {
            || !IP_FIRSTFRAG(iph);
 }
 
+void NFNAT::_init_shared_state() {
+    if (!_init_array) {
+        Router *r = this->router();
+        _lock_free_array = (LockFreeArray *)(r->find("array"));
+        _init_array = true;
+    }//if
+}
+
 uint32_t NFNAT::flow_id(Packet *p) {
     // Simulating Real NAT stuff!
     IPFlowID flow_id(p);
@@ -57,9 +65,9 @@ Packet *NFNAT::simple_action(Packet *p) {
     uint32_t fid = flow_id(p);
 
     // Keep as is
-    LockFreeArray *afc = (LockFreeArray *)(r->find("array"));
-    if (afc->array[fid] == 0)
-        afc->array[fid] = 1;
+    _init_shared_state();
+    if (_lock_free_array->array[fid] == 0)
+        _lock_free_array->array[fid] = 1;
 
     DEBUG("End NFNAT");
     DEBUG("--------------------");

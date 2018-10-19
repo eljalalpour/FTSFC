@@ -9,7 +9,12 @@ CLICK_DECLS
 
 class NFNAT : public Element {
 private:
+    bool _init_array;
+    LockFreeArray* _lock_free_array;
+
     std::unordered_map<uint32_t, bool> _fake_map;
+
+    inline void _init_shared_state();
 
 public:
     NFNAT ();

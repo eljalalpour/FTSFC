@@ -30,6 +30,14 @@ int FTMBSim::configure(Vector<String> &conf, ErrorHandler *errh) {
     return 0;
 }
 
+void FTMBSim::_init_shared_state() {
+    if (!_init_state) {
+        Router *r = this->router();
+        _shared_state = (LockFreeArray *)(r->find("array"));
+        _init_state = true;
+    }//if
+}
+
 Packet *FTMBSim::simple_action(Packet *p) {
     DEBUG("--------------------");
     DEBUG("Begin FTMBSim");
@@ -52,10 +60,8 @@ Packet *FTMBSim::simple_action(Packet *p) {
         _last_snapshot_timestamp = Timestamp::now();
     }//if
 
-    Router *r = this->router();
-
-    LockFreeArray *lfc = (LockFreeArray *)(r->find("array"));
-    ++lfc->array[0];
+    _init_shared_state();
+    ++_shared_state->array[0];
 
     DEBUG("End FTMBSim");
     DEBUG("--------------------");

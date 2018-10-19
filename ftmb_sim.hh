@@ -18,6 +18,10 @@ private:
     int _first_delay;
     bool _first_packet_seen;
 
+    bool _init_state;
+    LockFreeArray* _shared_state;
+    inline void _init_shared_state();
+
     Timestamp _last_snapshot_timestamp;
 
 public:

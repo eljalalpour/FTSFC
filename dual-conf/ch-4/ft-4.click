@@ -20,7 +20,7 @@ $queue, $index, $out, $forwarder |
     fd1::FromDPDKDevice(1,$queue);
     td1::ToDPDKDevice(1,$queue);
     bd1::ToDPDKDevice(0,$queue);
-    buffer::Buffer(CHAIN 4);
+    buffer::Buffer(BATCH 1, CHAIN 4);
 
     fd1
     -> MarkIPHeader(14)

@@ -22,7 +22,7 @@ FromDPDKDevice(0)
 -> MarkIPHeader(14)
 -> IPFilter(allow udp && src 1.3.0.0/16)
 -> SetTimestamp
--> buffer::Buffer(CHAIN 4);
+-> buffer::Buffer(BATCH 1, CHAIN 4);
 
 // To the outside world
 buffer[0]

@@ -13,7 +13,7 @@ $out,$forwarder |
     -> PMProcess
     -> FTNAT
     -> PMConstruct(ID $index)
-    -> buffer::Buffer(CHAIN 3);
+    -> buffer::Buffer(BATCH 1, CHAIN 3);
 
     // To the outside world
     buffer[0]

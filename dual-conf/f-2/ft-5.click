@@ -29,7 +29,7 @@ $index,$out,$forwarder |
     -> PMProcess
     -> FTLockFreeCounter(INDEX $index)
     -> PMConstruct(ID $index)
-    -> buffer::Buffer(CHAIN 5);
+    -> buffer::Buffer(BATCH 1, CHAIN 5);
 
     // To the outside world
     buffer[0]

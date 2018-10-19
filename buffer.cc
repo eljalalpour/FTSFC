@@ -8,7 +8,7 @@
 
 CLICK_DECLS
 
-Buffer::Buffer () _batch_counter(0) { };
+Buffer::Buffer () : _batch_counter(0) { };
 
 Buffer::~Buffer() { };
 

@@ -9,7 +9,6 @@
 CLICK_DECLS
 
 #define MS2US               1000
-#define MAX_FIRST_DELAY_MS  20
 
 class FTMBSim : public Element {
 private:

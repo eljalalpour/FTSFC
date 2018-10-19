@@ -74,9 +74,9 @@ function send(dev, duration, out)
 
     printf("Sending traffic...\n");
     io.output(report_file);
-    for i = 0, duration, 1
+    for i = 0, duration + 1, 1
     do
-        if i >= 1 then
+        if i >= 1 and i <= duration then
             io.write(
                     pktgen.portStats(dev, "rate")[0]["pkts_rx"], ",",
                     pktgen.portStats(dev, "rate")[0]["mbits_rx"], "\n");

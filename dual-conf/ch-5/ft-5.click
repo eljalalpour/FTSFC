@@ -27,13 +27,14 @@ $queue, $index, $out, $forwarder |
     bd1::ToDPDKDevice(0,$queue);
     buffer::Buffer(CHAIN 5);
 
+    fd1
     -> MarkIPHeader(14)
     -> IPFilter(allow udp && src 1.4.0.0/16)
 //    -> IPPrint("From 4")
     -> PMProcess
     -> FTLockFreeCounter(INDEX $index)
     -> PMConstruct(ID $index)
-    -> buffer::Buffer(CHAIN 5);
+    -> buffer;
 
     // To the outside world
     buffer[0]

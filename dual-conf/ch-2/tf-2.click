@@ -1,7 +1,7 @@
 // In aqua08
 // aqua07 -> aqua08 -> aqua01
 
-trans::Transmitter(10.70.0.3:10000); // set replica's ip and port
+trans::Transmitter(10.0.7.3:10000); // set replica's ip and port
 
 elementclass TFBlock {
 $index,$src_ip |

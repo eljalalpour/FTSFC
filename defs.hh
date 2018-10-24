@@ -177,6 +177,16 @@ public:
             random_piggyback(msg[i]);
         }//for
     }
+
+    static inline void nsleep(int dur_ns) {
+        auto start = std::chrono::system_clock::now();
+        while (true) {
+            auto elapsed = std::chrono::duration_cast<std::chrono::nanoseconds>(
+                    std::chrono::system_clock::now() - start);
+            if (elapsed.count() > dur_ns)
+                break;
+        }//while
+    }
 };
 
 #endif //FTSFC_DEFS_HH

@@ -27,6 +27,9 @@ int FTMBSim::configure(Vector<String> &conf, ErrorHandler *errh) {
     LOG("FTMBSim period is %d us, delay is %d us, per packet latency is %d us!\n",
             _period, _delay, _per_packet_latency);
 
+    _delay *= US2NS;
+    _per_packet_latency *= US2NS;
+
     return 0;
 }
 
@@ -49,11 +52,11 @@ Packet *FTMBSim::simple_action(Packet *p) {
 
     auto passed = (Timestamp::now() - _last_snapshot_timestamp).usec();
     if (passed >= _period) {
-        usleep(_delay);
         _last_snapshot_timestamp = Timestamp::now();
+        Util::nsleep(_delay);
     }//if
 
-    usleep(_per_packet_latency);
+    Util::nsleep(_per_packet_latency);
 
     _init_shared_state();
     ++_shared_state->array[0];

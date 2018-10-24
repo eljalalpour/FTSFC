@@ -8,7 +8,8 @@
 
 CLICK_DECLS
 
-#define MS2US               1000
+#define MS2US 1000
+#define US2NS 1000
 
 class FTMBSim : public Element {
 private:

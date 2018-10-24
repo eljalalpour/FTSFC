@@ -18,7 +18,7 @@ $index,$src_ip |
     -> output
 }
 
-fd1::FromDPDKDevice(0,0);
+fd1::FromDPDKDevice(1,0);
 // fd2::FromDPDKDevice(0,1);
 // fd3::FromDPDKDevice(0,2);
 // fd4::FromDPDKDevice(0,3);
@@ -28,7 +28,7 @@ fd1::FromDPDKDevice(0,0);
 // fd8::FromDPDKDevice(0,7);
 
 
-td1::ToDPDKDevice(0,0);
+td1::ToDPDKDevice(1,0);
 // td2::ToDPDKDevice(0,1);
 // td3::ToDPDKDevice(0,2);
 // td4::ToDPDKDevice(0,3);

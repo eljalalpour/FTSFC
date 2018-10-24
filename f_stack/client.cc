@@ -1,18 +1,19 @@
 #include "client.hh"
+#include <ff_api.h>
 
 void Client::send(State& state) {
     // Send state
-    write(_socket, reinterpret_cast<unsigned char *>(_state_to_be_sent), sizeof(State));
+    ff_write(_socket, reinterpret_cast<unsigned char *>(_state_to_be_sent), sizeof(State));
 
     char c;
-    read(_socket, &c, sizeof(char));
+    ff_read(_socket, &c, sizeof(char));
 }
 
 bool Client::connect(const string& ip, uint16_t port) {
     bool result = true;
 
     // Create socket
-    _socket = socket(AF_INET, SOCK_STREAM, 0);
+    _socket = ff_socket(AF_INET, SOCK_STREAM, 0);
     if (_socket == -1) {
         perror("Could not create socket");
         result = false;
@@ -21,7 +22,7 @@ bool Client::connect(const string& ip, uint16_t port) {
 
     // Set TCP_NODELAY
     int yes = 1;
-    if (setsockopt(_socket, IPPROTO_TCP, TCP_NODELAY, (char *) &yes, sizeof(int))) {
+    if (ff_setsockopt(_socket, IPPROTO_TCP, TCP_NODELAY, (char *) &yes, sizeof(int))) {
         perror("\nUnable to set TCP_NODELAY\n");
         result = false;
         goto CLEANUP;
@@ -35,13 +36,13 @@ bool Client::connect(const string& ip, uint16_t port) {
 
     // inet_pton
     if(inet_pton(AF_INET, ip.c_str(), &server.sin_addr) <= 0) {
-        perror("\n inet_pton error occured\n");
+        perror("\n inet_pton error occurred\n");
         result = false;
         goto CLEANUP;
     }//if
 
     // Connect to server
-    if (connect(_socket, (struct sockaddr *)&server, sizeof(server)) < 0) {
+    if (ff_connect(_socket, (struct sockaddr *)&server, sizeof(server)) < 0) {
         perror("connect failed. Error");
         result = false;
         goto CLEANUP;

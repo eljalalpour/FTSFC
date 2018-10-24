@@ -4,23 +4,23 @@
 #include <errno.h>
 #include <time.h>
 #include <sys/ioctl.h>
-
+#include <ff_api.h>
 
 Server::Server(uint16_t port) {
     _port = port;
 }
 
 void Server::_init_socket() {
-    _socket_fd = socket(PF_INET, SOCK_STREAM, 0);
+    _socket_fd = ff_socket(PF_INET, SOCK_STREAM, 0);
     if (_socket_fd < 0)
         return _init_socket_error("socket");
 
     // Set TCP_NODELAY
     int yes = 1;
-    setsockopt(_socket_fd, IPPROTO_TCP, TCP_NODELAY, (char *) &yes, sizeof(int));
+    ff_setsockopt(_socket_fd, IPPROTO_TCP, TCP_NODELAY, (char *) &yes, sizeof(int));
 
     int sock_opt = 1;
-    if (setsockopt(_socket_fd, SOL_SOCKET, SO_REUSEADDR, (void *)&sock_opt, sizeof(sock_opt)) < 0) {
+    if (ff_setsockopt(_socket_fd, SOL_SOCKET, SO_REUSEADDR, (void *)&sock_opt, sizeof(sock_opt)) < 0) {
         DEBUG("Set socket error...");
     }//if
 
@@ -29,12 +29,12 @@ void Server::_init_socket() {
     _sa.sin_port = htons(_port);
     _sa.sin_addr.s_addr = htonl(INADDR_ANY);
 
-    if (bind(_socket_fd, (struct sockaddr *)&_sa, sizeof(_sa)) < 0) {
+    if (ff_bind(_socket_fd, (struct sockaddr *)&_sa, sizeof(_sa)) < 0) {
         DEBUG("Error on binding socket...");
         return;
     }//if
 
-    listen(_socket_fd, CON_QUEUE);
+    ff_listen(_socket_fd, CON_QUEUE);
 }
 
 void Server::_interact(int conn_fd) {
@@ -45,14 +45,14 @@ void Server::_interact(int conn_fd) {
 //    }//if
 //
 //    LOG("Here\n");
-    auto n = read(conn_fd, &_state, sizeof(State));
+    auto n = ff_read(conn_fd, &_state, sizeof(State));
     if (n < 0) {
         LOG("Read error\n");
         return;
     }//if
 
     char c = 'c';
-    write(conn_fd, &c , sizeof(char));
+    ff_write(conn_fd, &c , sizeof(char));
 }
 
 
@@ -74,7 +74,7 @@ void Server::_accept_connection() {
 
 void Server::_init_socket_error(const char *) {
     if (_socket_fd >= 0) {
-        close(_socket_fd);
+        ff_close(_socket_fd);
         _socket_fd = -1;
     }//if
 }

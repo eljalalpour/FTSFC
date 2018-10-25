@@ -185,8 +185,8 @@ public:
             ;
     }
 
-    static inline bool npassed(std::chrono::time_point<std::chrono::high_resolution_clock>& tp, unsigned long dur_us) {
-        return std::chrono::duration_cast<std::chrono::nanoseconds>(CLOCK_NOW - tp).count() < dur_us;
+    static inline bool npassed(std::chrono::time_point<std::chrono::high_resolution_clock>& tp, unsigned long dur_ns) {
+        return std::chrono::duration_cast<std::chrono::nanoseconds>(CLOCK_NOW - tp).count() >= dur_ns;
     }
 };
 

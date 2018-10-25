@@ -10,19 +10,20 @@ CLICK_DECLS
 
 #define MS2US 1000
 #define US2NS 1000
+#define MS2NS 1000000
 
 class FTMBSim : public Element {
 private:
-    int _period; // In mili-seconds
-    int _delay; // In mili-seconds
-    int _per_packet_latency; // In micro-seconds
+    unsigned long _period; // In mili-seconds
+    unsigned long _delay; // In mili-seconds
+    unsigned long _per_packet_latency; // In micro-seconds
     bool _first_packet_seen;
 
     bool _init_state;
     LockFreeArray* _shared_state;
     inline void _init_shared_state();
 
-    Timestamp _last_snapshot_timestamp;
+    std::chrono::time_point<std::chrono::high_resolution_clock> _last_snapshot_timestamp;
 
 public:
     FTMBSim ();

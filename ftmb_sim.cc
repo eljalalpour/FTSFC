@@ -19,16 +19,15 @@ int FTMBSim::configure(Vector<String> &conf, ErrorHandler *errh) {
                 .complete() < 0)
         return -1;
 
-    // Config parameters are in ms, convert them to us
-    _period *= MS2US;
-    _delay *= MS2US;
-    _first_packet_seen = false;
+    LOG("FTMBSim period is %d ms, delay is %d ms, per packet latency is %d us!\n",
+        _period, _delay, _per_packet_latency);
 
-    LOG("FTMBSim period is %d us, delay is %d us, per packet latency is %d us!\n",
-            _period, _delay, _per_packet_latency);
-
-    _delay *= US2NS;
+    // parameters are in mili/micro-seconds,
+    // convert them to nano-seconds
+    _period *= MS2NS;
+    _delay *= MS2NS;
     _per_packet_latency *= US2NS;
+    _first_packet_seen = false;
 
     return 0;
 }
@@ -47,13 +46,12 @@ Packet *FTMBSim::simple_action(Packet *p) {
 
     if (!_first_packet_seen) {
         _first_packet_seen = true;
-        _last_snapshot_timestamp = Timestamp::now();
+        _last_snapshot_timestamp = CLOCK_NOW;
     }//if
 
-    auto passed = (Timestamp::now() - _last_snapshot_timestamp).usec();
-    if (passed >= _period) {
-        _last_snapshot_timestamp = Timestamp::now();
+    if (Util::npassed(_last_snapshot_timestamp, _period)) {
         Util::nsleep(_delay);
+        _last_snapshot_timestamp = CLOCK_NOW;
     }//if
 
     Util::nsleep(_per_packet_latency);

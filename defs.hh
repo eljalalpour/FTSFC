@@ -26,7 +26,8 @@
 #define SET_K_TH_BIT(n,k)   (n |= 1UL << k)
 #define SET_ALL_BITS -1
 
-#define CURRENT_TIMESTAMP std::chrono::high_resolution_clock::now().time_since_epoch().count()
+#define CLOCK_NOW         std::chrono::high_resolution_clock::now()
+#define CURRENT_TIMESTAMP CLOCK_NOW.time_since_epoch().count()
 
 #define ENABLE_LOG
 #ifdef  ENABLE_LOG
@@ -178,14 +179,14 @@ public:
         }//for
     }
 
-    static inline void nsleep(int dur_ns) {
-        auto start = std::chrono::system_clock::now();
-        while (true) {
-            auto elapsed = std::chrono::duration_cast<std::chrono::nanoseconds>(
-                    std::chrono::system_clock::now() - start);
-            if (elapsed.count() > dur_ns)
-                break;
-        }//while
+    static inline void nsleep(unsigned long dur_ns) {
+        auto start = CLOCK_NOW;
+        while (std::chrono::duration_cast<std::chrono::nanoseconds>(CLOCK_NOW - start).count() < dur_ns)
+            ;
+    }
+
+    static inline bool npassed(std::chrono::time_point<std::chrono::high_resolution_clock>& tp, unsigned long dur_us) {
+        return std::chrono::duration_cast<std::chrono::nanoseconds>(CLOCK_NOW - tp).count() < dur_us;
     }
 };
 

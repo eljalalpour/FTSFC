@@ -8,6 +8,7 @@ CLICK_DECLS
 SharedLockFreeState::SharedLockFreeState() {
     _util.init(_inoperation);
     _commit_timestamp = 0;
+    _logic_timestamp = _commit_timestamp + 1;
 };
 
 SharedLockFreeState::~SharedLockFreeState() { };
@@ -41,7 +42,8 @@ void SharedLockFreeState::_capture_inoperation_state(Packet *p, int thread_id) {
         _util.copy(msg[_id]->state, _inoperation);
     }
 
-    msg[_id]->timestamp = CURRENT_TIMESTAMP;
+//    msg[_id]->timestamp = CURRENT_TIMESTAMP;
+    msg[_id]->timestamp = ++_logic_timestamp;
 }
 
 void SharedLockFreeState::construct_piggyback_message(Packet *p, int thread_id) {

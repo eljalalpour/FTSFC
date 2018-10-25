@@ -26,6 +26,8 @@ private:
     int _failure_count;
     int _chain_len;
 
+    int64_t _logic_timestamp;
+
     State _inoperation;
     std::mutex _inop_mtx;
 

@@ -14,9 +14,9 @@ CLICK_DECLS
 
 class FTMBSim : public Element {
 private:
-    unsigned long _period; // In mili-seconds
-    unsigned long _delay; // In mili-seconds
-    unsigned long _per_packet_latency; // In micro-seconds
+    long _period; // In mili-seconds
+    long _delay; // In mili-seconds
+    long _per_packet_latency; // In micro-seconds
     bool _first_packet_seen;
 
     bool _init_state;

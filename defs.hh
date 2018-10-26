@@ -179,13 +179,13 @@ public:
         }//for
     }
 
-    static inline void nsleep(unsigned long dur_ns) {
+    static inline void nsleep(long dur_ns) {
         auto start = CLOCK_NOW;
         while (std::chrono::duration_cast<std::chrono::nanoseconds>(CLOCK_NOW - start).count() < dur_ns)
             ;
     }
 
-    static inline bool npassed(std::chrono::time_point<std::chrono::high_resolution_clock>& tp, unsigned long dur_ns) {
+    static inline bool npassed(std::chrono::time_point<std::chrono::high_resolution_clock>& tp, long dur_ns) {
         return std::chrono::duration_cast<std::chrono::nanoseconds>(CLOCK_NOW - tp).count() >= dur_ns;
     }
 };

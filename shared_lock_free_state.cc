@@ -73,19 +73,5 @@ Packet *SharedLockFreeState::simple_action(Packet *p) {
     return p;
 }
 
-inline int SharedLockFreeState::read(int index) {
-#ifdef ENABLE_MULTI_THREADING
-    std::lock_guard<std::mutex> lock(_inop_mtx);
-#endif
-    return _inoperation[index];
-}
-
-inline void SharedLockFreeState::increment(int index) {
-#ifdef ENABLE_MULTI_THREADING
-    std::lock_guard<std::mutex> lock(_inop_mtx);
-#endif
-    ++_inoperation[index];
-}
-
 CLICK_ENDDECLS
 EXPORT_ELEMENT(SharedLockFreeState)

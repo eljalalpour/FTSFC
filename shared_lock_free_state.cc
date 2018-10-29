@@ -17,10 +17,10 @@ void SharedLockFreeState::process_piggyback_message(Packet *p, PiggybackMessage&
     auto msg = CAST_PACKET_TO_PIGGY_BACK_MESSAGE(p);
 
     // Processing the secondary state set
-    COPY_PIGGYBACK_MESSAGE(&log_table, msg);
-//    for (int i = 0; i < _chain_len; ++i) {
-//        log_table[i] = (*msg[i]);
-//    }//for
+    //COPY_PIGGYBACK_MESSAGE(&log_table, msg);
+    for (int i = 0; i < _chain_len; ++i) {
+        log_table[i] = (*msg[i]);
+    }//for
 
     {//
 #ifdef ENABLE_MULTI_THREADING

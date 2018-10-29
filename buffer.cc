@@ -8,7 +8,7 @@
 
 CLICK_DECLS
 
-Buffer::Buffer () : _batch_counter(0), _warned(false) { };
+Buffer::Buffer () : _batch_counter(0) { };
 
 Buffer::~Buffer() { };
 
@@ -41,20 +41,6 @@ void Buffer::_send_to_forwarder(Packet* p) {
     output(TO_FORWARDER).push(q);
 }
 
-void Buffer::_store(Packet* p) {
-    if (_packets.size() >= MAX_BUFFER_SIZE) {
-        if (!_warned) {
-            LOG("Buffer is full!");
-            _warned = true;
-        }//if
-
-        p->kill();
-        return;
-    }//if
-    _timestamps.push((*_msg[_chain_len - 1]).timestamp);
-    _packets.push(p);
-}
-
 int Buffer::configure(Vector<String> &conf, ErrorHandler *errh) {
     // set id and f params
     if (Args(conf, this, errh)
@@ -85,7 +71,8 @@ void Buffer::push(int, Packet*p) {
     _release((*_msg[_chain_len - 1]).last_commit);
 
     // Store the packet into buffer
-    _store(p);
+    _timestamps.push((*_msg[_chain_len - 1]).timestamp);
+    _packets.push(p);
 
     DEBUG("End Buffer");
     DEBUG("--------------------");

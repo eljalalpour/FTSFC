@@ -27,14 +27,11 @@ private:
     int _batch_counter;
     int _batch_size;
 
-    bool _warned;
-
     std::queue<int64_t> _timestamps;
     std::queue<Packet*> _packets;
 
     inline void _release(int64_t);
     inline void _send_to_forwarder(Packet*);
-    inline void _store(Packet*);
 
 public:
     Buffer ();

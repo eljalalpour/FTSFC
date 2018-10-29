@@ -20,6 +20,7 @@ void SharedLockFreeState::process_piggyback_message(Packet *p, PiggybackMessage&
 //    COPY_PIGGYBACK_MESSAGE(log_table, msg);
     for (int i = 0; i < _chain_len; ++i)
         log_table[i] = msg[i];
+
     {//
 #ifdef ENABLE_MULTI_THREADING
         std::lock_guard<std::mutex> lock(_commit_mtx);

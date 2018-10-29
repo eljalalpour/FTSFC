@@ -68,7 +68,7 @@ int SharedLockFreeState::configure(Vector <String> &conf, ErrorHandler *errh) {
 
     LOG("Shared state, chain-length: %d, ID: %d, F: %d", _chain_len, _id, _failure_count);
     LOG("To copy indices are: ");
-    for (int i = 1; i <= _failure_count; ++i) {
+    for (int i = 0; i < _failure_count; ++i) {
         int index = (_id - 1 - i + _chain_len) % _chain_len;
         _to_copy_indices.push_back(index);
         LOG("%d", index);

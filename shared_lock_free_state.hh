@@ -58,19 +58,9 @@ public:
 
     void construct_piggyback_message(Packet*, int=0);
 
-    inline int read(int index) {
-    #ifdef ENABLE_MULTI_THREADING
-        std::lock_guard<std::mutex> lock(_inop_mtx);
-    #endif
-        return _inoperation[index];
-    }
+    inline int read(int index);
 
-    inline void increment(int index) {
-    #ifdef ENABLE_MULTI_THREADING
-        std::lock_guard<std::mutex> lock(_inop_mtx);
-    #endif
-        ++_inoperation[index];
-    }
+    inline void increment(int index);
 };
 
 CLICK_ENDDECLS

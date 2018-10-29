@@ -49,7 +49,7 @@ int Buffer::configure(Vector<String> &conf, ErrorHandler *errh) {
                 .complete() < 0)
         return -1;
 
-    DEBUG("Chain length is %d!\n", _chain_len);
+    LOG("Chain length is %d and batch is %d!\n", _chain_len, _batch_size);
 
     return 0;
 }

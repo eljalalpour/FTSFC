@@ -17,17 +17,15 @@ void SharedLockFreeState::process_piggyback_message(Packet *p, PiggybackMessage&
     auto msg = CAST_PACKET_TO_PIGGY_BACK_MESSAGE(p);
 
     // Processing the secondary state set
-//    COPY_PIGGYBACK_MESSAGE(log_table, msg);
-    for (int i = 0; i < _chain_len; ++i)
-        log_table[i] = msg[i];
+    COPY_PIGGYBACK_MESSAGE(&log_table, msg);
+//    for (int i = 0; i < _chain_len; ++i) {
+//        log_table[i] = (*msg[i]);
+//    }//for
 
     {//
 #ifdef ENABLE_MULTI_THREADING
         std::lock_guard<std::mutex> lock(_commit_mtx);
 #endif
-        // whatever is received is already replicated in f + 1 replicas,
-        // therefore we can use the timestamp of the primary state as the last commit timestamp
-        // if it is bigger than the last commit timestamp
         if (_commit_timestamp < msg[_id]->timestamp)
             _commit_timestamp = msg[_id]->timestamp;
 
@@ -67,7 +65,7 @@ int SharedLockFreeState::configure(Vector <String> &conf, ErrorHandler *errh) {
                 .read("F", _failure_count)
                 .complete() < 0)
         return -1;
-
+    LOG("Shared state, chain-length: %d, ID: %d, F: %d", _chain_len, _id, _failure_count);
     return 0;
 }
 

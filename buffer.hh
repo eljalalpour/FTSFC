@@ -19,6 +19,7 @@ CLICK_DECLS
 #define MAC_HEAD_SIZE    14
 #define UDP_HEAD_OFFSET_AFTER_MAC_HEAD 1
 #define DEFAULT_CRC 0
+#define MAX_BUFFER_SIZE  32768
 
 class Buffer : public Element {
 private:
@@ -26,11 +27,14 @@ private:
     int _batch_counter;
     int _batch_size;
 
+    bool _warned;
+
     std::queue<int64_t> _timestamps;
     std::queue<Packet*> _packets;
 
     inline void _release(int64_t);
     inline void _send_to_forwarder(Packet*);
+    inline void _store(Packet*);
 
 public:
     Buffer ();

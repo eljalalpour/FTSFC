@@ -28,8 +28,7 @@ void Buffer::_send_to_forwarder(Packet* p) {
     if (_batch_counter++ % _batch_size != 0)
         return;
 
-    auto n = DEFAULT_OFFSET + sizeof(PiggybackMessage) + PAD;
-    auto q = Packet::make(p->data(), n);
+    auto q = Packet::make(p->data(), TO_FORWARDER_PKT_SIZE);
     click_ip *ip = reinterpret_cast<click_ip *>(q->data() + MAC_HEAD_SIZE);
     click_udp *udp = reinterpret_cast<click_udp *>(ip + UDP_HEAD_OFFSET_AFTER_MAC_HEAD);
     udp->uh_ulen = htons(q->length() - MAC_HEAD_SIZE - sizeof(click_ip));

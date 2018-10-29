@@ -71,7 +71,7 @@ int SharedLockFreeState::configure(Vector <String> &conf, ErrorHandler *errh) {
     for (int i = 1; i <= _failure_count; ++i) {
         int index = (i + _chain_len - _failure_count ) % _chain_len;
         _to_copy_indices.push_back(index);
-        LOG(index);
+        LOG("%d", index);
     }//for
 
     return 0;

@@ -18,8 +18,8 @@ void SharedLockFreeState::process_piggyback_message(Packet *p, PiggybackMessage&
 
     // Processing the secondary state set
     //COPY_PIGGYBACK_MESSAGE(&log_table, msg);
-    for (int i = 0; i < _chain_len; ++i) {
-        log_table[i] = (*msg[i]);
+    for (int i = 0; i < _failure_count; ++i) {
+        log_table[_to_copy_indices[i]] = (*msg[_to_copy_indices[i]]);
     }//for
 
     {//
@@ -65,7 +65,15 @@ int SharedLockFreeState::configure(Vector <String> &conf, ErrorHandler *errh) {
                 .read("F", _failure_count)
                 .complete() < 0)
         return -1;
+
     LOG("Shared state, chain-length: %d, ID: %d, F: %d", _chain_len, _id, _failure_count);
+    LOG("To copy indices are: ");
+    for (int i = 1; i <= _failure_count; ++i) {
+        int index = (i + _chain_len - _failure_count ) % _chain_len;
+        _to_copy_indices.push_back(index);
+        LOG(index);
+    }//for
+
     return 0;
 }
 

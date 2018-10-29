@@ -25,6 +25,7 @@ private:
     int _id;
     int _failure_count;
     int _chain_len;
+    std::vector<int> _to_copy_indices;
 
     int64_t _logic_timestamp;
 

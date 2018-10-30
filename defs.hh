@@ -12,6 +12,7 @@
 #include <chrono>
 #include <cstdlib>
 #include <mutex>
+#include <vector>
 #include <click/packet.hh>
 #include <click/glue.hh>
 
@@ -187,6 +188,64 @@ public:
 
     static inline bool npassed(std::chrono::time_point<std::chrono::high_resolution_clock>& tp, long dur_ns) {
         return std::chrono::duration_cast<std::chrono::nanoseconds>(CLOCK_NOW - tp).count() >= dur_ns;
+    }
+
+    static inline long dummy_loop_count(long ns, double error) {
+        long lb = ns - error * ns;
+        long ub = ns + error * ns;
+
+        long count, delay, min, max;
+
+        min = 0;
+        max = 100000;
+
+        volatile long ii;
+
+        auto start = CLOCK_NOW;
+
+        std::vector<long> delays;
+
+        while (true) {
+            count = (min + max) / 2;
+            long delays = 0;
+            for (auto i = 0; i < 100; ++i) {
+                // Measurement
+                ii = 0;
+                start = CLOCK_NOW;
+                while (ii < count) ++ii;
+                delay = std::chrono::duration_cast<std::chrono::nanoseconds>(CLOCK_NOW - start).count();
+
+                delays += delay;
+            }//while
+
+            auto avg_delay = delays / 100.0;
+
+            if (avg_delay < ub &&
+                avg_delay > lb)
+                break;
+
+            if (avg_delay > ub)
+                max = count;
+
+            if (avg_delay < lb)
+                min = count;
+        }//while
+
+        return count;
+    }
+
+    static inline long find_dummy_loop_count(long ns, double error = 0.01) {
+        auto mean = 0.0;
+        auto loop = 100;
+        for (int i = 0; i < loop; ++i)
+            mean += dummy_loop_count(ns, error);
+        mean /= (double)loop;
+
+        return mean;
+    }
+
+    static inline void dummy_loop(volatile long cnt) {
+        while (cnt > 0) cnt--;
     }
 };
 

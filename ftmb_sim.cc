@@ -29,6 +29,10 @@ int FTMBSim::configure(Vector<String> &conf, ErrorHandler *errh) {
     _per_packet_latency *= US2NS;
     _first_packet_seen = false;
 
+    _loop_count = Util::find_dummy_loop_count(_per_packet_latency);
+
+    LOG("Loop count found: %d", _loop_count);
+
     return 0;
 }
 
@@ -54,10 +58,12 @@ Packet *FTMBSim::simple_action(Packet *p) {
         _last_snapshot_timestamp = CLOCK_NOW;
     }//if
 
-    Util::nsleep(_per_packet_latency);
+//    Util::nsleep(_per_packet_latency);
+    Util::dummy_loop(_loop_count);
 
     _init_shared_state();
-    ++_shared_state->array[0];
+    //TODO: adding the following line results in Segmentation fault, fix it
+    //_shared_state->increment(0);
 
     DEBUG("End FTMBSim");
     DEBUG("--------------------");

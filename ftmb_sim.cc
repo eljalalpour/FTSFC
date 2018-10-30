@@ -31,6 +31,8 @@ int FTMBSim::configure(Vector<String> &conf, ErrorHandler *errh) {
 
     _loop_count = Util::find_dummy_loop_count(_per_packet_latency);
 
+    LOG("Loop count found: %d", _loop_count);
+
     return 0;
 }
 

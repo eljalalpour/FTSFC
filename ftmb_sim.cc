@@ -62,7 +62,7 @@ Packet *FTMBSim::simple_action(Packet *p) {
     Util::dummy_loop(_loop_count);
 
     _init_shared_state();
-    ++_shared_state->array[0];
+    _shared_state->increment(0);
 
     DEBUG("End FTMBSim");
     DEBUG("--------------------");

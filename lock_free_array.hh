@@ -27,6 +27,10 @@ public:
 
     void add_handlers();
 
+    inline void increment(int index) {
+        ++ array[index];
+    }
+
 private:
     static String read_handler(Element*, void*);
 };

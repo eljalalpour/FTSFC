@@ -1,7 +1,7 @@
 // In aqua07
 // aqua01 -> aqua07 -> aqua08
 
-array::AtomicArray;
+array::LockFreeArray;
 
 elementclass NFBlock {
 $index,$src_ip |
@@ -19,8 +19,8 @@ $index,$src_ip |
 }
 
 fd1::FromDPDKDevice(0,0);
-fd2::FromDPDKDevice(0,1);
-fd3::FromDPDKDevice(0,2);
+// fd2::FromDPDKDevice(0,1);
+// fd3::FromDPDKDevice(0,2);
 // fd4::FromDPDKDevice(0,3);
 // fd5::FromDPDKDevice(0,4);
 // fd6::FromDPDKDevice(0,5);
@@ -28,8 +28,8 @@ fd3::FromDPDKDevice(0,2);
 // fd8::FromDPDKDevice(0,7);
 
 td1::ToDPDKDevice(0,0);
-td2::ToDPDKDevice(0,1);
-td3::ToDPDKDevice(0,2);
+// td2::ToDPDKDevice(0,1);
+// td3::ToDPDKDevice(0,2);
 // td4::ToDPDKDevice(0,3);
 // td5::ToDPDKDevice(0,4);
 // td6::ToDPDKDevice(0,5);
@@ -48,14 +48,14 @@ fd1
 -> NFBlock(0,1.1.1.1)
 -> td1;
 
-fd2
--> NFBlock(0,1.1.2.2)
--> td2;
-
-fd3
--> NFBlock(2,1.1.3.3)
--> td3;
-
+// fd2
+// -> NFBlock(0,1.1.2.2)
+// -> td2;
+//
+// fd3
+// -> NFBlock(2,1.1.3.3)
+// -> td3;
+//
 // fd4
 // -> NFBlock(3,1.1.4.4)
 // -> td4;

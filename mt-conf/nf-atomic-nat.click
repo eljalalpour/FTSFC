@@ -1,4 +1,4 @@
-array::AtomicArray;
+array::LockFreeArray;
 
 elementclass NATBlock {
 $index |

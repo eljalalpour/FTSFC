@@ -244,7 +244,7 @@ public:
         return mean;
     }
 
-    static inline void dummy_loop(long& cnt) {
+    static inline void dummy_loop(long cnt) {
         while (cnt > 0) cnt--;
     }
 };

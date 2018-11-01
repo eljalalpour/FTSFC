@@ -19,7 +19,7 @@ $index,$src_ip1,$src_ip2 |
     -> Discard;
 
     filter[0]
-    -> FTMBInputBuffer()
+    -> FTMBInputLogger()
     -> MarkIPHeader(14)
     -> StoreIPAddress($src_ip1, src)
     -> StoreIPAddress(10.70.0.8, dst)
@@ -28,7 +28,7 @@ $index,$src_ip1,$src_ip2 |
     -> td1;
 
     filter[1]
-    -> FTMBOutputBuffer(PER_PACKET 10)
+    -> FTMBOutputLogger(PER_PACKET 10)
     -> MarkIPHeader(14)
     -> StoreIPAddress($src_ip2, src)
     -> StoreIPAddress(10.70.0.9, dst)

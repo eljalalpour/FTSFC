@@ -2,7 +2,7 @@
 #include <click/config.h>
 #include <click/router.hh>
 #include <click/args.hh>
-#include "ftmb_sim.hh"
+#include "ftmb_master.hh"
 
 CLICK_DECLS
 

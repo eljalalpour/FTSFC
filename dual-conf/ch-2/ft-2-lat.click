@@ -6,9 +6,9 @@ shared_state::SharedLockFreeState(CHAIN 2, ID 1, F 1);
 
 elementclass FTBlock {
 $queue, $index, $out, $forwarder |
-    fd1::FromDPDKDevice(1,$queue);
-    td1::ToDPDKDevice(1,$queue);
-    bd1::ToDPDKDevice(0,$queue);
+    fd1::FromDPDKDevice(0,$queue);
+    td1::ToDPDKDevice(0,$queue);
+    bd1::ToDPDKDevice(1,$queue);
     buffer::Buffer(BATCH 1, CHAIN 2);
 
     fd1

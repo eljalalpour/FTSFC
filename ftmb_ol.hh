@@ -6,6 +6,10 @@
 
 CLICK_DECLS
 
+#define MS2US 1000
+#define US2NS 1000
+#define MS2NS 1000000
+
 class FTMBOutputLogger : public Element {
 private:
     long _per_packet_latency; // In micro-seconds

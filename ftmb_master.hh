@@ -7,6 +7,11 @@
 
 CLICK_DECLS
 
+#define MS2US 1000
+#define US2NS 1000
+#define MS2NS 1000000
+
+
 class FTMBMaster : public Element {
 private:
     long _period; // In mili-seconds

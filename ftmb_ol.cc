@@ -37,8 +37,6 @@ Packet *FTMBOutputLogger::simple_action(Packet *p) {
     // Artificial latency
     Util::dummy_loop(_loop_count);
 
-    _init_shared_state();
-
     DEBUG("End FTMBOutputLogger");
     DEBUG("--------------------");
 

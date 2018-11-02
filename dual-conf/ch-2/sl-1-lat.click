@@ -2,7 +2,6 @@
 // aqua01 -> aqua07 -> aqua08
 // aqua08 -> aqua07 -> aqua09
 
-
 elementclass MBBlock {
 $index,$src_ip1,$src_ip2 |
     fd1::FromDPDKDevice(0,0);

@@ -18,7 +18,7 @@ $index,$src_ip1,$src_ip2 |
     filter[2]
     -> Discard;
 
-    filter[0]
+    filter[0] // from the traffic generator
     -> FTMBInputLogger()
     -> MarkIPHeader(14)
     -> StoreIPAddress($src_ip1, src)
@@ -27,13 +27,15 @@ $index,$src_ip1,$src_ip2 |
     -> StoreEtherAddress(f4:52:14:5a:90:70, dst) // to aqua08
     -> td1;
 
-    filter[1]
+    filter[1] // from the master 1
+//    -> IPPrint("from slave 1")
     -> FTMBOutputLogger(PER_PACKET 10)
     -> MarkIPHeader(14)
     -> StoreIPAddress($src_ip2, src)
     -> StoreIPAddress(10.70.0.9, dst)
     -> StoreEtherAddress(e4:1d:2d:13:9e:d0, src) // from aqua07
     -> StoreEtherAddress(e4:1d:2d:13:9c:60, dst) // to aqua09
+//    -> IPPrint("To second")
     -> td2;
 }
 

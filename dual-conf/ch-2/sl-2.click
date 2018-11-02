@@ -14,12 +14,13 @@ $index,$src_ip1,$src_ip2 |
     fd1
     -> MarkIPHeader(14)
     -> filter::IPClassifier(src net 1.3.0.0/16,
-                            src net 1.4.0.0/16,
+                            src net 1.5.0.0/16,
                             -);
     filter[2]
     -> Discard;
 
-    filter[0]
+    filter[0] // from slave 1
+//    -> IPPrint("From slave 1")
     -> FTMBInputLogger()
     -> MarkIPHeader(14)
     -> StoreIPAddress($src_ip1, src)
@@ -28,8 +29,9 @@ $index,$src_ip1,$src_ip2 |
     -> StoreEtherAddress(e4:1d:2d:0c:89:e0, dst) // to aqua10
     -> td1;
 
-    filter[1]
+    filter[1] // from master 2
     -> FTMBOutputLogger(PER_PACKET 10)
+//    -> IPPrint("from master 2")
     -> MarkIPHeader(14)
     -> StoreIPAddress($src_ip2, src)
     -> StoreIPAddress(10.70.0.1, dst)

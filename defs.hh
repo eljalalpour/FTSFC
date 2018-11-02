@@ -244,9 +244,12 @@ public:
         return mean;
     }
 
+    #pragma GCC push_options
+    #pragma GCC optimize("O0")
     static inline void dummy_loop(volatile long cnt) {
         while (cnt > 0) cnt--;
     }
+    #pragma GCC pop_options
 };
 
 #endif //FTSFC_DEFS_HH

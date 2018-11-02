@@ -16,7 +16,7 @@ $dev,$src_ip |
     -> StoreIPAddress($src_ip, src)
     -> StoreIPAddress(192.168.1.109, dst)
     -> StoreEtherAddress(0c:c4:7a:73:fa:6a, src) // from aqua08
-    -> StoreEtherAddress(e4:1d:2d:13:9c:60, dst) // to aqua09
+    -> StoreEtherAddress(0c:c4:7a:73:f9:ec, dst) // to aqua09
     -> td1;
 }
 

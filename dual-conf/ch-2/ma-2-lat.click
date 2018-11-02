@@ -10,7 +10,7 @@ $dev,$src_ip |
 
     fd1
     -> MarkIPHeader(14)
-    -> IPFilter(allow udp && src 1.4.0.0/16)
+    -> IPFilter(allow udp && src 1.3.0.0/16)
     -> FTMBOutputLogger(PER_PACKET 5)
     -> MarkIPHeader(14)
     -> StoreIPAddress($src_ip, src)
@@ -20,4 +20,4 @@ $dev,$src_ip |
     -> td1;
 }
 
-MBBlock(0, 1.5.5.5);
+MBBlock(0, 1.4.4.4);

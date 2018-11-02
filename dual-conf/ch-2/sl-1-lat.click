@@ -4,9 +4,9 @@
 
 elementclass MBBlock {
 $index,$src_ip1,$src_ip2 |
-    fd1::FromDPDKDevice(1,0);
-    td1::ToDPDKDevice(1,0);
-    td2::ToDPDKDevice(1,1);
+    fd1::FromDPDKDevice(0,0);
+    td1::ToDPDKDevice(0,0);
+    td2::ToDPDKDevice(0,1);
 
     StaticThreadSched(td1 0, td2 1);
 

@@ -5,8 +5,8 @@ array::LockFreeArray;
 
 elementclass MBBlock {
 $index,$src_ip |
-    fd1::FromDPDKDevice(1,0);
-    td1::ToDPDKDevice(1,0);
+    fd1::FromDPDKDevice(0,0);
+    td1::ToDPDKDevice(0,0);
 
     fd1
     -> MarkIPHeader(14)

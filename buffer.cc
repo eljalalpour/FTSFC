@@ -28,18 +28,18 @@ void Buffer::_send_to_forwarder(Packet* p) {
     if (_batch_counter++ % _batch_size != 0)
         return;
 
-//    auto q = Packet::make(p->data(), TO_FORWARDER_PKT_SIZE);
-//    click_ip *ip = reinterpret_cast<click_ip *>(q->data() + MAC_HEAD_SIZE);
-//    click_udp *udp = reinterpret_cast<click_udp *>(ip + UDP_HEAD_OFFSET_AFTER_MAC_HEAD);
-//    udp->uh_ulen = htons(q->length() - MAC_HEAD_SIZE - sizeof(click_ip));
-//    udp->uh_sum = DEFAULT_CRC;
-//    ip->ip_hl = sizeof(click_ip) >> 2;
-//    ip->ip_len = htons(q->length() - MAC_HEAD_SIZE);
-//    ip->ip_sum = DEFAULT_CRC;
-//
-//    output(TO_FORWARDER).push(q);
+    auto q = Packet::make(p->data(), TO_FORWARDER_PKT_SIZE);
+    click_ip *ip = reinterpret_cast<click_ip *>(q->data() + MAC_HEAD_SIZE);
+    click_udp *udp = reinterpret_cast<click_udp *>(ip + UDP_HEAD_OFFSET_AFTER_MAC_HEAD);
+    udp->uh_ulen = htons(q->length() - MAC_HEAD_SIZE - sizeof(click_ip));
+    udp->uh_sum = DEFAULT_CRC;
+    ip->ip_hl = sizeof(click_ip) >> 2;
+    ip->ip_len = htons(q->length() - MAC_HEAD_SIZE);
+    ip->ip_sum = DEFAULT_CRC;
 
-    output(TO_FORWARDER).push(q->clone());
+    output(TO_FORWARDER).push(q);
+
+//    output(TO_FORWARDER).push(p->clone());
 }
 
 int Buffer::configure(Vector<String> &conf, ErrorHandler *errh) {

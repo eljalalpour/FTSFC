@@ -57,29 +57,6 @@ typedef int State[STATE_LEN];
 typedef struct TimestampState {
     int64_t timestamp;
     State state;
-
-    TimestampState() { }
-
-    TimestampState(int64_t timestamp, State& state) {
-        this->timestamp = timestamp;
-        memcpy(this->state, state, sizeof(State));
-    }
-
-    friend bool operator < (const TimestampState& me, const int64_t& t) {
-        return me.timestamp < t;
-    }
-
-    friend bool operator < (const int64_t& t, const TimestampState& me) {
-        return t < me.timestamp;
-    }
-
-    friend bool operator > (const TimestampState& me, const int64_t& t) {
-        return me.timestamp > t;
-    }
-
-    friend bool operator > (const int64_t& t, const TimestampState& me) {
-        return t > me.timestamp;
-    }
 } TimestampState;
 
 typedef struct PiggybackState {

@@ -20,6 +20,8 @@ int Forwarder::configure(Vector<String> &conf, ErrorHandler *errh) {
 
     LOG("Forwarder: Chain length is %d!\n", _chain_len);
 
+    _copy_len = _chain_len * sizeof(PiggybackState);
+
     return 0;
 }
 
@@ -31,10 +33,7 @@ void Forwarder::push(int source, Packet *p) {
         // Encode its memory of the piggyback message into the packet
         //TODO: make sure no lock is required for encoding and decoding
         auto msg2 = CAST_PACKET_TO_PIGGY_BACK_MESSAGE(p);
-//        for (int i = 0; i < _chain_len; ++i) {
-//            (*msg2[i]) = _msg[i];
-//        }//for
-        memcpy(msg2, _msg, sizeof(PiggybackMessage));
+        memcpy(msg2, _msg, _copy_len);
 
         output(0).push(p);
     }//if
@@ -43,10 +42,7 @@ void Forwarder::push(int source, Packet *p) {
         //TODO: make sure no lock is required for encoding and decoding
 
         auto msg2 = CAST_PACKET_TO_PIGGY_BACK_MESSAGE(p);
-//        for (int i = 0; i < _chain_len; ++i) {
-//            _msg[i] = (*msg2[i]);
-//        }//for
-        memcpy(_msg, msg2, sizeof(PiggybackMessage));
+        memcpy(_msg, msg2, _copy_len);
         // Afterwards, kill the packet
         p->kill();
     }//else

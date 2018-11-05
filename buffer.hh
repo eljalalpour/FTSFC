@@ -20,7 +20,7 @@ CLICK_DECLS
 #define TO_FORWARDER_PKT_SIZE DEFAULT_OFFSET + sizeof(PiggybackMessage) + PAD
 #define UDP_HEAD_OFFSET_AFTER_MAC_HEAD 1
 #define DEFAULT_CRC 0
-#define MAX_BUFFER_SIZE  32768
+#define MAX_BUFFER_SIZE  65000
 
 class Buffer : public Element {
 private:

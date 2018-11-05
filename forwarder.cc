@@ -31,9 +31,10 @@ void Forwarder::push(int source, Packet *p) {
         // Encode its memory of the piggyback message into the packet
         //TODO: make sure no lock is required for encoding and decoding
         auto msg2 = CAST_PACKET_TO_PIGGY_BACK_MESSAGE(p);
-        for (int i = 0; i < _chain_len; ++i) {
-            (*msg2[i]) = _msg[i];
-        }//for
+//        for (int i = 0; i < _chain_len; ++i) {
+//            (*msg2[i]) = _msg[i];
+//        }//for
+        memcpy(msg2, _msg, sizeof(PiggybackMessage));
 
         output(0).push(p);
     }//if
@@ -42,10 +43,10 @@ void Forwarder::push(int source, Packet *p) {
         //TODO: make sure no lock is required for encoding and decoding
 
         auto msg2 = CAST_PACKET_TO_PIGGY_BACK_MESSAGE(p);
-        for (int i = 0; i < _chain_len; ++i) {
-            _msg[i] = (*msg2[i]);
-        }//for
-
+//        for (int i = 0; i < _chain_len; ++i) {
+//            _msg[i] = (*msg2[i]);
+//        }//for
+        memcpy(_msg, msg2, sizeof(PiggybackMessage));
         // Afterwards, kill the packet
         p->kill();
     }//else

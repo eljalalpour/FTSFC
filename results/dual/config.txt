@@ -1,3 +1,6 @@
 Packet size 1350
 Sending rate 100%
 FOR in Monitor = 15
+
+For batching:
+    Chain size 2

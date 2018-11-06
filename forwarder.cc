@@ -31,18 +31,22 @@ void Forwarder::push(int source, Packet *p) {
 
     if (source == 0) { // Receiving a packet from the traffic source
         // Encode its memory of the piggyback message into the packet
-        //TODO: make sure no lock is required for encoding and decoding
+
         auto msg2 = CAST_PACKET_TO_PIGGY_BACK_MESSAGE(p);
-        memcpy(msg2, _msg, _copy_len);
+        for (int i = 0; i < _chain_len; ++i) {
+            (*msg2[i]) = _msg[i];
+        }//for
 
         output(0).push(p);
     }//if
     else { //Receiving a packet from Buffer
         // Decode and memorize the piggyback message from the packet
-        //TODO: make sure no lock is required for encoding and decoding
 
         auto msg2 = CAST_PACKET_TO_PIGGY_BACK_MESSAGE(p);
-        memcpy(_msg, msg2, _copy_len);
+        for (int i = 0; i < _chain_len; ++i) {
+            _msg[i] = (*msg2[i]);
+        }//for
+
         // Afterwards, kill the packet
         p->kill();
     }//else

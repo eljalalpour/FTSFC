@@ -20,4 +20,4 @@ $dev,$src_ip |
     -> td1;
 }
 
-MBBlock(0, 1.2.1.1);
+MBBlock(1, 1.2.1.1);

@@ -25,7 +25,7 @@ $queue, $index, $out, $forwarder |
     fd1::FromDPDKDevice(1,$queue);
     td1::ToDPDKDevice(1,$queue);
     bd1::ToDPDKDevice(0,$queue);
-    buffer::Buffer(BATCH 1, CHAIN 5);
+    buffer::Buffer(BATCH 5, CHAIN 5);
 
     fd1
     -> MarkIPHeader(14)
@@ -52,7 +52,7 @@ $queue, $index, $out, $forwarder |
     -> MarkIPHeader(14)
     -> StoreIPAddress($forwarder, src)
     -> StoreIPAddress(192.168.1.107, dst)
-    -> StoreEtherAddress(0c:c4:7a:73:fa:6a, src)
+    -> StoreEtherAddress(0c:c4:7a:73:fa:e6, src)
     -> StoreEtherAddress(0c:c4:7a:73:fa:54, dst)
 //    -> IPPrint("To the first")
     -> bd1;

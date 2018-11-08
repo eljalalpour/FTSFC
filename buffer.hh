@@ -15,12 +15,12 @@ CLICK_DECLS
 
 #define TO_OUTSIDE_WORLD 0
 #define TO_FORWARDER     1
-#define PAD              16
+#define PAD              0 
 #define MAC_HEAD_SIZE    14
 #define TO_FORWARDER_PKT_SIZE DEFAULT_OFFSET + sizeof(PiggybackMessage) + PAD
 #define UDP_HEAD_OFFSET_AFTER_MAC_HEAD 1
 #define DEFAULT_CRC 0
-#define MAX_BUFFER_SIZE  65000
+#define MAX_BUFFER_SIZE  64000
 
 class Buffer : public Element {
 private:
@@ -28,11 +28,14 @@ private:
     int _batch_counter;
     int _batch_size;
 
+    click_ip _iph;
+//    struct click_udp _udph;
+
     std::queue<int64_t> _timestamps;
     std::queue<Packet*> _packets;
 
     inline void _release(int64_t);
-    inline void _send_to_forwarder(Packet*);
+    inline void _send_to_forwarder(Packet*&);
 
 public:
     Buffer ();
@@ -50,6 +53,10 @@ public:
     int configure(Vector<String> &, ErrorHandler *);
 
     size_t length();
+
+    static inline void buffer_destructor(unsigned char* buf, size_t sz, void* argument) {
+	// No operation
+    }
 };
 
 CLICK_ENDDECLS

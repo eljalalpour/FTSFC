@@ -82,7 +82,7 @@ typedef PiggybackState PiggybackMessage[MAX_CHAIN_LEN];
 class Util {
 public:
     inline void init(State &s) {
-        memset(&s, 0, sizeof(State));
+        memset(s, 0, sizeof(State));
     }
 
     inline void init(TimestampState &s) {
@@ -94,7 +94,7 @@ public:
     }
 
     inline void init(PiggybackMessage &s) {
-        memset(&s, 0, sizeof(PiggybackMessage));
+        memset(s, 0, sizeof(PiggybackMessage));
     }
 
     inline void copy(State& y, State& x) {

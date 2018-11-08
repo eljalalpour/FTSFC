@@ -36,8 +36,12 @@ void Forwarder::push(int source, Packet *p) {
         for (int i = 0; i < _chain_len; ++i) {
             (*msg2[i]) = _msg[i];
         }//for
+//	memcpy(*msg2, _msg, _copy_len);
 
-        output(0).push(p);
+//	LOG("Forwarder sent timestamp 0: %llu", msg2[0]->timestamp);
+//	LOG("Forwarder sent timestamp LAST: %llu", msg2[_chain_len  - 1]->timestamp);
+	 
+	output(0).push(p);
     }//if
     else { //Receiving a packet from Buffer
         // Decode and memorize the piggyback message from the packet
@@ -45,8 +49,11 @@ void Forwarder::push(int source, Packet *p) {
         auto msg2 = CAST_PACKET_TO_PIGGY_BACK_MESSAGE(p);
         for (int i = 0; i < _chain_len; ++i) {
             _msg[i] = (*msg2[i]);
-        }//for
+        }//for	
+//	memcpy(&_msg[0], msg2[0], _copy_len);
 
+//	LOG("Forwarder received timestmap 0: %llu", _msg[0].timestamp);
+//	LOG("Forwarder received timestmap LAST: %llu", _msg[_chain_len - 1].timestamp);
         // Afterwards, kill the packet
         p->kill();
     }//else

@@ -10,5 +10,7 @@ For Chain size and real chain and replication factors:
     The batch size was set to 5 for all experiments for FTC
 
 
-
-To measure the latency for
+For FTMB:
+    Master delay was set to 3 us (the paper reports 4 us per PAL, but 1 us less in the configuration
+     is considered for the overhead of the simulation)
+    Output logger delay was set to 3 us instead of 3.5 us

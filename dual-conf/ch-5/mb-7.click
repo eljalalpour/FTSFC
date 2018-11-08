@@ -10,7 +10,7 @@ $dev,$src_ip |
     -> MarkIPHeader(14)
     -> IPFilter(allow udp && src 1.6.0.0/16)
     -> FTMBInputLogger()
-    -> FTMBMaster(PERIOD 200, DELAY 6, PER_PACKET 4)
+    -> FTMBMaster(PERIOD 200, DELAY 6, PER_PACKET 3)
     -> MarkIPHeader(14)
     -> StoreIPAddress($src_ip, src)    // from aqua 02
     -> StoreIPAddress(10.70.0.3, dst) // to aqua 03

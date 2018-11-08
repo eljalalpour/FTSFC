@@ -13,6 +13,8 @@ Buffer::Buffer () : _batch_counter(0) { };
 Buffer::~Buffer() { };
 
 void Buffer::_release(int64_t commit_timestamp) {
+    //LOG("front: %llu, commit: %llu", _timestamps.front(), commit_timestamp);
+    
     while(!_timestamps.empty()) {
         if (_timestamps.front() > commit_timestamp)
             break;
@@ -24,13 +26,18 @@ void Buffer::_release(int64_t commit_timestamp) {
     }//for
 }
 
-void Buffer::_send_to_forwarder(Packet* p) {
+void Buffer::_send_to_forwarder(Packet*& p) {
     if (_batch_counter++ % _batch_size != 0)
         return;
-
-    auto q = Packet::make(p->data(), TO_FORWARDER_PKT_SIZE);
+    
+    // Zero copy packet creation
+    auto q = Packet::make(CAST_AWAY_PACKET_DATA(p), TO_FORWARDER_PKT_SIZE, Buffer::buffer_destructor);
     click_ip *ip = reinterpret_cast<click_ip *>(q->data() + MAC_HEAD_SIZE);
     click_udp *udp = reinterpret_cast<click_udp *>(ip + UDP_HEAD_OFFSET_AFTER_MAC_HEAD);
+
+    // store the ip header
+    memcpy(&_iph, ip, sizeof(click_ip));
+
     udp->uh_ulen = htons(q->length() - MAC_HEAD_SIZE - sizeof(click_ip));
     udp->uh_sum = DEFAULT_CRC;
     ip->ip_hl = sizeof(click_ip) >> 2;
@@ -39,7 +46,15 @@ void Buffer::_send_to_forwarder(Packet* p) {
 
     output(TO_FORWARDER).push(q);
 
-//    output(TO_FORWARDER).push(p->clone());
+    // restore the ip header
+    memcpy(ip, &_iph, sizeof(click_ip));
+
+//    auto msg = CAST_PACKET_TO_PIGGY_BACK_MESSAGE(p);
+//    auto msg2 = CAST_PACKET_TO_PIGGY_BACK_MESSAGE(q);
+//    LOG("p's 0 timestamp: %llu", msg[0]->timestamp);
+//    LOG("q's 0 timestamp: %llu", msg2[0]->timestamp);
+//    LOG("p's 0 last commit: %llu", msg[0]->last_commit);
+//    LOG("q's 0 last commit: %llu", msg2[0]->last_commit);
 }
 
 int Buffer::configure(Vector<String> &conf, ErrorHandler *errh) {
@@ -69,18 +84,20 @@ void Buffer::push(int, Packet*p) {
     PiggybackMessage* _msg = CAST_PACKET_TO_PIGGY_BACK_MESSAGE(p);
 
     // Release packets from the buffer
-    _release((*_msg[_chain_len - 1]).last_commit);
+    _release((*_msg[0]).last_commit);
 
     // Store the packet into buffer
-    if (_packets.size() < MAX_BUFFER_SIZE) {
-        _timestamps.push((*_msg[_chain_len - 1]).timestamp);
-        _packets.push(p);
-    }//if
-    else {
-        // if there is not enough space for buffer
-        //drop the packet
-        p->kill();
-    }//else
+//    if (_packets.size() < MAX_BUFFER_SIZE) {
+//        _timestamps.push((*_msg[0]).timestamp);
+//        _packets.push(p);
+//    }//if
+//    else {
+//        // if there is not enough space for buffer
+//        //drop the packet
+//        p->kill();
+//    }//else
+
+    output(0).push(p);
 
     DEBUG("End Buffer");
     DEBUG("--------------------");

@@ -87,17 +87,17 @@ void Buffer::push(int, Packet*p) {
     _release((*_msg[0]).last_commit);
 
     // Store the packet into buffer
-//    if (_packets.size() < MAX_BUFFER_SIZE) {
-//        _timestamps.push((*_msg[0]).timestamp);
-//        _packets.push(p);
-//    }//if
-//    else {
-//        // if there is not enough space for buffer
-//        //drop the packet
-//        p->kill();
-//    }//else
+    if (_packets.size() < MAX_BUFFER_SIZE) {
+        _timestamps.push((*_msg[0]).timestamp);
+        _packets.push(p);
+    }//if
+    else {
+        // if there is not enough space for buffer
+        //drop the packet
+        p->kill();
+    }//else
 
-    output(0).push(p);
+//    output(0).push(p);
 
     DEBUG("End Buffer");
     DEBUG("--------------------");

@@ -12,9 +12,9 @@ TFLockFreeCounter::~TFLockFreeCounter () { };
 int TFLockFreeCounter::configure(Vector<String> &conf, ErrorHandler *errh) {
     // set index param
     if (Args(conf, this, errh)
-            .read("BATCH", _batch)
-            .read("INDEX", _index)
-            .complete() < 0)
+                .read("BATCH", _batch)
+                .read("INDEX", _index)
+                .complete() < 0)
         return -1;
 
     LOG("TFLockFreeCounter index is %d, batch is %d!\n", _index, _batch);
@@ -36,17 +36,16 @@ void TFLockFreeCounter::_init_transmitter() {
     }//if
 }
 
-Packet *TFLockFreeCounter::simple_action(Packet *p) {
+void TFLockFreeCounter::push(int, Packet *p) {
     DEBUG("--------------------");
     DEBUG("Begin TFLockFreeCounter");
 
     _init_transmitter();
-
     _queue[_queued_packets++] = p;
-    while (_queued_packets < _batch) {
-        _queue[_queued_packets++] = input(0).pull();
-        (*_trans).inoperation[_index]++;
-    }//while
+    (*_trans).inoperation[_index]++;
+
+    if (_queued_packets < _batch)
+        return;
 
     _trans->send();
 
@@ -59,8 +58,6 @@ Packet *TFLockFreeCounter::simple_action(Packet *p) {
 
     DEBUG("End TFLockFreeCounter");
     DEBUG("--------------------");
-
-    return p;
 }
 
 CLICK_ENDDECLS

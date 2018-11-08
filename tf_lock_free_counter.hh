@@ -18,19 +18,16 @@ private:
     bool _trans_init;
 
     Transmitter *_trans;
-
     vector<Packet*> _queue;
     int _queued_packets;
-
     inline void _init_transmitter();
-
 
 public:
     TFLockFreeCounter  ();
 
     ~TFLockFreeCounter ();
 
-    const char *class_name() const { return "TFLockFreeCounter "; }
+    const char *class_name() const { return "TFLockFreeCounter"; }
 
     const char *port_count() const { return PORTS_1_1; }
 
@@ -38,7 +35,7 @@ public:
 
     int configure(Vector<String> &, ErrorHandler *);
 
-    Packet *simple_action(Packet *);
+    void push(int, Packet *);
 };
 
 CLICK_ENDDECLS

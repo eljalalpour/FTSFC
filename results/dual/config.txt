@@ -4,3 +4,11 @@ FOR in Monitor = 15
 
 For batching:
     Chain size 2
+
+
+For Chain size and real chain and replication factors:
+    The batch size was set to 5 for all experiments for FTC
+
+
+
+To measure the latency for

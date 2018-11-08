@@ -31,9 +31,13 @@ private:
     std::condition_variable _ready_cv;
     std::mutex _ready_mtx;
 
+    volatile std::atomic_ulong _atomic_ready;
+
     volatile size_t _pending_workers;
     std::condition_variable _pending_workers_cv;
     std::mutex _pending_workers_mtx;
+
+    volatile std::atomic_ulong _atomic_pending_workers;
 
     State* _state_to_be_sent;
 
@@ -74,6 +78,25 @@ private:
                     }//{
                 }//else
             }//}
+        }//while
+    }
+
+    void _send_for_ever2(int _id) {
+        while(true) {
+            // Wait until there is some state to be sent
+            while(K_TH_BIT(_atomic_ready, _id) == 0);
+
+            // Send state to be replicated
+            _send(_conns[_id], *_state_to_be_sent);
+
+            // Let the Client know that this process has finished its task
+            --_atomic_pending_workers;
+            if (_atomic_pending_workers == 0) {//if no other sender exists, notify the client
+                _atomic_ready = 0;
+            }//if
+            else {
+                _atomic_ready = RESET_K_TH_BIT(_atomic_ready, _id);
+            }//else
         }//while
     }
 
@@ -145,6 +168,16 @@ private:
             std::unique_lock<std::mutex> lock(_pending_workers_mtx);
             _pending_workers_cv.wait(lock, [&](){ return _pending_workers == 0;});
         }// {
+    }
+
+    void _multi_send2(State &state) {
+        // Produce the state and notify the senders
+        _state_to_be_sent = &state;
+        _atomic_pending_workers = _conns.size();
+        _atomic_ready = SET_ALL_BITS;
+
+        // Waiting for workers to finish their jobs
+        while(_atomic_pending_workers > 0);
     }
 
 public:

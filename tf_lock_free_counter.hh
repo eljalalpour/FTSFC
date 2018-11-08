@@ -3,6 +3,7 @@
 #include "defs.hh"
 #include <click/config.h>
 #include <click/element.hh>
+#include <vector>
 #include "transmitter.hh"
 
 CLICK_DECLS
@@ -13,11 +14,16 @@ CLICK_DECLS
 class TFLockFreeCounter : public Element {
 private:
     int _index;
+    int _batch;
     bool _trans_init;
 
     Transmitter *_trans;
 
+    vector<Packet*> _queue;
+    int _queued_packets;
+
     inline void _init_transmitter();
+
 
 public:
     TFLockFreeCounter  ();

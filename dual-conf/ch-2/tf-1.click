@@ -8,7 +8,7 @@ $index,$src_ip |
     input
     -> MarkIPHeader(14)
     -> IPFilter(allow udp && src 1.0.0.0/16)
-    -> TFLockFreeCounter(INDEX $index)
+    -> TFLockFreeCounter(INDEX $index, BATCH 8) 
     -> MarkIPHeader(14)
     -> StoreIPAddress($src_ip, src)
     -> StoreIPAddress(10.70.0.8, dst)

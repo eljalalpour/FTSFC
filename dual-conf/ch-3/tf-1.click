@@ -1,24 +1,15 @@
 // In aqua07
 // aqua01 -> aqua07 -> aqua08
 
-//
-// Check-list:
-// Transmitter dest ip
-// IPFilter src IP
-// StoreIPAddress destination IP
-// StoreEtherAddress src
-// StoreEtherAddress dst
-// TFBlock elements second arguments
-//
-
-trans::Transmitter(10.70.0.2:10000); // set replica's ip and port
+trans::Transmitter(10.0.7.2:10000); // set replica's ip and port
 
 elementclass TFBlock {
 $index,$src_ip |
     input
     -> MarkIPHeader(14)
     -> IPFilter(allow udp && src 1.0.0.0/16)
-    -> TFLockFreeCounter(INDEX $index)
+//    -> IPPrint("From 0")
+    -> TFLockFreeCounter(INDEX $index, BATCH 128) 
     -> MarkIPHeader(14)
     -> StoreIPAddress($src_ip, src)
     -> StoreIPAddress(10.70.0.8, dst)
@@ -28,7 +19,7 @@ $index,$src_ip |
     -> output
 }
 
-fd1::FromDPDKDevice(0,0);
+fd1::FromDPDKDevice(1,0);
 // fd2::FromDPDKDevice(0,1);
 // fd3::FromDPDKDevice(0,2);
 // fd4::FromDPDKDevice(0,3);
@@ -38,7 +29,7 @@ fd1::FromDPDKDevice(0,0);
 // fd8::FromDPDKDevice(0,7);
 
 
-td1::ToDPDKDevice(0,0);
+td1::ToDPDKDevice(1,0);
 // td2::ToDPDKDevice(0,1);
 // td3::ToDPDKDevice(0,2);
 // td4::ToDPDKDevice(0,3);
@@ -86,4 +77,3 @@ fd1
 // fd8
 // -> TFBlock(7,1.1.8.8)
 // -> td8;
-

@@ -1,6 +1,8 @@
 // In aqua09
 // aqua08 -> aqua09 -> aqua10
 
+array::LockFreeArray;
+
 elementclass MBBlock {
 $dev,$src_ip |
     fd1::FromDPDKDevice($dev, 0);

@@ -8,6 +8,7 @@
 #include <arpa/inet.h>
 #include <netinet/tcp.h>
 #include <thread>
+#include <atomic>
 #include "defs.hh"
 
 using std::string;

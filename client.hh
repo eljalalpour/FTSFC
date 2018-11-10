@@ -8,7 +8,6 @@
 #include <arpa/inet.h>
 #include <netinet/tcp.h>
 #include <thread>
-#include <atomic>
 #include "defs.hh"
 
 using std::string;
@@ -28,8 +27,13 @@ private:
     /// \texttt{_ready} shows that if the data is ready for consumption
     /// Further, \texttt{_ready} is a bitset whose i-th bit shows that whether
     /// i-th thread has already consumed the data
-    volatile std::atomic_ulong _ready;
-    volatile std::atomic_ulong _pending_workers;
+    volatile size_t _ready;
+    std::condition_variable _ready_cv;
+    std::mutex _ready_mtx;
+
+    volatile size_t _pending_workers;
+    std::condition_variable _pending_workers_cv;
+    std::mutex _pending_workers_mtx;
 
     State* _state_to_be_sent;
 
@@ -43,20 +47,33 @@ private:
 
     void _send_for_ever(int _id) {
         while(true) {
-            // Wait until there is some state to be sent
-            while(K_TH_BIT(_ready, _id) == 0);
+            {// Wait until there is some state to be sent
+                std::unique_lock<std::mutex> lock(_ready_mtx);
+                // The worker also checks its own bit
+                _ready_cv.wait(lock, [&](){ return K_TH_BIT(_ready, _id) > 0;});
+            }//{
 
             // Send state to be replicated
             _send(_conns[_id], *_state_to_be_sent);
 
-            // Let the Client know that this process has finished its task
-            _pending_workers -= 1;
-            if (_pending_workers == 0) {//if no other sender exists, notify the client
-                _ready = 0;
-            }//if
-            else {
-                _ready = RESET_K_TH_BIT(_ready, _id);
-            }//else
+            {// Let the Client know that this process has finished its task
+                std::lock_guard<std::mutex> lock_guard(_pending_workers_mtx);
+                -- _pending_workers;
+                if (_pending_workers == 0) {//if no other sender exists, notify the client
+                    {
+                        std::lock_guard<std::mutex> lock(_ready_mtx);
+                        // Clear _ready bitset
+                        _ready = 0;
+                    }//{
+                    _pending_workers_cv.notify_one();
+                }//if
+                else {
+                    {// Remember that it have already processed the data
+                        std::lock_guard<std::mutex> lock(_ready_mtx);
+                        _ready = RESET_K_TH_BIT(_ready, _id);
+                    }//{
+                }//else
+            }//}
         }//while
     }
 
@@ -115,13 +132,19 @@ private:
     }
 
     void _multi_send(State &state) {
-        // Produce the state and notify the senders
-        _state_to_be_sent = &state;
-        _pending_workers = _conns.size();
-        _ready = SET_ALL_BITS;
+        {// Produce the state and notify the senders
+            _state_to_be_sent = &state;
+            _pending_workers = _conns.size();
 
-        // Waiting for workers to finish their jobs
-        while(_pending_workers > 0);
+            std::unique_lock<std::mutex> lock(_ready_mtx);
+            // Set all bits to 1, to let all the workers know that the data is ready for them
+            _ready = SET_ALL_BITS;
+            _ready_cv.notify_all();
+        }// {
+        {// Wait for senders to finish their tasks
+            std::unique_lock<std::mutex> lock(_pending_workers_mtx);
+            _pending_workers_cv.wait(lock, [&](){ return _pending_workers == 0;});
+        }// {
     }
 
 public:
@@ -157,7 +180,7 @@ public:
         }//for
 
         _pending_workers = _conns.size();
-        _ready = false;
+        _ready = 0;
 
         _connect_sockets();
         _create_threads();

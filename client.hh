@@ -163,7 +163,7 @@ public:
 
     void send(State& state) {
         if (_conns.size() > 1) {
-            return _multi_send(state);
+            _multi_send(state);
         }//if
         else {
             _send(_conns[0], state);

@@ -25,7 +25,7 @@ FromDPDKDevice(0,0)
 -> SetTimestamp
 -> PMProcess
 -> FTLockFreeCounter(INDEX 0)
--> PMConstruct(ID $index)
+-> PMConstruct(ID 1)
 -> ta::TimestampAccum
 -> MarkIPHeader(14)
 -> StoreIPAddress(1.3.1.1, src)

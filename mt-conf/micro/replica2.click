@@ -13,10 +13,10 @@
 
 shared_state::SharedLockFreeState(CHAIN 2, ID 1, F 1);
 
-stats_coll::StatsCollector(BUFFER 0,
-                          STATE 1,
-                          PATH ../FTSFC/results/single-thread/replica2.csv,
-                          PERIOD 100)
+// stats_coll::StatsCollector(BUFFER 0,
+//                           STATE 1,
+//                           PATH ../FTSFC/results/single-thread/replica2.csv,
+//                           PERIOD 100)
 
 
 FromDPDKDevice(0,0)

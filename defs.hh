@@ -15,6 +15,7 @@
 #include <vector>
 #include <click/packet.hh>
 #include <click/glue.hh>
+#include "elided_spin_lock.hh"
 
 /// Useful  definitions
 #define PORTS_2_1 "2/1"

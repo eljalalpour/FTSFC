@@ -23,8 +23,14 @@ void SharedLockFreeState::process_piggyback_message(Packet *p, PiggybackMessage&
     }//for
 
     {//
-#ifdef ENABLE_MULTI_THREADING
+#ifdef ENABLE_MULTI_THREADING_USING_MUTEX
         std::lock_guard<std::mutex> lock(_commit_mtx);
+#endif
+#ifdef ENABLE_MULTI_THREADING_USING_FLAG_LOCK
+        elided_lock<flag_spin_lock> flock(_commit_fl_lock);
+#endif
+#ifdef ENABLE_MULTI_THREADING_USING_ELIDED_LOCK
+        elided_lock<elided_spin_lock> elock(_commit_e_lock);
 #endif
         if (_commit_timestamp < msg[_id]->timestamp)
             _commit_timestamp = msg[_id]->timestamp;
@@ -39,8 +45,16 @@ void SharedLockFreeState::_capture_inoperation_state(Packet *p, int thread_id) {
     PiggybackMessage *msg = CAST_PACKET_TO_PIGGY_BACK_MESSAGE(p);
 
     {
-#ifdef ENABLE_MULTI_THREADING
+#ifdef ENABLE_MULTI_THREADING_USING_MUTEX
         std::lock_guard<std::mutex> lock(_inop_mtx);
+#endif
+
+#ifdef ENABLE_MULTI_THREADING_USING_FLAG_LOCK
+        elided_lock<flag_spin_lock> lock(_inop_fl_lock);
+#endif
+
+#ifdef ENABLE_MULTI_THREADING_USING_ELIDED_LOCK
+        elided_lock<elided_spin_lock> elock(_inop_e_lock);
 #endif
         _util.copy(msg[_id]->state, _inoperation);
     }

@@ -42,12 +42,14 @@ FT_BLOCK_WITH_FORWARDER = """elementclass FTBlock {{
 $id, $src_ip{MB_PARAM} |
     forwarder::Forwarder(CHAIN {CHAIN});
 
-    input[0]
+    // State channel
+    input[1]
     -> MarkIPHeader(14)
     -> IPFilter(allow udp && src 2.0.0.0/16)
     -> [1]forwarder;
 
-    input[1]
+    // Data channel
+    input[0]
     -> MarkIPHeader(14)
     -> IPFilter(allow udp && src 1.0.0.0/16)
     -> forwarder

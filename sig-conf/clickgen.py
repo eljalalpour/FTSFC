@@ -57,7 +57,7 @@ def shared_state_declare(ch_len, chain_pos, f):
     })
 
 
-def dev_name_list(from_or_to, device, thrds):
+def dev_name_list(from_or_to, device, thrds, channel):
     """
     list of device element names
     :param from_or_to: FromDevice or ToDevice
@@ -76,7 +76,8 @@ def dev_name_list(from_or_to, device, thrds):
         result.append(
             format_str.format(**{
                 DEVICE: device,
-                QUEUE: queue
+                QUEUE: queue,
+                CHANNEL: channel
             })
         )
     return result
@@ -88,7 +89,7 @@ def fd_data_names_list(thrds):
     :param thrds: a number denoting the number of threads
     :return: list of names
     """
-    return dev_name_list('from', DATA_DEVICE_ID, thrds)
+    return dev_name_list('from', DATA_DEVICE_ID, thrds, DATA)
 
 
 def fd_state_names_list(thrds):
@@ -97,7 +98,7 @@ def fd_state_names_list(thrds):
     :param thrds: a number denoting the number of threads
     :return: list of names
     """
-    return dev_name_list('from', STATE_DEVICE_ID, thrds)
+    return dev_name_list('from', STATE_DEVICE_ID, thrds, STATE)
 
 
 def fd_names_list(chain_pos, thrds):
@@ -122,7 +123,7 @@ def td_data_names_list(thrds):
     :param thrds: a number denoting the number of threads
     :return: list of names
     """
-    return dev_name_list('to', DATA_DEVICE_ID, thrds)
+    return dev_name_list('to', DATA_DEVICE_ID, thrds, DATA)
 
 
 def td_state_names_list(thrds):
@@ -131,7 +132,7 @@ def td_state_names_list(thrds):
     :param thrds: a number denoting the number of threads
     :return: list of names
     """
-    return dev_name_list('to', STATE_DEVICE_ID, thrds)
+    return dev_name_list('to', STATE_DEVICE_ID, thrds, STATE)
 
 
 def td_names_list(chain_pos, thrds):
@@ -159,7 +160,7 @@ def dev_declares(from_or_to, chain_pos, thrds):
     :param thrds: a number denoting the number of threads
     :return: formatted string of device declares
     """
-    def inner_dev_list(dev_format_str, device, thrds):
+    def inner_dev_list(dev_format_str, device, thrds, channel):
         """
         Helper function for multiple threads
         :param dev_format_str: device format string
@@ -172,7 +173,8 @@ def dev_declares(from_or_to, chain_pos, thrds):
             result.append(
                 dev_format_str.format(**{
                     DEVICE: device,
-                    QUEUE: queue
+                    QUEUE: queue,
+                    CHANNEL: channel
                 })
             )
         return result
@@ -185,11 +187,11 @@ def dev_declares(from_or_to, chain_pos, thrds):
     else:
         dev_format_str = TO_DEVICE_FORMAT_STR
 
-    devs = inner_dev_list(dev_format_str, DATA_DEVICE_ID, thrds)
+    devs = inner_dev_list(dev_format_str, DATA_DEVICE_ID, thrds, DATA)
 
     if (chain_pos == 0 and from_or_to == 'from') or \
             (chain_pos == -1) and from_or_to == 'to':
-        devs.extend(inner_dev_list(dev_format_str, STATE_DEVICE_ID, thrds))
+        devs.extend(inner_dev_list(dev_format_str, STATE_DEVICE_ID, thrds, STATE))
 
     return '\n'.join(devs)
 
@@ -238,6 +240,16 @@ def ft_block_names_list(thrds):
     return [FT_BLOCK_NAME_FORMAT_STR.format(i) for i in range(thrds)]
 
 
+def dev_name(chain_pos):
+    """
+    The name of the server based on the given position of middlebox in the chain
+    :param chain_pos: a number denoting the position of middlebox in the chain
+    :return: server name
+    """
+    return AQUA_MACHINES[chain_pos + FIRST_AQUA_MACHINE_IN_CHAIN]
+
+
+
 def dev_ip(chain_pos, _40_or_10):
     """
     IP address of the device based on the given position of middlebox in the chain
@@ -275,7 +287,7 @@ def src_ip_filter(chain_pos, thrd=0):
         chain_pos + 1,
         thrd + 1,
         thrd + 1,
-    )
+        )
 
 
 def gen_mb_params_str(thrd):
@@ -378,6 +390,8 @@ def ft_block_def(chain_pos, ch_len, batch, mb_params):
             DATA_SRC_MAC: dev_mac(chain_pos, data_dev),
             DATA_DST_MAC: dev_mac(chain_pos + 1, data_dev),
             DATA_DST_IP: dev_ip(chain_pos + 1, data_dev),
+            DATA_SRC_NAME: dev_name(chain_pos),
+            DATA_DST_NAME: dev_name(chain_pos + 1),
         })
 
     elif chain_pos == -1 or chain_pos == (ch_len - 1):
@@ -398,6 +412,12 @@ def ft_block_def(chain_pos, ch_len, batch, mb_params):
             STATE_DST_MAC: dev_mac(0, state_dev),
             STATE_SRC_IP: dev_ip(ch_len - 1, state_dev),
             STATE_DST_IP: dev_ip(0, state_dev),
+
+            DATA_SRC_NAME: dev_name(ch_len - 1),
+            DATA_DST_NAME: dev_name(-FIRST_AQUA_MACHINE_IN_CHAIN),
+
+            STATE_SRC_NAME: dev_name(ch_len - 1),
+            STATE_DST_NAME: dev_name(0),
         })
 
     else:
@@ -409,6 +429,8 @@ def ft_block_def(chain_pos, ch_len, batch, mb_params):
             DATA_SRC_MAC: dev_mac(chain_pos, data_dev),
             DATA_DST_MAC: dev_mac(chain_pos + 1, data_dev),
             DATA_DST_IP: dev_ip(chain_pos + 1, data_dev),
+            DATA_SRC_NAME: dev_name(chain_pos),
+            DATA_DST_NAME: dev_name(chain_pos + 1),
         })
 
     return result

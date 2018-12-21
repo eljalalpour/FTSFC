@@ -30,10 +30,10 @@ $id, $src_ip{MB_PARAM}|
     -> FTLockFreeCounter(INDEX $index)
     -> PMConstruct(ID $id)
     -> MarkIPHeader(14)
-    -> StoreEtherAddress({DATA_SRC_MAC}, src)
-    -> StoreEtherAddress({DATA_DST_MAC}, dst)
-    -> StoreIPAddress($src_ip, src)
-    -> StoreIPAddress({DATA_DST_IP}, dst)
+    -> StoreEtherAddress({DATA_SRC_MAC}, src) // {DATA_SRC_NAME}
+    -> StoreEtherAddress({DATA_DST_MAC}, dst) // {DATA_DST_NAME}
+    -> StoreIPAddress($src_ip, src) // {DATA_SRC_NAME}
+    -> StoreIPAddress({DATA_DST_IP}, dst) // {DATA_DST_NAME}
     -> output;
 }}
 """
@@ -55,10 +55,10 @@ $id, $src_ip{MB_PARAM} |
     -> FTLockFreeCounter(INDEX $index)
     -> PMConstruct(ID $id)
     -> MarkIPHeader(14)
-    -> StoreIPAddress($src_ip, src)
-    -> StoreEtherAddress({DATA_SRC_MAC}, src)
-    -> StoreEtherAddress({DATA_DST_MAC}, dst)
-    -> StoreIPAddress({DATA_DST_IP}, dst)
+    -> StoreIPAddress($src_ip, src) // {DATA_SRC_NAME}
+    -> StoreEtherAddress({DATA_SRC_MAC}, src) // {DATA_SRC_NAME}
+    -> StoreEtherAddress({DATA_DST_MAC}, dst) // {DATA_DST_NAME}
+    -> StoreIPAddress({DATA_DST_IP}, dst) // {DATA_DST_NAME}
     -> output;
 }}
 """
@@ -78,19 +78,19 @@ $id, $DATA_SRC_IP, $STATE_SRC_IP{MB_PARAM} |
     // To the outside world
     buffer[0]
     -> MarkIPHeader(14)
-    -> StoreEtherAddress({DATA_SRC_MAC}, src)
-    -> StoreEtherAddress({DATA_DST_MAC}, dst)
-    -> StoreIPAddress($DATA_SRC_IP, src)
-    -> StoreIPAddress({DATA_DST_IP}, dst)
+    -> StoreEtherAddress({DATA_SRC_MAC}, src) // {DATA_SRC_NAME}
+    -> StoreEtherAddress({DATA_DST_MAC}, dst) // {DATA_DST_NAME}
+    -> StoreIPAddress($DATA_SRC_IP, src) // {DATA_SRC_NAME}
+    -> StoreIPAddress({DATA_DST_IP}, dst) // {DATA_DST_NAME}
     -> [0]output;
 
     // To the forwarder
     buffer[1]
     -> MarkIPHeader(14)
-    -> StoreEtherAddress({STATE_SRC_MAC}, src)
-    -> StoreEtherAddress({STATE_DST_MAC}, dst)
-    -> StoreIPAddress($STATE_SRC_IP, src)
-    -> StoreIPAddress({STATE_DST_IP}, dst)
+    -> StoreEtherAddress({STATE_SRC_MAC}, src) // {STATE_SRC_NAME}
+    -> StoreEtherAddress({STATE_DST_MAC}, dst) // {STATE_DST_NAME}
+    -> StoreIPAddress($STATE_SRC_IP, src) // {STATE_SRC_NAME}
+    -> StoreIPAddress({STATE_DST_IP}, dst) // {STATE_DST_NAME}
     -> [1]output;
 }}
 """
@@ -125,16 +125,16 @@ LINK_WITH_BUFFER_FORMAT_STR = """// Queue {QUEUE}
 
 SHARED_STATE_FORMAT_STR = "shared_state::SharedLockFreeState(CHAIN {CHAIN}, ID {ID}, F {F})"
 
-FROM_DEVICE_NAME_FORMAT_STR = "fd_{DEVICE}_{QUEUE}"
+FROM_DEVICE_NAME_FORMAT_STR = "{CHANNEL}_fd{QUEUE}"
 THREAD_SCHED_FORMAT_STR = "StaticThreadSched({});"
-FROM_DEVICE_FORMAT_STR = "fd_{DEVICE}_{QUEUE}::FromDPDKDevice({DEVICE}, {QUEUE});"
+FROM_DEVICE_FORMAT_STR = "{CHANNEL}_fd{QUEUE}::FromDPDKDevice({DEVICE}, {QUEUE});"
 
-TO_DEVICE_NAME_FORMAT_STR = "td_{DEVICE}_{QUEUE}"
-TO_DEVICE_FORMAT_STR = "td_{DEVICE}_{QUEUE}::ToDPDKDevice({DEVICE}, {QUEUE});"
+TO_DEVICE_NAME_FORMAT_STR = "{DEVICE}_td{QUEUE}"
+TO_DEVICE_FORMAT_STR = "{DEVICE}_td{QUEUE}::ToDPDKDevice({DEVICE}, {QUEUE});"
 
-FT_BLOCK_NAME_FORMAT_STR = "ftb_{}"
-FT_BLOCK_FORMAT_STR = "ftb_{QUEUE}::FTBlock({ID}, {DATA_SRC_IP}{MB_PARAMS});"
-FT_BLOCK_WITH_BUFFER_FORMAT_STR = "ftb_{QUEUE}::FTBlock({ID}, {DATA_SRC_IP}, " \
+FT_BLOCK_NAME_FORMAT_STR = "ftb{}"
+FT_BLOCK_FORMAT_STR = "ftb{QUEUE}::FTBlock({ID}, {DATA_SRC_IP}{MB_PARAMS});"
+FT_BLOCK_WITH_BUFFER_FORMAT_STR = "ftb{QUEUE}::FTBlock({ID}, {DATA_SRC_IP}, " \
                                   "{STATE_SRC_IP}{MB_PARAMS});"
 
 ID = "ID"
@@ -142,18 +142,25 @@ F = "F"
 CHAIN = "CHAIN"
 MB_PARAM = 'MB_PARAM'
 
+DATA_SRC_NAME = "DATA_SRC_NAME"
 DATA_SRC_IP = "DATA_SRC_IP"
+DATA_DST_NAME = "DATA_DST_NAME"
 DATA_DST_IP = "DATA_DST_IP"
 DATA_SRC_MAC = "DATA_SRC_MAC"
 DATA_DST_MAC = "DATA_DST_MAC"
 
+STATE_SRC_NAME = "STATE_SRC_NAME"
 STATE_SRC_IP = "STATE_SRC_IP"
+STATE_DST_NAME = "STATE_DST_NAME"
 STATE_DST_IP = "STATE_DST_IP"
 STATE_SRC_MAC = "STATE_SRC_MAC"
 STATE_DST_MAC = "STATE_DST_MAC"
 
 DEVICE = "DEVICE"
 QUEUE = "QUEUE"
+CHANNEL = "CHANNEL"
+STATE = "state"
+DATA = "data"
 MB_PARAMS = "MB_PARAMS"
 
 BATCH = "BATCH"

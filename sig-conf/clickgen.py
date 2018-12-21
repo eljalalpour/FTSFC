@@ -66,6 +66,7 @@ def dev_name_list(from_or_to, device, thrds, channel):
     :param from_or_to: FromDevice or ToDevice
     :param device: the exact device id
     :param thrds: a number denoting the number of threads
+    :param channel: state or data channel
     :return: list of names
     """
     result = []
@@ -140,7 +141,7 @@ def td_state_names_list(thrds):
 
 def td_names_list(chain_pos, thrds):
     """
-    list of FromDevice element names based on the position of middlebox in the chain
+    list of ToDevice element names based on the position of middlebox in the chain
     and the number of threads
     :param chain_pos: a number denoting the position of middlebox in the chain
     :param thrds: a number denoting the number of threads
@@ -148,7 +149,7 @@ def td_names_list(chain_pos, thrds):
     """
     name_list = td_data_names_list(thrds)
 
-    if chain_pos == 0:
+    if chain_pos == -1:
         name_list.extend(td_state_names_list(thrds))
 
     return name_list

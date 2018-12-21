@@ -253,7 +253,6 @@ def dev_name(chain_pos):
     return AQUA_MACHINES[chain_pos + FIRST_AQUA_MACHINE_IN_CHAIN]
 
 
-
 def dev_ip(chain_pos, _40_or_10):
     """
     IP address of the device based on the given position of middlebox in the chain
@@ -287,6 +286,12 @@ def dev_mac(chain_pos, _40_or_10):
 
 
 def src_ip_filter(chain_pos, thrd=0):
+    if chain_pos == -1:
+        return "2.0.{}.{}".format(
+            chain_pos + 1,
+            thrd + 1,
+            thrd + 1,
+        )
     return "1.{}.{}.{}".format(
         chain_pos + 1,
         thrd + 1,
@@ -324,7 +329,7 @@ def ft_blocks_declares(chain_pos, ch_len, thrds):
         }
         if chain_pos == -1:
             params[ID] = ch_len - 1
-            params[DATA_SRC_IP] = src_ip_filter(ch_len - 1, i)
+            params[DATA_SRC_IP] = src_ip_filter(chain_pos, i)
             params[STATE_SRC_IP] = dev_ip(ch_len - 1, '10')
         else:
             params[DATA_SRC_IP] = src_ip_filter(chain_pos, i)

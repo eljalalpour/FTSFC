@@ -51,6 +51,8 @@ def parse_args(parser):
 
 
 def shared_state_declare(ch_len, chain_pos, f):
+    if chain_pos == -1:
+        chain_pos = ch_len - 1
     return SHARED_STATE_FORMAT_STR.format(**{
         CHAIN: ch_len,
         ID: chain_pos,

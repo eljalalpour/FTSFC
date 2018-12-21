@@ -288,7 +288,6 @@ def dev_mac(chain_pos, _40_or_10):
 def src_ip_filter(chain_pos, thrd=0):
     if chain_pos == -1:
         return "2.0.{}.{}".format(
-            chain_pos + 1,
             thrd + 1,
             thrd + 1,
         )

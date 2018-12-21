@@ -4,6 +4,7 @@ import argparse
 import os.path
 from defs import *
 
+
 def def_parser():
     parser = argparse.ArgumentParser(description="Generating click configurations")
     parser.add_argument('-c',
@@ -294,11 +295,12 @@ def gen_mb_params_str(thrd):
     return thrd
 
 
-def ft_blocks_declares(chain_pos, thrds):
+def ft_blocks_declares(chain_pos, ch_len, thrds):
     """
     format ft block declares based on the position of middlebox in the chain, number of threads, and
     mb parameters
     :param chain_pos: a number denoting the position of middlebox in the chain
+    :param ch_len: the chain's length
     :param thrds: a number denoting the number of threads
     :return: formatted string of the ft_blocks
     """
@@ -315,11 +317,14 @@ def ft_blocks_declares(chain_pos, thrds):
         params = {
             QUEUE: i,
             ID: chain_pos,
-            DATA_SRC_IP: src_ip_filter(chain_pos, i),
             MB_PARAMS: mb_p,
         }
         if chain_pos == -1:
-            params[STATE_SRC_IP] = dev_ip(chain_pos, '10')
+            params[ID] = ch_len - 1
+            params[DATA_SRC_IP] = src_ip_filter(ch_len - 1, i)
+            params[STATE_SRC_IP] = dev_ip(ch_len - 1, '10')
+        else:
+            params[DATA_SRC_IP] = src_ip_filter(chain_pos, i)
 
         declares.append(
             format_str.format(**params)
@@ -461,6 +466,7 @@ def ftc_click(ch_len, chain_pos, f, thrds, batch):
                                                              thrds)),
 
         FT_BLOCKS_DECLARES: ft_blocks_declares(chain_pos,
+                                               ch_len,
                                                thrds),
 
         LINKS: links(chain_pos, thrds),

@@ -75,7 +75,7 @@ $id, $DATA_SRC_IP, $STATE_SRC_IP{MB_PARAM} |
     -> PMConstruct(ID $id)
     -> buffer;
 
-    // To the outside world
+    // Data channel
     buffer[0]
     -> MarkIPHeader(14)
     -> StoreEtherAddress({DATA_SRC_MAC}, src) // {DATA_SRC_NAME}
@@ -84,7 +84,7 @@ $id, $DATA_SRC_IP, $STATE_SRC_IP{MB_PARAM} |
     -> StoreIPAddress({DATA_DST_IP}, dst) // {DATA_DST_NAME}
     -> [0]output;
 
-    // To the forwarder
+    // State channel
     buffer[1]
     -> MarkIPHeader(14)
     -> StoreEtherAddress({STATE_SRC_MAC}, src) // {STATE_SRC_NAME}

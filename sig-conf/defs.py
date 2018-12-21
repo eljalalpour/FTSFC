@@ -67,7 +67,7 @@ FT_BLOCK_WITH_BUFFER = """elementclass FTBlock {{
 $id, $DATA_SRC_IP, $STATE_SRC_IP{MB_PARAM} |
     buffer::Buffer(BATCH {BATCH}, CHAIN {CHAIN});
 
-    fd1
+    input
     -> MarkIPHeader(14)
     -> IPFilter(allow udp && src {SRC_IP_FILTER}/16)
     -> PMProcess

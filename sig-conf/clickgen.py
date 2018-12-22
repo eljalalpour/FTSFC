@@ -230,7 +230,7 @@ def thread_sched_declare(from_devs_list):
     """
     result = []
     for i in range(len(from_devs_list)):
-        result.append("{} {}".format(from_devs_list[i], i))
+        result.append("{} {}".format(from_devs_list[i], i % CPUS))
 
     return THREAD_SCHED_FORMAT_STR.format(', '.join(result))
 

@@ -1,5 +1,6 @@
 #include <click/config.h>
 #include <click/router.hh>
+#include <click/args.hh>
 #include "pm_process.hh"
 
 CLICK_DECLS
@@ -39,6 +40,19 @@ Packet* PMProcess::simple_action(Packet *p) {
 
     return p;
 }
+
+int PMProcess::configure(Vector<String> &conf, ErrorHandler *errh) {
+    // set index param
+    if (Args(conf, this, errh)
+                .read("QUEUE", _queue)
+                .complete() < 0)
+        return -1;
+
+    LOG("PMProcess thread id is %d!\n", _queue);
+
+    return 0;
+}
+
 
 CLICK_ENDDECLS
 EXPORT_ELEMENT(PMProcess)

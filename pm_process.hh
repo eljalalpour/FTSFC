@@ -20,6 +20,7 @@ private:
     bool _shared_state_init;
     SharedLockFreeState* _shared_state;
 
+    int _queue;
     PiggybackMessage _log_table;
 
     inline void _init_shared_state_pointer();
@@ -34,6 +35,8 @@ public:
     const char *port_count() const { return PORTS_1_1; }
 
     const char *processing() const { return AGNOSTIC; }
+
+    int configure(Vector<String> &conf, ErrorHandler *errh);
 
     Packet *simple_action(Packet *);
 };

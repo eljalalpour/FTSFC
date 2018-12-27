@@ -26,7 +26,7 @@ $queue, $src_ip{MB_PARAM}|
     input
     -> MarkIPHeader(14)
     -> IPFilter(allow udp && src {SRC_IP_FILTER}/16)
-    -> PMProcess
+    -> PMProcess(QUEUE $queue)
     -> FTLockFreeCounter(INDEX $index)
     -> PMConstruct(QUEUE $queue)
     -> MarkIPHeader(14)
@@ -39,7 +39,7 @@ $queue, $src_ip{MB_PARAM}|
 """
 
 FT_BLOCK_WITH_FORWARDER = """elementclass FTBlock {{
-$id, $src_ip{MB_PARAM} |
+$queue, $src_ip{MB_PARAM} |
     forwarder::Forwarder(CHAIN {CHAIN});
 
     // State channel
@@ -53,7 +53,7 @@ $id, $src_ip{MB_PARAM} |
     -> MarkIPHeader(14)
     -> IPFilter(allow udp && src 1.0.0.0/16)
     -> forwarder
-    -> PMProcess
+    -> PMProcess(QUEUE $queue)
     -> FTLockFreeCounter(INDEX $index)
     -> PMConstruct(QUEUE $queue)
     -> MarkIPHeader(14)
@@ -66,13 +66,13 @@ $id, $src_ip{MB_PARAM} |
 """
 
 FT_BLOCK_WITH_BUFFER = """elementclass FTBlock {{
-$id, $DATA_SRC_IP, $STATE_SRC_IP{MB_PARAM} |
+$queue, $DATA_SRC_IP, $STATE_SRC_IP{MB_PARAM} |
     buffer::Buffer(BATCH {BATCH}, CHAIN {CHAIN});
 
     input
     -> MarkIPHeader(14)
     -> IPFilter(allow udp && src {SRC_IP_FILTER}/16)
-    -> PMProcess
+    -> PMProcess(QUEUE $queue)
     -> FTLockFreeCounter(INDEX $index)
     -> PMConstruct(QUEUE $queue)
     -> buffer;

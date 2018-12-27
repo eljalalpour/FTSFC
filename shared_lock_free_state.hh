@@ -51,7 +51,7 @@ private:
 
 #ifdef ENABLE_MULTI_THREADING_USING_FINE_GRAINED_LOCKS
     std::mutex _inop_mtxes[STATE_LEN];
-    std::mutex _commit_mtxes[STATE_LEN];
+    std::mutex _commit_mtx;
 #endif
 
 inline void _capture_inoperation_state(Packet *, int=0);

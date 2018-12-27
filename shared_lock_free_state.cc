@@ -22,29 +22,34 @@ void SharedLockFreeState::process_piggyback_message(Packet *p, PiggybackMessage&
         log_table[_to_copy_indices[i]] = (*msg[_to_copy_indices[i]]);
     }//for
 
-    {//
-        if (_commit_timestamp < msg[_id]->timestamp) {
+    if (_commit_timestamp < msg[_id]->timestamp) {
 
 #ifdef ENABLE_MULTI_THREADING_USING_MUTEX
-            std::lock_guard<std::mutex> lock(_commit_mtx);
+        std::lock_guard<std::mutex> lock(_commit_mtx);
 #endif
 #ifdef ENABLE_MULTI_THREADING_USING_FLAG_LOCK
-            elided_lock<flag_spin_lock> flock(_commit_fl_lock);
+        elided_lock<flag_spin_lock> flock(_commit_fl_lock);
 #endif
 #ifdef ENABLE_MULTI_THREADING_USING_ELIDED_LOCK
-            elided_lock<elided_spin_lock> elock(_commit_e_lock);
+        elided_lock<elided_spin_lock> elock(_commit_e_lock);
 #endif
-        if (_commit_timestamp < msg[_id]->timestamp)
-            _commit_timestamp = msg[_id]->timestamp;
-            // This part must be done in construct piggyback message, but we perform it here for performance reasons
-            msg[_id]->last_commit = _commit_timestamp;
-        }//if
-        else {
-            // This part must be done in construct piggyback message, but we perform it here for performance reasons
-            // Note the following line repeats since to be lock free for the cases that
-            msg[_id]->last_commit = _commit_timestamp;
-        }//else
-    }
+
+#ifdef ENABLE_MULTI_THREADING_USING_ELIDED_LOCK
+        elided_lock<elided_spin_lock> elock(_commit_e_lock);
+#endif
+#ifdef ENABLE_MULTI_THREADING_USING_FINE_GRAINED_LOCKS
+        std::lock_guard<std::mutex> lock(_commit_mtx);
+#endif
+        _commit_timestamp = msg[_id]->timestamp;
+        // This part must be done in construct piggyback message, but we perform it here for performance reasons
+        msg[_id]->last_commit = _commit_timestamp;
+    }//if
+    else {
+        // This part must be done in construct piggyback message, but we perform it here for performance reasons
+        // Note the following line repeats the same line in 'if' block, since to be lock free for the cases that
+        //_commit_timestamp is only read.
+        msg[_id]->last_commit = _commit_timestamp;
+    }//else
 }
 
 void SharedLockFreeState::_capture_inoperation_state(Packet *p, int thread_id) {

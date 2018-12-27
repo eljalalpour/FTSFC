@@ -22,13 +22,13 @@ FT = """
 """
 
 FT_BLOCK = """elementclass FTBlock {{
-$id, $src_ip{MB_PARAM}|
+$queue, $src_ip{MB_PARAM}|
     input
     -> MarkIPHeader(14)
     -> IPFilter(allow udp && src {SRC_IP_FILTER}/16)
     -> PMProcess
     -> FTLockFreeCounter(INDEX $index)
-    -> PMConstruct(ID $id)
+    -> PMConstruct(QUEUE $queue)
     -> MarkIPHeader(14)
     -> StoreEtherAddress({DATA_SRC_MAC}, src) // {DATA_SRC_NAME}
     -> StoreEtherAddress({DATA_DST_MAC}, dst) // {DATA_DST_NAME}
@@ -55,7 +55,7 @@ $id, $src_ip{MB_PARAM} |
     -> forwarder
     -> PMProcess
     -> FTLockFreeCounter(INDEX $index)
-    -> PMConstruct(ID $id)
+    -> PMConstruct(QUEUE $queue)
     -> MarkIPHeader(14)
     -> StoreIPAddress($src_ip, src) // {DATA_SRC_NAME}
     -> StoreEtherAddress({DATA_SRC_MAC}, src) // {DATA_SRC_NAME}
@@ -74,7 +74,7 @@ $id, $DATA_SRC_IP, $STATE_SRC_IP{MB_PARAM} |
     -> IPFilter(allow udp && src {SRC_IP_FILTER}/16)
     -> PMProcess
     -> FTLockFreeCounter(INDEX $index)
-    -> PMConstruct(ID $id)
+    -> PMConstruct(QUEUE $queue)
     -> buffer;
 
     // Data channel

@@ -15,7 +15,7 @@ CLICK_DECLS
 
 class PMConstruct : public Element {
 private:
-    int _thread_id;
+    int _queue;
     bool _shared_state_init;
     SharedLockFreeState* _shared_state;
     inline void _init_shared_state_pointer();

@@ -48,7 +48,7 @@ int PMProcess::configure(Vector<String> &conf, ErrorHandler *errh) {
                 .complete() < 0)
         return -1;
 
-    LOG("PMProcess thread id is %d!\n", _queue);
+    LOG("PMProcess queue is %d!\n", _queue);
 
     return 0;
 }

@@ -25,7 +25,7 @@ int PMConstruct::configure(Vector<String> &conf, ErrorHandler *errh) {
                 .complete() < 0)
         return -1;
 
-    LOG("PMConstruct thread id is %d!\n", _queue);
+    LOG("PMConstruct queue is %d!\n", _queue);
 
     return 0;
 }

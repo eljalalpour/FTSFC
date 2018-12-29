@@ -323,11 +323,9 @@ def ft_blocks_declares(chain_pos, ch_len, thrds):
 
         params = {
             QUEUE: i,
-            ID: chain_pos,
             MB_PARAMS: mb_p,
         }
         if chain_pos == -1:
-            params[ID] = ch_len - 1
             params[STATE_SRC_IP] = src_ip_filter(chain_pos, i)
             params[DATA_SRC_IP] = src_ip_filter(ch_len - 1, i)
         else:

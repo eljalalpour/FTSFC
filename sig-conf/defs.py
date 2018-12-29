@@ -27,7 +27,7 @@ $queue, $src_ip{MB_PARAM}|
     -> MarkIPHeader(14)
     -> IPFilter(allow udp && src {SRC_IP_FILTER}/16)
     -> PMProcess(QUEUE $queue)
-    -> FTLockFreeCounter(INDEX $index)
+    -> {MB}
     -> PMConstruct(QUEUE $queue)
     -> MarkIPHeader(14)
     -> StoreEtherAddress({DATA_SRC_MAC}, src) // {DATA_SRC_NAME}
@@ -54,7 +54,7 @@ $queue, $src_ip{MB_PARAM} |
     -> IPFilter(allow udp && src 1.0.0.0/16)
     -> forwarder
     -> PMProcess(QUEUE $queue)
-    -> FTLockFreeCounter(INDEX $index)
+    -> {MB}
     -> PMConstruct(QUEUE $queue)
     -> MarkIPHeader(14)
     -> StoreIPAddress($src_ip, src) // {DATA_SRC_NAME}
@@ -73,7 +73,7 @@ $queue, $DATA_SRC_IP, $STATE_SRC_IP{MB_PARAM} |
     -> MarkIPHeader(14)
     -> IPFilter(allow udp && src {SRC_IP_FILTER}/16)
     -> PMProcess(QUEUE $queue)
-    -> FTLockFreeCounter(INDEX $index)
+    -> {MB}
     -> PMConstruct(QUEUE $queue)
     -> buffer;
 
@@ -142,6 +142,7 @@ FT_BLOCK_WITH_BUFFER_FORMAT_STR = "ftb{QUEUE}::FTBlock({ID}, {DATA_SRC_IP}, " \
 ID = "ID"
 F = "F"
 CHAIN = "CHAIN"
+MB = "MB"
 MB_PARAM = 'MB_PARAM'
 
 DATA_SRC_NAME = "DATA_SRC_NAME"

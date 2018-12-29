@@ -377,7 +377,7 @@ def links(chain_pos, thrds):
     return '\n'.join(ll)
 
 
-def ft_block_def(chain_pos, ch_len, batch, mb_params):
+def ft_block_def(chain_pos, ch_len, batch, mb, mb_params):
     """
     format a block declare
     :param chain_pos: a number denoting the position of middlebox in the chain
@@ -397,6 +397,7 @@ def ft_block_def(chain_pos, ch_len, batch, mb_params):
         result = FT_BLOCK_WITH_FORWARDER.format(**{
             CHAIN: ch_len,
 
+            MB: mb,
             MB_PARAM: mb_params_str,
 
             DATA_SRC_MAC: dev_mac(chain_pos, data_dev),
@@ -411,6 +412,7 @@ def ft_block_def(chain_pos, ch_len, batch, mb_params):
             BATCH: batch,
             CHAIN: ch_len,
 
+            MB: mb,
             MB_PARAM: mb_params_str,
 
             SRC_IP_FILTER: src_ip_filter(ch_len - 2),
@@ -436,6 +438,7 @@ def ft_block_def(chain_pos, ch_len, batch, mb_params):
         result = FT_BLOCK.format(**{
             SRC_IP_FILTER: src_ip_filter(chain_pos - 1),
 
+            MB: mb,
             MB_PARAM: mb_params_str,
 
             DATA_SRC_MAC: dev_mac(chain_pos, data_dev),
@@ -461,6 +464,7 @@ def ftc_click(ch_len, chain_pos, f, thrds, batch):
         FT_BLOCK_DEF: ft_block_def(chain_pos,
                                    ch_len,
                                    batch,
+                                   COUNTER_MB,
                                    COUNTER_MB_PARAMS),
 
         FROM_DEVICE_DECLARES: from_dev_declares(chain_pos,

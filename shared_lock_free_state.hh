@@ -50,8 +50,9 @@ private:
 #endif
 
 #ifdef ENABLE_MULTI_THREADING_USING_FINE_GRAINED_LOCKS
+    int64_t _commit_timestamps[STATE_LEN];
     std::mutex _inop_mtxes[STATE_LEN];
-    std::mutex _commit_mtx;
+    std::mutex _commit_mtxes[STATE_LEN];
 #endif
 
 inline void _capture_inoperation_state(Packet *, int=0);
@@ -72,7 +73,7 @@ public:
 
     int configure(Vector<String> &, ErrorHandler *);
 
-    void process_piggyback_message(Packet*, PiggybackMessage&);
+    void process_piggyback_message(Packet*, PiggybackMessage&, int);
 
     void construct_piggyback_message(Packet*, int=0);
 

@@ -3,8 +3,13 @@
 #include <clicknet/tcp.h>
 #include <clicknet/udp.h>
 #include <click/error.hh>
+#include <click/packet_anno.hh>
+#include <clicknet/ip.h>
+#include "checksumfixup.hh"
 
 CLICK_DECLS
+
+using namespace ClickityClack;
 
 #define CLICK_BEAMER_HASHFN_BOB 0
 #define CLICK_BEAMER_HASHFN_CRC 1
@@ -59,10 +64,8 @@ int BeamerMux::configure(Vector<String> &conf, ErrorHandler *errh) {
     if (maxStates <= 0)
         return errh->error("Bad MAX_STATES");
 
-    vip = 0;
+    //vip = 0;
     bucketMap.init(ringSize);
-
-    idMap.init(0x10000);
 
     states = new StateTrack<MuxState>*[click_max_cpu_ids()]; assert(states);
     for (int i = 0; i < click_max_cpu_ids(); i++)
@@ -73,40 +76,32 @@ int BeamerMux::configure(Vector<String> &conf, ErrorHandler *errh) {
     return 0;
 }
 
-Packet *BeamerMux::handleUDP(Packet *p) {
+
+
+Packet *BeamerMux::simple_action(Packet *p) {
+    // We assume that the packet is always UDP
     uint32_t hash = beamerHash(p->ip_header(), p->udp_header());
     uint32_t dip = bucketMap.get(hash).current;
 
-    return ipipEncapper.encapsulate(p, vip.addr(), dip);
+    // Update the header,
+    // part of the code is taken from ipipEcaper.encapsulate function in ClickityClack
+    click_ip *ip = reinterpret_cast<click_ip *>(p->data() + MAC_HEAD_SIZE);
+    click_udp *udp = reinterpret_cast<click_udp *>(ip + UDP_HEAD_OFFSET_AFTER_MAC_HEAD);
+
+    ip->ip_hl = sizeof(click_ip) >> 2;
+    ip->ip_dst.s_addr = dip;
+    udp->uh_sum = DEFAULT_CRC;
+
+    ip->ip_sum = checksumFold(
+            checksumFixup32(0, ip->ip_src.,
+                            checksumFixup32(0, dip,
+                                            checksumFixup16(0, ip->ip_len,
+                                                            ip->ip_sum))));
+
+    p->set_ip_header(ip, sizeof(click_ip));
+
+    return p;
 }
-
-Packet *BeamerMux::simple_action(Packet *p)
-{
-    uint8_t proto = p->ip_header()->ip_p;
-    unsigned int cpuID = click_current_cpu_id();
-    click_jiffies_t now = click_jiffies();
-
-    switch (proto)
-    {
-        case IPPROTO_UDP:
-            return handleUDP(p);
-
-        default:
-            return p;
-    }
-
-    p->kill();
-    return NULL;
-}
-
-enum
-{
-    /* write */
-            H_ASSIGN,
-
-    /* read */
-            H_GEN,
-};
 
 CLICK_ENDDECLS
 

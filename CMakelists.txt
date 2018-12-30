@@ -59,7 +59,7 @@ add_executable(FTSFC
         tf_monitor.hh
         tf_nat.cc
         tf_nat.hh
-        not-worked-ideas/ft/buffer.cc beamermux.cc beamermux.hh)
+        not-worked-ideas/ft/buffer.cc beamermux.cc beamermux.hh freebsdbob.hh fivetuple.hh statetrack.hh dipmap.hh checksumfixup.hh)
 
 target_link_libraries(FTSFC ${PROTOBUF_LIB})
 

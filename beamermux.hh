@@ -4,8 +4,22 @@
 #include <click/element.hh>
 #include <click/ipaddress.hh>
 
+#include "fivetuple.hh"
+#include "statetrack.hh"
+#include "dipmap.hh"
+
 CLICK_DECLS
 
+#define MAC_HEAD_SIZE   14
+#define DEFAULT_CRC     0
+#define UDP_HEAD_OFFSET_AFTER_MAC_HEAD 1
+
+/// BeamerMux is adapted version of Beamer load balancer https://github.com/Beamer-LB/beamer-click
+/// The differences are:
+///     1- BeamerMux is not fault tolerant. The original Beamer uses ZooKeeper for fault tolerance
+///     2- BeamerMux handles only UDP packets, while Beamer handles TCP and UDP
+///     3- BeamerMux modifies the IP header or the original packet, while Beamer encapsulate the original packet inside
+/// another IP or GRE packet.
 class BeamerMux: Element {
 public:
     BeamerMux();
@@ -23,9 +37,19 @@ public:
     Packet *simple_action(Packet *p);
 
 private:
-    IPAddress vip;
+    //IPAddress vip;
+    Beamer::DIPHistoryMap bucketMap;
 
-    Packet *handleUDP(Packet *);
+    struct MuxState: public ClickityClack::State<ClickityClack::FiveTuple>
+    {
+        uint32_t dip;
+
+        MuxState();
+
+        MuxState(ClickityClack::FiveTuple tuple, uint32_t dip)
+                : ClickityClack::State<ClickityClack::FiveTuple>(tuple), dip(dip) {}
+    };
+    ClickityClack::StateTrack<MuxState> **states;
 };
 
 

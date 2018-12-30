@@ -4,7 +4,6 @@
 #include <click/config.h>
 #include <click/element.hh>
 #include <mutex>
-#include <condition_variable>
 
 CLICK_DECLS
 

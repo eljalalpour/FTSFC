@@ -21,7 +21,8 @@ CLICK_DECLS
 //#define ENABLE_MULTI_THREADING_USING_MUTEX 1
 //#define ENABLE_MULTI_THREADING_USING_FLAG_LOCK 1
 //#define ENABLE_MULTI_THREADING_USING_ELIDED_LOCK 1
-#define ENABLE_MULTI_THREADING_USING_FINE_GRAINED_LOCKS 1
+//#define ENABLE_MULTI_THREADING_USING_FINE_GRAINED_LOCKS 1
+#define ENABLE_MULTI_THREADING_USING_FINE_GRAINED_ELIDED_LOCKS 1
 
 class SharedLockFreeState : public Element {
 private:
@@ -53,6 +54,12 @@ private:
     int64_t _commit_timestamps[STATE_LEN];
     std::mutex _inop_mtxes[STATE_LEN];
     std::mutex _commit_mtxes[STATE_LEN];
+#endif
+
+#ifdef ENABLE_MULTI_THREADING_USING_FINE_GRAINED_ELIDED_LOCKS
+    int64_t _commit_timestamps[STATE_LEN];
+    elided_spin_lock _inop_e_locks[STATE_LEN];
+    elided_spin_lock _commit_e_locks[STATE_LEN];
 #endif
 
 inline void _capture_inoperation_state(Packet *, int=0);
@@ -93,6 +100,10 @@ public:
 #ifdef ENABLE_MULTI_THREADING_USING_FINE_GRAINED_LOCKS
         std::lock_guard<std::mutex> lock(_inop_mtxes[index]);
 #endif
+
+#ifdef ENABLE_MULTI_THREADING_USING_FINE_GRAINED_ELIDED_LOCKS
+        elided_lock<elided_spin_lock> elock(_inop_e_locks[index]);
+#endif
         return _inoperation[index];
     }
 
@@ -111,6 +122,10 @@ public:
 
 #ifdef ENABLE_MULTI_THREADING_USING_FINE_GRAINED_LOCKS
         std::lock_guard<std::mutex> lock(_inop_mtxes[index]);
+#endif
+
+#ifdef ENABLE_MULTI_THREADING_USING_FINE_GRAINED_ELIDED_LOCKS
+        elided_lock<elided_spin_lock> elock(_inop_e_locks[index]);
 #endif
         ++_inoperation[index];
     }

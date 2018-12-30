@@ -14,11 +14,15 @@ SharedLockFreeState::SharedLockFreeState() {
 #ifdef ENABLE_MULTI_THREADING_USING_FINE_GRAINED_LOCKS
     std::memset(_commit_timestamps, 0, sizeof(_commit_timestamps));
 #endif
+
+#ifdef ENABLE_MULTI_THREADING_USING_FINE_GRAINED_ELIDED_LOCKS
+    std::memset(_commit_timestamps, 0, sizeof(_commit_timestamps));
+#endif
 };
 
 SharedLockFreeState::~SharedLockFreeState() { };
 
-void SharedLockFreeState::process_piggyback_message(Packet *p, PiggybackMessage& log_table, int thread_id) {
+void SharedLockFreeState::process_piggyback_message(Packet *p, PiggybackMessage& log_table, int queue) {
     auto msg = CAST_PACKET_TO_PIGGY_BACK_MESSAGE(p);
 
     // Processing the secondary state set
@@ -39,11 +43,12 @@ void SharedLockFreeState::process_piggyback_message(Packet *p, PiggybackMessage&
         elided_lock<elided_spin_lock> elock(_commit_e_lock);
 #endif
 
-#ifdef ENABLE_MULTI_THREADING_USING_ELIDED_LOCK
-        elided_lock<elided_spin_lock> elock(_commit_e_lock);
-#endif
 #ifdef ENABLE_MULTI_THREADING_USING_FINE_GRAINED_LOCKS
-        std::lock_guard<std::mutex> lock(_commit_mtxes[thread_id]);
+        std::lock_guard<std::mutex> lock(_commit_mtxes[queue]);
+#endif
+
+#ifdef ENABLE_MULTI_THREADING_USING_FINE_GRAINED_ELIDED_LOCKS
+        elided_lock<elided_spin_lock> elock(_commit_e_locks[queue]);
 #endif
         _commit_timestamp = msg[_id]->timestamp;
         // This part must be done in construct piggyback message, but we perform it here for performance reasons
@@ -57,7 +62,7 @@ void SharedLockFreeState::process_piggyback_message(Packet *p, PiggybackMessage&
     }//else
 }
 
-void SharedLockFreeState::_capture_inoperation_state(Packet *p, int queue_id) {
+void SharedLockFreeState::_capture_inoperation_state(Packet *p, int queue) {
     DEBUG("Capture _inoperation state");
     PiggybackMessage *msg = CAST_PACKET_TO_PIGGY_BACK_MESSAGE(p);
 
@@ -75,7 +80,10 @@ void SharedLockFreeState::_capture_inoperation_state(Packet *p, int queue_id) {
 #endif
 
 #ifdef ENABLE_MULTI_THREADING_USING_FINE_GRAINED_LOCKS
-        std::lock_guard<std::mutex> lock(_inop_mtxes[queue_id]);
+        std::lock_guard<std::mutex> lock(_inop_mtxes[queue]);
+#endif
+#ifdef ENABLE_MULTI_THREADING_USING_FINE_GRAINED_ELIDED_LOCKS
+        elided_lock<elided_spin_lock> elock(_inop_e_locks[queue]);
 #endif
         _util.copy(msg[_id]->state, _inoperation);
     }

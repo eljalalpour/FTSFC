@@ -93,7 +93,7 @@ def gen_store(opts):
 
     elif apr == NF:
         print("Generating for {}".format(NF))
-        clicks = nfgen.generate(opts['c'], opts['t'])
+        clicks = nfgen.generate(opts['c'], opts['t'], opts['m'])
         nfgen.store(opts['o'], clicks)
 
     else:

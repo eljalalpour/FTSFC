@@ -214,6 +214,12 @@ def dev_mac(chain_pos, _40_or_10):
 
 
 def src_ip_filter(chain_pos, thrd=0):
+    if chain_pos == -1:
+        return "2.0.{}.{}".format(
+            thrd + 1,
+            thrd + 1,
+            )
+    print("Chain Position: {}".format(chain_pos))
     return "1.{}.{}.{}".format(
         chain_pos + 1,
         thrd + 1,
@@ -221,16 +227,21 @@ def src_ip_filter(chain_pos, thrd=0):
         )
 
 
-def gen_mb_params_str(thrd):
-    return thrd
+def gen_mb_params_str(thrd, mb):
+    result = ''
+    if mb == BEAMER_MUX_MB:
+        result = ''
+    elif mb == COUNTER_MB:
+        result = thrd
+
+    return result
 
 
-def nf_blocks_declares(chain_pos, ch_len, thrds):
+def nf_blocks_declares(chain_pos, thrds, mb):
     """
     format ft block declares based on the position of middlebox in the chain, number of threads, and
     mb parameters
     :param chain_pos: a number denoting the position of middlebox in the chain
-    :param ch_len: the chain's length
     :param thrds: a number denoting the number of threads
     :return: formatted string of the ft_blocks
     """
@@ -239,7 +250,7 @@ def nf_blocks_declares(chain_pos, ch_len, thrds):
     format_str = NF_BLOCK_FORMAT_STR
 
     for i in range(thrds):
-        mb_p = gen_mb_params_str(i)
+        mb_p = gen_mb_params_str(i, mb)
         if mb_p != '':
             mb_p = ', ' + str(mb_p)
 
@@ -281,7 +292,7 @@ def links(thrds):
     return '\n'.join(ll)
 
 
-def nf_block_def(chain_pos, mb, mb_params):
+def nf_block_def(ch_len, chain_pos, mb, mb_params):
     """
     format a block declare
     :param chain_pos: a number denoting the position of middlebox in the chain
@@ -294,17 +305,25 @@ def nf_block_def(chain_pos, mb, mb_params):
     if mb_params is not None and len(mb_params) > 0:
         mb_params_str = ', ' + ', '.join(mb_params)
 
+    if chain_pos == -1 or chain_pos == (ch_len - 1):
+        dst_index = -FIRST_AQUA_MACHINE_IN_CHAIN
+        src_ip_filter_index = ch_len - 2
+
+    else:
+        dst_index = chain_pos + 1
+        src_ip_filter_index = chain_pos - 1
+
     result = NF_BLOCK.format(**{
-        SRC_IP_FILTER: src_ip_filter(chain_pos - 1),
+        SRC_IP_FILTER: src_ip_filter(src_ip_filter_index),
 
         MB: mb,
         MB_PARAM: mb_params_str,
 
         DATA_SRC_MAC: dev_mac(chain_pos, data_dev),
-        DATA_DST_MAC: dev_mac(chain_pos + 1, data_dev),
-        DATA_DST_IP: dev_ip(chain_pos + 1, data_dev),
+        DATA_DST_MAC: dev_mac(dst_index, data_dev),
+        DATA_DST_IP: dev_ip(dst_index, data_dev),
         DATA_SRC_NAME: dev_name(chain_pos),
-        DATA_DST_NAME: dev_name(chain_pos + 1),
+        DATA_DST_NAME: dev_name(dst_index),
     })
 
     return result
@@ -317,7 +336,6 @@ def nf_click(ch_len, chain_pos, thrds, mb):
     """
     mb_ = None
     mb_params_ = None
-    mb_params_vals_ = None
 
     if mb == COUNTER:
         mb_ = COUNTER_MB
@@ -330,7 +348,8 @@ def nf_click(ch_len, chain_pos, thrds, mb):
     string_map = {
         SHARED_STATE_DECLARE: shared_state_declare(),
 
-        NF_BLOCK_DEF: nf_block_def(chain_pos,
+        NF_BLOCK_DEF: nf_block_def(ch_len,
+                                   chain_pos,
                                    mb_,
                                    mb_params_),
 
@@ -344,8 +363,8 @@ def nf_click(ch_len, chain_pos, thrds, mb):
                                                              thrds)),
 
         NF_BLOCKS_DECLARES: nf_blocks_declares(chain_pos,
-                                               ch_len,
-                                               thrds),
+                                               thrds,
+                                               mb),
 
         LINKS: links(thrds),
     }
@@ -355,8 +374,10 @@ def nf_click(ch_len, chain_pos, thrds, mb):
 
 def generate(ch_len, thrds, mb):
     clicks = []
-    for chain_pos in range(ch_len):
+    for chain_pos in range(ch_len - 1):
         clicks.append(nf_click(ch_len, chain_pos, thrds, mb))
+
+    clicks.append(nf_click(ch_len, -1, thrds, mb))
 
     return clicks
 

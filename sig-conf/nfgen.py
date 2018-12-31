@@ -214,12 +214,6 @@ def dev_mac(chain_pos, _40_or_10):
 
 
 def src_ip_filter(chain_pos, thrd=0):
-    if chain_pos == -1:
-        return "2.0.{}.{}".format(
-            thrd + 1,
-            thrd + 1,
-            )
-
     return "1.{}.{}.{}".format(
         chain_pos + 1,
         thrd + 1,
@@ -374,10 +368,10 @@ def nf_click(ch_len, chain_pos, thrds, mb):
 
 def generate(ch_len, thrds, mb):
     clicks = []
-    for chain_pos in range(ch_len - 1):
+    for chain_pos in range(ch_len):
         clicks.append(nf_click(ch_len, chain_pos, thrds, mb))
 
-    clicks.append(nf_click(ch_len, -1, thrds, mb))
+    # clicks.append(nf_click(ch_len, -1, thrds, mb))
 
     return clicks
 

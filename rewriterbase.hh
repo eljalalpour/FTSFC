@@ -5,7 +5,6 @@
 #include "../../elements/ip/iprwmapping.hh"
 #include <click/bitvector.hh>
 #include <click/ipflowid.hh>
-#include <click/ip
 #include <click/hashcontainer.hh>
 
 CLICK_DECLS

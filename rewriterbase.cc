@@ -1,9 +1,29 @@
+// -*- mode: c++; c-basic-offset: 4 -*-
+/*
+ * RewriterBase.{cc,hh} -- rewrites packet source and destination
+ * Eddie Kohler
+ * original versions by Eddie Kohler and Max Poletto
+ *
+ * Copyright (c) 2000 Massachusetts Institute of Technology
+ * Copyright (c) 2001 International Computer Science Institute
+ * Copyright (c) 2008-2010 Meraki, Inc.
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a
+ * copy of this software and associated documentation files (the "Software"),
+ * to deal in the Software without restriction, subject to the conditions
+ * listed in the Click LICENSE file. These conditions include: you must
+ * preserve this copyright notice, and you cannot mention the copyright
+ * holders in advertising related to the Software without their permission.
+ * The Software is provided WITHOUT ANY WARRANTY, EXPRESS OR IMPLIED. This
+ * notice is a summary of the Click LICENSE file; the license in that file is
+ * legally binding.
+ */
 
 #include <click/config.h>
 #include "rewriterbase.hh"
-#include "../../elements/ip/iprwpatterns.hh"
-#include "../../elements/ip/iprwmapping.hh"
-#include "../../elements/ip/iprwpattern.hh"
+#include "rwpatterns.hh"
+#include "rwmapping.hh"
+#include "rwpattern.hh"
 #include <clicknet/ip.h>
 #include <clicknet/tcp.h>
 #include <clicknet/udp.h>
@@ -13,6 +33,17 @@
 #include <click/error.hh>
 #include <click/algorithm.hh>
 #include <click/heap.hh>
+
+#ifdef CLICK_LINUXMODULE
+#include <click/cxxprotect.h>
+CLICK_CXX_PROTECT
+#if LINUX_VERSION_CODE < KERNEL_VERSION(2, 6, 0)
+# include <asm/softirq.h>
+#endif
+#include <net/sock.h>
+CLICK_CXX_UNPROTECT
+#include <click/cxxunprotect.h>
+#endif
 
 CLICK_DECLS
 
@@ -32,9 +63,9 @@ Mapper::rewrite_flowid(RewriterInput *, const IPFlowID &, IPFlowID &,
     return RewriterBase::rw_drop;
 }
 
-
- RewriterBase
-
+//
+// RewriterBase
+//
 
 RewriterBase::RewriterBase()
         : _map(0), _heap(new RewriterHeap), _gc_timer(gc_timer_hook, this)
@@ -78,7 +109,7 @@ RewriterBase::parse_input_spec(const String &line, RewriterInput &is,
     } else if (word == "keep") {
         Vector<String> words;
         cp_spacevec(rest, words);
-        if (!IPRewriterPattern::parse_ports(words, &is, this, &cerrh))
+        if (!RewriterPattern::parse_ports(words, &is, this, &cerrh))
             return -1;
         if ((unsigned) is.foutput >= (unsigned) noutputs()
             || (unsigned) is.routput >= (unsigned) is.reply_element->noutputs())
@@ -90,7 +121,7 @@ RewriterBase::parse_input_spec(const String &line, RewriterInput &is,
             return cerrh.error("syntax error, expected %<%s%>", word.c_str());
 
     } else if (word == "pattern" || word == "xpattern") {
-        if (!IPRewriterPattern::parse_with_ports(rest, &is, this, &cerrh))
+        if (!RewriterPattern::parse_with_ports(rest, &is, this, &cerrh))
             return -1;
         if ((unsigned) is.foutput >= (unsigned) noutputs()
             || (unsigned) is.routput >= (unsigned) is.reply_element->noutputs())
@@ -185,10 +216,10 @@ RewriterBase::cleanup(CleanupStage)
     _input_specs.clear();
 }
 
-IPRewriterEntry *
+RewriterEntry *
 RewriterBase::get_entry(int ip_p, const IPFlowID &flowid, int input)
 {
-    IPRewriterEntry *m = _map.get(flowid);
+    RewriterEntry *m = _map.get(flowid);
     if (m && ip_p && m->flow()->ip_p() && m->flow()->ip_p() != ip_p)
         return 0;
     if (!m && (unsigned) input < (unsigned) _input_specs.size()) {
@@ -200,7 +231,7 @@ RewriterBase::get_entry(int ip_p, const IPFlowID &flowid, int input)
     return m;
 }
 
-IPRewriterEntry *
+RewriterEntry *
 RewriterBase::store_flow(RewriterFlow *flow, int input,
                            Map &map, Map *reply_map_ptr)
 {
@@ -211,7 +242,7 @@ RewriterBase::store_flow(RewriterFlow *flow, int input,
         return 0;
     }
 
-    IPRewriterEntry *old = map.set(&flow->entry(false));
+    RewriterEntry *old = map.set(&flow->entry(false));
     assert(!old);
 
     if (!reply_map_ptr)
@@ -442,7 +473,7 @@ RewriterBase::llrpc(unsigned command, void *data)
         //	      -EAGAIN.
 
         IPFlowID *val = reinterpret_cast<IPFlowID *>(data);
-        IPRewriterEntry *m = get_entry(IP_PROTO_TCP, *val, -1);
+        RewriterEntry *m = get_entry(IP_PROTO_TCP, *val, -1);
         if (!m)
             return -EAGAIN;
         *val = m->rewritten_flowid();
@@ -456,7 +487,7 @@ RewriterBase::llrpc(unsigned command, void *data)
         //	      -EAGAIN.
 
         IPFlowID *val = reinterpret_cast<IPFlowID *>(data);
-        IPRewriterEntry *m = get_entry(IP_PROTO_UDP, *val, -1);
+        RewriterEntry *m = get_entry(IP_PROTO_UDP, *val, -1);
         if (!m)
             return -EAGAIN;
         *val = m->rewritten_flowid();
@@ -466,6 +497,6 @@ RewriterBase::llrpc(unsigned command, void *data)
         return Element::llrpc(command, data);
 }
 
-ELEMENT_REQUIRES(IPRewriterMapping IPRewriterPattern)
+ELEMENT_REQUIRES(RewriterMapping RewriterPattern)
 ELEMENT_PROVIDES(RewriterBase)
 CLICK_ENDDECLS

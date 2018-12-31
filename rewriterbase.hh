@@ -1,16 +1,12 @@
 // -*- mode: c++; c-basic-offset: 4 -*-
-#ifndef CLICK_IPREWRITERBASE_HH
-#define CLICK_IPREWRITERBASE_HH
+#ifndef CLICK_REWRITERBASE_HH
+#define CLICK_REWRITERBASE_HH
 #include <click/timer.hh>
-#include "../../elements/ip/iprwmapping.hh"
+#include "rwmapping.hh"
 #include <click/bitvector.hh>
-#include <click/ipflowid.hh>
-#include <click/hashcontainer.hh>
-
 CLICK_DECLS
 class Mapper;
 class RewriterPattern;
-class RewriterBase;
 
 class RewriterInput { public:
     enum {
@@ -84,7 +80,7 @@ private:
 
 class RewriterBase : public Element { public:
 
-    typedef HashContainer<IPRewriterEntry> Map;
+    typedef HashContainer<RewriterEntry> Map;
     enum {
         rw_drop = -1, rw_addmap = -2
     };
@@ -114,16 +110,16 @@ class RewriterBase : public Element { public:
     RewriterBase *reply_element(int input) const {
         return _input_specs[input].reply_element;
     }
-    virtual HashContainer<IPRewriterEntry> *get_map(int mapid) {
+    virtual HashContainer<RewriterEntry> *get_map(int mapid) {
         return likely(mapid == RewriterInput::mapid_default) ? &_map : 0;
     }
 
     enum {
         get_entry_check = -1, get_entry_reply = -2
     };
-    virtual IPRewriterEntry *get_entry(int ip_p, const IPFlowID &flowid,
+    virtual RewriterEntry *get_entry(int ip_p, const IPFlowID &flowid,
                                        int input);
-    virtual IPRewriterEntry *add_flow(int ip_p, const IPFlowID &flowid,
+    virtual RewriterEntry *add_flow(int ip_p, const IPFlowID &flowid,
                                       const IPFlowID &rewritten_flowid,
                                       int input) = 0;
     virtual void destroy_flow(RewriterFlow *flow) = 0;
@@ -154,7 +150,7 @@ protected:
         return timeouts[1] ? timeouts[1] : timeouts[0];
     }
 
-    IPRewriterEntry *store_flow(RewriterFlow *flow, int input,
+    RewriterEntry *store_flow(RewriterFlow *flow, int input,
                                 Map &map, Map *reply_map_ptr = 0);
     inline void unmap_flow(RewriterFlow *flow,
                            Map &map, Map *reply_map_ptr = 0);
@@ -214,7 +210,7 @@ RewriterInput::rewrite_flowid(const IPFlowID &flowid,
             rewritten_flowid = flowid;
             return RewriterBase::rw_addmap;
         case i_pattern: {
-            HashContainer<IPRewriterEntry> *reply_map;
+            HashContainer<RewriterEntry> *reply_map;
             if (likely(mapid == mapid_default))
                 reply_map = &reply_element->_map;
             else

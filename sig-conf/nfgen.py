@@ -219,7 +219,7 @@ def src_ip_filter(chain_pos, thrd=0):
             thrd + 1,
             thrd + 1,
             )
-    print("Chain Position: {}".format(chain_pos))
+
     return "1.{}.{}.{}".format(
         chain_pos + 1,
         thrd + 1,

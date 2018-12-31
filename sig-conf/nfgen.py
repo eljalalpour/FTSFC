@@ -125,10 +125,6 @@ def dev_declares(from_or_to, chain_pos, thrds):
 
     devs = inner_dev_list(dev_format_str, DATA_DEVICE_ID, thrds)
 
-    if (chain_pos == 0 and from_or_to == 'from') or \
-            (chain_pos == -1) and from_or_to == 'to':
-        devs.extend(inner_dev_list(dev_format_str, STATE_DEVICE_ID, thrds))
-
     return '\n'.join(devs)
 
 
@@ -136,7 +132,7 @@ def from_dev_declares(chain_pos, thrds):
     """
     format from device declares based on the position of middlebox in the chain
     and the number of threads
-    :param chain_pos: a number denoting the position of middlebox in the chain, use -1 for the last middlebox
+    :param chain_pos: a number denoting the position of middlebox in the chain
     :param thrds: a number denoting the number of threads
     :return: formatted string of from device declares
     """
@@ -218,11 +214,6 @@ def dev_mac(chain_pos, _40_or_10):
 
 
 def src_ip_filter(chain_pos, thrd=0):
-    if chain_pos == -1:
-        return "2.0.{}.{}".format(
-            thrd + 1,
-            thrd + 1,
-            )
     return "1.{}.{}.{}".format(
         chain_pos + 1,
         thrd + 1,
@@ -255,11 +246,8 @@ def nf_blocks_declares(chain_pos, ch_len, thrds):
         params = {
             QUEUE: i,
             MB_PARAMS: mb_p,
+            DATA_SRC_IP: src_ip_filter(chain_pos, i)
         }
-        if chain_pos == -1:
-            params[DATA_SRC_IP] = src_ip_filter(ch_len - 1, i)
-        else:
-            params[DATA_SRC_IP] = src_ip_filter(chain_pos, i)
 
         declares.append(
             format_str.format(**params)
@@ -322,17 +310,29 @@ def nf_block_def(chain_pos, mb, mb_params):
     return result
 
 
-def nf_click(ch_len, chain_pos, thrds):
+def nf_click(ch_len, chain_pos, thrds, mb):
     """
     Click code for FTC
     :return: Click code in string
     """
+    mb_ = None
+    mb_params_ = None
+    mb_params_vals_ = None
+
+    if mb == COUNTER:
+        mb_ = COUNTER_MB
+        mb_params_ = COUNTER_MB_PARAMS
+
+    elif mb == LB_MB:
+        mb_ = BEAMER_MUX_MB
+        mb_params_ = BEAMER_MUX_MB_PARAMS
+
     string_map = {
         SHARED_STATE_DECLARE: shared_state_declare(),
 
         NF_BLOCK_DEF: nf_block_def(chain_pos,
-                                    COUNTER_MB,
-                                    COUNTER_MB_PARAMS),
+                                   mb_,
+                                   mb_params_),
 
         FROM_DEVICE_DECLARES: from_dev_declares(chain_pos,
                                                 thrds),
@@ -353,12 +353,10 @@ def nf_click(ch_len, chain_pos, thrds):
     return NF.format(**string_map)
 
 
-def generate(ch_len, thrds):
+def generate(ch_len, thrds, mb):
     clicks = []
-    for chain_pos in range(ch_len - 1):
-        clicks.append(nf_click(ch_len, chain_pos, thrds))
-
-    clicks.append(nf_click(ch_len, -1, thrds))
+    for chain_pos in range(ch_len):
+        clicks.append(nf_click(ch_len, chain_pos, thrds, mb))
 
     return clicks
 

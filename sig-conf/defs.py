@@ -36,3 +36,7 @@ DATA_DEVICE_ID = 1
 
 FIRST_AQUA_MACHINE_IN_CHAIN = 6
 CPUS = 8
+
+
+COUNTER_MB = 'counter'
+LB_MB = 'lb'

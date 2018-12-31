@@ -2,6 +2,7 @@ import os.path
 import sys
 import argparse
 import os.path
+from defs import *
 import ftcgen
 import nfgen
 
@@ -17,6 +18,8 @@ DEFAULT_FAILS = 1
 DEFAULT_THREADS = 1
 DEFAULT_BATCH = 5
 
+DEFAULT_MB = COUNTER_MB
+
 
 def def_parser():
     parser = argparse.ArgumentParser(description="Generating click configurations")
@@ -26,30 +29,42 @@ def def_parser():
                         help='chain size',
                         type=int,
                         required=True)
+
     parser.add_argument('-a',
                         '--approach',
                         dest='a',
                         help='Approach',
                         type=str,
-                        default=DEFAULT_FAILS)
+                        required=True)
+
+    parser.add_argument('-m',
+                        '--middlebox',
+                        dest='m',
+                        help='Middlebox (Select among "counter", "lb")',
+                        type=str,
+                        default=True)
+
     parser.add_argument('-f',
                         '--fail',
                         dest='f',
                         help='Number of failures',
                         type=int,
                         default=DEFAULT_FAILS)
+
     parser.add_argument('-t',
                         '--thread',
                         dest='t',
                         help='Number of threads',
                         type=int,
                         default=DEFAULT_THREADS)
+
     parser.add_argument('-b',
                         '--batch',
                         dest='b',
                         help='Buffer batch size',
                         type=int,
                         default=DEFAULT_BATCH)
+
     parser.add_argument('-o',
                         '--output',
                         dest='o',

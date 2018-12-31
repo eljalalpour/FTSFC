@@ -87,4 +87,7 @@ COUNTER = 'counter'
 COUNTER_MB = 'NFLockFreeCounter(INDEX $index)'
 COUNTER_MB_PARAMS = ["$index"]
 
+BEAMER_MUX_MB = 'BeamerMux(RING_SIZE 200000, MAX_STATES 800)'
+BEAMER_MUX_MB_PARAMS = []
+
 NF_OUTPUT_NAME_FORMAT_STR = 'nf-{}.click'

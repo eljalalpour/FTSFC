@@ -48,8 +48,6 @@ BeamerMux::BeamerMux() {}
 
 BeamerMux::~BeamerMux() {}
 
-static const int RESERVED_PORT_COUNT = 1024;
-
 int BeamerMux::configure(Vector<String> &conf, ErrorHandler *errh) {
     int ringSize = 1;
     int maxStates = -1;

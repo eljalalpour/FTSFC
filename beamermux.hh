@@ -20,7 +20,7 @@ CLICK_DECLS
 ///     2- BeamerMux handles only UDP packets, while Beamer handles TCP and UDP
 ///     3- BeamerMux modifies the IP header or the original packet, while Beamer encapsulate the original packet inside
 /// another IP or GRE packet.
-class BeamerMux: Element {
+class BeamerMux: public Element {
 public:
     BeamerMux();
 

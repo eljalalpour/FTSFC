@@ -6,9 +6,12 @@
 #include <click/packet_anno.hh>
 #include <clicknet/ip.h>
 #include "checksumfixup.hh"
+#include "p4crc32.hh"
+#include "defs.hh"
 
 CLICK_DECLS
 
+using namespace Beamer;
 using namespace ClickityClack;
 
 #define CLICK_BEAMER_HASHFN_BOB 0
@@ -17,8 +20,6 @@ using namespace ClickityClack;
 #ifndef CLICK_BEAMER_HASHFN
 #define CLICK_BEAMER_HASHFN CLICK_BEAMER_HASHFN_CRC
 #endif
-
-#define CLICK_BEAMER_STATEFUL_DAISY 0
 
 static inline uint32_t beamerHash(const click_ip *ipHeader, const click_tcp *tcpHeader)
 {
@@ -75,7 +76,6 @@ int BeamerMux::configure(Vector<String> &conf, ErrorHandler *errh) {
 }
 
 
-
 Packet *BeamerMux::simple_action(Packet *p) {
     // We assume that the packet is always UDP
     uint32_t hash = beamerHash(p->ip_header(), p->udp_header());
@@ -83,7 +83,7 @@ Packet *BeamerMux::simple_action(Packet *p) {
 
     // Update the header,
     // part of the code is taken from ipipEcaper.encapsulate function in ClickityClack
-    click_ip *ip = reinterpret_cast<click_ip *>(p->data() + MAC_HEAD_SIZE);
+    click_ip *ip = reinterpret_cast<click_ip *>(CAST_AWAY_PACKET_DATA(p) + MAC_HEAD_SIZE);
     click_udp *udp = reinterpret_cast<click_udp *>(ip + UDP_HEAD_OFFSET_AFTER_MAC_HEAD);
 
     ip->ip_hl = sizeof(click_ip) >> 2;
@@ -91,7 +91,7 @@ Packet *BeamerMux::simple_action(Packet *p) {
     udp->uh_sum = DEFAULT_CRC;
 
     ip->ip_sum = checksumFold(
-            checksumFixup32(0, ip->ip_src.,
+            checksumFixup32(0, ip->ip_src.s_addr,
                             checksumFixup32(0, dip,
                                             checksumFixup16(0, ip->ip_len,
                                                             ip->ip_sum))));

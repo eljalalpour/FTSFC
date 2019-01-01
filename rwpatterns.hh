@@ -26,7 +26,7 @@ class RewriterPatterns : public Element { public:
 
     const char *class_name() const { return "RewriterPatterns"; }
 
-    int configure_phase() const	{ return IPRewriterBase::CONFIGURE_PHASE_PATTERNS; }
+    int configure_phase() const	{ return RewriterBase::CONFIGURE_PHASE_PATTERNS; }
     int configure(Vector<String> &, ErrorHandler *) CLICK_COLD;
     void cleanup(CleanupStage) CLICK_COLD;
 

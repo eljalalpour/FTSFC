@@ -114,6 +114,19 @@ AddrRewriter.
 RoundRobinIPMapper, FTPPortMapper, ICMPRewriter, ICMPPingRewriter,
 StoreIPAddress (for simple uses) */
 
+
+/// AddrRewriter works as follows:
+/// It maintains RewriterBase._map and RewriterBase._heap.
+/// The former records mapping, and the latter records flows and their expiries.
+/// On receiving a packet, AddrRewriter first looks up _map.
+/// If found, the packet is rewritten according to the mapping.
+/// Note that the elements of _heap expire periodically.
+/// Function RewriterBase.shrink_heap is called every period.
+/// To make sure that the shrink_heap will never be called, we can set expiry time bigger thatn the experiment duration.
+/// If there was no mapping, the packet is handled by the INPUTSPEC corresponding to the input port on
+/// which the packet arrived.
+
+
 class AddrRewriter : public RewriterBase { public:
 
     class AddrFlow : public RewriterFlow { public:

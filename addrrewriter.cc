@@ -138,6 +138,48 @@ AddrRewriter::add_flow(int, const IPFlowID &flowid,
     return store_flow(flow, input, _map);
 }
 
+//void
+//AddrRewriter::push(int port, Packet *p_in)
+//{
+//    WritablePacket *p = p_in->uniqueify();
+//    click_ip *iph = p->ip_header();
+//
+//    IPFlowID flowid(iph->ip_src, 0, IPAddress(), 0);
+//
+//    /// Read shared state
+//    RewriterEntry *m = _map.get(flowid);
+//
+//    if (!m) {
+//        IPFlowID rflowid = IPFlowID(IPAddress(), 0, iph->ip_dst, 0);
+//        /// Read shared state
+//        m = _map.get(rflowid);
+//    }
+//
+//    if (!m) {			// create new mapping
+//        RewriterInput &is = _input_specs.unchecked_at(port);
+//        IPFlowID rewritten_flowid = IPFlowID::uninitialized_t();
+//        int result = is.rewrite_flowid(flowid, rewritten_flowid, p);
+//        if (result == rw_addmap) /// Write shared state
+//            m = AddrRewriter::add_flow(0, flowid, rewritten_flowid, port);
+//        if (!m) {
+//            checked_output_push(result, p);
+//            return;
+//        } else if (_annos & 2) /// Write shared state
+//            m->flow()->set_reply_anno(p->anno_u8(_annos >> 2));
+//    }
+//
+//    /// Read shared state
+//    AddrFlow *mf = static_cast<AddrFlow *>(m->flow());
+//
+//    /// Read shared state
+//    mf->apply(p, m->direction(), _annos);
+//
+//    /// Write shared state
+//    mf->change_expiry_by_timeout(_heap, click_jiffies(), _timeouts);
+//
+//    output(m->output()).push(p);
+//}
+
 void
 AddrRewriter::push(int port, Packet *p_in)
 {
@@ -145,30 +187,42 @@ AddrRewriter::push(int port, Packet *p_in)
     click_ip *iph = p->ip_header();
 
     IPFlowID flowid(iph->ip_src, 0, IPAddress(), 0);
+    IPFlowID rflowid = IPFlowID(IPAddress(), 0, iph->ip_dst, 0);
+    RewriterInput &is = _input_specs.unchecked_at(port);
+    IPFlowID rewritten_flowid = IPFlowID::uninitialized_t();
+    int result = is.rewrite_flowid(flowid, rewritten_flowid, p);
+
+    /// Read shared state
     RewriterEntry *m = _map.get(flowid);
 
     if (!m) {
-        IPFlowID rflowid = IPFlowID(IPAddress(), 0, iph->ip_dst, 0);
+        /// Read shared state
         m = _map.get(rflowid);
     }
 
     if (!m) {			// create new mapping
-        RewriterInput &is = _input_specs.unchecked_at(port);
-        IPFlowID rewritten_flowid = IPFlowID::uninitialized_t();
-        int result = is.rewrite_flowid(flowid, rewritten_flowid, p);
-        if (result == rw_addmap)
+        if (result == rw_addmap) /// Write shared state
             m = AddrRewriter::add_flow(0, flowid, rewritten_flowid, port);
         if (!m) {
             checked_output_push(result, p);
             return;
-        } else if (_annos & 2)
+        } else if (_annos & 2) /// Write shared state
             m->flow()->set_reply_anno(p->anno_u8(_annos >> 2));
     }
 
+    /// Read shared state
+    auto m_output = m->output();
+
+    /// Read shared state
     AddrFlow *mf = static_cast<AddrFlow *>(m->flow());
+
+    /// Read shared state
     mf->apply(p, m->direction(), _annos);
+
+    /// Write shared state, this line my be removed to simplify the logic
     mf->change_expiry_by_timeout(_heap, click_jiffies(), _timeouts);
-    output(m->output()).push(p);
+
+    output(m_output).push(p);
 }
 
 

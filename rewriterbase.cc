@@ -332,7 +332,10 @@ void
 RewriterBase::gc_timer_hook(Timer *t, void *user_data)
 {
     RewriterBase *rw = static_cast<RewriterBase *>(user_data);
+
+    /// Write shared state
     rw->shrink_heap(false);
+
     if (rw->_gc_interval_sec)
         t->reschedule_after_sec(rw->_gc_interval_sec);
 }

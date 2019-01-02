@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.0)
 project(FTSFC)
 
-set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD 14)
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++17 -lpthread -O2")
 
 set(PYTHON_FILES sig-conf/clickgen.py)
@@ -59,7 +59,7 @@ add_executable(FTSFC
         tf_monitor.hh
         tf_nat.cc
         tf_nat.hh
-        not-worked-ideas/ft/buffer.cc beamermux.cc beamermux.hh freebsdbob.hh fivetuple.hh statetrack.hh dipmap.hh checksumfixup.hh p4crc32.hh rewriterbase.hh rewriterbase.cc rwmapping.hh rwmapping.cc rwpattern.hh rwpattern.cc rwpatterns.hh rwpatterns.cc addrrewriter.hh addrrewriter.cc)
+        not-worked-ideas/ft/buffer.cc beamermux.cc beamermux.hh freebsdbob.hh fivetuple.hh statetrack.hh dipmap.hh checksumfixup.hh p4crc32.hh rewriterbase.hh rewriterbase.cc rwmapping.hh rwmapping.cc rwpattern.hh rwpattern.cc rwpatterns.hh rwpatterns.cc addrrewriter.hh addrrewriter.cc lock_manager.hh shared_locks.cc shared_locks.hh)
 
 target_link_libraries(FTSFC ${PROTOBUF_LIB})
 

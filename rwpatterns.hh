@@ -1,5 +1,5 @@
-#ifndef CLICK_IPRWPATTERNS_HH
-#define CLICK_IPRWPATTERNS_HH
+#ifndef CLICK_RWPATTERNS_HH
+#define CLICK_RWPATTERNS_HH
 #include "rewriterbase.hh"
 #include <click/hashtable.hh>
 CLICK_DECLS

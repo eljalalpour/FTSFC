@@ -1,6 +1,7 @@
 // -*- mode: c++; c-basic-offset: 4 -*-
 #ifndef CLICK_RW_PATTERN_HH
 #define CLICK_RW_PATTERN_HH
+#include <click/config.h>
 #include <click/element.hh>
 #include <click/hashcontainer.hh>
 #include <click/ipflowid.hh>

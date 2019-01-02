@@ -83,11 +83,18 @@ THREAD_SCHEDULES = "THREAD_SCHEDULES"
 NF_BLOCKS_DECLARES = "NF_BLOCKS_DECLARES"
 LINKS = "LINKS"
 
-COUNTER = 'counter'
 COUNTER_MB = 'NFLockFreeCounter(INDEX $index)'
 COUNTER_MB_PARAMS = ["$index"]
 
 BEAMER_MUX_MB = 'BeamerMux(RING_SIZE 200000, MAX_STATES 800)'
 BEAMER_MUX_MB_PARAMS = []
+
+NAT_MB_DEF = 'nat::AddrRewriter({})'
+NAT_MB = '[$port]nat[$port]'
+NAT_MB_PARAMS = ['$port']
+NAT_MB_PARAMS_FORMAT = ('pattern {IP_MIN}-{IP_MAX} - {PORT} {PORT}')
+IP_MIN = 'IP_MIN'
+IP_MAX = 'IP_MAX'
+PORT = 'PORT'
 
 NF_OUTPUT_NAME_FORMAT_STR = 'nf-{}.click'

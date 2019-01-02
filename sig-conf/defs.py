@@ -37,6 +37,11 @@ DATA_DEVICE_ID = 1
 FIRST_AQUA_MACHINE_IN_CHAIN = 6
 CPUS = 8
 
+COUNTER = 'counter'
+LB = 'lb'
+NAT = 'nat'
 
-COUNTER_MB = 'counter'
-LB_MB = 'lb'
+IN_TR_SRC_IP_MIN = "1.0.0.0"
+IN_TR_SRC_IP_MAX = "1.0.255.255"
+
+NO_SHARED_STATE = '// No shared state'

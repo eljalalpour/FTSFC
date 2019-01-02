@@ -18,7 +18,7 @@ DEFAULT_FAILS = 1
 DEFAULT_THREADS = 1
 DEFAULT_BATCH = 5
 
-DEFAULT_MB = COUNTER_MB
+DEFAULT_MB = COUNTER
 
 
 def def_parser():
@@ -26,23 +26,24 @@ def def_parser():
     parser.add_argument('-c',
                         '--chain',
                         dest='c',
-                        help='chain size',
+                        help='<Required> Chain size',
                         type=int,
                         required=True)
 
     parser.add_argument('-a',
                         '--approach',
                         dest='a',
-                        help='Approach',
+                        help='<Required> Approach -- select among "nf", "ftc"',
                         type=str,
                         required=True)
 
     parser.add_argument('-m',
                         '--middlebox',
                         dest='m',
-                        help='Middlebox (Select among "counter", "lb")',
+                        help='Middlebox -- select among "counter", "lb", "nat"',
+                        nargs='+',
                         type=str,
-                        default=True)
+                        default=[COUNTER])
 
     parser.add_argument('-f',
                         '--fail',
@@ -68,7 +69,7 @@ def def_parser():
     parser.add_argument('-o',
                         '--output',
                         dest='o',
-                        help='output folder',
+                        help='<Required> output folder',
                         type=str,
                         required=True)
 
@@ -86,13 +87,13 @@ def parse_args(parser):
 
 def gen_store(opts):
     apr = opts['a'].lower()
+    print("Generating for {}".format(apr))
+
     if apr == FTC:
-        print("Generating for {}".format(FTC))
         clicks = ftcgen.generate(opts['c'], opts['f'], opts['t'], opts['b'])
         ftcgen.store(opts['o'], clicks)
 
     elif apr == NF:
-        print("Generating for {}".format(NF))
         clicks = nfgen.generate(opts['c'], opts['t'], opts['m'])
         nfgen.store(opts['o'], clicks)
 

@@ -1,10 +1,72 @@
 from defs import *
 from nfdefs import *
 import os
+import socket
+import struct
 
 
-def shared_state_declare():
-    return SHARED_STATE_FORMAT_STR
+def divide_ip_space(thrds, chain_pos):
+    def ip2long(ip):
+        """
+        Convert an IP string to long
+        :param ip: ip in string
+        :return: a long value of ip
+        """
+        packed_ip = socket.inet_aton(ip)
+        return struct.unpack("!L", packed_ip)[0]
+
+    def long2ip(ip_l):
+        """
+        Convert an IP long to IP string
+        :param ip_l: IP in long
+        :return: IP string
+        """
+        return socket.inet_ntoa(struct.pack('!L', ip_l))
+
+    if chain_pos == 0:
+        s = ip2long(IN_TR_SRC_IP_MIN)
+        t = ip2long(IN_TR_SRC_IP_MAX)
+    else:
+        s = ip2long(src_ip_filter(chain_pos, 0))
+        t = ip2long(src_ip_filter(chain_pos, thrds - 1))
+
+    step = (t - s) / thrds
+
+    ll = []
+    for i in range(0, thrds):
+        ll.append(long2ip(s + i * step))
+        ll.append(long2ip(s + (i + 1) * step - 1))
+
+    ll[-1] = long2ip(t)
+
+    return ll
+
+
+def shared_state_declare(mb, thrds, chain_pos):
+    result = ''
+    if mb == COUNTER:
+        result = SHARED_STATE_FORMAT_STR
+
+    elif mb == LB:
+        result = NO_SHARED_STATE
+
+    elif mb == NAT:
+        ips = divide_ip_space(thrds, chain_pos)
+        params = []
+        for i in range(0, len(ips), 2):
+            ip_min = ips[i]
+            ip_max = ips[i + 1]
+            port = i / 2
+            params.append(
+                NAT_MB_PARAMS_FORMAT.format(**{
+                    IP_MIN: ip_min,
+                    IP_MAX: ip_max,
+                    PORT: port,
+                })
+            )
+        result = NAT_MB_DEF.format(',\n\t'.join(params))
+
+    return result
 
 
 def dev_name_list(from_or_to, device, thrds):
@@ -60,9 +122,6 @@ def fd_names_list(chain_pos, thrds):
     :return: the list of device names
     """
     name_list = fd_data_names_list(thrds)
-
-    if chain_pos == 0:
-        name_list.extend(fd_state_names_list(thrds))
 
     return name_list
 
@@ -214,18 +273,18 @@ def dev_mac(chain_pos, _40_or_10):
 
 
 def src_ip_filter(chain_pos, thrd=0):
-    return "1.{}.{}.{}".format(
+    return "1.{}.{}.0".format(
         chain_pos + 1,
-        thrd + 1,
-        thrd + 1,
-        )
+        thrd)
 
 
 def gen_mb_params_str(thrd, mb):
     result = ''
-    if mb == BEAMER_MUX_MB:
+    if mb == LB:
         result = ''
-    elif mb == COUNTER_MB:
+    elif mb == COUNTER:
+        result = thrd
+    elif mb == NAT:
         result = thrd
 
     return result
@@ -335,12 +394,16 @@ def nf_click(ch_len, chain_pos, thrds, mb):
         mb_ = COUNTER_MB
         mb_params_ = COUNTER_MB_PARAMS
 
-    elif mb == LB_MB:
+    elif mb == LB:
         mb_ = BEAMER_MUX_MB
         mb_params_ = BEAMER_MUX_MB_PARAMS
 
+    elif mb == NAT:
+        mb_ = NAT_MB
+        mb_params_ = NAT_MB_PARAMS
+
     string_map = {
-        SHARED_STATE_DECLARE: shared_state_declare(),
+        SHARED_STATE_DECLARE: shared_state_declare(mb, thrds, chain_pos),
 
         NF_BLOCK_DEF: nf_block_def(ch_len,
                                    chain_pos,
@@ -368,8 +431,13 @@ def nf_click(ch_len, chain_pos, thrds, mb):
 
 def generate(ch_len, thrds, mb):
     clicks = []
+    if len(mb) == 1:
+        mb *= ch_len
+    elif len(mb) != ch_len:
+        raise ValueError("The number of middleboxes list must be either 1 or equal to chain length!")
+
     for chain_pos in range(ch_len):
-        clicks.append(nf_click(ch_len, chain_pos, thrds, mb))
+        clicks.append(nf_click(ch_len, chain_pos, thrds, mb[chain_pos]))
 
     # clicks.append(nf_click(ch_len, -1, thrds, mb))
 

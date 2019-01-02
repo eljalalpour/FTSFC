@@ -222,13 +222,23 @@ def thread_sched_declare(from_devs_list):
     return THREAD_SCHED_FORMAT_STR.format(', '.join(result))
 
 
-def nf_block_names_list(thrds):
+def nf_block_names_list(thrds, mb):
     """
     the list of FTC block names
     :param thrds: a number denoting the number of threads
     :return: names list
     """
-    return [NF_BLOCK_NAME_FORMAT_STR.format(i) for i in range(thrds)]
+    ll = []
+
+    if mb == NAT:
+        for i in range(thrds):
+            ll.append(NAT_PRE_NF_BLOCK_NAME_FORMAT_STR.format(i))
+            ll.append(NAT_POST_NF_BLOCK_NAME_FORMAT_STR.format(i))
+
+    else:
+        ll = [NF_BLOCK_NAME_FORMAT_STR.format(i) for i in range(thrds)]
+
+    return ll
 
 
 def dev_name(chain_pos):
@@ -300,27 +310,34 @@ def nf_blocks_declares(chain_pos, thrds, mb):
     """
 
     declares = []
-    format_str = NF_BLOCK_FORMAT_STR
 
     for i in range(thrds):
-        mb_p = gen_mb_params_str(i, mb)
-        if mb_p != '':
-            mb_p = ', ' + str(mb_p)
+        if mb == NAT:
+            declares.append(
+                NAT_NF_BLOCK_FORMAT_STR.format(**{
+                    QUEUE: i,
+                    DATA_SRC_IP: src_ip_filter(chain_pos, i),
+                })
+            )
+        else:
+            mb_p = gen_mb_params_str(i, mb)
+            if mb_p != '':
+                mb_p = ', ' + str(mb_p)
 
-        params = {
-            QUEUE: i,
-            MB_PARAMS: mb_p,
-            DATA_SRC_IP: src_ip_filter(chain_pos, i)
-        }
+            params = {
+                QUEUE: i,
+                MB_PARAMS: mb_p,
+                DATA_SRC_IP: src_ip_filter(chain_pos, i),
+            }
 
-        declares.append(
-            format_str.format(**params)
-        )
+            declares.append(
+                NF_BLOCK_FORMAT_STR.format(**params)
+            )
 
     return '\n'.join(declares)
 
 
-def links(thrds):
+def links(thrds, mb):
     """
     format link strings, each link is 'FromDevice... -> FTBlock -> ...ToDevice'
     :param thrds: a number denoting the number of threads
@@ -328,19 +345,25 @@ def links(thrds):
     """
     fd_data_names = fd_data_names_list(thrds)
     td_data_names = td_data_names_list(thrds)
-    nf_block_names = nf_block_names_list(thrds)
-
-    format_str = LINK_FORMAT_STR
+    nf_block_names = nf_block_names_list(thrds, mb)
 
     ll = []
     for i in range(thrds):
-        params = {
-            QUEUE: i,
-            'FROM_DATA_DEVICE_NAME': fd_data_names[i],
-            'NF_BLOCK_NAME': nf_block_names[i],
-            'TO_DATA_DEVICE_NAME': td_data_names[i],
-        }
-        ll.append(format_str.format(**params))
+        if mb == NAT:
+            ll.append(NAT_LINK_FORMAT_STR.format(**{
+                QUEUE: i,
+                'FROM_DATA_DEVICE_NAME': fd_data_names[i],
+                'PRE_NF_BLOCK_NAME': nf_block_names[i * 2],
+                'POST_NF_BLOCK_NAME': nf_block_names[i * 2 + 1],
+                'TO_DATA_DEVICE_NAME': td_data_names[i],
+            }))
+        else:
+            ll.append(LINK_FORMAT_STR.format(**{
+                QUEUE: i,
+                'FROM_DATA_DEVICE_NAME': fd_data_names[i],
+                'NF_BLOCK_NAME': nf_block_names[i],
+                'TO_DATA_DEVICE_NAME': td_data_names[i],
+            }))
 
     return '\n'.join(ll)
 
@@ -366,18 +389,30 @@ def nf_block_def(ch_len, chain_pos, mb, mb_params):
         dst_index = chain_pos + 1
         src_ip_filter_index = chain_pos - 1
 
-    result = NF_BLOCK.format(**{
-        SRC_IP_FILTER: src_ip_filter(src_ip_filter_index),
+    if mb == NAT_MB:
+        result = NAT_NF_BLOCK.format(**{
+            SRC_IP_FILTER: src_ip_filter(src_ip_filter_index),
 
-        MB: mb,
-        MB_PARAM: mb_params_str,
+            DATA_SRC_MAC: dev_mac(chain_pos, data_dev),
+            DATA_DST_MAC: dev_mac(dst_index, data_dev),
+            DATA_DST_IP: dev_ip(dst_index, data_dev),
+            DATA_SRC_NAME: dev_name(chain_pos),
+            DATA_DST_NAME: dev_name(dst_index),
+        })
 
-        DATA_SRC_MAC: dev_mac(chain_pos, data_dev),
-        DATA_DST_MAC: dev_mac(dst_index, data_dev),
-        DATA_DST_IP: dev_ip(dst_index, data_dev),
-        DATA_SRC_NAME: dev_name(chain_pos),
-        DATA_DST_NAME: dev_name(dst_index),
-    })
+    else:
+        result = NF_BLOCK.format(**{
+            SRC_IP_FILTER: src_ip_filter(src_ip_filter_index),
+
+            MB: mb,
+            MB_PARAM: mb_params_str,
+
+            DATA_SRC_MAC: dev_mac(chain_pos, data_dev),
+            DATA_DST_MAC: dev_mac(dst_index, data_dev),
+            DATA_DST_IP: dev_ip(dst_index, data_dev),
+            DATA_SRC_NAME: dev_name(chain_pos),
+            DATA_DST_NAME: dev_name(dst_index),
+        })
 
     return result
 
@@ -423,7 +458,7 @@ def nf_click(ch_len, chain_pos, thrds, mb):
                                                thrds,
                                                mb),
 
-        LINKS: links(thrds),
+        LINKS: links(thrds, mb),
     }
 
     return NF.format(**string_map)

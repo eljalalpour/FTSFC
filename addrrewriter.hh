@@ -131,7 +131,7 @@ class AddrRewriter : public RewriterBase { public:
 
     class AddrFlow : public RewriterFlow { public:
 
-        AddrFlow(IPRewriterInput *owner, const IPFlowID &flowid,
+        AddrFlow(RewriterInput *owner, const IPFlowID &flowid,
                    const IPFlowID &rewritten_flowid,
                    bool guaranteed, click_jiffies_t expiry_j)
                 : RewriterFlow(owner, flowid, rewritten_flowid,

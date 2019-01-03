@@ -87,12 +87,9 @@ AddrRewriter::cast(const char *n)
     return 0;
 }
 
-void AddrRewriter::_init_shared_state() {
-    if (!_init_state) {
-        Router *r = this->router();
-        _shared_locks = (SharedLocks *)(r->find(_shared_element_name));
-        _init_state = true;
-    }//if
+void AddrRewriter::_init_shared_locks() {
+    Router *r = this->router();
+    _shared_locks = (SharedLocks *)(r->find(_shared_element_name));
 }
 
 int
@@ -110,7 +107,7 @@ AddrRewriter::configure(Vector<String> &conf, ErrorHandler *errh)
 
     _annos = 1 + (has_reply_anno ? 2 + (reply_anno << 2) : 0);
 
-    _init_shared_state();
+    _init_shared_locks();
 
     return RewriterBase::configure(conf, errh);
 }
@@ -160,6 +157,7 @@ AddrRewriter::push(int port, Packet *p_in)
     IPFlowID flowid(iph->ip_src, 0, IPAddress(), 0);
 
     /// Read shared state
+    click_chatter("#buckets: %d, flowid's bucket: %d", _map.bucket_count(), _map.bucket(flowid));
     RewriterEntry *m = _map.get(flowid);
 
     if (!m) {
@@ -172,8 +170,10 @@ AddrRewriter::push(int port, Packet *p_in)
         RewriterInput &is = _input_specs.unchecked_at(port);
         IPFlowID rewritten_flowid = IPFlowID::uninitialized_t();
         int result = is.rewrite_flowid(flowid, rewritten_flowid, p);
-        if (result == rw_addmap) /// Write shared state
+        if (result == rw_addmap) { /// Write shared state
             m = AddrRewriter::add_flow(0, flowid, rewritten_flowid, port);
+            _shared_locks->extend_size(_map.bucket_count());
+        }//if
         if (!m) {
             checked_output_push(result, p);
             return;

@@ -172,10 +172,9 @@ protected:
 
 private:
 
-    void _init_shared_state();
+    void _init_shared_locks();
 
     String _shared_element_name;
-    bool _init_state;
     SharedLocks *_shared_locks;
 };
 

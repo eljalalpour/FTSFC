@@ -48,7 +48,26 @@ public:
     std::deque<elided_spin_lock> reader_lockers;
     std::deque<elided_spin_lock> writer_lockers;
 #endif
+    inline void extend_readers_size(size_t);
 
+    inline void extend_writers_size(size_t);
+
+    inline void extend_size(size_t);
 };
+
+void SharedLocks::extend_readers_size(size_t new_size) {
+    for (auto i = reader_lockers.size(); i < new_size; ++i)
+        reader_lockers.emplace_back();
+}
+
+void SharedLocks::extend_writers_size(size_t new_size) {
+    for (auto i = writer_lockers.size(); i < new_size; ++i)
+        writer_lockers.emplace_back();
+}
+
+void SharedLocks::extend_size(size_t new_size) {
+    extend_readers_size(new_size);
+    extend_writers_size(new_size);
+}
 
 CLICK_ENDDECLS

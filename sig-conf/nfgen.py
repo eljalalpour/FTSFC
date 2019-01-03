@@ -51,20 +51,21 @@ def shared_state_declare(mb, thrds, chain_pos):
         result = NO_SHARED_STATE
 
     elif mb == NAT:
-        ips = divide_ip_space(thrds, chain_pos)
-        params = []
-        for i in range(0, len(ips), 2):
-            ip_min = ips[i]
-            ip_max = ips[i + 1]
-            port = i / 2
-            params.append(
-                NAT_MB_PARAMS_FORMAT.format(**{
-                    IP_MIN: ip_min,
-                    IP_MAX: ip_max,
-                    PORT: port,
-                })
-            )
-        result = NAT_MB_DEF.format(',\n\t'.join(params))
+        # ips = divide_ip_space(thrds, chain_pos)
+        # params = []
+        # for i in range(0, len(ips), 2):
+        #     ip_min = ips[i]
+        #     ip_max = ips[i + 1]
+        #     port = i / 2
+        #     params.append(
+        #         NAT_MB_PARAMS_FORMAT.format(**{
+        #             IP_MIN: ip_min,
+        #             IP_MAX: ip_max,
+        #             PORT: port,
+        #         })
+        #     )
+        # result = NAT_MB_DEF.format(',\n\t'.join(params))
+        result = NAT_SHARED_STATE_FORMAT_STR
 
     return result
 
@@ -230,13 +231,15 @@ def nf_block_names_list(thrds, mb):
     """
     ll = []
 
-    if mb == NAT:
-        for i in range(thrds):
-            ll.append(NAT_PRE_NF_BLOCK_NAME_FORMAT_STR.format(i))
-            ll.append(NAT_POST_NF_BLOCK_NAME_FORMAT_STR.format(i))
+    # if mb == NAT:
+    #     for i in range(thrds):
+    #         ll.append(NAT_PRE_NF_BLOCK_NAME_FORMAT_STR.format(i))
+    #         ll.append(NAT_POST_NF_BLOCK_NAME_FORMAT_STR.format(i))
+    #
+    # else:
+    #     ll = [NF_BLOCK_NAME_FORMAT_STR.format(i) for i in range(thrds)]
 
-    else:
-        ll = [NF_BLOCK_NAME_FORMAT_STR.format(i) for i in range(thrds)]
+    ll = [NF_BLOCK_NAME_FORMAT_STR.format(i) for i in range(thrds)]
 
     return ll
 
@@ -288,14 +291,21 @@ def src_ip_filter(chain_pos, thrd=0):
         thrd)
 
 
-def gen_mb_params_str(thrd, mb):
+def gen_mb_params_str(thrds, chain_pos, thrd, mb):
     result = ''
     if mb == LB:
         result = ''
     elif mb == COUNTER:
         result = thrd
     elif mb == NAT:
-        result = thrd
+        ips = divide_ip_space(thrds, chain_pos)
+        ip_min = ips[thrd * 2]
+        ip_max = ips[thrd * 2 + 1]
+        result = NAT_MB_PARAMS_FORMAT.format(**{
+            IP_MIN: ip_min,
+            IP_MAX: ip_max,
+            # PORT: port,
+        })
 
     return result
 
@@ -311,28 +321,43 @@ def nf_blocks_declares(chain_pos, thrds, mb):
 
     declares = []
 
-    for i in range(thrds):
-        if mb == NAT:
-            declares.append(
-                NAT_NF_BLOCK_FORMAT_STR.format(**{
-                    QUEUE: i,
-                    DATA_SRC_IP: src_ip_filter(chain_pos, i),
-                })
-            )
-        else:
-            mb_p = gen_mb_params_str(i, mb)
-            if mb_p != '':
-                mb_p = ', ' + str(mb_p)
+    for thrd in range(thrds):
+        # if mb == NAT:
+        #     declares.append(
+        #         NAT_NF_BLOCK_FORMAT_STR.format(**{
+        #             QUEUE: thrd,
+        #             DATA_SRC_IP: src_ip_filter(chain_pos, thrd),
+        #         })
+        #     )
+        # else:
+        #     mb_p = gen_mb_params_str(thrd, mb)
+        #     if mb_p != '':
+        #         mb_p = ', ' + str(mb_p)
+        #
+        #     params = {
+        #         QUEUE: thrd,
+        #         MB_PARAMS: mb_p,
+        #         DATA_SRC_IP: src_ip_filter(chain_pos, thrd),
+        #     }
+        #
+        #     declares.append(
+        #         NF_BLOCK_FORMAT_STR.format(**params)
+        #     )
 
-            params = {
-                QUEUE: i,
-                MB_PARAMS: mb_p,
-                DATA_SRC_IP: src_ip_filter(chain_pos, i),
-            }
+        # mb_p = gen_mb_params_str(thrd, mb)
+        mb_p = gen_mb_params_str(thrds, chain_pos, thrd, mb)
+        if mb_p != '':
+            mb_p = ', ' + str(mb_p)
 
-            declares.append(
-                NF_BLOCK_FORMAT_STR.format(**params)
-            )
+        params = {
+            QUEUE: thrd,
+            MB_PARAMS: mb_p,
+            DATA_SRC_IP: src_ip_filter(chain_pos, thrd),
+        }
+
+        declares.append(
+            NF_BLOCK_FORMAT_STR.format(**params)
+        )
 
     return '\n'.join(declares)
 
@@ -349,21 +374,28 @@ def links(thrds, mb):
 
     ll = []
     for i in range(thrds):
-        if mb == NAT:
-            ll.append(NAT_LINK_FORMAT_STR.format(**{
-                QUEUE: i,
-                'FROM_DATA_DEVICE_NAME': fd_data_names[i],
-                'PRE_NF_BLOCK_NAME': nf_block_names[i * 2],
-                'POST_NF_BLOCK_NAME': nf_block_names[i * 2 + 1],
-                'TO_DATA_DEVICE_NAME': td_data_names[i],
-            }))
-        else:
-            ll.append(LINK_FORMAT_STR.format(**{
-                QUEUE: i,
-                'FROM_DATA_DEVICE_NAME': fd_data_names[i],
-                'NF_BLOCK_NAME': nf_block_names[i],
-                'TO_DATA_DEVICE_NAME': td_data_names[i],
-            }))
+        # if mb == NAT:
+        #     ll.append(NAT_LINK_FORMAT_STR.format(**{
+        #         QUEUE: i,
+        #         'FROM_DATA_DEVICE_NAME': fd_data_names[i],
+        #         'PRE_NF_BLOCK_NAME': nf_block_names[i * 2],
+        #         'POST_NF_BLOCK_NAME': nf_block_names[i * 2 + 1],
+        #         'TO_DATA_DEVICE_NAME': td_data_names[i],
+        #     }))
+        # else:
+        #     ll.append(LINK_FORMAT_STR.format(**{
+        #         QUEUE: i,
+        #         'FROM_DATA_DEVICE_NAME': fd_data_names[i],
+        #         'NF_BLOCK_NAME': nf_block_names[i],
+        #         'TO_DATA_DEVICE_NAME': td_data_names[i],
+        #     }))
+
+        ll.append(LINK_FORMAT_STR.format(**{
+            QUEUE: i,
+            'FROM_DATA_DEVICE_NAME': fd_data_names[i],
+            'NF_BLOCK_NAME': nf_block_names[i],
+            'TO_DATA_DEVICE_NAME': td_data_names[i],
+        }))
 
     return '\n'.join(ll)
 
@@ -389,30 +421,43 @@ def nf_block_def(ch_len, chain_pos, mb, mb_params):
         dst_index = chain_pos + 1
         src_ip_filter_index = chain_pos - 1
 
-    if mb == NAT_MB:
-        result = NAT_NF_BLOCK.format(**{
-            SRC_IP_FILTER: src_ip_filter(src_ip_filter_index),
+    # if mb == NAT_MB:
+    #     result = NAT_NF_BLOCK.format(**{
+    #         SRC_IP_FILTER: src_ip_filter(src_ip_filter_index),
+    #
+    #         DATA_SRC_MAC: dev_mac(chain_pos, data_dev),
+    #         DATA_DST_MAC: dev_mac(dst_index, data_dev),
+    #         DATA_DST_IP: dev_ip(dst_index, data_dev),
+    #         DATA_SRC_NAME: dev_name(chain_pos),
+    #         DATA_DST_NAME: dev_name(dst_index),
+    #     })
+    #
+    # else:
+    #     result = NF_BLOCK.format(**{
+    #         SRC_IP_FILTER: src_ip_filter(src_ip_filter_index),
+    #
+    #         MB: mb,
+    #         MB_PARAM: mb_params_str,
+    #
+    #         DATA_SRC_MAC: dev_mac(chain_pos, data_dev),
+    #         DATA_DST_MAC: dev_mac(dst_index, data_dev),
+    #         DATA_DST_IP: dev_ip(dst_index, data_dev),
+    #         DATA_SRC_NAME: dev_name(chain_pos),
+    #         DATA_DST_NAME: dev_name(dst_index),
+    #     })
 
-            DATA_SRC_MAC: dev_mac(chain_pos, data_dev),
-            DATA_DST_MAC: dev_mac(dst_index, data_dev),
-            DATA_DST_IP: dev_ip(dst_index, data_dev),
-            DATA_SRC_NAME: dev_name(chain_pos),
-            DATA_DST_NAME: dev_name(dst_index),
-        })
+    result = NF_BLOCK.format(**{
+        SRC_IP_FILTER: src_ip_filter(src_ip_filter_index),
 
-    else:
-        result = NF_BLOCK.format(**{
-            SRC_IP_FILTER: src_ip_filter(src_ip_filter_index),
+        MB: NAT_MB,
+        MB_PARAM: mb_params_str,
 
-            MB: mb,
-            MB_PARAM: mb_params_str,
-
-            DATA_SRC_MAC: dev_mac(chain_pos, data_dev),
-            DATA_DST_MAC: dev_mac(dst_index, data_dev),
-            DATA_DST_IP: dev_ip(dst_index, data_dev),
-            DATA_SRC_NAME: dev_name(chain_pos),
-            DATA_DST_NAME: dev_name(dst_index),
-        })
+        DATA_SRC_MAC: dev_mac(chain_pos, data_dev),
+        DATA_DST_MAC: dev_mac(dst_index, data_dev),
+        DATA_DST_IP: dev_ip(dst_index, data_dev),
+        DATA_SRC_NAME: dev_name(chain_pos),
+        DATA_DST_NAME: dev_name(dst_index),
+    })
 
     return result
 

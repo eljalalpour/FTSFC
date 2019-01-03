@@ -70,6 +70,7 @@ NAT_LINK_FORMAT_STR = """// Queue {QUEUE}
 """
 
 SHARED_STATE_FORMAT_STR = "array::LockFreeArray;"
+NAT_SHARED_STATE_FORMAT_STR = "shared::SharedLocks;"
 
 FROM_DEVICE_NAME_FORMAT_STR = "fd{QUEUE}"
 THREAD_SCHED_FORMAT_STR = "StaticThreadSched({});"
@@ -121,12 +122,15 @@ COUNTER_MB_PARAMS = ["$index"]
 BEAMER_MUX_MB = 'BeamerMux(RING_SIZE 200000, MAX_STATES 800)'
 BEAMER_MUX_MB_PARAMS = []
 
-NAT_MB_DEF = 'nat::AddrRewriter({})'
-NAT_MB = '[$port]nat[$port]'
-NAT_MB_PARAMS = ['$port']
-NAT_MB_PARAMS_FORMAT = ('pattern {IP_MIN}-{IP_MAX} - {PORT} {PORT}')
+# NAT_MB_DEF = 'nat::AddrRewriter({})'
+# NAT_MB = '[$port]nat[$port]'
+NAT_MB = 'AddrRewriter({PATTERN})'
+NAT_MB_PARAMS = ['$pattern']
+# NAT_MB_PARAMS_FORMAT = 'pattern {IP_MIN}-{IP_MAX} - {PORT} {PORT}'
+NAT_MB_PARAMS_FORMAT = 'pattern {IP_MIN}-{IP_MAX} - 0 0'
 IP_MIN = 'IP_MIN'
 IP_MAX = 'IP_MAX'
 PORT = 'PORT'
+PATTERN = 'PATTERN'
 
 NF_OUTPUT_NAME_FORMAT_STR = 'nf-{}.click'

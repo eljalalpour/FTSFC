@@ -301,11 +301,10 @@ def gen_mb_params_str(thrds, chain_pos, thrd, mb):
         ips = divide_ip_space(thrds, chain_pos)
         ip_min = ips[thrd * 2]
         ip_max = ips[thrd * 2 + 1]
-        result = NAT_MB_PARAMS_FORMAT.format(**{
-            IP_MIN: ip_min,
-            IP_MAX: ip_max,
-            # PORT: port,
-        })
+        result = ', '.join([
+            ip_min,
+            ip_max
+        ])
 
     return result
 
@@ -400,14 +399,34 @@ def links(thrds, mb):
     return '\n'.join(ll)
 
 
-def nf_block_def(ch_len, chain_pos, mb, mb_params):
+def middlebox_declare(mb):
+    result = None
+    if mb == NAT:
+        result = NAT_MB
+    elif mb == LB:
+        result = BEAMER_MUX_MB
+
+    elif mb == COUNTER:
+        result = COUNTER_MB
+
+    return result
+
+
+def nf_block_def(ch_len, thrds, chain_pos, mb):
     """
     format a block declare
-    :param chain_pos: a number denoting the position of middlebox in the chain
-    :param mb_params: the list of parameter lists for MB's threads
     :return: formatted string of ft block
     """
     data_dev = '40'
+
+    if mb == COUNTER:
+        mb_params = COUNTER_MB_PARAMS
+
+    elif mb == LB:
+        mb_params = BEAMER_MUX_MB_PARAMS
+
+    elif mb == NAT:
+        mb_params = NAT_MB_PARAMS
 
     mb_params_str = ''
     if mb_params is not None and len(mb_params) > 0:
@@ -449,7 +468,7 @@ def nf_block_def(ch_len, chain_pos, mb, mb_params):
     result = NF_BLOCK.format(**{
         SRC_IP_FILTER: src_ip_filter(src_ip_filter_index),
 
-        MB: NAT_MB,
+        MB: middlebox_declare(mb),
         MB_PARAM: mb_params_str,
 
         DATA_SRC_MAC: dev_mac(chain_pos, data_dev),
@@ -467,28 +486,11 @@ def nf_click(ch_len, chain_pos, thrds, mb):
     Click code for FTC
     :return: Click code in string
     """
-    mb_ = None
-    mb_params_ = None
-
-    if mb == COUNTER:
-        mb_ = COUNTER_MB
-        mb_params_ = COUNTER_MB_PARAMS
-
-    elif mb == LB:
-        mb_ = BEAMER_MUX_MB
-        mb_params_ = BEAMER_MUX_MB_PARAMS
-
-    elif mb == NAT:
-        mb_ = NAT_MB
-        mb_params_ = NAT_MB_PARAMS
 
     string_map = {
         SHARED_STATE_DECLARE: shared_state_declare(mb, thrds, chain_pos),
 
-        NF_BLOCK_DEF: nf_block_def(ch_len,
-                                   chain_pos,
-                                   mb_,
-                                   mb_params_),
+        NF_BLOCK_DEF: nf_block_def(ch_len, thrds, chain_pos, mb),
 
         FROM_DEVICE_DECLARES: from_dev_declares(chain_pos,
                                                 thrds),

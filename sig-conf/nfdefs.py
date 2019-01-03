@@ -124,13 +124,9 @@ BEAMER_MUX_MB_PARAMS = []
 
 # NAT_MB_DEF = 'nat::AddrRewriter({})'
 # NAT_MB = '[$port]nat[$port]'
-NAT_MB = 'AddrRewriter({PATTERN})'
-NAT_MB_PARAMS = ['$pattern']
+NAT_MB = 'AddrRewriter(pattern $ip_min-$ip_max - 0 0, SHARED shared)'
+NAT_MB_PARAMS = ['$ip_min', '$ip_max']
 # NAT_MB_PARAMS_FORMAT = 'pattern {IP_MIN}-{IP_MAX} - {PORT} {PORT}'
-NAT_MB_PARAMS_FORMAT = 'pattern {IP_MIN}-{IP_MAX} - 0 0'
-IP_MIN = 'IP_MIN'
-IP_MAX = 'IP_MAX'
-PORT = 'PORT'
-PATTERN = 'PATTERN'
+# NAT_MB_PARAMS_FORMAT = 'pattern {IP_MIN}-{IP_MAX} - 0 0'
 
 NF_OUTPUT_NAME_FORMAT_STR = 'nf-{}.click'

@@ -1,6 +1,7 @@
 #pragma once
 
 #include "defs.hh"
+#include "elided_spin_lock.hh"
 #include <click/config.h>
 #include <click/element.hh>
 #include <mutex>
@@ -49,15 +50,25 @@ public:
     std::deque<elided_spin_lock> writer_lockers;
 #endif
     inline void extend_readers_size(size_t);
-
     inline void extend_writers_size(size_t);
-
     inline void extend_size(size_t);
+
+    inline void lock_reader(size_t);
+    inline void lock_writer(size_t);
+
+    inline void unlock_reader(size_t);
+    inline void unlock_writer(size_t);
+
+private:
+    std::mutex _my_mutex;
 };
 
 void SharedLocks::extend_readers_size(size_t new_size) {
-    for (auto i = reader_lockers.size(); i < new_size; ++i)
-        reader_lockers.emplace_back();
+    if (new_size > reader_lockers.size()) {
+        std::lock_guard<std::mutex> guard(_my_mutex);
+        for (auto i = reader_lockers.size(); i < new_size; ++i)
+            reader_lockers.emplace_back();
+    }//if
 }
 
 void SharedLocks::extend_writers_size(size_t new_size) {
@@ -68,6 +79,22 @@ void SharedLocks::extend_writers_size(size_t new_size) {
 void SharedLocks::extend_size(size_t new_size) {
     extend_readers_size(new_size);
     extend_writers_size(new_size);
+}
+
+void SharedLocks::lock_reader(size_t index) {
+    reader_lockers[index].lock();
+}
+
+void SharedLocks::lock_writer(size_t index) {
+    writer_lockers[index].lock();
+}
+
+void SharedLocks::unlock_reader(size_t index) {
+    reader_lockers[index].unlock();
+}
+
+void SharedLocks::unlock_writer(size_t index) {
+    writer_lockers[index].unlock();
 }
 
 CLICK_ENDDECLS

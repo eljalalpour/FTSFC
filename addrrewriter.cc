@@ -157,7 +157,9 @@ AddrRewriter::push(int port, Packet *p_in)
     IPFlowID flowid(iph->ip_src, 0, IPAddress(), 0);
 
     /// Read shared state
-    click_chatter("#buckets: %d, flowid's bucket: %d", _map.bucket_count(), _map.bucket(flowid));
+    auto bucket = _map.bucket(flowid);
+    _shared_locks->reader_lockers[bucket].lock();
+
     RewriterEntry *m = _map.get(flowid);
 
     if (!m) {

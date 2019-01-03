@@ -3,6 +3,7 @@
 #define CLICK_ADDRREWRITER_HH
 #include "rewriterbase.hh"
 #include "rwmapping.hh"
+#include "shared_locks.hh"
 
 CLICK_DECLS
 
@@ -169,6 +170,10 @@ protected:
 
     static String dump_mappings_handler(Element *, void *);
 
+private:
+    String _shared_element_name;
+    bool _init_state;
+    SharedLocks *_shared_locks;
 };
 
 

@@ -23,6 +23,7 @@
 #include <click/error.hh>
 #include <clicknet/tcp.h>
 #include <clicknet/udp.h>
+#include <click/router.hh>
 CLICK_DECLS
 
 void
@@ -86,6 +87,14 @@ AddrRewriter::cast(const char *n)
     return 0;
 }
 
+void AddrRewriter::_init_shared_state() {
+    if (!_init_state) {
+        Router *r = this->router();
+        _shared_locks = (SharedLocks *)(r->find(_shared_element_name));
+        _init_state = true;
+    }//if
+}
+
 int
 AddrRewriter::configure(Vector<String> &conf, ErrorHandler *errh)
 {
@@ -95,10 +104,14 @@ AddrRewriter::configure(Vector<String> &conf, ErrorHandler *errh)
 
     if (Args(this, errh).bind(conf)
                 .read("REPLY_ANNO", has_reply_anno, AnnoArg(1), reply_anno)
+                .read("SHARED", _shared_element_name)
                 .consume() < 0)
         return -1;
 
     _annos = 1 + (has_reply_anno ? 2 + (reply_anno << 2) : 0);
+
+    _init_shared_state();
+
     return RewriterBase::configure(conf, errh);
 }
 

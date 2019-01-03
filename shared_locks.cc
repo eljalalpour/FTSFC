@@ -12,7 +12,7 @@ SharedLocks::~SharedLocks() { };
 
 int SharedLocks::configure(Vector <String> &conf, ErrorHandler *errh) {
     // set id and f params
-    int _readers, _writers;
+    size_t _readers, _writers;
     if (Args(conf, this, errh)
                 .read("READERS", _readers)
                 .read("WRITERS", _writers)
@@ -22,11 +22,8 @@ int SharedLocks::configure(Vector <String> &conf, ErrorHandler *errh) {
     assert(_readers > 0);
     assert(_writers > 0);
 
-    for (int i = 0; i < _readers; i++)
-        reader_lockers.emplace_back();
-
-    for (int i = 0; i < _writers; i++)
-        writer_lockers.emplace_back();
+    extend_readers_size(_readers);
+    extend_writers_size(_writers);
 
     return 0;
 }

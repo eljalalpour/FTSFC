@@ -5,6 +5,7 @@
 #include <click/config.h>
 #include <click/element.hh>
 #include <mutex>
+#include <shared_mutex>
 #include <deque>
 
 CLICK_DECLS
@@ -15,6 +16,30 @@ CLICK_DECLS
 //#define ENABLE_MULTI_THREADING_USING_FINE_GRAINED_LOCKS 1
 //#define ENABLE_MULTI_THREADING_USING_FINE_GRAINED_ELIDED_LOCKS 1
 
+
+#ifdef ENABLE_MULTI_THREADING_USING_MUTEX
+typedef std::deque<std::mutex> ReaderLockers;
+typedef std::deque<std::mutex> WriterLockers;
+
+typedef std::deque<std::shared_lock<std::mutex>> ReaderLocks;
+typedef std::deque<std::unique_lock<std::mutex>> WriterLocks;
+#endif
+
+#ifdef ENABLE_MULTI_THREADING_USING_FLAG_LOCK
+typedef std::deque<flag_spin_lock> ReaderLockers;
+typedef std::deque<flag_spin_lock> WriterLockers;
+
+typedef std::deque<std::unique_lock<flag_spin_lock>> WriterLocks;
+typedef std::deque<std::shared_lock<flag_spin_lock>> ReaderLocks;
+#endif
+
+#ifdef ENABLE_MULTI_THREADING_USING_ELIDED_LOCK
+typedef std::deque<elided_spin_lock> ReaderLockers;
+typedef std::deque<elided_spin_lock> WriterLockers;
+
+typedef std::deque<std::unique_lock<elided_spin_lock>> WriterLocks;
+typedef std::deque<std::shared_lock<elided_spin_lock>> ReaderLocks;
+#endif
 
 class SharedLocks : public Element {
 public:
@@ -34,21 +59,6 @@ public:
     int configure(Vector<String> &, ErrorHandler *);
 
 public:
-
-#ifdef ENABLE_MULTI_THREADING_USING_MUTEX
-    std::deque<std::mutex> reader_lockers;
-    std::deque<std::mutex> writer_lockers;
-#endif
-
-#ifdef ENABLE_MULTI_THREADING_USING_FLAG_LOCK
-    std::deque<flag_spin_lock> reader_lockers;
-    std::deque<flag_spin_lock> writer_lockers;
-#endif
-
-#ifdef ENABLE_MULTI_THREADING_USING_ELIDED_LOCK
-    std::deque<elided_spin_lock> reader_lockers;
-    std::deque<elided_spin_lock> writer_lockers;
-#endif
     inline void extend_readers_size(size_t);
     inline void extend_writers_size(size_t);
     inline void extend_size(size_t);
@@ -61,19 +71,31 @@ public:
 
 private:
     std::mutex _my_mutex;
+
+    ReaderLockers _reader_lockers;
+    WriterLockers _writer_lockers;
+
+    ReaderLocks _reader_locks;
+    WriterLocks _writer_locks;
+
+    template<typename LockersType, typename LocksType>
+    inline void _extend(LockersType& lockers, LocksType& locks, size_t new_size) {
+        if (new_size > lockers.size()) {
+            std::lock_guard<std::mutex> guard(_my_mutex);
+            for (auto i = lockers.size(); i < new_size; ++i) {
+                lockers.emplace_back();
+                locks.emplace_back(lockers.back());
+            }//for
+        }//if
+    }
 };
 
 void SharedLocks::extend_readers_size(size_t new_size) {
-    if (new_size > reader_lockers.size()) {
-        std::lock_guard<std::mutex> guard(_my_mutex);
-        for (auto i = reader_lockers.size(); i < new_size; ++i)
-            reader_lockers.emplace_back();
-    }//if
+    _extend(_reader_lockers, _reader_locks, new_size);
 }
 
 void SharedLocks::extend_writers_size(size_t new_size) {
-    for (auto i = writer_lockers.size(); i < new_size; ++i)
-        writer_lockers.emplace_back();
+    _extend(_writer_lockers, _writer_locks, new_size);
 }
 
 void SharedLocks::extend_size(size_t new_size) {
@@ -82,19 +104,19 @@ void SharedLocks::extend_size(size_t new_size) {
 }
 
 void SharedLocks::lock_reader(size_t index) {
-    reader_lockers[index].lock();
+    _reader_locks[index].lock();
 }
 
 void SharedLocks::lock_writer(size_t index) {
-    writer_lockers[index].lock();
+    _writer_locks[index].lock();
 }
 
 void SharedLocks::unlock_reader(size_t index) {
-    reader_lockers[index].unlock();
+    _reader_locks[index].unlock();
 }
 
 void SharedLocks::unlock_writer(size_t index) {
-    writer_lockers[index].unlock();
+    _writer_locks[index].unlock();
 }
 
 CLICK_ENDDECLS

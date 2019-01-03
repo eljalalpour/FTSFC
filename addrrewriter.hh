@@ -171,6 +171,9 @@ protected:
     static String dump_mappings_handler(Element *, void *);
 
 private:
+
+    void AddrRewriter::_init_shared_state();
+
     String _shared_element_name;
     bool _init_state;
     SharedLocks *_shared_locks;

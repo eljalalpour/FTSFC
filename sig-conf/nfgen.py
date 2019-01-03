@@ -51,21 +51,10 @@ def shared_state_declare(mb, thrds, chain_pos):
         result = NO_SHARED_STATE
 
     elif mb == NAT:
-        # ips = divide_ip_space(thrds, chain_pos)
-        # params = []
-        # for i in range(0, len(ips), 2):
-        #     ip_min = ips[i]
-        #     ip_max = ips[i + 1]
-        #     port = i / 2
-        #     params.append(
-        #         NAT_MB_PARAMS_FORMAT.format(**{
-        #             IP_MIN: ip_min,
-        #             IP_MAX: ip_max,
-        #             PORT: port,
-        #         })
-        #     )
-        # result = NAT_MB_DEF.format(',\n\t'.join(params))
-        result = NAT_SHARED_STATE_FORMAT_STR
+        result = NAT_SHARED_STATE_FORMAT_STR.format(**{
+            'READERS': 10,
+            'WRITERS': 10,
+        })
 
     return result
 

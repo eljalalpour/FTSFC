@@ -187,6 +187,8 @@ RewriterBase::configure(Vector<String> &conf, ErrorHandler *errh)
             _input_specs.push_back(is);
     }
 
+    click_chatter("Map buckets: %d", _map.bucket_count());
+
     return _input_specs.size() == ninputs() ? 0 : -1;
 }
 

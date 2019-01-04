@@ -28,6 +28,11 @@ int SharedArray::configure(Vector<String> &conf, ErrorHandler *errh) {
                 .consume() < 0)
         return -1;
 
+    assert(_sharing_level == ThreadSharing1 ||
+           _sharing_level == ThreadSharing2 ||
+           _sharing_level == ThreadSharing4 ||
+           _sharing_level == ThreadSharing8)
+
     _init_shared_locks();
 
     return 0;
@@ -48,7 +53,7 @@ String SharedArray::read_handler(Element *e, void *) {
 }
 
 void SharedArray::add_handlers() {
-    add_read_handler("_array", read_handler, LFA_H_ARRAY);
+    add_read_handler("array", read_handler, LFA_H_ARRAY);
 }
 
 CLICK_ENDDECLS

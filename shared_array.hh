@@ -41,7 +41,7 @@ public:
 
 private:
     int _array[DEFAULT_SIZE];
-    SharingLevel _sharing_level;
+    int _sharing_level;
     String _shared_element_name;
     SharedLocks *_shared_locks;
 

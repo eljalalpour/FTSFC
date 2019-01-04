@@ -17,6 +17,7 @@ APPROACHES = [
 DEFAULT_FAILS = 1
 DEFAULT_THREADS = 1
 DEFAULT_BATCH = 5
+DEFAULT_SHARING_LEVEL = 1  # no sharing
 
 DEFAULT_MB = COUNTER
 
@@ -40,7 +41,7 @@ def def_parser():
     parser.add_argument('-m',
                         '--middlebox',
                         dest='m',
-                        help='Middlebox -- select among "counter", "lb", "nat"',
+                        help='Middlebox -- select among counter, lb, nat -- default {}'.format(COUNTER),
                         nargs='+',
                         type=str,
                         default=[COUNTER])
@@ -48,23 +49,30 @@ def def_parser():
     parser.add_argument('-f',
                         '--fail',
                         dest='f',
-                        help='Number of failures',
+                        help='Number of failures -- default {}'.format(DEFAULT_FAILS),
                         type=int,
                         default=DEFAULT_FAILS)
 
     parser.add_argument('-t',
                         '--thread',
                         dest='t',
-                        help='Number of threads',
+                        help='Number of threads -- default {}'.format(DEFAULT_THREADS),
                         type=int,
                         default=DEFAULT_THREADS)
 
     parser.add_argument('-b',
                         '--batch',
                         dest='b',
-                        help='Buffer batch size',
+                        help='Buffer batch size -- default {}'.format(DEFAULT_BATCH),
                         type=int,
                         default=DEFAULT_BATCH)
+
+    parser.add_argument('-l',
+                        '--level',
+                        dest='l',
+                        help='Sharing level -- select among 1, 2, 4, 8 -- default {}'.format(DEFAULT_SHARING_LEVEL),
+                        type=int,
+                        default=DEFAULT_SHARING_LEVEL)
 
     parser.add_argument('-o',
                         '--output',
@@ -94,7 +102,7 @@ def gen_store(opts):
         ftcgen.store(opts['o'], clicks)
 
     elif apr == NF:
-        clicks = nfgen.generate(opts['c'], opts['t'], opts['m'])
+        clicks = nfgen.generate(opts['c'], opts['t'], opts['m'], opts['l'])
         nfgen.store(opts['o'], clicks)
 
     else:

@@ -12,15 +12,17 @@ NFLockFreeCounter::~NFLockFreeCounter() { };
 
 void NFLockFreeCounter::_init_shared_state() {
     Router *r = this->router();
-    _shared_state = (SharedArray *)(r->find("array"));
+    _shared_state = (SharedArray *)(r->find(_shared_array_element_name));
 }
 
 int NFLockFreeCounter::configure(Vector<String> &conf, ErrorHandler *errh) {
     // set index param
     if (Args(conf, this, errh)
                 .read("INDEX", _index)
+                .read("SHARED_ARRAY", _shared_array_element_name)
                 .complete() < 0)
         return -1;
+
     DEBUG("NFLockFreeCounter index is %d!\n", _index);
 
     _init_shared_state();

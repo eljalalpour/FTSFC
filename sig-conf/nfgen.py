@@ -42,17 +42,20 @@ def divide_ip_space(thrds, chain_pos):
     return ll
 
 
-def shared_state_declare(mb, thrds, chain_pos):
+def shared_state_declare(mb, thrds, chain_pos, sharing_level):
     result = ''
     if mb == COUNTER:
-        result = SHARED_STATE_FORMAT_STR
+        result = SHARED_STATE_FORMAT_STR.format(**{
+            'LOCKS': 8,
+            'SHARING_LEVEL': sharing_level,
+        })
 
     elif mb == LB:
         result = NO_SHARED_STATE
 
     elif mb == NAT:
         result = NAT_SHARED_STATE_FORMAT_STR.format(**{
-            'LOCKS': 32768
+            'LOCKS': 32768,
         })
 
     return result
@@ -469,14 +472,14 @@ def nf_block_def(ch_len, thrds, chain_pos, mb):
     return result
 
 
-def nf_click(ch_len, chain_pos, thrds, mb):
+def nf_click(ch_len, chain_pos, thrds, mb, sharing_level):
     """
     Click code for FTC
     :return: Click code in string
     """
 
     string_map = {
-        SHARED_STATE_DECLARE: shared_state_declare(mb, thrds, chain_pos),
+        SHARED_STATE_DECLARE: shared_state_declare(mb, thrds, chain_pos, sharing_level),
 
         NF_BLOCK_DEF: nf_block_def(ch_len, thrds, chain_pos, mb),
 
@@ -499,7 +502,7 @@ def nf_click(ch_len, chain_pos, thrds, mb):
     return NF.format(**string_map)
 
 
-def generate(ch_len, thrds, mb):
+def generate(ch_len, thrds, mb, sharing_level):
     clicks = []
     if len(mb) == 1:
         mb *= ch_len
@@ -507,7 +510,7 @@ def generate(ch_len, thrds, mb):
         raise ValueError("The number of middleboxes list must be either 1 or equal to chain length!")
 
     for chain_pos in range(ch_len):
-        clicks.append(nf_click(ch_len, chain_pos, thrds, mb[chain_pos]))
+        clicks.append(nf_click(ch_len, chain_pos, thrds, mb[chain_pos], sharing_level))
 
     # clicks.append(nf_click(ch_len, -1, thrds, mb))
 

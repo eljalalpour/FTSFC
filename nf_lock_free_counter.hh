@@ -11,6 +11,7 @@ class NFLockFreeCounter : public Element {
 private:
     size_t _index;
     SharedArray* _shared_state;
+    String _shared_array_element_name;
     inline void _init_shared_state();
 
 public:

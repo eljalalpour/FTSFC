@@ -23,12 +23,6 @@ add_executable(FTSFC
         forwarder.hh
         ftmb_sim.cc
         ftmb_sim.hh
-        shared_array.cc
-        shared_array.hh
-        old/nf_atomic_counter.cc
-        old/nf_atomic_counter.hh
-        old/nf_atomic_nat.cc
-        old/nf_atomic_nat.hh
         nf_counter.cc
         nf_counter.hh
         shared_lock_free_state.cc
@@ -59,7 +53,32 @@ add_executable(FTSFC
         tf_monitor.hh
         tf_nat.cc
         tf_nat.hh
-        not-worked-ideas/ft/buffer.cc beamermux.cc beamermux.hh freebsdbob.hh fivetuple.hh statetrack.hh dipmap.hh checksumfixup.hh p4crc32.hh rewriterbase.hh rewriterbase.cc rwmapping.hh rwmapping.cc rwpattern.hh rwpattern.cc rwpatterns.hh rwpatterns.cc addrrewriter.hh addrrewriter.cc lock_manager.hh shared_locks.cc shared_locks.hh)
+        ftmb_master.hh
+        ftmb_master.cc
+        beamermux.cc
+        beamermux.hh
+        freebsdbob.hh
+        fivetuple.hh
+        statetrack.hh
+        dipmap.hh
+        checksumfixup.hh
+        p4crc32.hh
+        rewriterbase.hh
+        rewriterbase.cc
+        rwmapping.hh
+        rwmapping.cc
+        rwpattern.hh
+        rwpattern.cc
+        rwpatterns.hh
+        rwpatterns.cc
+        addrrewriter.hh
+        addrrewriter.cc
+        lock_manager.hh
+        shared_locks.cc
+        shared_locks.hh
+        shared_array.cc
+        shared_array.hh
+        )
 
 target_link_libraries(FTSFC ${PROTOBUF_LIB})
 

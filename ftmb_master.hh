@@ -3,7 +3,7 @@
 #include "defs.hh"
 #include <click/config.h>
 #include <click/element.hh>
-#include "lock_free_array.hh"
+#include "shared_array.hh"
 
 CLICK_DECLS
 

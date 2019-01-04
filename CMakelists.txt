@@ -23,8 +23,8 @@ add_executable(FTSFC
         forwarder.hh
         ftmb_sim.cc
         ftmb_sim.hh
-        lock_free_array.cc
-        lock_free_array.hh
+        shared_array.cc
+        shared_array.hh
         old/nf_atomic_counter.cc
         old/nf_atomic_counter.hh
         old/nf_atomic_nat.cc

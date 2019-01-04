@@ -9,15 +9,15 @@
 
 CLICK_DECLS
 
-class LockFreeArray : public Element {
+class SharedArray : public Element {
 public:
     int array[DEFAULT_SIZE];
 
-    LockFreeArray ();
+    SharedArray ();
 
-    ~LockFreeArray();
+    ~SharedArray();
 
-    const char *class_name() const { return "LockFreeArray"; }
+    const char *class_name() const { return "SharedArray"; }
 
     const char *port_count() const { return PORTS_0_0; }
 

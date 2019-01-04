@@ -11,7 +11,7 @@ NFMonitor::~NFMonitor() { };
 
 void NFMonitor::_init_shared_state() {
     Router *r = this->router();
-    _lock_free_array = (LockFreeArray *)(r->find("array"));
+    _lock_free_array = (SharedArray *)(r->find("array"));
 }
 
 int NFMonitor::configure(Vector<String> &conf, ErrorHandler *errh) {

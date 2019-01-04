@@ -20,7 +20,7 @@ private:
     long _loop_count;
     bool _first_packet_seen;
 
-    LockFreeArray* _shared_state;
+    SharedArray* _shared_state;
     inline void _init_shared_state();
 
     std::chrono::time_point<std::chrono::high_resolution_clock> _last_snapshot_timestamp;

@@ -3,13 +3,13 @@
 #include "defs.hh"
 #include <click/config.h>
 #include <click/element.hh>
-#include "lock_free_array.hh"
+#include "shared_array.hh"
 
 CLICK_DECLS
 
 class NFMonitor : public Element {
 private:
-    LockFreeArray* _lock_free_array;
+    SharedArray* _lock_free_array;
     int _index;
     int _for_count;
 

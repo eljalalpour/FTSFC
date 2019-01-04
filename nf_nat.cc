@@ -1,4 +1,4 @@
-#include "lock_free_array.hh"
+#include "shared_array.hh"
 #include "defs.hh"
 #include <click/config.h>
 #include <click/router.hh>
@@ -20,7 +20,7 @@ bool NFNAT::bad_header(const click_ip *iph) {
 void NFNAT::_init_shared_state() {
     if (!_init_array) {
         Router *r = this->router();
-        _lock_free_array = (LockFreeArray *)(r->find("array"));
+        _lock_free_array = (SharedArray *)(r->find("array"));
         _init_array = true;
     }//if
 }

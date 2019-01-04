@@ -160,70 +160,57 @@ AddrRewriter::push(int port, Packet *p_in)
     RewriterEntry *m;
 
     {/// Critical section
-        /// A - READER LOCK
+        /// A - LOCK
         /// lock the corresponding reader lock
         auto bucket = _map.bucket(flowid);
-        _shared_locks->lock_reader(bucket);
+        _shared_locks->lock(bucket);
 
         m = _map.get(flowid);
 
         if (!m) {
-            /// A - READER UNLOCK
+            /// A - UNLOCK
             /// unlock the corresponding reader lock
-            _shared_locks->unlock_reader(bucket);
+            _shared_locks->unlock(bucket);
 
             IPFlowID rflowid = IPFlowID(IPAddress(), 0, iph->ip_dst, 0);
 
-            /// B - READER LOCK
+            /// B - LOCK
             /// lock the corresponding reader lock
             bucket = _map.bucket(rflowid);
-            _shared_locks->lock_reader(bucket);
+            _shared_locks->lock(bucket);
 
             /// Read shared state
             m = _map.get(rflowid);
         }
 
         if (!m) {            // create new mapping
-            /// B - READER UNLOCK
+            /// B - UNLOCK
             /// unlock the corresponding reader lock
-            _shared_locks->unlock_reader(bucket);
+            _shared_locks->unlock(bucket);
 
             RewriterInput &is = _input_specs.unchecked_at(port);
             IPFlowID rewritten_flowid = IPFlowID::uninitialized_t();
             int result = is.rewrite_flowid(flowid, rewritten_flowid, p);
             if (result == rw_addmap) { /// Write shared state
 
-                /// C - WRITER LOCK
-                /// lock the corresponding writer lock
+                /// C - LOCK
+                /// lock the corresponding lock
                 bucket = _map.bucket(rewritten_flowid);
-                _shared_locks->lock_writer(bucket);
+                _shared_locks->lock(bucket);
 
                 m = AddrRewriter::add_flow(0, flowid, rewritten_flowid, port);
 //                _shared_locks->extend_size(_map.bucket_count());
 
-                /// C - WRITER UNLOCK
-                /// unlock the corresponding writer lock
-                _shared_locks->unlock_writer(bucket);
             }//if
             if (!m) {
+                /// C - UNLOCK
+                _shared_locks->unlock(bucket);
                 checked_output_push(result, p);
                 return;
             }//if
-            else if (_annos & 2) {/// Write shared state
-                /// D - WRITER LOCK
-                /// lock the corresponding writer lock
-                _shared_locks->lock_writer(bucket);
-
+            else if (_annos & 2) {
                 m->flow()->set_reply_anno(p->anno_u8(_annos >> 2));
-
-                /// D - WRITER UNLOCK
-                /// unlock the corresponding writer lock
-                _shared_locks->unlock_writer(bucket);
             }//else if
-
-            /// E - READER LOCK
-            /// lock the corresponding reader lock
-            _shared_locks->lock_reader(bucket);
         }//if
 
         /// Read shared state
@@ -232,20 +219,12 @@ AddrRewriter::push(int port, Packet *p_in)
         /// Read shared state
         mf->apply(p, m->direction(), _annos);
 
-        /// A, B, E - READER UNLOCK
-        /// unlock the corresponding reader lock
-        _shared_locks->unlock_reader(bucket);
-
-        /// F - WRITER LOCK
-        /// lock the corresponding writer lock
-        _shared_locks->lock_writer(bucket);
-
         /// Write shared state
         mf->change_expiry_by_timeout(_heap, click_jiffies(), _timeouts);
 
-        /// F - WRITER UNLOCK
+        /// A, B, C - WRITER UNLOCK
         /// unlock the corresponding writer lock
-        _shared_locks->unlock_writer(bucket);
+        _shared_locks->unlock(bucket);
     }
     output(m->output()).push(p);
 }

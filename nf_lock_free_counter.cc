@@ -1,4 +1,4 @@
-#include "lock_free_array.hh"
+#include "shared_array.hh"
 #include <click/config.h>
 #include <click/router.hh>
 #include <click/args.hh>
@@ -12,7 +12,7 @@ NFLockFreeCounter::~NFLockFreeCounter() { };
 
 void NFLockFreeCounter::_init_shared_state() {
     Router *r = this->router();
-    _shared_state = (LockFreeArray *)(r->find("array"));
+    _shared_state = (SharedArray *)(r->find("array"));
 }
 
 int NFLockFreeCounter::configure(Vector<String> &conf, ErrorHandler *errh) {
@@ -32,7 +32,7 @@ Packet *NFLockFreeCounter::simple_action(Packet *p) {
     DEBUG("--------------------");
     DEBUG("Begin NFLockFreeCounter with index %d:", _index);
 
-    ++_shared_state->array[_index];
+    _shared_state->increment(_index);
 
     DEBUG("End NFLockFreeCounter %d:", _index);
     DEBUG("--------------------");

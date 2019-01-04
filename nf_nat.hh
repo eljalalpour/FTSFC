@@ -29,6 +29,8 @@ public:
 
     Packet *simple_action(Packet *p);
 
+    int configure(Vector<String> &, ErrorHandler *) CLICK_COLD;
+
     inline bool bad_header(const click_ip *iph);
 
     inline uint32_t flow_id(Packet *p);

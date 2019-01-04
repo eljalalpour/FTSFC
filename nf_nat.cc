@@ -18,11 +18,8 @@ bool NFNAT::bad_header(const click_ip *iph) {
 }
 
 void NFNAT::_init_shared_state() {
-    if (!_init_array) {
-        Router *r = this->router();
-        _lock_free_array = (SharedArray *)(r->find("array"));
-        _init_array = true;
-    }//if
+    Router *r = this->router();
+    _lock_free_array = (SharedArray *)(r->find("array"));
 }
 
 uint32_t NFNAT::flow_id(Packet *p) {
@@ -49,10 +46,13 @@ uint32_t NFNAT::flow_id(Packet *p) {
     return hash_val % STATE_LEN;
 }
 
+int NFNAT::configure(Vector<String> &conf, ErrorHandler *errh)  {
+    _init_shared_state();
+}
+
 Packet *NFNAT::simple_action(Packet *p) {
     DEBUG("--------------------");
     DEBUG("Begin NFNAT");
-    Router *r = this->router();
 
     const click_ip *iph = p->ip_header();
 
@@ -65,9 +65,8 @@ Packet *NFNAT::simple_action(Packet *p) {
     uint32_t fid = flow_id(p);
 
     // Keep as is
-    _init_shared_state();
-    if (_lock_free_array->array[fid] == 0)
-        _lock_free_array->array[fid] = 1;
+    if (_lock_free_array->read(fid) == 0)
+        _lock_free_array->increment(fid);
 
     DEBUG("End NFNAT");
     DEBUG("--------------------");

@@ -9,7 +9,7 @@ CLICK_DECLS
 
 class NFLockFreeCounter : public Element {
 private:
-    int _index;
+    size_t _index;
     SharedArray* _shared_state;
     inline void _init_shared_state();
 

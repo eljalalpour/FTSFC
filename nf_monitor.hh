@@ -10,7 +10,7 @@ CLICK_DECLS
 class NFMonitor : public Element {
 private:
     SharedArray* _lock_free_array;
-    int _index;
+    size_t _index;
     int _for_count;
 
     inline void _init_shared_state();

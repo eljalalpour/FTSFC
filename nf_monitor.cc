@@ -33,7 +33,7 @@ Packet *NFMonitor::simple_action(Packet *p) {
     DEBUG("--------------------");
     DEBUG("Begin NFMonitor with index %d:", _index);
 
-    ++(_lock_free_array->array[_index]);
+    _lock_free_array->increment(_index);
 
     for (int i = 0; i < _for_count; ++i) {
         rand();

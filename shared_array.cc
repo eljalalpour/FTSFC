@@ -57,4 +57,4 @@ void SharedArray::add_handlers() {
 }
 
 CLICK_ENDDECLS
-EXPORT_ELEMENT(LockFreeArray)
+EXPORT_ELEMENT(SharedArray)

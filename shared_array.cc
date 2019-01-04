@@ -31,7 +31,7 @@ int SharedArray::configure(Vector<String> &conf, ErrorHandler *errh) {
     assert(_sharing_level == ThreadSharing1 ||
            _sharing_level == ThreadSharing2 ||
            _sharing_level == ThreadSharing4 ||
-           _sharing_level == ThreadSharing8)
+           _sharing_level == ThreadSharing8);
 
     _init_shared_locks();
 

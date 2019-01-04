@@ -52,7 +52,8 @@ def shared_state_declare(mb, thrds, chain_pos):
 
     elif mb == NAT:
         result = NAT_SHARED_STATE_FORMAT_STR.format(**{
-            'LOCKS': 32768
+            'READERS': 32768,
+            'WRITERS': 32768,
         })
 
     return result

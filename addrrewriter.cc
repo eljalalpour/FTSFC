@@ -252,6 +252,7 @@ AddrRewriter::add_handlers()
     add_rewriter_handlers(true);
 }
 
+ELEMENT_REQUIRES(SharedLocks)
 ELEMENT_REQUIRES(RewriterBase)
 EXPORT_ELEMENT(AddrRewriter)
 CLICK_ENDDECLS

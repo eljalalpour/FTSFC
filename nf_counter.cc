@@ -43,4 +43,5 @@ Packet *NFCounter::simple_action(Packet *p) {
 }
 
 CLICK_ENDDECLS
+ELEMENT_REQUIRES(SharedArray)
 EXPORT_ELEMENT(NFCounter)

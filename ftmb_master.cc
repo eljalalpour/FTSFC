@@ -41,7 +41,7 @@ int FTMBMaster::configure(Vector<String> &conf, ErrorHandler *errh) {
 
 void FTMBMaster::_init_shared_state() {
     Router *r = this->router();
-    _shared_state = (LockFreeArray *)(r->find(_shared_array_element_name));
+    _shared_state = (SharedArray *)(r->find(_shared_array_element_name));
 }
 
 Packet *FTMBMaster::simple_action(Packet *p) {

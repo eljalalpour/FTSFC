@@ -6,7 +6,7 @@ $index |
     -> MarkIPHeader(14)
     -> IPFilter(allow udp && src 22.1.0.0/16)
     -> IPPrint($index)
-    -> NFLockFreeCounter(INDEX $index)
+    -> NFCounter(INDEX $index)
     -> MarkIPHeader(14)
     -> StoreIPAddress(10.70.0.7, src)
     -> StoreIPAddress(10.70.0.1, dst)

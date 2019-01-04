@@ -29,8 +29,8 @@ add_executable(FTSFC
         old/nf_atomic_counter.hh
         old/nf_atomic_nat.cc
         old/nf_atomic_nat.hh
-        nf_lock_free_counter.cc
-        nf_lock_free_counter.hh
+        nf_counter.cc
+        nf_counter.hh
         shared_lock_free_state.cc
         shared_lock_free_state.hh
         ft_lock_free_counter.cc

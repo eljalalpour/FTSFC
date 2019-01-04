@@ -2,20 +2,20 @@
 #include <click/config.h>
 #include <click/router.hh>
 #include <click/args.hh>
-#include "nf_lock_free_counter.hh"
+#include "nf_counter.hh"
 
 CLICK_DECLS
 
-NFLockFreeCounter::NFLockFreeCounter () { };
+NFCounter::NFCounter () { };
 
-NFLockFreeCounter::~NFLockFreeCounter() { };
+NFCounter::~NFCounter() { };
 
-void NFLockFreeCounter::_init_shared_state() {
+void NFCounter::_init_shared_state() {
     Router *r = this->router();
     _shared_state = (SharedArray *)(r->find(_shared_array_element_name));
 }
 
-int NFLockFreeCounter::configure(Vector<String> &conf, ErrorHandler *errh) {
+int NFCounter::configure(Vector<String> &conf, ErrorHandler *errh) {
     // set index param
     if (Args(conf, this, errh)
                 .read("INDEX", _index)
@@ -23,20 +23,20 @@ int NFLockFreeCounter::configure(Vector<String> &conf, ErrorHandler *errh) {
                 .complete() < 0)
         return -1;
 
-    DEBUG("NFLockFreeCounter index is %d!\n", _index);
+    DEBUG("NFCounter index is %d!\n", _index);
 
     _init_shared_state();
 
     return 0;
 }
 
-Packet *NFLockFreeCounter::simple_action(Packet *p) {
+Packet *NFCounter::simple_action(Packet *p) {
     DEBUG("--------------------");
-    DEBUG("Begin NFLockFreeCounter with index %d:", _index);
+    DEBUG("Begin NFCounter with index %d:", _index);
 
     _shared_state->increment(_index);
 
-    DEBUG("End NFLockFreeCounter %d:", _index);
+    DEBUG("End NFCounter %d:", _index);
     DEBUG("--------------------");
 
     return p;

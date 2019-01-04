@@ -7,7 +7,7 @@
 
 CLICK_DECLS
 
-class NFLockFreeCounter : public Element {
+class NFCounter : public Element {
 private:
     size_t _index;
     SharedArray* _shared_state;
@@ -15,11 +15,11 @@ private:
     inline void _init_shared_state();
 
 public:
-    NFLockFreeCounter ();
+    NFCounter ();
 
-    ~NFLockFreeCounter();
+    ~NFCounter();
 
-    const char *class_name() const { return "NFLockFreeCounter"; }
+    const char *class_name() const { return "NFCounter"; }
 
     const char *port_count() const { return PORTS_1_1; }
 

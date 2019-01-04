@@ -33,15 +33,14 @@ int FTMBSim::configure(Vector<String> &conf, ErrorHandler *errh) {
 
 //    LOG("Loop count found: %d", _loop_count);
 
+    _init_shared_state();
+
     return 0;
 }
 
 void FTMBSim::_init_shared_state() {
-    if (!_init_state) {
-        Router *r = this->router();
-        _shared_state = (LockFreeArray *)(r->find("array"));
-        _init_state = true;
-    }//if
+    Router *r = this->router();
+    _shared_state = (LockFreeArray *)(r->find("array"));
 }
 
 Packet *FTMBSim::simple_action(Packet *p) {

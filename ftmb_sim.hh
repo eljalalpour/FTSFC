@@ -20,7 +20,6 @@ private:
     long _loop_count;
     bool _first_packet_seen;
 
-    bool _init_state;
     LockFreeArray* _shared_state;
     inline void _init_shared_state();
 

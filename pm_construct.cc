@@ -5,17 +5,13 @@
 
 CLICK_DECLS
 
-PMConstruct::PMConstruct() : _shared_state_init(false) { }
+PMConstruct::PMConstruct() { }
 
 PMConstruct::~PMConstruct() { }
 
 inline void PMConstruct::_init_shared_state_pointer() {
-    if (!_shared_state_init) {
-        _shared_state_init = true;
-
-        Router *r = this->router();
-        _shared_state = (SharedLockFreeState *)(r->find("shared_state"));
-    }//if
+    Router *r = this->router();
+    _shared_state = (SharedLockFreeState *)(r->find("shared_state"));
 }
 
 int PMConstruct::configure(Vector<String> &conf, ErrorHandler *errh) {
@@ -27,14 +23,14 @@ int PMConstruct::configure(Vector<String> &conf, ErrorHandler *errh) {
 
     LOG("PMConstruct queue is %d!\n", _queue);
 
+    _init_shared_state_pointer();
+
     return 0;
 }
 
 Packet *PMConstruct::simple_action(Packet *p) {
     DEBUG("--------------------");
     DEBUG("Begin PMConstruct");
-
-    _init_shared_state_pointer();
 
     _shared_state->construct_piggyback_message(p, _queue);
 

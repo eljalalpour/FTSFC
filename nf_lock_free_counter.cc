@@ -6,16 +6,13 @@
 
 CLICK_DECLS
 
-NFLockFreeCounter::NFLockFreeCounter () : _init_state(false) { };
+NFLockFreeCounter::NFLockFreeCounter () { };
 
 NFLockFreeCounter::~NFLockFreeCounter() { };
 
 void NFLockFreeCounter::_init_shared_state() {
-    if (!_init_state) {
-        Router *r = this->router();
-        _shared_state = (LockFreeArray *)(r->find("array"));
-        _init_state = true;
-    }//if
+    Router *r = this->router();
+    _shared_state = (LockFreeArray *)(r->find("array"));
 }
 
 int NFLockFreeCounter::configure(Vector<String> &conf, ErrorHandler *errh) {
@@ -26,14 +23,14 @@ int NFLockFreeCounter::configure(Vector<String> &conf, ErrorHandler *errh) {
         return -1;
     DEBUG("NFLockFreeCounter index is %d!\n", _index);
 
+    _init_shared_state();
+
     return 0;
 }
 
 Packet *NFLockFreeCounter::simple_action(Packet *p) {
     DEBUG("--------------------");
     DEBUG("Begin NFLockFreeCounter with index %d:", _index);
-
-    _init_shared_state();
 
     ++_shared_state->array[_index];
 

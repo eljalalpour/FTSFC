@@ -9,7 +9,6 @@ CLICK_DECLS
 
 class FTMonitor : public Element {
 private:
-    bool _init_state;
     SharedLockFreeState* _shared_state;
     int _index;
     int _for_count;

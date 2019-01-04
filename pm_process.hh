@@ -17,7 +17,6 @@ CLICK_DECLS
 
 class PMProcess : public Element {
 private:
-    bool _shared_state_init;
     SharedLockFreeState* _shared_state;
 
     int _queue;

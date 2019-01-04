@@ -5,7 +5,7 @@
 
 CLICK_DECLS
 
-PMProcess::PMProcess() : _shared_state_init(false) {
+PMProcess::PMProcess() {
     Util _util;
     _util.init(_log_table);
 }
@@ -13,19 +13,13 @@ PMProcess::PMProcess() : _shared_state_init(false) {
 PMProcess::~PMProcess() { }
 
 inline void PMProcess::_init_shared_state_pointer() {
-    if (!_shared_state_init) {
-        _shared_state_init = true;
-
-        Router *r = this->router();
-        _shared_state = (SharedLockFreeState *)(r->find("shared_state"));
-    }//if
+    Router *r = this->router();
+    _shared_state = (SharedLockFreeState *)(r->find("shared_state"));
 }
 
 Packet* PMProcess::simple_action(Packet *p) {
     DEBUG("--------------------");
     DEBUG("Begin PMProcess");
-
-    _init_shared_state_pointer();
 
     try {
         _shared_state->process_piggyback_message(p, _log_table, _queue);
@@ -49,6 +43,8 @@ int PMProcess::configure(Vector<String> &conf, ErrorHandler *errh) {
         return -1;
 
     LOG("PMProcess queue is %d!\n", _queue);
+
+    _init_shared_state_pointer();
 
     return 0;
 }

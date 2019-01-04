@@ -11,7 +11,6 @@ CLICK_DECLS
 
 class FTLockFreeCounter : public Element {
 private:
-    bool _init_state;
     SharedLockFreeState* _shared_state;
     int _index;
 

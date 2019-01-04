@@ -15,7 +15,6 @@ class TFLockFreeCounter : public Element {
 private:
     int _index;
     int _batch;
-    bool _trans_init;
 
     Transmitter *_trans;
     vector<Packet*> _queue;

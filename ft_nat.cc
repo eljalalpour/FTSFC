@@ -5,7 +5,7 @@
 
 CLICK_DECLS
 
-FTNAT::FTNAT () : _init_state(false)  { };
+FTNAT::FTNAT () { };
 
 FTNAT::~FTNAT() { };
 
@@ -15,11 +15,8 @@ bool FTNAT::bad_header(const click_ip *iph) {
 }
 
 void FTNAT::_init_shared_state() {
-    if (!_init_state) {
-        Router *r = this->router();
-        _shared_state = (SharedLockFreeState *)(r->find("shared_state"));
-        _init_state = true;
-    }//if
+    Router *r = this->router();
+    _shared_state = (SharedLockFreeState *)(r->find("shared_state"));
 }
 
 uint32_t FTNAT::flow_id(Packet *p) {
@@ -46,11 +43,15 @@ uint32_t FTNAT::flow_id(Packet *p) {
     return hash_val % STATE_LEN;
 }
 
+int FTNAT::configure(Vector<String> &conf, ErrorHandler *errh) {
+    _init_shared_state();
+
+    return 0;
+}
+
 Packet *FTNAT::simple_action(Packet *p) {
     DEBUG("--------------------");
     DEBUG("Begin FTNAT");
-
-    _init_shared_state();
 
     const click_ip *iph = p->ip_header();
 

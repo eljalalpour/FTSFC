@@ -6,17 +6,13 @@
 
 CLICK_DECLS
 
-TFNAT::TFNAT  () : _trans_init(false) { };
+TFNAT::TFNAT  () { };
 
 TFNAT::~TFNAT () { };
 
 void TFNAT::_init_transmitter() {
-    if (!_trans_init) {
-        Router *r = this->router();
-        _trans = (Transmitter *)(r->find("trans"));
-
-        _trans_init = true;
-    }//if
+    Router *r = this->router();
+    _trans = (Transmitter *)(r->find("trans"));
 }
 
 bool TFNAT::bad_header(const click_ip *iph) {
@@ -48,11 +44,16 @@ uint32_t TFNAT::flow_id(Packet *p) {
     return hash_val % STATE_LEN;
 }
 
+int TFNAT::configure(Vector<String> &conf, ErrorHandler *errh) {
+    _init_transmitter();
+
+    return 0;
+}
+
 Packet *TFNAT::simple_action(Packet *p) {
     DEBUG("--------------------");
     DEBUG("Begin TFNAT");
 
-    _init_transmitter();
 
     const click_ip *iph = p->ip_header();
 

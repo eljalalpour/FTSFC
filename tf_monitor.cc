@@ -5,7 +5,7 @@
 
 CLICK_DECLS
 
-TFMonitor::TFMonitor  () : _trans_init(false) { };
+TFMonitor::TFMonitor  () { };
 
 TFMonitor::~TFMonitor () { };
 
@@ -19,23 +19,19 @@ int TFMonitor::configure(Vector<String> &conf, ErrorHandler *errh) {
 
     LOG("TFMonitor index is %d!\n", _index);
 
+    _init_transmitter();
+
     return 0;
 }
 
 void TFMonitor::_init_transmitter() {
-    if (!_trans_init) {
-        Router *r = this->router();
-        _trans = (Transmitter *)(r->find("trans"));
-
-        _trans_init = true;
-    }//if
+    Router *r = this->router();
+    _trans = (Transmitter *)(r->find("trans"));
 }
 
 Packet *TFMonitor::simple_action(Packet *p) {
     DEBUG("--------------------");
     DEBUG("Begin TFMonitor");
-
-    _init_transmitter();
 
     (*_trans).inoperation[_index] ++;
     _trans->send();

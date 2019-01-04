@@ -5,16 +5,13 @@
 
 CLICK_DECLS
 
-FTMonitor::FTMonitor () : _init_state(false) { };
+FTMonitor::FTMonitor () { };
 
 FTMonitor::~FTMonitor() { };
 
 void FTMonitor::_init_shared_state() {
-    if (!_init_state) {
-        Router *r = this->router();
-        _shared_state = (SharedLockFreeState *)(r->find("shared_state"));
-        _init_state = true;
-    }//if
+    Router *r = this->router();
+    _shared_state = (SharedLockFreeState *)(r->find("shared_state"));
 }
 
 int FTMonitor::configure(Vector<String> &conf, ErrorHandler *errh) {
@@ -27,14 +24,14 @@ int FTMonitor::configure(Vector<String> &conf, ErrorHandler *errh) {
 
     DEBUG("FTMonitor index is %d!\n", _index);
 
+    _init_shared_state();
+
     return 0;
 }
 
 Packet *FTMonitor::simple_action(Packet *p) {
     DEBUG("--------------------");
     DEBUG("Begin FTMonitor with index %d:", _index);
-
-    _init_shared_state();
 
 //    ++_shared_state->_inoperation[_index];
     _shared_state->increment(_index);

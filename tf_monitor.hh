@@ -13,7 +13,6 @@ CLICK_DECLS
 class TFMonitor : public Element {
 private:
     int _index;
-    bool _trans_init;
     int _for_count;
 
     Transmitter *_trans;

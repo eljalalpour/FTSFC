@@ -10,7 +10,6 @@ CLICK_DECLS
 
 class FTNAT : public Element {
 private:
-    bool _init_state;
     SharedLockFreeState* _shared_state;
     std::unordered_map<uint32_t, bool> _fake_map;
 
@@ -26,6 +25,8 @@ public:
     const char *port_count() const { return PORTS_1_1; }
 
     const char *processing() const { return AGNOSTIC; }
+
+    int configure(Vector<String> &, ErrorHandler *);
 
     Packet *simple_action(Packet *p);
 

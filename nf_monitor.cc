@@ -5,16 +5,13 @@
 
 CLICK_DECLS
 
-NFMonitor::NFMonitor () : _init_array(false) { };
+NFMonitor::NFMonitor () { };
 
 NFMonitor::~NFMonitor() { };
 
 void NFMonitor::_init_shared_state() {
-    if (!_init_array) {
-        Router *r = this->router();
-        _lock_free_array = (LockFreeArray *)(r->find("array"));
-        _init_array = true;
-    }//if
+    Router *r = this->router();
+    _lock_free_array = (LockFreeArray *)(r->find("array"));
 }
 
 int NFMonitor::configure(Vector<String> &conf, ErrorHandler *errh) {
@@ -27,14 +24,14 @@ int NFMonitor::configure(Vector<String> &conf, ErrorHandler *errh) {
 
     DEBUG("NFMonitor index is %d!\n", _index);
 
+    _init_shared_state();
+
     return 0;
 }
 
 Packet *NFMonitor::simple_action(Packet *p) {
     DEBUG("--------------------");
     DEBUG("Begin NFMonitor with index %d:", _index);
-
-    _init_shared_state();
 
     ++(_lock_free_array->array[_index]);
 

@@ -9,7 +9,6 @@ CLICK_DECLS
 
 class NFMonitor : public Element {
 private:
-    bool _init_array;
     LockFreeArray* _lock_free_array;
     int _index;
     int _for_count;

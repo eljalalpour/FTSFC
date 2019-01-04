@@ -1,6 +1,6 @@
 AddressInfo(sender 10.70.0.6);
 trans::Transmitter(10.0.7.12:10000);
-array::LockFreeArray;
+_array::SharedArray;
 
 elementclass CounterBlock {
 $index |

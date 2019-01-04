@@ -1,7 +1,7 @@
 // In aqua12
 // aqua11 -> aqua12 -> aqua01
 
-array::LockFreeArray;
+_array::SharedArray;
 
 elementclass MBBlock {
 $dev,$src_ip |

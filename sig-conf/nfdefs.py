@@ -69,8 +69,9 @@ NAT_LINK_FORMAT_STR = """// Queue {QUEUE}
 -> {TO_DATA_DEVICE_NAME};
 """
 
-SHARED_STATE_FORMAT_STR = "array::LockFreeArray;"
-NAT_SHARED_STATE_FORMAT_STR = "shared::SharedLocks(LOCKS {LOCKS});"
+NAT_SHARED_STATE_FORMAT_STR = "shared_locks::SharedLocks(LOCKS {LOCKS});"
+SHARED_STATE_FORMAT_STR = "shared_locks::SharedLocks(LOCKS {LOCKS});" \
+                          "array::SharedArray(SHARED_LOCKS shared_locks, SHARING_LEVEL {SHARING_LEVEL});"
 
 FROM_DEVICE_NAME_FORMAT_STR = "fd{QUEUE}"
 THREAD_SCHED_FORMAT_STR = "StaticThreadSched({});"
@@ -124,7 +125,7 @@ BEAMER_MUX_MB_PARAMS = []
 
 # NAT_MB_DEF = 'nat::AddrRewriter({})'
 # NAT_MB = '[$port]nat[$port]'
-NAT_MB = 'AddrRewriter(pattern $ip_min-$ip_max - 0 0, SHARED shared)'
+NAT_MB = 'AddrRewriter(pattern $ip_min-$ip_max - 0 0, SHARED_LOCKS shared_locks)'
 NAT_MB_PARAMS = ['$ip_min', '$ip_max']
 # NAT_MB_PARAMS_FORMAT = 'pattern {IP_MIN}-{IP_MAX} - {PORT} {PORT}'
 # NAT_MB_PARAMS_FORMAT = 'pattern {IP_MIN}-{IP_MAX} - 0 0'

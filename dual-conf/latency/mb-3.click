@@ -1,4 +1,4 @@
-array::LockFreeArray;
+_array::SharedArray;
 
 elementclass MBBlock {
 $dev,$src_ip |

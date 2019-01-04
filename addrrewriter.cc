@@ -101,7 +101,7 @@ AddrRewriter::configure(Vector<String> &conf, ErrorHandler *errh)
 
     if (Args(this, errh).bind(conf)
                 .read("REPLY_ANNO", has_reply_anno, AnnoArg(1), reply_anno)
-                .read("SHARED", _shared_element_name)
+                .read("SHARED_LOCKS", _shared_element_name)
                 .consume() < 0)
         return -1;
 

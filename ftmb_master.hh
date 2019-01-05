@@ -20,7 +20,7 @@ private:
     long _loop_count;
     bool _first_packet_seen;
 
-    SharedArray* _shared_state;
+    SharedState* _shared_state;
     String _shared_array_element_name;
     inline void _init_shared_state();
 

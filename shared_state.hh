@@ -23,7 +23,7 @@ public:
 
     inline int read(size_t);
 
-private:
+protected:
     int _sharing_level;
     inline size_t _lock_index(size_t index);
 };

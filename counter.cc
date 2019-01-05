@@ -12,14 +12,14 @@ Counter::~Counter() { };
 
 void Counter::_init_shared_state() {
     Router *r = this->router();
-    _shared_state = (SharedState *)(r->find(_shared_array_element_name));
+    _shared_state = (SharedState *)(r->find(_shared_state_element_name));
 }
 
 int Counter::configure(Vector<String> &conf, ErrorHandler *errh) {
     // set index param
     if (Args(conf, this, errh)
                 .read("INDEX", _index)
-                .read("SHARED_STATE", _shared_array_element_name)
+                .read("SHARED_STATE", _shared_state_element_name)
                 .complete() < 0)
         return -1;
 

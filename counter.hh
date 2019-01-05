@@ -11,7 +11,7 @@ class Counter : public Element {
 private:
     size_t _index;
     SharedState* _shared_state;
-    String _shared_array_element_name;
+    String _shared_state_element_name;
     inline void _init_shared_state();
 
 public:

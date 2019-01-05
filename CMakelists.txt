@@ -25,8 +25,8 @@ add_executable(FTSFC
         counter.hh
         ft_shared_state.cc
         ft_shared_state.hh
-        ft_lock_free_counter.cc
-        ft_lock_free_counter.hh
+        ft_counter.cc
+        ft_counter.hh
         pm_process.cc
         pm_process.hh
         pm_construct.cc

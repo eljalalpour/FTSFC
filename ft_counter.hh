@@ -3,25 +3,23 @@
 #include "defs.hh"
 #include <click/config.h>
 #include <click/element.hh>
-#include "ft_shared_state.hh"
+#include "ft_shared_state_counter.hh"
 
 CLICK_DECLS
 
-#define DEFAULT_INDEX   0
-
-class FTLockFreeCounter : public Element {
+class FTCounter : public Element {
 private:
-    SharedState* _shared_state;
-    int _index;
-
+    size_t _index;
+    FTSharedStateCounter* _shared_state;
+    String _shared_state_element_name;
     inline void _init_shared_state();
 
 public:
-    FTLockFreeCounter ();
+    FTCounter ();
 
-    ~FTLockFreeCounter();
+    ~FTCounter();
 
-    const char *class_name() const { return "FTLockFreeCounter"; }
+    const char *class_name() const { return "FTCounter"; }
 
     const char *port_count() const { return PORTS_1_1; }
 

@@ -11,6 +11,8 @@ CLICK_DECLS
 
 class SharedArray : public SharedArrayBase {
 public:
+    const char *class_name() const { return "SharedArray"; }
+
     inline void increment(size_t);
 
     inline int read(size_t);

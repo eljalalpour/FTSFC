@@ -23,15 +23,9 @@ Packet *SharedStateBase::simple_action(Packet *p) {
 
 int SharedStateBase::configure(Vector<String> &conf, ErrorHandler *errh) {
     if (Args(this, errh).bind(conf)
-                .read("SHARING_LEVEL", _sharing_level)
-                .read("SHARED_LOCKS", _shared_element_name)
+                .read("SHARED_LOCKS", _shared_locks_name)
                 .consume() < 0)
         return -1;
-
-    assert(_sharing_level == ThreadSharing1 ||
-           _sharing_level == ThreadSharing2 ||
-           _sharing_level == ThreadSharing4 ||
-           _sharing_level == ThreadSharing8);
 
     _init_shared_locks();
 

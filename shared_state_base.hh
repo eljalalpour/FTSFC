@@ -8,13 +8,6 @@ CLICK_DECLS
 
 class SharedStateBase : public Element {
 public:
-    enum SharingLevel {
-        ThreadSharing1 = 1, // no sharing
-        ThreadSharing2 = 2, // 2 threads share the same counter
-        ThreadSharing4 = 4, // 4 threads share the same counter
-        ThreadSharing8 = 8, // all threads share the same counter
-    };
-
     SharedStateBase ();
 
     ~SharedStateBase();
@@ -37,8 +30,7 @@ public:
 
 protected:
     State _state;
-    int _sharing_level;
-    String _shared_element_name;
+    String _shared_locks_name;
     SharedLocks *_shared_locks;
 
     void _init_shared_locks();

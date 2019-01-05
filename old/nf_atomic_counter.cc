@@ -1,4 +1,4 @@
-#include "../atomic_array.hh"
+#include "atomic_array.hh"
 #include <click/config.h>
 #include <click/router.hh>
 #include <click/args.hh>

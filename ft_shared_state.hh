@@ -18,57 +18,49 @@ CLICK_DECLS
 /// \end{itemize}
 ///
 
+#define LOCK(locker)   if (locker != nullptr) locker->lock()
+#define UNLOCK(locker) if (locker != nullptr) locker->unlock()
+
+#define ENABLE_SINGLE_LOCK
+#define ENABLE_MULTI_LOCKS
+
+enum Operation {
+    ProcessPiggybackMessage,
+    CaptureInOperationState,
+    PacketTransaction,
+    Increment,
+    Read
+};
+
 class FTSharedState : public SharedStateBase {
 private:
     int _id;
     int _failure_count;
     int _chain_len;
     std::vector<int> _to_copy_indices;
-    int64_t _logic_timestamp;
     State _inoperation;
-    int64_t _commit_timestamp;
     Util _util;
 
-#ifdef ENABLE_MULTI_THREADING_USING_MUTEX
-    std::mutex _inop_mtx;
-    std::mutex _commit_mtx;
+#ifdef ENABLE_SINGLE_LOCK
+    int64_t _commit_timestamp;
+    Locker _inop_mtx;
+    Locker _commit_mtx;
 #endif
 
-#ifdef ENABLE_MULTI_THREADING_USING_FLAG_LOCK
-    flag_spin_lock _inop_fl_lock;
-    flag_spin_lock _commit_fl_lock;
-#endif
-
-#ifdef ENABLE_MULTI_THREADING_USING_ELIDED_LOCK
-    elided_spin_lock _inop_e_lock;
-    elided_spin_lock _commit_e_lock;
-#endif
-
-#ifdef ENABLE_MULTI_THREADING_USING_FINE_GRAINED_LOCKS
+#ifdef ENABLE_MULTI_LOCKS
     int64_t _commit_timestamps[STATE_LEN];
     std::mutex _inop_mtxes[STATE_LEN];
     std::mutex _commit_mtxes[STATE_LEN];
 #endif
 
-#ifdef ENABLE_MULTI_THREADING_USING_FINE_GRAINED_ELIDED_LOCKS
-    int64_t _commit_timestamps[STATE_LEN];
-    elided_spin_lock _inop_e_locks[STATE_LEN];
-    elided_spin_lock _commit_e_locks[STATE_LEN];
-#endif
-
 inline void _capture_inoperation_state(Packet *, int=0);
 
 public:
-
     FTSharedState ();
 
     ~FTSharedState();
 
     const char *class_name() const { return "FTSharedState"; }
-
-    const char *port_count() const { return PORTS_0_0; }
-
-    const char *processing() const { return AGNOSTIC; }
 
     Packet *simple_action(Packet *);
 
@@ -78,52 +70,101 @@ public:
 
     void construct_piggyback_message(Packet*, int=0);
 
-    inline int read(int index) {
-#ifdef ENABLE_MULTI_THREADING_USING_MUTEX
-        std::lock_guard<std::mutex> lock(_inop_mtx);
-#endif
+    inline int64_t commit_timestamp(int);
 
-#ifdef ENABLE_MULTI_THREADING_USING_FLAG_LOCK
-        elided_lock<flag_spin_lock> flock(_inop_fl_lock);
-#endif
+    inline void set_commit_timestamp(int, int64_t);
 
-#ifdef ENABLE_MULTI_THREADING_USING_ELIDED_LOCK
-        elided_lock<elided_spin_lock> elock(_inop_e_lock);
-#endif
+    inline int read(size_t);
 
-#ifdef ENABLE_MULTI_THREADING_USING_FINE_GRAINED_LOCKS
-        std::lock_guard<std::mutex> lock(_inop_mtxes[index]);
-#endif
+    inline void increment(size_t);
 
-#ifdef ENABLE_MULTI_THREADING_USING_FINE_GRAINED_ELIDED_LOCKS
-        elided_lock<elided_spin_lock> elock(_inop_e_locks[index]);
-#endif
-        return _inoperation[index];
-    }
-
-    inline void increment(int index) {
-#ifdef ENABLE_MULTI_THREADING_USING_MUTEX
-        std::lock_guard<std::mutex> lock(_inop_mtx);
-#endif
-
-#ifdef ENABLE_MULTI_THREADING_USING_FLAG_LOCK
-        elided_lock<flag_spin_lock> flock(_inop_fl_lock);
-#endif
-
-#ifdef ENABLE_MULTI_THREADING_USING_ELIDED_LOCK
-        elided_lock<elided_spin_lock> elock(_inop_e_lock);
-#endif
-
-#ifdef ENABLE_MULTI_THREADING_USING_FINE_GRAINED_LOCKS
-        std::lock_guard<std::mutex> lock(_inop_mtxes[index]);
-#endif
-
-#ifdef ENABLE_MULTI_THREADING_USING_FINE_GRAINED_ELIDED_LOCKS
-        elided_lock<elided_spin_lock> elock(_inop_e_locks[index]);
-#endif
-        ++_inoperation[index];
-    }
-
+protected:
+    virtual inline Locker* get_locker(size_t, Operation);
 };
+
+
+int64_t FTSharedState::commit_timestamp(int queue) {
+#ifdef ENABLE_SINGLE_LOCK
+    return _commit_timestamp;
+#endif
+#ifdef ENABLE_MULTI_LOCKS
+    return _commit_timestamps[queue];
+#else
+    return 0;
+#endif
+}
+
+void FTSharedState::set_commit_timestamp(int queue, int64_t val) {
+#ifdef ENABLE_SINGLE_LOCK
+    _commit_timestamp = val;
+#endif
+#ifdef ENABLE_MULTI_LOCKS
+    _commit_timestamps[queue] = val;
+#endif
+}
+
+int FTSharedState::read(size_t index) {
+    Locker* locker = get_locker(index, Operation::Read);
+    LOCK(locker);
+    auto val = _inoperation[index];
+    UNLOCK(locker);
+
+    return val;
+}
+
+void FTSharedState::increment(size_t index) {
+    Locker* locker = get_locker(index, Operation::Increment);
+
+    LOCK(locker);
+    ++_inoperation[index];
+    UNLOCK(locker);
+}
+
+
+Locker* FTSharedState::get_locker(size_t index_or_queue, Operation op) {
+    Locker* locker = nullptr;
+
+#ifdef ENABLE_SINGLE_LOCK
+    switch (op) {
+        case Operation::ProcessPiggybackMessage:
+            locker = &_commit_mtx;
+            break;
+
+        case Operation::CaptureInOperationState:
+            locker = &_inop_mtx;
+            break;
+
+        case Operation::Increment:
+            locker = &_inop_mtx;
+            break;
+
+        case Operation::Read:
+            locker = &_inop_mtx;
+            break;
+    }//switch
+#endif
+
+#ifdef ENABLE_MULTI_LOCKS
+    switch (op) {
+        case Operation::ProcessPiggybackMessage:
+            locker = &_commit_mtxes[index_or_queue];
+            break;
+
+        case Operation::CaptureInOperationState:
+            locker = &_inop_mtxes[index_or_queue];
+            break;
+
+        case Operation::Increment:
+            locker = &_inop_mtxes[index_or_queue];
+            break;
+
+        case Operation::Read:
+            locker = &_inop_mtxes[index_or_queue];
+            break;
+    }//switch
+#endif
+
+    return locker;
+}
 
 CLICK_ENDDECLS

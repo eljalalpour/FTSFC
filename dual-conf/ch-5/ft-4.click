@@ -12,7 +12,7 @@
 // StoreIPAddress dst mac
 //
 
-shared_state::SharedLockFreeState(CHAIN 5, ID 3, F 1);
+shared_state::SharedState(CHAIN 5, ID 3, F 1);
 
 elementclass FTBlock {
 $queue, $index, $out |

@@ -13,7 +13,7 @@
 //
 
 
-shared_state::SharedLockFreeState(CHAIN 4, ID 3, F 1);
+shared_state::SharedState(CHAIN 4, ID 3, F 1);
 
 elementclass FTBlock {
 $queue, $index, $out, $forwarder |

@@ -13,7 +13,7 @@
 //
 
 
-shared_state::SharedLockFreeState(CHAIN 5, ID 4, F 2);
+shared_state::SharedState(CHAIN 5, ID 4, F 2);
 
 // stats_coll::StatsCollector(BUFFER 0,
 //                          STATE 1,

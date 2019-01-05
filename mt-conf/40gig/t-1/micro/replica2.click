@@ -11,7 +11,7 @@
 // StoreIPAddress dst mac
 //
 
-shared_state::SharedLockFreeState(CHAIN 2, ID 1, F 1);
+shared_state::SharedState(CHAIN 2, ID 1, F 1);
 
 stats_coll::StatsCollector(BUFFER 0,
                           STATE 1,

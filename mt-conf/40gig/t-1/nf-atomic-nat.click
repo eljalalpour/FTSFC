@@ -1,4 +1,4 @@
-_array::SharedArray;
+_state::SharedState;
 
 elementclass NATBlock {
 $index |

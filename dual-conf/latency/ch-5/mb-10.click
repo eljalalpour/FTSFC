@@ -1,7 +1,7 @@
 // In aqua05
 // aqua04 -> aqua05 -> aqua01
 
-_array::SharedArray;
+_state::SharedState;
 
 elementclass MBBlock {
 $dev,$src_ip |

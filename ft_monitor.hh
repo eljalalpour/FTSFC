@@ -9,7 +9,7 @@ CLICK_DECLS
 
 class FTMonitor : public Element {
 private:
-    SharedState* _shared_state;
+    FTSharedState* _shared_state;
     int _index;
     int _for_count;
 

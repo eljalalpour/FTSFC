@@ -16,7 +16,7 @@ int NFAtomicCounter::configure(Vector<String> &conf, ErrorHandler *errh) {
                 .read("INDEX", _index)
                 .complete() < 0)
         return -1;
-    DEBUG("NFLockFreeCounter index is %d!\n", _index);
+    DEBUG("NFAtomicCounter index is %d!\n", _index);
 
     return 0;
 }

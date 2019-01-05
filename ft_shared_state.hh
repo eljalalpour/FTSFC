@@ -9,7 +9,7 @@
 CLICK_DECLS
 
 ///
-/// ShareLockFreeState maintains the state that is shared among multiple Replica class instances,
+/// FTSharedState maintains the state that is shared among multiple Replica class instances,
 /// and performs low-level state management operations.
 /// \textbf{Assumptions}
 /// \begin{itemize}
@@ -131,13 +131,7 @@ Locker* FTSharedState::get_locker(size_t index_or_queue, Operation op) {
             break;
 
         case Operation::CaptureInOperationState:
-            locker = &_inop_mtx;
-            break;
-
         case Operation::Increment:
-            locker = &_inop_mtx;
-            break;
-
         case Operation::Read:
             locker = &_inop_mtx;
             break;
@@ -151,13 +145,7 @@ Locker* FTSharedState::get_locker(size_t index_or_queue, Operation op) {
             break;
 
         case Operation::CaptureInOperationState:
-            locker = &_inop_mtxes[index_or_queue];
-            break;
-
         case Operation::Increment:
-            locker = &_inop_mtxes[index_or_queue];
-            break;
-
         case Operation::Read:
             locker = &_inop_mtxes[index_or_queue];
             break;

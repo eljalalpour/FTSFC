@@ -7,14 +7,14 @@ CLICK_DECLS
 
 SharedStateBase::SharedStateBase () {
     for (int i = 0; i < STATE_LEN; ++i)
-        _array[i] = 0;
+        _state[i] = 0;
 };
 
 SharedStateBase::~SharedStateBase() { };
 
 void SharedStateBase::_init_shared_locks() {
     Router *r = this->router();
-    _shared_locks = (SharedLocks *)(r->find(_shared_element_name));
+    _shared_locks = (SharedLocks *)(r->find(_shared_locks_element_name));
 }
 
 Packet *SharedStateBase::simple_action(Packet *p) {
@@ -23,7 +23,7 @@ Packet *SharedStateBase::simple_action(Packet *p) {
 
 int SharedStateBase::configure(Vector<String> &conf, ErrorHandler *errh) {
     if (Args(this, errh).bind(conf)
-                .read("SHARED_LOCKS", _shared_locks_name)
+                .read("SHARED_LOCKS", _shared_locks_element_name)
                 .consume() < 0)
         return -1;
 
@@ -38,7 +38,7 @@ String SharedStateBase::read_handler(Element *e, void *) {
     SharedStateBase *c = (SharedStateBase *)e;
     String res;
 
-    for (int i : c->_array) {
+    for (int i : c->_state) {
         res += String(i);
         res += ",";
     }//for

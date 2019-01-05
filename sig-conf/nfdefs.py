@@ -44,7 +44,7 @@ LINK_FORMAT_STR = """// Queue {QUEUE}
 
 NAT_SHARED_STATE_FORMAT_STR = "shared_locks::SharedLocks(LOCKS {LOCKS});"
 SHARED_STATE_FORMAT_STR = "shared_locks::SharedLocks(LOCKS {LOCKS});" \
-                          "\nshared_array::SharedArray(SHARED_LOCKS shared_locks, SHARING_LEVEL {SHARING_LEVEL});"
+                          "\nshared_state::SharedState(SHARED_LOCKS shared_locks, SHARING_LEVEL {SHARING_LEVEL});"
 
 FROM_DEVICE_NAME_FORMAT_STR = "fd{QUEUE}"
 THREAD_SCHED_FORMAT_STR = "StaticThreadSched({});"
@@ -85,7 +85,7 @@ THREAD_SCHEDULES = "THREAD_SCHEDULES"
 NF_BLOCKS_DECLARES = "NF_BLOCKS_DECLARES"
 LINKS = "LINKS"
 
-COUNTER_MB = 'NFCounter(SHARED_ARRAY shared_array, INDEX $index)'
+COUNTER_MB = 'Counter(SHARED_STATE shared_state, INDEX $index)'
 COUNTER_MB_PARAMS = ["$index"]
 
 BEAMER_MUX_MB = 'BeamerMux(RING_SIZE 200000, MAX_STATES 800)'

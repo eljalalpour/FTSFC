@@ -4,12 +4,9 @@
 #include <click/element.hh>
 #include "shared_locks.hh"
 
-#define DEFAULT_SIZE         8
-#define DEFAULT_HANDLER_SIZE 8
-
 CLICK_DECLS
 
-class SharedArrayBase : public Element {
+class SharedStateBase : public Element {
 public:
     enum SharingLevel {
         ThreadSharing1 = 1, // no sharing
@@ -18,11 +15,11 @@ public:
         ThreadSharing8 = 8, // all threads share the same counter
     };
 
-    SharedArrayBase ();
+    SharedStateBase ();
 
-    ~SharedArrayBase();
+    ~SharedStateBase();
 
-    const char *class_name() const { return "SharedArrayBase"; }
+    const char *class_name() const { return "SharedStateBase"; }
 
     const char *port_count() const { return PORTS_0_0; }
 
@@ -39,7 +36,7 @@ public:
     virtual inline int read(size_t);
 
 protected:
-    int _array[DEFAULT_SIZE];
+    State _state;
     int _sharing_level;
     String _shared_element_name;
     SharedLocks *_shared_locks;
@@ -49,12 +46,12 @@ protected:
     static String read_handler(Element*, void*);
 };
 
-void SharedArrayBase::increment(size_t index) {
-    ++_array[index];
+void SharedStateBase::increment(size_t index) {
+    ++_state[index];
 }
 
-int SharedArrayBase::read(size_t index) {
-    return _array[index];
+int SharedStateBase::read(size_t index) {
+    return _state[index];
 }
 
 CLICK_ENDDECLS

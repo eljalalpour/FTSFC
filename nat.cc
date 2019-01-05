@@ -1,28 +1,28 @@
-#include "shared_array.hh"
+#include "shared_state.hh"
 #include "defs.hh"
 #include <click/config.h>
 #include <click/router.hh>
 #include <click/args.hh>
 #include <click/ipflowid.hh>
-#include "nf_nat.hh"
+#include "nat.hh"
 
 CLICK_DECLS
 
-NFNAT::NFNAT () { };
+NAT::NAT () { };
 
-NFNAT::~NFNAT() { };
+NAT::~NAT() { };
 
-bool NFNAT::bad_header(const click_ip *iph) {
+bool NAT::bad_header(const click_ip *iph) {
     return (iph->ip_p != IP_PROTO_TCP && iph->ip_p != IP_PROTO_UDP)
            || !IP_FIRSTFRAG(iph);
 }
 
-void NFNAT::_init_shared_state() {
+void NAT::_init_shared_state() {
     Router *r = this->router();
-    _lock_free_array = (SharedArray *)(r->find("array"));
+    _lock_free_array = (SharedState *)(r->find("array"));
 }
 
-uint32_t NFNAT::flow_id(Packet *p) {
+uint32_t NAT::flow_id(Packet *p) {
     // Simulating Real NAT stuff!
     IPFlowID flow_id(p);
     uint64_t ip_part =
@@ -46,13 +46,13 @@ uint32_t NFNAT::flow_id(Packet *p) {
     return hash_val % STATE_LEN;
 }
 
-int NFNAT::configure(Vector<String> &conf, ErrorHandler *errh)  {
+int NAT::configure(Vector<String> &conf, ErrorHandler *errh)  {
     _init_shared_state();
 }
 
-Packet *NFNAT::simple_action(Packet *p) {
+Packet *NAT::simple_action(Packet *p) {
     DEBUG("--------------------");
-    DEBUG("Begin NFNAT");
+    DEBUG("Begin NAT");
 
     const click_ip *iph = p->ip_header();
 
@@ -68,7 +68,7 @@ Packet *NFNAT::simple_action(Packet *p) {
     if (_lock_free_array->read(fid) == 0)
         _lock_free_array->increment(fid);
 
-    DEBUG("End NFNAT");
+    DEBUG("End NAT");
     DEBUG("--------------------");
 
     return p;

@@ -14,16 +14,18 @@ CLICK_DECLS
 //#define ENABLE_MULTI_THREADING_USING_ELIDED_LOCK 1
 
 #ifdef ENABLE_MULTI_THREADING_USING_MUTEX
-typedef std::deque<std::mutex> Lockers;
+typedef std::mutex Locker;
 #endif
 
 #ifdef ENABLE_MULTI_THREADING_USING_FLAG_LOCK
-typedef std::deque<flag_spin_lock> Lockers;
+typedef flag_spin_lock Locker;
 #endif
 
 #ifdef ENABLE_MULTI_THREADING_USING_ELIDED_LOCK
-typedef std::deque<elided_spin_lock> Lockers;
+typedef elided_spin_lock Locker;
 #endif
+
+typedef std::deque<Locker> Lockers;
 
 class SharedLocks : public Element {
 public:

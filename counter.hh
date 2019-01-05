@@ -3,23 +3,23 @@
 #include "defs.hh"
 #include <click/config.h>
 #include <click/element.hh>
-#include "shared_array.hh"
+#include "shared_state.hh"
 
 CLICK_DECLS
 
-class NFCounter : public Element {
+class Counter : public Element {
 private:
     size_t _index;
-    SharedArray* _shared_state;
+    SharedState* _shared_state;
     String _shared_array_element_name;
     inline void _init_shared_state();
 
 public:
-    NFCounter ();
+    Counter ();
 
-    ~NFCounter();
+    ~Counter();
 
-    const char *class_name() const { return "NFCounter"; }
+    const char *class_name() const { return "Counter"; }
 
     const char *port_count() const { return PORTS_1_1; }
 

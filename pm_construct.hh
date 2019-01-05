@@ -3,7 +3,7 @@
 #include "defs.hh"
 #include <click/config.h>
 #include <click/element.hh>
-#include "shared_lock_free_state.hh"
+#include "ft_shared_state.hh"
 
 CLICK_DECLS
 
@@ -16,7 +16,7 @@ CLICK_DECLS
 class PMConstruct : public Element {
 private:
     int _queue;
-    SharedLockFreeState* _shared_state;
+    SharedState* _shared_state;
     inline void _init_shared_state_pointer();
 
 public:

@@ -1,4 +1,4 @@
-#include "shared_array.hh"
+#include "shared_state.hh"
 #include <click/config.h>
 #include <click/router.hh>
 #include <click/args.hh>
@@ -41,7 +41,7 @@ int FTMBMaster::configure(Vector<String> &conf, ErrorHandler *errh) {
 
 void FTMBMaster::_init_shared_state() {
     Router *r = this->router();
-    _shared_state = (SharedArray *)(r->find(_shared_array_element_name));
+    _shared_state = (SharedState *)(r->find(_shared_array_element_name));
 }
 
 Packet *FTMBMaster::simple_action(Packet *p) {

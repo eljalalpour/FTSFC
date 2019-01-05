@@ -1,4 +1,4 @@
-#include "shared_array.hh"
+#include "shared_state.hh"
 #include <click/config.h>
 #include <click/router.hh>
 #include <click/args.hh>
@@ -40,7 +40,7 @@ int FTMBSim::configure(Vector<String> &conf, ErrorHandler *errh) {
 
 void FTMBSim::_init_shared_state() {
     Router *r = this->router();
-    _shared_state = (SharedArray *)(r->find("array"));
+    _shared_state = (SharedState *)(r->find("array"));
 }
 
 Packet *FTMBSim::simple_action(Packet *p) {

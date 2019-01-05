@@ -14,7 +14,7 @@ PMProcess::~PMProcess() { }
 
 inline void PMProcess::_init_shared_state_pointer() {
     Router *r = this->router();
-    _shared_state = (SharedLockFreeState *)(r->find("shared_state"));
+    _shared_state = (SharedState *)(r->find("shared_state"));
 }
 
 Packet* PMProcess::simple_action(Packet *p) {

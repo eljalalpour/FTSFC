@@ -3,7 +3,7 @@
 #include <click/router.hh>
 #include <sstream>
 #include "buffer.hh"
-#include "shared_lock_free_state.hh"
+#include "ft_shared_state.hh"
 #include "stats_collector.hh"
 
 CLICK_DECLS
@@ -70,7 +70,7 @@ void StatsCollector::collect() {
     Router *r = this->router();
 
 //    if (_state > 0) {
-//        auto _shared_state_elm = (SharedLockFreeState *) (r->find(SHARED_STATE));
+//        auto _shared_state_elm = (SharedState *) (r->find(SHARED_STATE));
 //        _log_table_stats.push_back(_shared_state_elm->log_table_length());
 //    }//if
 //    else {

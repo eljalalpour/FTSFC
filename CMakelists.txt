@@ -23,10 +23,10 @@ add_executable(FTSFC
         forwarder.hh
         ftmb_sim.cc
         ftmb_sim.hh
-        nf_counter.cc
-        nf_counter.hh
-        shared_lock_free_state.cc
-        shared_lock_free_state.hh
+        counter.cc
+        counter.hh
+        ft_shared_state.cc
+        ft_shared_state.hh
         ft_lock_free_counter.cc
         ft_lock_free_counter.hh
         pm_process.cc
@@ -45,10 +45,10 @@ add_executable(FTSFC
         ft_nat.hh
         ft_monitor.cc
         ft_monitor.hh
-        nf_monitor.cc
-        nf_monitor.hh
-        nf_nat.cc
-        nf_nat.hh
+        monitor.cc
+        monitor.hh
+        nat.cc
+        nat.hh
         tf_monitor.cc
         tf_monitor.hh
         tf_nat.cc
@@ -76,9 +76,9 @@ add_executable(FTSFC
         lock_manager.hh
         shared_locks.cc
         shared_locks.hh
-        shared_array.cc
-        shared_array.hh
-        shared_array_base.cc shared_array_base.hh)
+        shared_state.cc
+        shared_state.hh
+        shared_state_base.cc shared_state_base.hh)
 
 target_link_libraries(FTSFC ${PROTOBUF_LIB})
 

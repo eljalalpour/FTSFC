@@ -3,7 +3,7 @@
 #include "defs.hh"
 #include <click/config.h>
 #include <click/element.hh>
-#include "shared_lock_free_state.hh"
+#include "ft_shared_state.hh"
 
 CLICK_DECLS
 
@@ -11,7 +11,7 @@ CLICK_DECLS
 
 class FTLockFreeCounter : public Element {
 private:
-    SharedLockFreeState* _shared_state;
+    SharedState* _shared_state;
     int _index;
 
     inline void _init_shared_state();

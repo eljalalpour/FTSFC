@@ -21,8 +21,8 @@ add_executable(FTSFC
         forwarder.hh
         ftmb_sim.cc
         ftmb_sim.hh
-        counter.cc
-        counter.hh
+        nf_counter.cc
+        nf_counter.hh
         ft_shared_state.cc
         ft_shared_state.hh
         ft_counter.cc

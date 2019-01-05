@@ -2,7 +2,7 @@
 #include <click/config.h>
 #include <click/router.hh>
 #include <click/args.hh>
-#include "counter.hh"
+#include "nf_counter.hh"
 
 CLICK_DECLS
 

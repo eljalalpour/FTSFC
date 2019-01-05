@@ -34,9 +34,9 @@ public:
 
     void add_handlers();
 
-    virtual inline void increment(size_t) = 0;
+    virtual inline void increment(size_t);
 
-    virtual inline int read(size_t) = 0;
+    virtual inline int read(size_t);
 
 protected:
     int _array[DEFAULT_SIZE];
@@ -48,5 +48,13 @@ protected:
 
     static String read_handler(Element*, void*);
 };
+
+void SharedArrayBase::increment(size_t index) {
+    ++_array[index];
+}
+
+int SharedArrayBase::read(size_t index) {
+    return _array[index];
+}
 
 CLICK_ENDDECLS

@@ -17,7 +17,7 @@ CLICK_DECLS
 
 class PMProcess : public Element {
 private:
-    SharedState* _shared_state;
+    FTSharedState* _shared_state;
 
     int _queue;
     PiggybackMessage _log_table;

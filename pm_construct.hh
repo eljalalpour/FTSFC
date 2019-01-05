@@ -16,7 +16,7 @@ CLICK_DECLS
 class PMConstruct : public Element {
 private:
     int _queue;
-    SharedState* _shared_state;
+    FTSharedState* _shared_state;
     inline void _init_shared_state_pointer();
 
 public:

@@ -17,6 +17,7 @@ CLICK_DECLS
 
 class PMProcess : public Element {
 private:
+    String _shared_state_element_name;
     FTSharedState* _shared_state;
 
     int _queue;

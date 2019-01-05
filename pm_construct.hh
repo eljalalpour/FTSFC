@@ -17,6 +17,7 @@ class PMConstruct : public Element {
 private:
     int _queue;
     FTSharedState* _shared_state;
+    String _shared_state_element_name;
     inline void _init_shared_state_pointer();
 
 public:

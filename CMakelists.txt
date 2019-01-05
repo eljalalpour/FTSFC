@@ -78,7 +78,7 @@ add_executable(FTSFC
         shared_locks.hh
         shared_array.cc
         shared_array.hh
-        )
+        shared_array_base.cc shared_array_base.hh)
 
 target_link_libraries(FTSFC ${PROTOBUF_LIB})
 

@@ -33,15 +33,15 @@ Locker* FTSharedStateCounter::get_locker(size_t index_or_queue, Operation op) {
     Locker* locker = nullptr;
 
     switch (op) {
+        default:
+            locker = FTSharedState::get_locker(index_or_queue, op);
+            break;
+            
         case Operation::CaptureInOperationState:
         case Operation::Increment:
         case Operation::Read:
             auto lock_index = _lock_index(index_or_queue);
             locker = _shared_locks->locker_ptr(lock_index);
-            break;
-
-        default:
-            locker = FTSharedState::get_locker(index_or_queue, op);
             break;
     }//switch
 

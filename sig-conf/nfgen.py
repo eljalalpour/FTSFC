@@ -312,28 +312,6 @@ def nf_blocks_declares(chain_pos, thrds, mb):
     declares = []
 
     for thrd in range(thrds):
-        # if mb == NAT:
-        #     declares.append(
-        #         NAT_NF_BLOCK_FORMAT_STR.format(**{
-        #             QUEUE: thrd,
-        #             DATA_SRC_IP: src_ip_filter(chain_pos, thrd),
-        #         })
-        #     )
-        # else:
-        #     mb_p = gen_mb_params_str(thrd, mb)
-        #     if mb_p != '':
-        #         mb_p = ', ' + str(mb_p)
-        #
-        #     params = {
-        #         QUEUE: thrd,
-        #         MB_PARAMS: mb_p,
-        #         DATA_SRC_IP: src_ip_filter(chain_pos, thrd),
-        #     }
-        #
-        #     declares.append(
-        #         NF_BLOCK_FORMAT_STR.format(**params)
-        #     )
-
         # mb_p = gen_mb_params_str(thrd, mb)
         mb_p = gen_mb_params_str(thrds, chain_pos, thrd, mb)
         if mb_p != '':
@@ -364,22 +342,6 @@ def links(thrds, mb):
 
     ll = []
     for i in range(thrds):
-        # if mb == NAT:
-        #     ll.append(NAT_LINK_FORMAT_STR.format(**{
-        #         QUEUE: i,
-        #         'FROM_DATA_DEVICE_NAME': fd_data_names[i],
-        #         'PRE_NF_BLOCK_NAME': nf_block_names[i * 2],
-        #         'POST_NF_BLOCK_NAME': nf_block_names[i * 2 + 1],
-        #         'TO_DATA_DEVICE_NAME': td_data_names[i],
-        #     }))
-        # else:
-        #     ll.append(LINK_FORMAT_STR.format(**{
-        #         QUEUE: i,
-        #         'FROM_DATA_DEVICE_NAME': fd_data_names[i],
-        #         'NF_BLOCK_NAME': nf_block_names[i],
-        #         'TO_DATA_DEVICE_NAME': td_data_names[i],
-        #     }))
-
         ll.append(LINK_FORMAT_STR.format(**{
             QUEUE: i,
             'FROM_DATA_DEVICE_NAME': fd_data_names[i],
@@ -430,31 +392,6 @@ def nf_block_def(ch_len, thrds, chain_pos, mb):
     else:
         dst_index = chain_pos + 1
         src_ip_filter_index = chain_pos - 1
-
-    # if mb == NAT_MB:
-    #     result = NAT_NF_BLOCK.format(**{
-    #         SRC_IP_FILTER: src_ip_filter(src_ip_filter_index),
-    #
-    #         DATA_SRC_MAC: dev_mac(chain_pos, data_dev),
-    #         DATA_DST_MAC: dev_mac(dst_index, data_dev),
-    #         DATA_DST_IP: dev_ip(dst_index, data_dev),
-    #         DATA_SRC_NAME: dev_name(chain_pos),
-    #         DATA_DST_NAME: dev_name(dst_index),
-    #     })
-    #
-    # else:
-    #     result = NF_BLOCK.format(**{
-    #         SRC_IP_FILTER: src_ip_filter(src_ip_filter_index),
-    #
-    #         MB: mb,
-    #         MB_PARAM: mb_params_str,
-    #
-    #         DATA_SRC_MAC: dev_mac(chain_pos, data_dev),
-    #         DATA_DST_MAC: dev_mac(dst_index, data_dev),
-    #         DATA_DST_IP: dev_ip(dst_index, data_dev),
-    #         DATA_SRC_NAME: dev_name(chain_pos),
-    #         DATA_DST_NAME: dev_name(dst_index),
-    #     })
 
     result = NF_BLOCK.format(**{
         SRC_IP_FILTER: src_ip_filter(src_ip_filter_index),
@@ -511,8 +448,6 @@ def generate(ch_len, thrds, mb, sharing_level):
 
     for chain_pos in range(ch_len):
         clicks.append(nf_click(ch_len, chain_pos, thrds, mb[chain_pos], sharing_level))
-
-    # clicks.append(nf_click(ch_len, -1, thrds, mb))
 
     return clicks
 

@@ -7,7 +7,7 @@
 
 CLICK_DECLS
 
-class Counter : public Element {
+class NFCounter : public Element {
 private:
     size_t _index;
     SharedState* _shared_state;
@@ -15,9 +15,9 @@ private:
     inline void _init_shared_state();
 
 public:
-    Counter ();
+    NFCounter ();
 
-    ~Counter();
+    ~NFCounter();
 
     const char *class_name() const { return "Counter"; }
 

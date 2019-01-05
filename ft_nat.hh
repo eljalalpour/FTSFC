@@ -10,7 +10,7 @@ CLICK_DECLS
 
 class FTNAT : public Element {
 private:
-    SharedState* _shared_state;
+    FTSharedState* _shared_state;
     std::unordered_map<uint32_t, bool> _fake_map;
 
     inline void _init_shared_state();

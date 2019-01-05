@@ -19,7 +19,7 @@ public:
 
     ~NFCounter();
 
-    const char *class_name() const { return "Counter"; }
+    const char *class_name() const { return "NFCounter"; }
 
     const char *port_count() const { return PORTS_1_1; }
 

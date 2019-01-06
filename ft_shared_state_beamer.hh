@@ -28,13 +28,8 @@ public:
     const char *class_name() const { return "FTSharedStateBeamer"; }
 
 protected:
-    inline size_t _lock_index(size_t index);
     virtual inline Locker* get_locker(size_t, Operation);
 };
-
-size_t FTSharedStateBeamer::_lock_index(size_t index) {
-    return index % (_cached_lockers_size / _sharing_level);
-}
 
 Locker* FTSharedStateBeamer::get_locker(size_t index_or_queue, Operation op) {
     // Since there is no state sharing, no locking is required!

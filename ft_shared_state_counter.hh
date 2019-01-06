@@ -23,6 +23,8 @@ public:
 
     Packet *simple_action(Packet *);
 
+    int configure(Vector<String> &, ErrorHandler *);
+
     const char *class_name() const { return "FTSharedStateCounter"; }
 
 protected:

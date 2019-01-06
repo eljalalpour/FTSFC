@@ -75,4 +75,4 @@ Packet *NAT::simple_action(Packet *p) {
 }
 
 CLICK_ENDDECLS
-EXPORT_ELEMENT(NFNAT)
+EXPORT_ELEMENT(NAT)

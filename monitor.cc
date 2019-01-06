@@ -46,4 +46,4 @@ Packet *Monitor::simple_action(Packet *p) {
 }
 
 CLICK_ENDDECLS
-EXPORT_ELEMENT(NFMonitor)
+EXPORT_ELEMENT(Monitor)

@@ -84,7 +84,7 @@ int FTSharedState::configure(Vector <String> &conf, ErrorHandler *errh) {
         LOG("%d", index);
     }//for
 
-    return FTSharedStateBase::configure(conf, errh);
+    return SharedStateBase::configure(conf, errh);
 }
 
 Packet *FTSharedState::simple_action(Packet *p) {

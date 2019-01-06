@@ -73,7 +73,7 @@ int FTSharedState::configure(Vector <String> &conf, ErrorHandler *errh) {
                 .read("CHAIN", _chain_len)
                 .read("ID", _id)
                 .read("F", _failure_count)
-                .complete() < 0)
+                .consume() < 0)
         return -1;
 
     LOG("Shared state, chain-length: %d, ID: %d, F: %d", _chain_len, _id, _failure_count);

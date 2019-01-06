@@ -33,7 +33,7 @@ Packet *FTCounter::simple_action(Packet *p) {
     DEBUG("--------------------");
     DEBUG("Begin FTCounter with index %d:", _index);
 
-    _shared_state->FTSharedState::increment(_index);
+    _shared_state->increment(_index);
 
     DEBUG("End FTCounter %d:", _index);
     DEBUG("--------------------");

@@ -67,7 +67,7 @@ def fd_state_names_list(thrds):
     return dev_name_list('from', STATE_DEVICE_ID, thrds, STATE)
 
 
-def fd_names_list(chain_pos, thrds):
+def fd_names_list(ch_len, chain_pos, thrds):
     """
     list of FromDevice element names based on the position of middlebox in the chain
     and the number of threads
@@ -77,7 +77,7 @@ def fd_names_list(chain_pos, thrds):
     """
     name_list = fd_data_names_list(thrds)
 
-    if chain_pos == 0:
+    if chain_pos == 0 and ch_len > 1:
         name_list.extend(fd_state_names_list(thrds))
 
     return name_list
@@ -472,7 +472,8 @@ def ftc_click(ch_len, chain_pos, thrds, mb, sharing_level, f, batch):
                                             chain_pos,
                                             thrds),
 
-        THREAD_SCHEDULES: thread_sched_declare(fd_names_list(chain_pos,
+        THREAD_SCHEDULES: thread_sched_declare(fd_names_list(ch_len,
+                                                             chain_pos,
                                                              thrds)),
 
         FTC_BLOCKS_DECLARES: ft_blocks_declares(chain_pos,

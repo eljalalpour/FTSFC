@@ -17,6 +17,12 @@ public:
         ThreadSharing8 = 8, // all threads share the same counter
     };
 
+    FTSharedStateCounter ();
+
+    ~FTSharedStateCounter();
+
+    Packet *simple_action(Packet *);
+
     const char *class_name() const { return "FTSharedStateCounter"; }
 
 protected:
@@ -36,7 +42,7 @@ Locker* FTSharedStateCounter::get_locker(size_t index_or_queue, Operation op) {
         default:
             locker = FTSharedState::get_locker(index_or_queue, op);
             break;
-            
+
         case Operation::CaptureInOperationState:
         case Operation::Increment:
         case Operation::Read:

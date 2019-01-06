@@ -5,6 +5,10 @@
 
 CLICK_DECLS
 
+FTSharedStateCounter::FTSharedStateCounter() { }
+
+FTSharedStateCounter::~FTSharedStateCounter() { }
+
 int FTSharedStateCounter::configure(Vector<String> &conf, ErrorHandler *errh) {
     if (Args(this, errh).bind(conf)
                 .read("SHARING_LEVEL", _sharing_level)
@@ -17,6 +21,10 @@ int FTSharedStateCounter::configure(Vector<String> &conf, ErrorHandler *errh) {
            _sharing_level == ThreadSharing8);
 
     return FTSharedState::configure(conf, errh);
+}
+
+Packet *FTSharedStateCounter::simple_action(Packet *p) {
+    return p;
 }
 
 CLICK_ENDDECLS

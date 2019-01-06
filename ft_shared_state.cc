@@ -84,7 +84,7 @@ int FTSharedState::configure(Vector <String> &conf, ErrorHandler *errh) {
         LOG("%d", index);
     }//for
 
-    return 0;
+    return FTSharedStateBase::configure(conf, errh);
 }
 
 Packet *FTSharedState::simple_action(Packet *p) {
@@ -92,4 +92,5 @@ Packet *FTSharedState::simple_action(Packet *p) {
 }
 
 CLICK_ENDDECLS
+EXPORT_REQUIRES(SharedStateBase)
 EXPORT_ELEMENT(FTSharedState)

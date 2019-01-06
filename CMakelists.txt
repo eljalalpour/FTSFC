@@ -84,6 +84,10 @@ add_executable(FTSFC
         ft_shared_state_counter.hh
         ft_shared_state_beamer.cc
         ft_shared_state_beamer.hh
+        ft_shared_state_addrrewriter.cc
+        ft_shared_state_addrrewriter.hh
+        ft_addrrewriter.cc
+        ft_addrrewriter.hh
         )
 
 target_link_libraries(FTSFC ${PROTOBUF_LIB})

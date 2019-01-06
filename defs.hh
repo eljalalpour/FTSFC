@@ -46,6 +46,7 @@
 #endif
 
 /// definitions of assumptions
+#define MAX_QUEUES         8
 #define STATE_LEN          8
 #define MAX_CHAIN_LEN      5
 #define DEFAULT_OFFSET     76 // This value must be greater than 75

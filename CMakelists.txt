@@ -76,7 +76,15 @@ add_executable(FTSFC
         shared_locks.hh
         shared_state.cc
         shared_state.hh
-        shared_state_base.cc shared_state_base.hh ft_counter_shared_state.cc ft_counter_shared_state.hh ft_shared_state_counter.cc ft_shared_state_counter.hh)
+        shared_state_base.cc
+        shared_state_base.hh
+        ft_counter_shared_state.cc
+        ft_counter_shared_state.hh
+        ft_shared_state_counter.cc
+        ft_shared_state_counter.hh
+        ft_shared_state_beamer.cc
+        ft_shared_state_beamer.hh
+        )
 
 target_link_libraries(FTSFC ${PROTOBUF_LIB})
 

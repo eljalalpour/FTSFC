@@ -4,6 +4,7 @@
 #include <click/config.h>
 #include <click/element.hh>
 #include <mutex>
+#include <click/hashcontainer.hh>
 #include "ft_shared_state.hh"
 #include "ft_addrrewriter.hh"
 

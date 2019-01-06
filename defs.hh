@@ -2,7 +2,7 @@
 #define FTSFC_DEFS_HH
 
 /// Assumptions:
-///     - The state of a middlebox is a FIXED int array with 8 values (32 bytes)
+///     - The state of a middlebox is a FIXED int16 array with 8 values (16 bytes)
 ///     - The piggyback message always contains the piggback state of 5 middleboxes
 ///     - Middleboxes must not modify packets
 

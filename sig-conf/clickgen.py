@@ -98,7 +98,7 @@ def gen_store(opts):
     print("Generating for {}".format(apr))
 
     if apr == FTC:
-        clicks = ftcgen.generate(opts['c'], opts['f'], opts['t'], opts['b'])
+        clicks = ftcgen.generate(opts['c'], opts['t'], opts['m'], opts['l'], opts['f'], opts['b'])
         ftcgen.store(opts['o'], clicks)
 
     elif apr == NF:

@@ -26,9 +26,40 @@ $queue, $src_ip{MB_PARAM}|
     input
     -> MarkIPHeader(14)
     -> IPFilter(allow udp && src {SRC_IP_FILTER}/16)
-    -> PMProcess(QUEUE $queue)
+    -> PMProcess(QUEUE $queue, SHARED_STATE shared_state)
     -> {MB}
-    -> PMConstruct(QUEUE $queue)
+    -> PMConstruct(QUEUE $queue, SHARED_STATE shared_state)
+    -> MarkIPHeader(14)
+    -> StoreEtherAddress({DATA_SRC_MAC}, src) // {DATA_SRC_NAME}
+    -> StoreEtherAddress({DATA_DST_MAC}, dst) // {DATA_DST_NAME}
+    -> StoreIPAddress($src_ip, src) // {DATA_SRC_NAME}
+    -> StoreIPAddress({DATA_DST_IP}, dst) // {DATA_DST_NAME}
+    -> output;
+}}
+"""
+
+FTC_BLOCK_SINGLE1 = """elementclass FTBlock {{
+$queue, $src_ip{MB_PARAM}|
+    input
+    -> MarkIPHeader(14)
+    -> IPFilter(allow udp && src 1.0.0.0/16)
+    -> {MB}
+    -> PMConstruct(QUEUE $queue, SHARED_STATE shared_state)
+    -> MarkIPHeader(14)
+    -> StoreEtherAddress({DATA_SRC_MAC}, src) // {DATA_SRC_NAME}
+    -> StoreEtherAddress({DATA_DST_MAC}, dst) // {DATA_DST_NAME}
+    -> StoreIPAddress($src_ip, src) // {DATA_SRC_NAME}
+    -> StoreIPAddress({DATA_DST_IP}, dst) // {DATA_DST_NAME}
+    -> output;
+}}
+"""
+
+FTC_BLOCK_SINGLE2 = """elementclass FTBlock {{
+$queue, $src_ip|
+    input
+    -> MarkIPHeader(14)
+    -> IPFilter(allow udp && src {SRC_IP_FILTER}/16)
+    -> PMProcess(QUEUE $queue, SHARED_STATE shared_state)
     -> MarkIPHeader(14)
     -> StoreEtherAddress({DATA_SRC_MAC}, src) // {DATA_SRC_NAME}
     -> StoreEtherAddress({DATA_DST_MAC}, dst) // {DATA_DST_NAME}
@@ -53,9 +84,9 @@ $queue, $src_ip{MB_PARAM} |
     -> MarkIPHeader(14)
     -> IPFilter(allow udp && src 1.0.0.0/16)
     -> forwarder
-    -> PMProcess(QUEUE $queue)
+    -> PMProcess(QUEUE $queue, SHARED_STATE shared_state)
     -> {MB}
-    -> PMConstruct(QUEUE $queue)
+    -> PMConstruct(QUEUE $queue, SHARED_STATE shared_state)
     -> MarkIPHeader(14)
     -> StoreIPAddress($src_ip, src) // {DATA_SRC_NAME}
     -> StoreEtherAddress({DATA_SRC_MAC}, src) // {DATA_SRC_NAME}
@@ -72,9 +103,9 @@ $queue, $DATA_SRC_IP, $STATE_SRC_IP{MB_PARAM} |
     input
     -> MarkIPHeader(14)
     -> IPFilter(allow udp && src {SRC_IP_FILTER}/16)
-    -> PMProcess(QUEUE $queue)
+    -> PMProcess(QUEUE $queue, SHARED_STATE shared_state)
     -> {MB}
-    -> PMConstruct(QUEUE $queue)
+    -> PMConstruct(QUEUE $queue, SHARED_STATE shared_state)
     -> buffer;
 
     // Data channel
@@ -125,7 +156,11 @@ LINK_WITH_BUFFER_FORMAT_STR = """// Queue {QUEUE}
 -> {TO_STATE_DEVICE_NAME};
 """
 
-SHARED_STATE_FORMAT_STR = "shared_state::SharedLockFreeState(CHAIN {CHAIN}, ID {ID}, F {F})"
+
+SHARED_STATE_FORMAT_STR = "shared_state::FTSharedState(CHAIN {CHAIN}, ID {ID}, F {F})"
+
+SHARED_STATE_COUNTER_FORMAT_STR = "shared_state::FTSharedStateCounter" \
+                                  "(CHAIN {CHAIN}, ID {ID}, F {F}, SHARING_LEVEL {SHARING_LEVEL})"
 
 FROM_DEVICE_NAME_FORMAT_STR = "{CHANNEL}_fd{QUEUE}"
 THREAD_SCHED_FORMAT_STR = "StaticThreadSched({});"
@@ -138,6 +173,8 @@ FTC_BLOCK_NAME_FORMAT_STR = "ftc{}"
 FTC_BLOCK_FORMAT_STR = "ftc{QUEUE}::FTBlock({QUEUE}, {DATA_SRC_IP}{MB_PARAMS});"
 FTC_BLOCK_WITH_BUFFER_FORMAT_STR = "ftc{QUEUE}::FTBlock({QUEUE}, {DATA_SRC_IP}, " \
                                   "{STATE_SRC_IP}{MB_PARAMS});"
+
+FTC_BLOCK_SINGLE2_FORMAT_STR = "ftc{QUEUE}::FTBlock({QUEUE}, {DATA_SRC_IP});"
 
 ID = "ID"
 F = "F"
@@ -179,7 +216,7 @@ LINKS = "LINKS"
 
 
 COUNTER = 'counter'
-COUNTER_MB = 'FTLockFreeCounter(INDEX $index)'
+COUNTER_MB = 'FTCounter(INDEX $index, SHARED_STATE shared_state)'
 COUNTER_MB_PARAMS = ["$index"]
-
+SHARING_LEVEL = "SHARING_LEVEL"
 FTC_OUTPUT_NAME_FORMAT_STR = 'ft-{}.click'

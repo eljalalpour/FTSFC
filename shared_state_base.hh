@@ -31,6 +31,7 @@ public:
 protected:
     State _state;
     String _shared_locks_element_name;
+    size_t _cached_lockers_size;
     SharedLocks *_shared_locks;
 
     void _init_shared_locks();

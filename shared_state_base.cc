@@ -15,6 +15,7 @@ SharedStateBase::~SharedStateBase() { };
 void SharedStateBase::_init_shared_locks() {
     Router *r = this->router();
     _shared_locks = (SharedLocks *)(r->find(_shared_locks_element_name));
+    _cached_lockers_size = _shared_locks->size();
 }
 
 Packet *SharedStateBase::simple_action(Packet *p) {

@@ -32,7 +32,7 @@ private:
 };
 
 size_t SharedState::_lock_index(size_t index) {
-    return index % (STATE_LEN / _sharing_level);
+    return index % (_cached_lockers_size / _sharing_level);
 }
 
 Locker* SharedState::get_locker(size_t index_or_queue) {

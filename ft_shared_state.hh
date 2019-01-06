@@ -18,7 +18,7 @@ CLICK_DECLS
 /// \end{itemize}
 ///
 
-#define ENABLE_SINGLE_LOCK
+//#define ENABLE_SINGLE_LOCK
 #define ENABLE_MULTI_LOCKS
 
 enum Operation {

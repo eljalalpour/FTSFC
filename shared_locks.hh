@@ -27,6 +27,9 @@ typedef elided_spin_lock Locker;
 
 typedef std::deque<Locker> Lockers;
 
+#define LOCK(locker)   if (locker != nullptr) locker->lock()
+#define UNLOCK(locker) if (locker != nullptr) locker->unlock()
+
 class SharedLocks : public Element {
 public:
 

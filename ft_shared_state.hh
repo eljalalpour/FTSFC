@@ -18,9 +18,6 @@ CLICK_DECLS
 /// \end{itemize}
 ///
 
-#define LOCK(locker)   if (locker != nullptr) locker->lock()
-#define UNLOCK(locker) if (locker != nullptr) locker->unlock()
-
 #define ENABLE_SINGLE_LOCK
 #define ENABLE_MULTI_LOCKS
 

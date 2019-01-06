@@ -55,6 +55,8 @@ public:
     inline void unlock(size_t);
 
     inline Locker* locker_ptr(size_t);
+
+    inline size_t size();
 private:
     std::mutex _my_mutex;
     Lockers _lockers;
@@ -79,6 +81,10 @@ void SharedLocks::unlock(size_t index) {
 
 Locker* SharedLocks::locker_ptr(size_t index) {
     return &_lockers[index];
+}
+
+size_t SharedLocks::size() {
+    return _lockers.size();
 }
 
 CLICK_ENDDECLS

@@ -157,11 +157,11 @@ LINK_WITH_BUFFER_FORMAT_STR = """// Queue {QUEUE}
 """
 
 SHARED_STATE_FORMAT_STR = "shared_locks::SharedLocks(LOCKS {LOCKS});" \
-                          "\nshared_state::FTSharedState(CHAIN {CHAIN}, ID {ID}, F {F});"
+                          "\nshared_state::FTSharedState(SHARED_LOCKS shared_locks, CHAIN {CHAIN}, ID {ID}, F {F});"
 
 SHARED_STATE_COUNTER_FORMAT_STR = "shared_locks::SharedLocks(LOCKS {LOCKS});" \
                                   "\nshared_state::FTSharedStateCounter" \
-                                  "(CHAIN {CHAIN}, ID {ID}, F {F}, SHARING_LEVEL {SHARING_LEVEL});"
+                                  "(SHARED_LOCKS shared_locks, CHAIN {CHAIN}, ID {ID}, F {F}, SHARING_LEVEL {SHARING_LEVEL});"
 
 FROM_DEVICE_NAME_FORMAT_STR = "{CHANNEL}_fd{QUEUE}"
 THREAD_SCHED_FORMAT_STR = "StaticThreadSched({});"

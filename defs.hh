@@ -53,7 +53,7 @@
 #define LOG_TABLE_RES_SIZE 10000
 
 /// State and piggyback message definitions
-typedef int State[STATE_LEN];
+typedef int16_t State[STATE_LEN];
 
 typedef struct TimestampState {
     int64_t timestamp;

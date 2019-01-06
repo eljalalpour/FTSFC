@@ -180,6 +180,8 @@ private:
     String _shared_state_element_name;
     FTSharedStateAddrRewriter *_shared_state;
 
+    int _queue;
+
     HashContainer::bucket_count_type last_lock_index;
 
     friend class FTSharedStateAddrRewriter;

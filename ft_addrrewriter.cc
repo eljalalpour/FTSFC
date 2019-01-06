@@ -92,7 +92,7 @@ void FTAddrRewriter::_init_shared() {
     _shared_locks = (SharedLocks *)(r->find(_shared_locks_element_name));
     _shared_state = (FTSharedStateAddrRewriter *)(r->find(_shared_state_element_name));
 
-    _shared_state->register_addr_rewriter(this);
+    _shared_state->register_addr_rewriter(_queue, this);
 }
 
 int
@@ -106,6 +106,7 @@ FTAddrRewriter::configure(Vector<String> &conf, ErrorHandler *errh)
                 .read("REPLY_ANNO", has_reply_anno, AnnoArg(1), reply_anno)
                 .read("SHARED_LOCKS", _shared_locks_element_name)
                 .read("SHARED_STATE", _shared_state_element_name)
+                .read("QUEUE", _queue)
                 .consume() < 0)
         return -1;
 

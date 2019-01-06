@@ -30,6 +30,11 @@ int SharedStateBase::configure(Vector<String> &conf, ErrorHandler *errh) {
 
     _init_shared_locks();
 
+    LOG("Piggyback message size: %d, State size: %d, min packet size: %d",
+            sizeof(PiggybackMessage),
+            sizeof(State),
+            sizeof(PiggybackMessage) + DEFAULT_OFFSET);
+
     return 0;
 }
 

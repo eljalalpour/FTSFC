@@ -92,4 +92,4 @@ Packet *FTSharedState::simple_action(Packet *p) {
 }
 
 CLICK_ENDDECLS
-EXPORT_ELEMENT(SharedLockFreeState)
+EXPORT_ELEMENT(FTSharedState)

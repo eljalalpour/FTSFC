@@ -38,6 +38,9 @@ size_t FTSharedStateCounter::_lock_index(size_t index) {
 }
 
 Locker* FTSharedStateCounter::get_locker(size_t index_or_queue, Operation op) {
+    if (_sharing_level == ThreadSharing1)
+        return nullptr;
+
     Locker* locker = nullptr;
 
     switch (op) {

@@ -26,24 +26,35 @@ public:
 protected:
     int _sharing_level;
     inline size_t _lock_index(size_t index);
+
+private:
+    virtual inline Locker* get_locker(size_t);
 };
 
 size_t SharedState::_lock_index(size_t index) {
     return index % (STATE_LEN / _sharing_level);
 }
 
+Locker* SharedState::get_locker(size_t index_or_queue) {
+    if (_sharing_level == ThreadSharing1)
+        return nullptr;
+
+    auto lock_index = _lock_index(index_or_queue);
+    return _shared_locks->locker_ptr(lock_index);
+}
+
 void SharedState::increment(size_t index) {
-    auto lock_index = _lock_index(index);
-    _shared_locks->lock(lock_index);
+    auto locker = get_locker(index);
+    LOCK(locker);
     ++_state[index];
-    _shared_locks->unlock(lock_index);
+    UNLOCK(locker);
 }
 
 int SharedState::read(size_t index) {
-    auto lock_index = _lock_index(index);
-    _shared_locks->lock(lock_index);
+    auto locker = get_locker(index);
+    LOCK(locker);
     auto val = _state[index];
-    _shared_locks->unlock(lock_index);
+    UNLOCK(locker);
 
     return val;
 }

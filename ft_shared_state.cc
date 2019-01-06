@@ -92,5 +92,5 @@ Packet *FTSharedState::simple_action(Packet *p) {
 }
 
 CLICK_ENDDECLS
-EXPORT_REQUIRES(SharedStateBase)
+ELEMENT_REQUIRES(SharedStateBase)
 EXPORT_ELEMENT(FTSharedState)

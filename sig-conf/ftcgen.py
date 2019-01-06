@@ -13,12 +13,14 @@ def shared_state_declare(ch_len, chain_pos, f, mb, sharing_level):
             ID: chain_pos,
             F: f,
             SHARING_LEVEL: sharing_level,
+            LOCKS: 8,
         })
 
     return SHARED_STATE_FORMAT_STR.format(**{
         CHAIN: ch_len,
         ID: chain_pos,
         F: f,
+        LOCKS: 32768,
     })
 
 

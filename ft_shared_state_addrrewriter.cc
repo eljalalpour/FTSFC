@@ -17,7 +17,7 @@ Packet *FTSharedStateAddrRewriter::simple_action(Packet *p) {
     return p;
 }
 
-void FTSharedStateAddrRewriter::register_addr_rewriter(int queue, FTAddrRewriter* me) {
+void FTSharedStateAddrRewriter::register_addr_rewriter(int queue, int* me) {
     _reg_addr_rw[queue] = me;
 }
 

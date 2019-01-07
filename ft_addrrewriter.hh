@@ -3,9 +3,6 @@
 #include "rewriterbase.hh"
 #include "rwmapping.hh"
 #include "shared_locks.hh"
-
-class FTSharedStateAddrRewriter;
-
 #include "ft_shared_state_addrrewriter.hh"
 
 CLICK_DECLS
@@ -185,8 +182,6 @@ private:
     FTSharedStateAddrRewriter *_shared_state;
 
     int _queue;
-
-    friend class FTSharedStateAddrRewriter;
 };
 
 

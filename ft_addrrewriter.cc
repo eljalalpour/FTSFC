@@ -92,7 +92,7 @@ void FTAddrRewriter::_init_shared() {
     _shared_locks = (SharedLocks *)(r->find(_shared_locks_element_name));
     _shared_state = (FTSharedStateAddrRewriter *)(r->find(_shared_state_element_name));
 
-    _shared_state->register_addr_rewriter(_queue, this);
+    _shared_state->register_addr_rewriter(_queue, &last_lock_index);
 }
 
 int

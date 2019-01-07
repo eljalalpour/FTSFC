@@ -6,9 +6,6 @@
 #include <mutex>
 #include <click/hashcontainer.hh>
 #include "ft_shared_state.hh"
-
-class FTAddrRewriter;
-
 #include "ft_addrrewriter.hh"
 
 CLICK_DECLS
@@ -25,18 +22,18 @@ public:
 
     const char *class_name() const { return "FTSharedStateAddrRewriter"; }
 
-    void register_addr_rewriter(int, FTAddrRewriter*);
+    void register_addr_rewriter(int, int*);
 
 protected:
-    inline size_t _lock_index(size_t index);
+    inline uint32_t _lock_index(size_t index);
     virtual inline Locker* get_locker(size_t, Operation);
 
 private:
-    FTAddrRewriter* _reg_addr_rw[MAX_QUEUES];
+    uint32_t* _reg_last_locks[MAX_QUEUES];
 };
 
-size_t FTSharedStateAddrRewriter::_lock_index(size_t index) {
-    return _reg_addr_rw[index]->last_lock_index;
+uint32_t FTSharedStateAddrRewriter::_lock_index(size_t index) {
+    return *_reg_addr_rw[index];
 }
 
 Locker* FTSharedStateAddrRewriter::get_locker(size_t index_or_queue, Operation op) {

@@ -22,7 +22,7 @@ public:
 
     const char *class_name() const { return "FTSharedStateAddrRewriter"; }
 
-    void register_addr_rewriter(int, int*);
+    void register_addr_rewriter(int, uint32_t*);
 
 protected:
     inline uint32_t _lock_index(size_t index);

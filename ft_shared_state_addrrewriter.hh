@@ -6,7 +6,6 @@
 #include <mutex>
 #include <click/hashcontainer.hh>
 #include "ft_shared_state.hh"
-#include "ft_addrrewriter.hh"
 
 CLICK_DECLS
 

@@ -231,5 +231,8 @@ NAT_MB = 'FTAddrRewriter(pattern $ip_min-$ip_max - 0 0, ' \
          'QUEUE $queue)'
 NAT_MB_PARAMS = ['$ip_min', '$ip_max']
 
+BEAMER_MUX_MB = 'BeamerMux(RING_SIZE 200000, MAX_STATES 800)'
+BEAMER_MUX_MB_PARAMS = []
+
 SHARING_LEVEL = "SHARING_LEVEL"
 FTC_OUTPUT_NAME_FORMAT_STR = 'ft-{}.click'

@@ -63,12 +63,15 @@ def shared_state_declare(ch_len, chain_pos, f, mb, sharing_level):
             F: f,
         })
 
-    return SHARED_STATE_FORMAT_STR.format(**{
-        CHAIN: ch_len,
-        ID: chain_pos,
-        F: f,
-        LOCKS: 32768,
-    })
+    elif mb == BEAMER_MUX_MB:
+            return SHARED_STATE_FORMAT_STR.format(**{
+            CHAIN: ch_len,
+            ID: chain_pos,
+            F: f,
+            LOCKS: 1,
+        })
+
+    return None
 
 
 def dev_name_list(from_or_to, device, thrds, channel):
@@ -318,6 +321,9 @@ def gen_mb_params_str(thrds, chain_pos, thrd, mb):
             ip_max
         ])
 
+    elif mb == LB:
+        return ''
+
     return thrd
 
 
@@ -409,6 +415,9 @@ def middlebox_declare(mb):
     elif mb == COUNTER:
         result = COUNTER_MB
 
+    elif mb == LB:
+        result = BEAMER_MUX_MB
+
     return result
 
 
@@ -427,6 +436,8 @@ def ft_block_def(ch_len, thrds, chain_pos, mb, batch):
         mb_params = COUNTER_MB_PARAMS
     elif mb == NAT:
         mb_params = NAT_MB_PARAMS
+    elif mb == LB:
+        mb_params = BEAMER_MUX_MB_PARAMS
 
     mb_params_str = ''
     if mb_params is not None and len(mb_params) > 0:

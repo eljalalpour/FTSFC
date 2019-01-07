@@ -6,11 +6,12 @@
 #include <mutex>
 #include <click/hashcontainer.hh>
 #include "ft_shared_state.hh"
+
+class FTAddrRewriter;
+
 #include "ft_addrrewriter.hh"
 
 CLICK_DECLS
-
-class FTAddrRewriter;
 
 class FTSharedStateAddrRewriter : public FTSharedState {
 public:

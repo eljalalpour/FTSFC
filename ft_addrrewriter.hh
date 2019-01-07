@@ -3,6 +3,9 @@
 #include "rewriterbase.hh"
 #include "rwmapping.hh"
 #include "shared_locks.hh"
+
+class FTSharedStateAddrRewriter;
+
 #include "ft_shared_state_addrrewriter.hh"
 
 CLICK_DECLS
@@ -126,8 +129,6 @@ StoreIPAddress (for simple uses) */
 /// To make sure that the shrink_heap will never be called, we can set expiry time bigger thatn the experiment duration.
 /// If there was no mapping, the packet is handled by the INPUTSPEC corresponding to the input port on
 /// which the packet arrived.
-
-class FTSharedStateAddrRewriter;
 
 class FTAddrRewriter : public RewriterBase { public:
 

@@ -63,8 +63,8 @@ def shared_state_declare(ch_len, chain_pos, f, mb, sharing_level):
             F: f,
         })
 
-    elif mb == BEAMER_MUX_MB:
-            return SHARED_STATE_FORMAT_STR.format(**{
+    elif mb == LB:
+        return SHARED_STATE_FORMAT_STR.format(**{
             CHAIN: ch_len,
             ID: chain_pos,
             F: f,

@@ -127,6 +127,7 @@ StoreIPAddress (for simple uses) */
 /// If there was no mapping, the packet is handled by the INPUTSPEC corresponding to the input port on
 /// which the packet arrived.
 
+class FTSharedStateAddrRewriter;
 
 class FTAddrRewriter : public RewriterBase { public:
 
@@ -170,11 +171,11 @@ protected:
 
     static String dump_mappings_handler(Element *, void *);
 
-    HashContainer::bucket_count_type last_lock_index;
-
 private:
 
     void _init_shared();
+
+    uint32_t last_lock_index;
 
     String _shared_locks_element_name;
     SharedLocks *_shared_locks;

@@ -163,6 +163,10 @@ SHARED_STATE_COUNTER_FORMAT_STR = "shared_locks::SharedLocks(LOCKS {LOCKS});" \
                                   "\nshared_state::FTSharedStateCounter" \
                                   "(SHARED_LOCKS shared_locks, CHAIN {CHAIN}, ID {ID}, F {F}, SHARING_LEVEL {SHARING_LEVEL});"
 
+SHARED_STATE_NAT_FORMAT_STR = "shared_locks::SharedLocks(LOCKS {LOCKS});" \
+                                  "\nshared_state::FTSharedStateAddrRewriter" \
+                                  "(SHARED_LOCKS shared_locks, CHAIN {CHAIN}, ID {ID}, F {F});"
+
 FROM_DEVICE_NAME_FORMAT_STR = "{CHANNEL}_fd{QUEUE}"
 THREAD_SCHED_FORMAT_STR = "StaticThreadSched({});"
 FROM_DEVICE_FORMAT_STR = "{CHANNEL}_fd{QUEUE}::FromDPDKDevice({DEVICE}, {QUEUE});"
@@ -219,5 +223,13 @@ LOCKS = "LOCKS"
 COUNTER = 'counter'
 COUNTER_MB = 'FTCounter(INDEX $index, SHARED_STATE shared_state)'
 COUNTER_MB_PARAMS = ["$index"]
+
+NAT = 'nat'
+NAT_MB = 'FTAddrRewriter(pattern $ip_min-$ip_max - 0 0, ' \
+         'SHARED_LOCKS shared_locks, ' \
+         'SHARED_STATE shared_state, ' \
+         'QUEUE $queue)'
+NAT_MB_PARAMS = ['$ip_min', '$ip_max']
+
 SHARING_LEVEL = "SHARING_LEVEL"
 FTC_OUTPUT_NAME_FORMAT_STR = 'ft-{}.click'

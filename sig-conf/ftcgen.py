@@ -1,6 +1,45 @@
 from defs import *
 from ftcdefs import *
 import os
+import socket
+import struct
+
+
+def divide_ip_space(thrds, chain_pos):
+    def ip2long(ip):
+        """
+        Convert an IP string to long
+        :param ip: ip in string
+        :return: a long value of ip
+        """
+        packed_ip = socket.inet_aton(ip)
+        return struct.unpack("!L", packed_ip)[0]
+
+    def long2ip(ip_l):
+        """
+        Convert an IP long to IP string
+        :param ip_l: IP in long
+        :return: IP string
+        """
+        return socket.inet_ntoa(struct.pack('!L', ip_l))
+
+    if chain_pos == 0:
+        s = ip2long(IN_TR_SRC_IP_MIN)
+        t = ip2long(IN_TR_SRC_IP_MAX)
+    else:
+        s = ip2long(src_ip_filter(chain_pos, 0))
+        t = ip2long(src_ip_filter(chain_pos, thrds - 1))
+
+    step = (t - s) / thrds
+
+    ll = []
+    for i in range(0, thrds):
+        ll.append(long2ip(s + i * step))
+        ll.append(long2ip(s + (i + 1) * step - 1))
+
+    ll[-1] = long2ip(t)
+
+    return ll
 
 
 def shared_state_declare(ch_len, chain_pos, f, mb, sharing_level):
@@ -14,6 +53,14 @@ def shared_state_declare(ch_len, chain_pos, f, mb, sharing_level):
             F: f,
             SHARING_LEVEL: sharing_level,
             LOCKS: 8,
+        })
+
+    elif mb == NAT:
+        return SHARED_STATE_NAT_FORMAT_STR.format(**{
+            LOCKS: 32768,
+            CHAIN: ch_len,
+            ID: chain_pos,
+            F: f,
         })
 
     return SHARED_STATE_FORMAT_STR.format(**{
@@ -259,11 +306,22 @@ def src_ip_filter(chain_pos, thrd=0):
         thrd)
 
 
-def gen_mb_params_str(thrd):
+def gen_mb_params_str(thrds, chain_pos, thrd, mb):
+    if mb == COUNTER:
+        return thrd
+    elif mb == NAT:
+        ips = divide_ip_space(thrds, chain_pos)
+        ip_min = ips[thrd * 2]
+        ip_max = ips[thrd * 2 + 1]
+        return ', '.join([
+            ip_min,
+            ip_max
+        ])
+
     return thrd
 
 
-def ft_blocks_declares(chain_pos, ch_len, thrds):
+def ft_blocks_declares(chain_pos, ch_len, thrds, mb):
     """
     format ft block declares based on the position of middlebox in the chain, number of threads, and
     mb parameters
@@ -281,20 +339,20 @@ def ft_blocks_declares(chain_pos, ch_len, thrds):
     elif chain_pos == -1:
         format_str = FTC_BLOCK_WITH_BUFFER_FORMAT_STR
 
-    for i in range(thrds):
-        mb_p = gen_mb_params_str(i)
+    for thrd in range(thrds):
+        mb_p = gen_mb_params_str(thrds, chain_pos, thrd, mb)
         if mb_p != '':
             mb_p = ', ' + str(mb_p)
 
         params = {
-            QUEUE: i,
+            QUEUE: thrd,
             MB_PARAMS: mb_p,
         }
         if chain_pos == -1:
-            params[STATE_SRC_IP] = src_ip_filter(chain_pos, i)
-            params[DATA_SRC_IP] = src_ip_filter(ch_len - 1, i)
+            params[STATE_SRC_IP] = src_ip_filter(chain_pos, thrd)
+            params[DATA_SRC_IP] = src_ip_filter(ch_len - 1, thrd)
         else:
-            params[DATA_SRC_IP] = src_ip_filter(chain_pos, i)
+            params[DATA_SRC_IP] = src_ip_filter(chain_pos, thrd)
 
         declares.append(
             format_str.format(**params)
@@ -345,7 +403,10 @@ def links(ch_len, chain_pos, thrds):
 
 def middlebox_declare(mb):
     result = None
-    if mb == COUNTER:
+    if mb == NAT:
+        result = NAT_MB
+
+    elif mb == COUNTER:
         result = COUNTER_MB
 
     return result
@@ -480,7 +541,8 @@ def ftc_click(ch_len, chain_pos, thrds, mb, sharing_level, f, batch):
 
         FTC_BLOCKS_DECLARES: ft_blocks_declares(chain_pos,
                                                 ch_len,
-                                                thrds),
+                                                thrds,
+                                                mb),
 
         LINKS: links(ch_len,
                      chain_pos,

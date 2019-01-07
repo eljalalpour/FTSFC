@@ -10,13 +10,6 @@ CLICK_DECLS
 
 class FTSharedStateBeamer : public FTSharedState {
 public:
-    enum {
-        ThreadSharing1 = 1, // no sharing
-        ThreadSharing2 = 2, // 2 threads share the same counter
-        ThreadSharing4 = 4, // 4 threads share the same counter
-        ThreadSharing8 = 8, // all threads share the same counter
-    };
-
     FTSharedStateBeamer ();
 
     ~FTSharedStateBeamer();

@@ -170,6 +170,8 @@ protected:
 
     static String dump_mappings_handler(Element *, void *);
 
+    HashContainer::bucket_count_type last_lock_index;
+
 private:
 
     void _init_shared();
@@ -181,8 +183,6 @@ private:
     FTSharedStateAddrRewriter *_shared_state;
 
     int _queue;
-
-    HashContainer::bucket_count_type last_lock_index;
 
     friend class FTSharedStateAddrRewriter;
 };

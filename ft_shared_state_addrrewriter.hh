@@ -29,6 +29,7 @@ protected:
 
 private:
     uint32_t* _reg_last_locks[MAX_QUEUES];
+    uint32_t _registered;
 };
 
 uint32_t FTSharedStateAddrRewriter::_lock_index(size_t index) {
@@ -36,6 +37,10 @@ uint32_t FTSharedStateAddrRewriter::_lock_index(size_t index) {
 }
 
 Locker* FTSharedStateAddrRewriter::get_locker(size_t index_or_queue, Operation op) {
+
+    if (_registered <= 1)
+        return nullptr;
+
     Locker* locker = nullptr;
 
     switch (op) {

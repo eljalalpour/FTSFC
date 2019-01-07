@@ -18,7 +18,7 @@ Packet *FTSharedStateAddrRewriter::simple_action(Packet *p) {
 }
 
 void FTSharedStateAddrRewriter::register_addr_rewriter(int queue, int* me) {
-    _reg_addr_rw[queue] = me;
+    _reg_last_locks[queue] = me;
 }
 
 CLICK_ENDDECLS

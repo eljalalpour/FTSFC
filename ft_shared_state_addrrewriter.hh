@@ -33,7 +33,7 @@ private:
 };
 
 uint32_t FTSharedStateAddrRewriter::_lock_index(size_t index) {
-    return *_reg_addr_rw[index];
+    return *_reg_last_locks[index];
 }
 
 Locker* FTSharedStateAddrRewriter::get_locker(size_t index_or_queue, Operation op) {

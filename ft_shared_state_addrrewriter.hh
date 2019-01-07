@@ -10,6 +10,8 @@
 
 CLICK_DECLS
 
+class FTAddrRewriter;
+
 class FTSharedStateAddrRewriter : public FTSharedState {
 public:
     FTSharedStateAddrRewriter ();

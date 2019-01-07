@@ -425,6 +425,8 @@ def ft_block_def(ch_len, thrds, chain_pos, mb, batch):
     mb_params = []
     if mb == COUNTER:
         mb_params = COUNTER_MB_PARAMS
+    elif mb == NAT:
+        mb_params = NAT_MB_PARAMS
 
     mb_params_str = ''
     if mb_params is not None and len(mb_params) > 0:

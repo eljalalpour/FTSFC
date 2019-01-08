@@ -1,20 +1,20 @@
 #include <click/config.h>
 #include <click/router.hh>
 #include <click/args.hh>
-#include "nf_monitor.hh"
+#include "monitor.hh"
 
 CLICK_DECLS
 
-NFMonitor::NFMonitor () { };
+Monitor::Monitor () { };
 
-NFMonitor::~NFMonitor() { };
+Monitor::~Monitor() { };
 
-void NFMonitor::_init_shared_state() {
+void Monitor::_init_shared_state() {
     Router *r = this->router();
-    _lock_free_array = (LockFreeArray *)(r->find("array"));
+    _lock_free_array = (SharedState *)(r->find("array"));
 }
 
-int NFMonitor::configure(Vector<String> &conf, ErrorHandler *errh) {
+int Monitor::configure(Vector<String> &conf, ErrorHandler *errh) {
     // set index param
     if (Args(conf, this, errh)
                 .read("INDEX", _index)
@@ -22,28 +22,28 @@ int NFMonitor::configure(Vector<String> &conf, ErrorHandler *errh) {
                 .complete() < 0)
         return -1;
 
-    DEBUG("NFMonitor index is %d!\n", _index);
+    DEBUG("Monitor index is %d!\n", _index);
 
     _init_shared_state();
 
     return 0;
 }
 
-Packet *NFMonitor::simple_action(Packet *p) {
+Packet *Monitor::simple_action(Packet *p) {
     DEBUG("--------------------");
-    DEBUG("Begin NFMonitor with index %d:", _index);
+    DEBUG("Begin Monitor with index %d:", _index);
 
-    ++(_lock_free_array->array[_index]);
+    _lock_free_array->increment(_index);
 
     for (int i = 0; i < _for_count; ++i) {
         rand();
     }//for
 
-    DEBUG("End NFMonitor %d:", _index);
+    DEBUG("End Monitor %d:", _index);
     DEBUG("--------------------");
 
     return p;
 }
 
 CLICK_ENDDECLS
-EXPORT_ELEMENT(NFMonitor)
+EXPORT_ELEMENT(Monitor)

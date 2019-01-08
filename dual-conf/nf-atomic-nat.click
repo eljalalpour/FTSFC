@@ -1,4 +1,4 @@
-array::LockFreeArray;
+_state::SharedState;
 
 elementclass NATBlock {
 $index |

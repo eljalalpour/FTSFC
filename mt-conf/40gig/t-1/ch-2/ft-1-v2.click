@@ -1,7 +1,7 @@
 // In aqua09
 // aqua01 -> aqua09 -> aqua10
 
-shared_state::SharedLockFreeState(CHAIN 2, ID 0, F 1);
+shared_state::SharedState(CHAIN 2, ID 0, F 1);
 
 elementclass FTBlock {
 $index,$src_ip |

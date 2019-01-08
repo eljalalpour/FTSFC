@@ -36,41 +36,15 @@ $src_ip{MB_PARAM} |
 }}
 """
 
-NAT_NF_BLOCK = """elementclass PreNFBlock {{
-    input
-    -> MarkIPHeader(14)
-    -> IPFilter(allow udp && src {SRC_IP_FILTER}/16)
-    -> output
-}}
-
-elementclass PostNFBlock {{
-$src_ip |
-    input
-    -> MarkIPHeader(14)
-    -> StoreEtherAddress({DATA_SRC_MAC}, src) // {DATA_SRC_NAME}
-    -> StoreEtherAddress({DATA_DST_MAC}, dst) // {DATA_DST_NAME}
-    -> StoreIPAddress($src_ip, src) // {DATA_SRC_NAME}
-    -> StoreIPAddress({DATA_DST_IP}, dst) // {DATA_DST_NAME}
-    -> output
-}}
-"""
-
 LINK_FORMAT_STR = """// Queue {QUEUE}
 {FROM_DATA_DEVICE_NAME}
 -> {NF_BLOCK_NAME}
 -> {TO_DATA_DEVICE_NAME};
 """
 
-NAT_LINK_FORMAT_STR = """// Queue {QUEUE}
-{FROM_DATA_DEVICE_NAME}
--> {PRE_NF_BLOCK_NAME}
--> [{QUEUE}]nat[{QUEUE}]
--> {POST_NF_BLOCK_NAME}
--> {TO_DATA_DEVICE_NAME};
-"""
-
-SHARED_STATE_FORMAT_STR = "array::LockFreeArray;"
-NAT_SHARED_STATE_FORMAT_STR = "shared::SharedLocks(LOCKS {LOCKS});"
+NAT_SHARED_STATE_FORMAT_STR = "shared_locks::SharedLocks(LOCKS {LOCKS});"
+SHARED_STATE_FORMAT_STR = "shared_locks::SharedLocks(LOCKS {LOCKS});" \
+                          "\nshared_state::SharedState(SHARED_LOCKS shared_locks, SHARING_LEVEL {SHARING_LEVEL});"
 
 FROM_DEVICE_NAME_FORMAT_STR = "fd{QUEUE}"
 THREAD_SCHED_FORMAT_STR = "StaticThreadSched({});"
@@ -81,11 +55,6 @@ TO_DEVICE_FORMAT_STR = "td{QUEUE}::ToDPDKDevice({DEVICE}, {QUEUE});"
 
 NF_BLOCK_NAME_FORMAT_STR = "nfb{}"
 NF_BLOCK_FORMAT_STR = "nfb{QUEUE}::NFBlock({DATA_SRC_IP}{MB_PARAMS});"
-
-NAT_PRE_NF_BLOCK_NAME_FORMAT_STR = "pre_nfb{}"
-NAT_POST_NF_BLOCK_NAME_FORMAT_STR = "post_nfb{}"
-NAT_NF_BLOCK_FORMAT_STR = "pre_nfb{QUEUE}::PreNFBlock();" \
-                          "\npost_nfb{QUEUE}::PostNFBlock({DATA_SRC_IP});"
 
 ID = "ID"
 F = "F"
@@ -116,7 +85,7 @@ THREAD_SCHEDULES = "THREAD_SCHEDULES"
 NF_BLOCKS_DECLARES = "NF_BLOCKS_DECLARES"
 LINKS = "LINKS"
 
-COUNTER_MB = 'NFLockFreeCounter(INDEX $index)'
+COUNTER_MB = 'NFCounter(SHARED_STATE shared_state, INDEX $index)'
 COUNTER_MB_PARAMS = ["$index"]
 
 BEAMER_MUX_MB = 'BeamerMux(RING_SIZE 200000, MAX_STATES 800)'
@@ -124,7 +93,7 @@ BEAMER_MUX_MB_PARAMS = []
 
 # NAT_MB_DEF = 'nat::AddrRewriter({})'
 # NAT_MB = '[$port]nat[$port]'
-NAT_MB = 'AddrRewriter(pattern $ip_min-$ip_max - 0 0, SHARED shared)'
+NAT_MB = 'AddrRewriter(pattern $ip_min-$ip_max - 0 0, SHARED_LOCKS shared_locks)'
 NAT_MB_PARAMS = ['$ip_min', '$ip_max']
 # NAT_MB_PARAMS_FORMAT = 'pattern {IP_MIN}-{IP_MAX} - {PORT} {PORT}'
 # NAT_MB_PARAMS_FORMAT = 'pattern {IP_MIN}-{IP_MAX} - 0 0'

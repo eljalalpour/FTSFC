@@ -1,11 +1,11 @@
-array::LockFreeArray;
+_state::SharedState;
 
 elementclass CounterBlock {
 $index |
     input
     -> MarkIPHeader(14)
 //    -> IPPrint($index)
-    -> NFLockFreeCounter(INDEX $index)
+    -> NFCounter(INDEX $index)
     -> MarkIPHeader(14)
     -> StoreIPAddress(192.168.1.107, src)
     -> StoreIPAddress(192.168.1.101, dst)

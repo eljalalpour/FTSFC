@@ -1,4 +1,4 @@
-#include "lock_free_array.hh"
+#include "shared_state.hh"
 #include <click/config.h>
 #include <click/router.hh>
 #include <click/args.hh>
@@ -16,6 +16,7 @@ int FTMBMaster::configure(Vector<String> &conf, ErrorHandler *errh) {
                 .read("PERIOD", _period)
                 .read("DELAY", _delay)
                 .read("PER_PACKET", _per_packet_latency)
+                .read("SHARED_ARRAY", _shared_array_element_name)
                 .complete() < 0)
         return -1;
 
@@ -33,15 +34,14 @@ int FTMBMaster::configure(Vector<String> &conf, ErrorHandler *errh) {
 
     LOG("Loop count found: %d", _loop_count);
 
+    _init_shared_state();
+
     return 0;
 }
 
 void FTMBMaster::_init_shared_state() {
-    if (!_init_state) {
-        Router *r = this->router();
-        _shared_state = (LockFreeArray *)(r->find("array"));
-        _init_state = true;
-    }//if
+    Router *r = this->router();
+    _shared_state = (SharedState *)(r->find(_shared_array_element_name));
 }
 
 Packet *FTMBMaster::simple_action(Packet *p) {
@@ -60,7 +60,7 @@ Packet *FTMBMaster::simple_action(Packet *p) {
 
     Util::dummy_loop(_loop_count);
 
-    _init_shared_state();
+
     //TODO: adding the following line results in Segmentation fault, fix it
     //_shared_state->increment(0);
 

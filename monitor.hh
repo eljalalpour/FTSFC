@@ -3,24 +3,24 @@
 #include "defs.hh"
 #include <click/config.h>
 #include <click/element.hh>
-#include "lock_free_array.hh"
+#include "shared_state.hh"
 
 CLICK_DECLS
 
-#define DEFAULT_INDEX   0
-
-class NFLockFreeCounter : public Element {
+class Monitor : public Element {
 private:
-    int _index;
-    LockFreeArray* _shared_state;
+    SharedState* _lock_free_array;
+    size_t _index;
+    int _for_count;
+
     inline void _init_shared_state();
 
 public:
-    NFLockFreeCounter ();
+    Monitor ();
 
-    ~NFLockFreeCounter();
+    ~Monitor();
 
-    const char *class_name() const { return "NFLockFreeCounter"; }
+    const char *class_name() const { return "Monitor"; }
 
     const char *port_count() const { return PORTS_1_1; }
 

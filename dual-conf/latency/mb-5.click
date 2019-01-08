@@ -1,7 +1,7 @@
 // In aqua11
 // aqua10 -> aqua11 -> aqua12
 
-array::LockFreeArray;
+_state::SharedState;
 
 elementclass MBBlock {
 $dev,$src_ip |
@@ -12,7 +12,7 @@ $dev,$src_ip |
     -> MarkIPHeader(14)
     -> IPFilter(allow udp && src 1.4.0.0/16)
     -> FTMBInputLogger()
-    -> NFNAT
+    -> NAT
     -> FTMBMaster(PERIOD 200, DELAY 6, PER_PACKET 3)
     -> MarkIPHeader(14)
     -> StoreIPAddress($src_ip, src)    // from aqua 11

@@ -42,17 +42,20 @@ def divide_ip_space(thrds, chain_pos):
     return ll
 
 
-def shared_state_declare(mb, thrds, chain_pos):
+def shared_state_declare(mb, thrds, chain_pos, sharing_level):
     result = ''
     if mb == COUNTER:
-        result = SHARED_STATE_FORMAT_STR
+        result = SHARED_STATE_FORMAT_STR.format(**{
+            'LOCKS': 8,
+            'SHARING_LEVEL': sharing_level,
+        })
 
     elif mb == LB:
         result = NO_SHARED_STATE
 
     elif mb == NAT:
         result = NAT_SHARED_STATE_FORMAT_STR.format(**{
-            'LOCKS': 32768
+            'LOCKS': 32768,
         })
 
     return result
@@ -309,28 +312,6 @@ def nf_blocks_declares(chain_pos, thrds, mb):
     declares = []
 
     for thrd in range(thrds):
-        # if mb == NAT:
-        #     declares.append(
-        #         NAT_NF_BLOCK_FORMAT_STR.format(**{
-        #             QUEUE: thrd,
-        #             DATA_SRC_IP: src_ip_filter(chain_pos, thrd),
-        #         })
-        #     )
-        # else:
-        #     mb_p = gen_mb_params_str(thrd, mb)
-        #     if mb_p != '':
-        #         mb_p = ', ' + str(mb_p)
-        #
-        #     params = {
-        #         QUEUE: thrd,
-        #         MB_PARAMS: mb_p,
-        #         DATA_SRC_IP: src_ip_filter(chain_pos, thrd),
-        #     }
-        #
-        #     declares.append(
-        #         NF_BLOCK_FORMAT_STR.format(**params)
-        #     )
-
         # mb_p = gen_mb_params_str(thrd, mb)
         mb_p = gen_mb_params_str(thrds, chain_pos, thrd, mb)
         if mb_p != '':
@@ -361,22 +342,6 @@ def links(thrds, mb):
 
     ll = []
     for i in range(thrds):
-        # if mb == NAT:
-        #     ll.append(NAT_LINK_FORMAT_STR.format(**{
-        #         QUEUE: i,
-        #         'FROM_DATA_DEVICE_NAME': fd_data_names[i],
-        #         'PRE_NF_BLOCK_NAME': nf_block_names[i * 2],
-        #         'POST_NF_BLOCK_NAME': nf_block_names[i * 2 + 1],
-        #         'TO_DATA_DEVICE_NAME': td_data_names[i],
-        #     }))
-        # else:
-        #     ll.append(LINK_FORMAT_STR.format(**{
-        #         QUEUE: i,
-        #         'FROM_DATA_DEVICE_NAME': fd_data_names[i],
-        #         'NF_BLOCK_NAME': nf_block_names[i],
-        #         'TO_DATA_DEVICE_NAME': td_data_names[i],
-        #     }))
-
         ll.append(LINK_FORMAT_STR.format(**{
             QUEUE: i,
             'FROM_DATA_DEVICE_NAME': fd_data_names[i],
@@ -428,31 +393,6 @@ def nf_block_def(ch_len, thrds, chain_pos, mb):
         dst_index = chain_pos + 1
         src_ip_filter_index = chain_pos - 1
 
-    # if mb == NAT_MB:
-    #     result = NAT_NF_BLOCK.format(**{
-    #         SRC_IP_FILTER: src_ip_filter(src_ip_filter_index),
-    #
-    #         DATA_SRC_MAC: dev_mac(chain_pos, data_dev),
-    #         DATA_DST_MAC: dev_mac(dst_index, data_dev),
-    #         DATA_DST_IP: dev_ip(dst_index, data_dev),
-    #         DATA_SRC_NAME: dev_name(chain_pos),
-    #         DATA_DST_NAME: dev_name(dst_index),
-    #     })
-    #
-    # else:
-    #     result = NF_BLOCK.format(**{
-    #         SRC_IP_FILTER: src_ip_filter(src_ip_filter_index),
-    #
-    #         MB: mb,
-    #         MB_PARAM: mb_params_str,
-    #
-    #         DATA_SRC_MAC: dev_mac(chain_pos, data_dev),
-    #         DATA_DST_MAC: dev_mac(dst_index, data_dev),
-    #         DATA_DST_IP: dev_ip(dst_index, data_dev),
-    #         DATA_SRC_NAME: dev_name(chain_pos),
-    #         DATA_DST_NAME: dev_name(dst_index),
-    #     })
-
     result = NF_BLOCK.format(**{
         SRC_IP_FILTER: src_ip_filter(src_ip_filter_index),
 
@@ -469,14 +409,14 @@ def nf_block_def(ch_len, thrds, chain_pos, mb):
     return result
 
 
-def nf_click(ch_len, chain_pos, thrds, mb):
+def nf_click(ch_len, chain_pos, thrds, mb, sharing_level):
     """
     Click code for FTC
     :return: Click code in string
     """
 
     string_map = {
-        SHARED_STATE_DECLARE: shared_state_declare(mb, thrds, chain_pos),
+        SHARED_STATE_DECLARE: shared_state_declare(mb, thrds, chain_pos, sharing_level),
 
         NF_BLOCK_DEF: nf_block_def(ch_len, thrds, chain_pos, mb),
 
@@ -499,7 +439,7 @@ def nf_click(ch_len, chain_pos, thrds, mb):
     return NF.format(**string_map)
 
 
-def generate(ch_len, thrds, mb):
+def generate(ch_len, thrds, mb, sharing_level):
     clicks = []
     if len(mb) == 1:
         mb *= ch_len
@@ -507,9 +447,7 @@ def generate(ch_len, thrds, mb):
         raise ValueError("The number of middleboxes list must be either 1 or equal to chain length!")
 
     for chain_pos in range(ch_len):
-        clicks.append(nf_click(ch_len, chain_pos, thrds, mb[chain_pos]))
-
-    # clicks.append(nf_click(ch_len, -1, thrds, mb))
+        clicks.append(nf_click(ch_len, chain_pos, thrds, mb[chain_pos], sharing_level))
 
     return clicks
 

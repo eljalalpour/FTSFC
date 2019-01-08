@@ -1,4 +1,4 @@
-#include "lock_free_array.hh"
+#include "shared_state.hh"
 #include <click/config.h>
 #include <click/router.hh>
 #include <click/args.hh>

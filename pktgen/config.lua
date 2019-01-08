@@ -4,7 +4,7 @@ require "Pktgen";
 
 local DEVICE = "0";
 local RATE = 100;
-local SIZE = 1350;
+local SIZE = 256;
 
 local SRC_MAC  = "f4:52:14:69:a5:20"; -- Aqua01
 local DST_MAC  = "e4:1d:2d:13:9e:d0"; -- Aqua07

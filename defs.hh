@@ -2,7 +2,7 @@
 #define FTSFC_DEFS_HH
 
 /// Assumptions:
-///     - The state of a middlebox is a FIXED int array with 8 values (32 bytes)
+///     - The state of a middlebox is a FIXED int16 array with 8 values (16 bytes)
 ///     - The piggyback message always contains the piggback state of 5 middleboxes
 ///     - Middleboxes must not modify packets
 
@@ -46,6 +46,7 @@
 #endif
 
 /// definitions of assumptions
+#define MAX_QUEUES         8
 #define STATE_LEN          8
 #define MAX_CHAIN_LEN      5
 #define DEFAULT_OFFSET     76 // This value must be greater than 75
@@ -53,7 +54,7 @@
 #define LOG_TABLE_RES_SIZE 10000
 
 /// State and piggyback message definitions
-typedef int State[STATE_LEN];
+typedef int16_t State[STATE_LEN];
 
 typedef struct TimestampState {
     int64_t timestamp;

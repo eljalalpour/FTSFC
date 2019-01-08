@@ -1,7 +1,7 @@
 // In aqua12
 // aqua11 -> aqua12 -> aqua02
 
-array::LockFreeArray;
+_state::SharedState;
 
 elementclass MBBlock {
 $dev,$src_ip |

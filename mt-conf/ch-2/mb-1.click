@@ -1,7 +1,7 @@
 // In aqua07
 // aqua01 -> aqua07 -> aqua08
 
-array::LockFreeArray;
+_state::SharedState;
 
 elementclass NFBlock {
 $index,$src_ip |

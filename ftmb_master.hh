@@ -3,7 +3,7 @@
 #include "defs.hh"
 #include <click/config.h>
 #include <click/element.hh>
-#include "lock_free_array.hh"
+#include "shared_state.hh"
 
 CLICK_DECLS
 
@@ -20,8 +20,8 @@ private:
     long _loop_count;
     bool _first_packet_seen;
 
-    bool _init_state;
-    LockFreeArray* _shared_state;
+    SharedState* _shared_state;
+    String _shared_array_element_name;
     inline void _init_shared_state();
 
     std::chrono::time_point<std::chrono::high_resolution_clock> _last_snapshot_timestamp;

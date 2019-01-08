@@ -14,16 +14,21 @@ CLICK_DECLS
 //#define ENABLE_MULTI_THREADING_USING_ELIDED_LOCK 1
 
 #ifdef ENABLE_MULTI_THREADING_USING_MUTEX
-typedef std::deque<std::mutex> Lockers;
+typedef std::mutex Locker;
 #endif
 
 #ifdef ENABLE_MULTI_THREADING_USING_FLAG_LOCK
-typedef std::deque<flag_spin_lock> Lockers;
+typedef flag_spin_lock Locker;
 #endif
 
 #ifdef ENABLE_MULTI_THREADING_USING_ELIDED_LOCK
-typedef std::deque<elided_spin_lock> Lockers;
+typedef elided_spin_lock Locker;
 #endif
+
+typedef std::deque<Locker> Lockers;
+
+#define LOCK(locker)   if (locker != nullptr) locker->lock()
+#define UNLOCK(locker) if (locker != nullptr) locker->unlock()
 
 class SharedLocks : public Element {
 public:
@@ -49,6 +54,9 @@ public:
 
     inline void unlock(size_t);
 
+    inline Locker* locker_ptr(size_t);
+
+    inline size_t size();
 private:
     std::mutex _my_mutex;
     Lockers _lockers;
@@ -69,6 +77,14 @@ void SharedLocks::lock(size_t index) {
 
 void SharedLocks::unlock(size_t index) {
     _lockers[index].unlock();
+}
+
+Locker* SharedLocks::locker_ptr(size_t index) {
+    return &_lockers[index];
+}
+
+size_t SharedLocks::size() {
+    return _lockers.size();
 }
 
 CLICK_ENDDECLS

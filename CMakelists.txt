@@ -11,8 +11,6 @@ include_directories(
 )
 
 add_executable(FTSFC
-        atomic_array.cc
-        atomic_array.hh
         buffer.hh
         buffer.cc
         decoder.cc
@@ -23,18 +21,12 @@ add_executable(FTSFC
         forwarder.hh
         ftmb_sim.cc
         ftmb_sim.hh
-        lock_free_array.cc
-        lock_free_array.hh
-        old/nf_atomic_counter.cc
-        old/nf_atomic_counter.hh
-        old/nf_atomic_nat.cc
-        old/nf_atomic_nat.hh
-        nf_lock_free_counter.cc
-        nf_lock_free_counter.hh
-        shared_lock_free_state.cc
-        shared_lock_free_state.hh
-        ft_lock_free_counter.cc
-        ft_lock_free_counter.hh
+        nf_counter.cc
+        nf_counter.hh
+        ft_shared_state.cc
+        ft_shared_state.hh
+        ft_counter.cc
+        ft_counter.hh
         pm_process.cc
         pm_process.hh
         pm_construct.cc
@@ -51,15 +43,52 @@ add_executable(FTSFC
         ft_nat.hh
         ft_monitor.cc
         ft_monitor.hh
-        nf_monitor.cc
-        nf_monitor.hh
-        nf_nat.cc
-        nf_nat.hh
+        monitor.cc
+        monitor.hh
+        nat.cc
+        nat.hh
         tf_monitor.cc
         tf_monitor.hh
         tf_nat.cc
         tf_nat.hh
-        not-worked-ideas/ft/buffer.cc beamermux.cc beamermux.hh freebsdbob.hh fivetuple.hh statetrack.hh dipmap.hh checksumfixup.hh p4crc32.hh rewriterbase.hh rewriterbase.cc rwmapping.hh rwmapping.cc rwpattern.hh rwpattern.cc rwpatterns.hh rwpatterns.cc addrrewriter.hh addrrewriter.cc lock_manager.hh shared_locks.cc shared_locks.hh)
+        ftmb_master.hh
+        ftmb_master.cc
+        beamermux.cc
+        beamermux.hh
+        freebsdbob.hh
+        fivetuple.hh
+        statetrack.hh
+        dipmap.hh
+        checksumfixup.hh
+        p4crc32.hh
+        rewriterbase.hh
+        rewriterbase.cc
+        rwmapping.hh
+        rwmapping.cc
+        rwpattern.hh
+        rwpattern.cc
+        rwpatterns.hh
+        rwpatterns.cc
+        addrrewriter.hh
+        addrrewriter.cc
+        lock_manager.hh
+        shared_locks.cc
+        shared_locks.hh
+        shared_state.cc
+        shared_state.hh
+        shared_state_base.cc
+        shared_state_base.hh
+        ft_counter_shared_state.cc
+        ft_counter_shared_state.hh
+        ft_shared_state_counter.cc
+        ft_shared_state_counter.hh
+        ft_shared_state_beamer.cc
+        ft_shared_state_beamer.hh
+        ft_shared_state_addrrewriter.cc
+        ft_shared_state_addrrewriter.hh
+        ft_addrrewriter.cc
+        ft_addrrewriter.hh
+        )
 
 target_link_libraries(FTSFC ${PROTOBUF_LIB})
 

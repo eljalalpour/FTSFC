@@ -11,13 +11,14 @@ PMConstruct::~PMConstruct() { }
 
 inline void PMConstruct::_init_shared_state_pointer() {
     Router *r = this->router();
-    _shared_state = (SharedLockFreeState *)(r->find("shared_state"));
+    _shared_state = (FTSharedState *)(r->find(_shared_state_element_name));
 }
 
 int PMConstruct::configure(Vector<String> &conf, ErrorHandler *errh) {
     // set index param
     if (Args(conf, this, errh)
                 .read("QUEUE", _queue)
+                .read("SHARED_STATE", _shared_state_element_name)
                 .complete() < 0)
         return -1;
 

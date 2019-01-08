@@ -11,7 +11,7 @@ FTMonitor::~FTMonitor() { };
 
 void FTMonitor::_init_shared_state() {
     Router *r = this->router();
-    _shared_state = (SharedLockFreeState *)(r->find("shared_state"));
+    _shared_state = (FTSharedState *)(r->find("shared_state"));
 }
 
 int FTMonitor::configure(Vector<String> &conf, ErrorHandler *errh) {

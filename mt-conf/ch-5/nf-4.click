@@ -1,7 +1,7 @@
 // In aqua10
 // aqua09 -> aqua10 -> aqua02
 
-array::LockFreeArray;
+_state::SharedState;
 
 elementclass NFBlock {
 $index,$src_ip |
@@ -9,7 +9,7 @@ $index,$src_ip |
     -> MarkIPHeader(14)
     -> IPFilter(allow udp && src 1.3.0.0/16)
 //    -> IPPrint($index)
-    -> NFLockFreeCounter(INDEX $index)
+    -> NFCounter(INDEX $index)
     -> MarkIPHeader(14)
     -> StoreIPAddress($src_ip, src)
     -> StoreIPAddress(192.168.1.102, dst)

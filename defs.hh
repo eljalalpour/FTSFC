@@ -80,6 +80,17 @@ typedef PiggybackState PiggybackMessage[MAX_CHAIN_LEN];
 #define CAST_PACKET_TO_PIGGY_BACK_MESSAGE(p) reinterpret_cast<PiggybackMessage*>(CAST_AWAY_PACKET_DATA(p) + DEFAULT_OFFSET)
 #define COPY_PIGGYBACK_MESSAGE(y, x) memcpy(y, x, sizeof(PiggybackMessage))
 
+/// FTMB definitions
+typedef int64_t FTMBSeqNumber;
+typedef FTMBSeqNumber VectorOfClocks[MAX_QUEUES];
+
+typedef struct PacketAccessLog { /// We ignore p_i in FTMB's definition
+    int16_t shared_variable_index; /// v_j in FTMB's definition
+    FTMBSeqNumber seq_number;  /// s_ij in FTMB's definition
+} PacketAccessLog;
+
+typedef PacketAccessLog PALs[STATE_LEN];
+
 /// Util class to serialize, deserialize, encode, and decode states
 class Util {
 public:

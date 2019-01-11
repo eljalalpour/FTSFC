@@ -3,6 +3,7 @@
 #include "defs.hh"
 #include <click/config.h>
 #include <click/element.hh>
+#include <cstring>
 
 CLICK_DECLS
 
@@ -31,12 +32,12 @@ private:
     inline void _process_pal(Packet*);
 };
 
-void _process_vor(Packet* p) {
+void FTMBOutputLogger::_process_vor(Packet* p) {
     std::memcpy(_last_vor, CAST_PACKET_TO_VOR(p), sizeof(VectorOfClocks));
 }
 
-void _process_pal(Packet* p) {
-    std::memcpy(_last_pal, CAST_PACKET_TO_PAL(p), sizeof(PacketAccessLog));
+void FTMBOutputLogger::_process_pal(Packet* p) {
+    std::memcpy(&_last_pal, CAST_PACKET_TO_PAL(p), sizeof(PacketAccessLog));
 }
 
 CLICK_ENDDECLS

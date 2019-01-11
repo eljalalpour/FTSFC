@@ -11,7 +11,7 @@ FTMBCounter::~FTMBCounter() { };
 
 void FTMBCounter::_init_shared_state() {
     Router *r = this->router();
-    _shared_state = (FTSharedStateCounter *)(r->find(_shared_state_element_name));
+    _shared_state = (FTMBSharedStateCounter *)(r->find(_shared_state_element_name));
 }
 
 int FTMBCounter::configure(Vector<String> &conf, ErrorHandler *errh) {
@@ -35,7 +35,7 @@ Packet *FTMBCounter::simple_action(Packet *p) {
 
     Locker* locker = _shared_state->preprocess(_index, _index);
     _counter ++;
-    _shared_state->postprocess(_index, locker, p, output(0));
+    _shared_state->postprocess(_index, locker, p, &output(0));
 
     DEBUG("End FTMBCounter %d:", _index);
     DEBUG("--------------------");

@@ -1,6 +1,10 @@
 #pragma once
 
 #include <deque>
+#include <cstring>
+#include <click/packet_anno.hh>
+#include <clicknet/ip.h>
+#include <clicknet/udp.h>
 #include "shared_state_base.hh"
 
 using std::deque;
@@ -16,7 +20,7 @@ enum FTMBOperation {
     AccessSharedVariable,
 };
 
-class FTMBSharedState: SharedStateBase {
+class FTMBSharedState: public SharedStateBase {
 public:
     FTMBSharedState ();
 
@@ -30,23 +34,23 @@ public:
 
     inline Locker* preprocess(int16_t, int16_t);
 
-    inline void postprocess(int16_t, Locker*, Packet*, Element::Port&);
+    inline void postprocess(int16_t, Locker*, Packet*, const Element::Port*);
 
 protected:
     int _queues;
     VectorOfClocks _maxs; /// MAX in FTMB's definition
 //    Locker _maxs_lockers[MAX_QUEUES]; /// Locks for _maxs
     std::deque<FTMBSeqNumber> _counters; /// s_ij in FTMB's definition, must be equal to the number of
-                                         /// variables changed per thread
+    /// variables changed per thread
 
-    PacketAccessLog[MAX_QUEUES] _pals;
+    PacketAccessLog _pals[MAX_QUEUES];
 
     virtual inline Locker* get_locker(int16_t, int16_t, FTMBOperation);
 
 private:
-    inline void _read_vor(VectorOfClocks &);
+    inline void _read_vor(VectorOfClocks);
 
-    inline void _transfer(VectorOfClocks &, Packet *, Element::Port&);
+    inline void _transfer(int16_t, VectorOfClocks, Packet*, const Element::Port*);
 
     inline void _fix_header(Packet*);
 };
@@ -56,7 +60,7 @@ Locker* FTMBSharedState::preprocess(int16_t var_id, int16_t queue) {
     LOCK(locker);
 
     /// increment the counter of shared variable
-    ++_counters[var_id]
+    ++_counters[var_id];
 
     /// store PAL
     _pals[queue].set(var_id, _maxs[queue]++);
@@ -64,13 +68,13 @@ Locker* FTMBSharedState::preprocess(int16_t var_id, int16_t queue) {
     return locker;
 }
 
-void FTMBSharedState::_read_vor(VectorOfClocks& vor) {
+void FTMBSharedState::_read_vor(VectorOfClocks vor) {
     //TODO: check if locking is required or not
     std::memcpy(vor, _maxs, sizeof(VectorOfClocks));
 }
 
 void FTMBSharedState::_fix_header(Packet* p) {
-    click_ip *ip = reinterpret_cast<click_ip *>(p->data() + MAC_HEAD_SIZE);
+    click_ip *ip = reinterpret_cast<click_ip *>(CAST_AWAY_PACKET_DATA(p) + MAC_HEAD_SIZE);
     click_udp *udp = reinterpret_cast<click_udp *>(ip + UDP_HEAD_OFFSET_AFTER_MAC_HEAD);
 
     udp->uh_ulen = htons(p->length() - MAC_HEAD_SIZE - sizeof(click_ip));
@@ -80,31 +84,30 @@ void FTMBSharedState::_fix_header(Packet* p) {
     ip->ip_sum = DEFAULT_CRC;
 }
 
-void FTMBSharedState::_transfer(int16_t queue, VectorOfClocks& vor, Packet* p, Element::Port& output_port) {
+void FTMBSharedState::_transfer(int16_t queue, VectorOfClocks vor, Packet* p, const Element::Port* output_port) {
     // PAL packet
     auto pal_pkt = Packet::make(CAST_AWAY_PACKET_DATA(p), PAL_PKT_SIZE, Util::no_op_pkt_destructor);
-    std::memcpy(pal_pkt->data(), _pals[queue], sizeof(PacketAccessLog));
+    std::memcpy(pal_pkt->data(), &_pals[queue], sizeof(PacketAccessLog));
     _fix_header(pal_pkt);
-    output_port.push(pal_pkt);
+    output_port->push(pal_pkt);
 
     // VOR packet
     auto vor_pkt = Packet::make(CAST_AWAY_PACKET_DATA(p), VOR_PKT_SIZE, Util::no_op_pkt_destructor);
     std::memcpy(vor_pkt->data(), vor, sizeof(VectorOfClocks));
     _fix_header(vor_pkt);
-    output_port.push(vor_pkt);
-
+    output_port->push(vor_pkt);
 }
 
-void FTMBSharedState::postprocess(int16_t queue, Locker* locker, Packet* p, Element::Port& output_port) {
+void FTMBSharedState::postprocess(int16_t queue, Locker* locker, Packet* p, const Element::Port* output_port) {
     /// create vector of clocks
     VectorOfClocks vor;
-    read_vor(vor);
+    _read_vor(vor);
 
     /// release the lock
     UNLOCK(locker);
 
     /// transfer vor and pals
-    transfer(queue, vor, p, output_port);
+    _transfer(queue, vor, p, output_port);
 }
 
 Locker* FTMBSharedState::get_locker(int16_t var_id, int16_t queue, FTMBOperation op) {

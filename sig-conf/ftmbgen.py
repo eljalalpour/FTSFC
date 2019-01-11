@@ -42,7 +42,7 @@ def divide_ip_space(thrds, chain_pos):
     return ll
 
 
-def shared_state_declare(ch_len, chain_pos, thrds, mb, sharing_level):
+def shared_state_declare(chain_pos, thrds, mb, sharing_level):
 
     if chain_pos % 2 == 1:  # No need for shared state for output loggers
         return '// No shared state'
@@ -273,9 +273,6 @@ def dev_mac(chain_pos, _40_or_10):
 
 
 def src_ip_filter(chain_pos, thrd=0):
-    if chain_pos == -1:
-        return "2.0.{}.0".format(
-            thrd)
     return "1.{}.{}.0".format(
         chain_pos + 1,
         thrd)
@@ -438,8 +435,7 @@ def ftmb_click(ch_len, chain_pos, thrds, mb, sharing_level):
     :return: Click code in string
     """
     string_map = {
-        SHARED_STATE_DECLARE: shared_state_declare(ch_len,
-                                                   chain_pos,
+        SHARED_STATE_DECLARE: shared_state_declare(chain_pos,
                                                    thrds,
                                                    mb,
                                                    sharing_level),
@@ -473,13 +469,13 @@ def ftmb_click(ch_len, chain_pos, thrds, mb, sharing_level):
 
 def generate(ch_len, thrds, mb, sharing_level):
     clicks = []
+    ch_len *= 2
     if len(mb) == 1:
         mb *= ch_len
     elif len(mb) != ch_len:
         raise ValueError("The number of middleboxes must be either 1 or equal to chain length!")
 
-    for_loop = ch_len * 2
-    for chain_pos in range(for_loop):
+    for chain_pos in range(ch_len):
         clicks.append(ftmb_click(ch_len, chain_pos, thrds, mb[chain_pos / 2], sharing_level))
 
     return clicks

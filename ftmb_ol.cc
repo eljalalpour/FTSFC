@@ -11,18 +11,6 @@ FTMBOutputLogger::FTMBOutputLogger () { };
 
 FTMBOutputLogger::~FTMBOutputLogger() { };
 
-int FTMBOutputLogger::configure(Vector<String> &conf, ErrorHandler *errh) {
-    // set queue param
-    if (Args(conf, this, errh)
-                .read("QUEUE", _queue)
-                .complete() < 0)
-        return -1;
-
-    LOG("FTMBOutputLogger queue is %d", _queue);
-
-    return 0;
-}
-
 Packet *FTMBOutputLogger::simple_action(Packet *p) {
     DEBUG("--------------------");
     DEBUG("Begin FTMBOutputLogger");

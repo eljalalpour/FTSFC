@@ -5,13 +5,16 @@ import os.path
 from defs import *
 import ftcgen
 import nfgen
+import ftmbgen
 
 NF = "nf"
 FTC = "ftc"
+FTMB = "ftmb"
 
 APPROACHES = [
     NF,
     FTC,
+    FTMB,
 ]
 
 DEFAULT_FAILS = 1
@@ -34,7 +37,7 @@ def def_parser():
     parser.add_argument('-a',
                         '--approach',
                         dest='a',
-                        help='<Required> Approach -- select among "nf", "ftc"',
+                        help='<Required> Approach -- select among ' + ', '.join(APPROACHES),
                         type=str,
                         required=True)
 
@@ -104,6 +107,10 @@ def gen_store(opts):
     elif apr == NF:
         clicks = nfgen.generate(opts['c'], opts['t'], opts['m'], opts['l'])
         nfgen.store(opts['o'], clicks)
+
+    elif apr == FTMB:
+        clicks = ftmbgen.generate(opts['c'], opts['t'], opts['m'], opts['l'])
+        ftmbgen.store(opts['o'], clicks)
 
     else:
         print("Invalid approach '{}'!".format(apr))

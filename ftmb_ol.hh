@@ -13,8 +13,6 @@ public:
 
     ~FTMBOutputLogger();
 
-    int configure(Vector<String> &conf, ErrorHandler *errh);
-
     const char *class_name() const { return "FTMBOutputLogger"; }
 
     const char *port_count() const { return PORTS_1_1; }

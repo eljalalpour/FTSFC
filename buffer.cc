@@ -31,7 +31,7 @@ void Buffer::_send_to_forwarder(Packet*& p) {
         return;
     
     // Zero copy packet creation
-    auto q = Packet::make(CAST_AWAY_PACKET_DATA(p), TO_FORWARDER_PKT_SIZE, Buffer::buffer_destructor);
+    auto q = Packet::make(CAST_AWAY_PACKET_DATA(p), TO_FORWARDER_PKT_SIZE, Util::no_op_pkt_destructor);
     click_ip *ip = reinterpret_cast<click_ip *>(q->data() + MAC_HEAD_SIZE);
     click_udp *udp = reinterpret_cast<click_udp *>(ip + UDP_HEAD_OFFSET_AFTER_MAC_HEAD);
 

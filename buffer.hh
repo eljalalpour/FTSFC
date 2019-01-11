@@ -53,10 +53,6 @@ public:
     int configure(Vector<String> &, ErrorHandler *);
 
     size_t length();
-
-    static inline void buffer_destructor(unsigned char* buf, size_t sz, void* argument) {
-	// No operation
-    }
 };
 
 CLICK_ENDDECLS

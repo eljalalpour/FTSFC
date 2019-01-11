@@ -21,7 +21,7 @@ FTMB = """
 {LINKS}
 """
 
-FTMB_MASTER_BLOCK = """elementclass FTMBBLock {{
+FTMB_MASTER_BLOCK = """elementclass FTMBBlock {{
 $queue, $src_ip{MB_PARAM}|
     input
     -> MarkIPHeader(14)
@@ -37,7 +37,7 @@ $queue, $src_ip{MB_PARAM}|
 }}
 """
 
-FTMB_SLAVE_BLOCK = """elementclass FTMBBLock {{
+FTMB_SLAVE_BLOCK = """elementclass FTMBBlock {{
 $queue, $src_ip |
     input
     -> MarkIPHeader(14)

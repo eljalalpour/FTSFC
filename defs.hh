@@ -89,11 +89,16 @@ typedef struct PacketAccessLog { /// We ignore p_i in FTMB's definition
     int16_t var_id;    /// v_j in FTMB's definition
     FTMBSeqNumber seq_num;       /// s_ij in FTMB's definition
 
-    PacketAccessLog(int16_t var_id = 0, FTMBSeqNumber seq_num = 0) {
+    inline void set(int16_t var_id, FTMBSeqNumber seq_num) {
         this->var_id = var_id;
         this->seq_num = seq_num;
     }
 } PacketAccessLog;
+
+/// Some useful IP related defs
+#define MAC_HEAD_SIZE    14
+#define UDP_HEAD_OFFSET_AFTER_MAC_HEAD 1
+#define DEFAULT_CRC 0
 
 /// Util class to serialize, deserialize, encode, and decode states
 class Util {

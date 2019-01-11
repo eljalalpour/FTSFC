@@ -55,12 +55,14 @@ private:
 
     inline void _transfer(int16_t, VectorOfClocks, Packet*, const Element::Port*);
 
-    inline void _fix_header(Packet*);
-
     Packet *_pal_pkt;
     Packet *_vor_pkt;
 
+    click_ether _ethh;
+    struct in_addr _sipaddr;
+    struct in_addr _dipaddr;
 
+    void _create_packet(int, Packet**);
 };
 
 Locker* FTMBSharedState::preprocess(int16_t var_id, int16_t queue) {
@@ -81,28 +83,15 @@ void FTMBSharedState::_read_vor(VectorOfClocks vor) {
     std::memcpy(vor, _maxs, sizeof(VectorOfClocks));
 }
 
-void FTMBSharedState::_fix_header(Packet* p) {
-    click_ip *ip = reinterpret_cast<click_ip *>(CAST_AWAY_PACKET_DATA(p) + MAC_HEAD_SIZE);
-    click_udp *udp = reinterpret_cast<click_udp *>(ip + UDP_HEAD_OFFSET_AFTER_MAC_HEAD);
-
-    udp->uh_ulen = htons(p->length() - MAC_HEAD_SIZE - sizeof(click_ip));
-    udp->uh_sum = DEFAULT_CRC;
-    ip->ip_hl = sizeof(click_ip) >> 2;
-    ip->ip_len = htons(p->length() - MAC_HEAD_SIZE);
-    ip->ip_sum = DEFAULT_CRC;
-}
-
 void FTMBSharedState::_transfer(int16_t queue, VectorOfClocks vor, Packet* p, const Element::Port* output_port) {
-    // PAL packet
-    auto pal_pkt = Packet::make(CAST_AWAY_PACKET_DATA(p), PAL_PKT_SIZE, Util::no_op_pkt_destructor);
+    /// PAL packet
+    auto pal_pkt = _pal_pkt->clone();
     std::memcpy(pal_pkt->data(), &_pals[queue], sizeof(PacketAccessLog));
-    _fix_header(pal_pkt);
     output_port->push(pal_pkt);
 
-    // VOR packet
-    auto vor_pkt = Packet::make(CAST_AWAY_PACKET_DATA(p), VOR_PKT_SIZE, Util::no_op_pkt_destructor);
+    /// VOR packet
+    auto vor_pkt = _vor_pkt->clone();
     std::memcpy(vor_pkt->data(), vor, sizeof(VectorOfClocks));
-    _fix_header(vor_pkt);
     output_port->push(vor_pkt);
 }
 

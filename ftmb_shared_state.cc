@@ -4,6 +4,9 @@
 #include <cstring>
 #include "ftmb_shared_state.hh"
 #include <click/glue.hh>
+#include <click/standard/alignmentinfo.hh>
+#include <click/etheraddress.hh>
+#include <click/error.hh>
 
 CLICK_DECLS
 
@@ -17,8 +20,12 @@ int FTMBSharedState::configure(Vector <String> &conf, ErrorHandler *errh) {
                 .read("QUEUES", _queues)
                 .read_mp("SRCETH", EtherAddressArg(), _ethh.ether_shost)
                 .read_mp("DSTETH", EtherAddressArg(), _ethh.ether_dhost)
+                .read_mp("SRCIP", _sipaddr)
+                .read_mp("DSTIP", _dipaddr)
                 .consume() < 0)
         return -1;
+
+    _ethh.ether_type = htons(0x0800);
 
     LOG("FTMB Shared state, queues: %d", _queues);
 
@@ -33,18 +40,17 @@ int FTMBSharedState::configure(Vector <String> &conf, ErrorHandler *errh) {
     return result;
 }
 
-int FTMBSharedState::initialize(ErrorHandler *) {
-    WritablePacket *q = Packet::make(PAL_PKT_SIZE);
-    _pal_pkt = q;
-    _ethh.ether_type = htons(0x0800);
-    memcpy(q->data(), &_ethh, 14);
-    click_ip *ip = reinterpret_cast<click_ip *>(q->data()+14);
-    click_udp *udp = reinterpret_cast<click_udp *>(ip + 1);
+void FTMBSharedState::create_packet(int pkt_size, Packet** _pkt_ptr) {
+    WritablePacket *q = Packet::make(pkt_size);
+    *_pkt_ptr = q;
+    memcpy(q->data(), &_ethh, MAC_HEAD_SIZE);
+    click_ip *ip = reinterpret_cast<click_ip *>(q->data() + MAC_HEAD_SIZE);
+    click_udp *udp = reinterpret_cast<click_udp *>(ip + UDP_HEAD_OFFSET_AFTER_MAC_HEAD);
 
     // set up IP header
     ip->ip_v = 4;
     ip->ip_hl = sizeof(click_ip) >> 2;
-    ip->ip_len = htons(_len-14);
+    ip->ip_len = htons(pkt_size - MAC_HEAD_SIZE);
     ip->ip_id = 0;
     ip->ip_p = IP_PROTO_UDP;
     ip->ip_src = _sipaddr;
@@ -58,16 +64,21 @@ int FTMBSharedState::initialize(ErrorHandler *) {
     _packet->set_ip_header(ip, sizeof(click_ip));
 
     // set up UDP header
-    udp->uh_sport = htons(_sport);
-    udp->uh_dport = htons(_dport);
+    udp->uh_sport = htons(10000);
+    udp->uh_dport = htons(10000);
     udp->uh_sum = 0;
-    unsigned short len = _len-14-sizeof(click_ip);
+    unsigned short len = pkt_size - MAC_HEAD_SIZE - sizeof(click_ip);
     udp->uh_ulen = htons(len);
     if (_cksum) {
         unsigned csum = click_in_cksum((uint8_t *)udp, len);
         udp->uh_sum = click_in_cksum_pseudohdr(csum, ip, len);
     } else
         udp->uh_sum = 0;
+}
+
+int FTMBSharedState::initialize(ErrorHandler *) {
+    _create_packet(PAL_PKT_SIZE, &_pal_pkt);
+    _create_packet(VOR_PKT_SIZE, &_vor_pkt);
 
     return 0;
 }

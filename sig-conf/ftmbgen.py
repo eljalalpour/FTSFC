@@ -57,6 +57,7 @@ def shared_state_declare(chain_pos, thrds, mb, sharing_level):
             SHARING_LEVEL: sharing_level,
             DATA_SRC_MAC: dev_mac(chain_pos, data_dev),
             DATA_DST_MAC: dev_mac(dst_index, data_dev),
+            DATA_DST_IP: dev_ip(dst_index, data_dev),
         })
 
     elif mb == NAT:
@@ -65,6 +66,7 @@ def shared_state_declare(chain_pos, thrds, mb, sharing_level):
             QUEUES: thrds,
             DATA_SRC_MAC: dev_mac(chain_pos, data_dev),
             DATA_DST_MAC: dev_mac(dst_index, data_dev),
+            DATA_DST_IP: dev_ip(dst_index, data_dev),
         })
 
     elif mb == LB:
@@ -73,6 +75,7 @@ def shared_state_declare(chain_pos, thrds, mb, sharing_level):
             QUEUES: thrds,
             DATA_SRC_MAC: dev_mac(chain_pos, data_dev),
             DATA_DST_MAC: dev_mac(dst_index, data_dev),
+            DATA_DST_IP: dev_ip(dst_index, data_dev),
         })
 
     return None
@@ -485,7 +488,7 @@ def generate(ch_len, thrds, mb, sharing_level):
         raise ValueError("The number of middleboxes must be either 1 or equal to chain length!")
 
     for chain_pos in range(ch_len):
-        clicks.append(ftmb_click(ch_len, chain_pos, thrds, mb[chain_pos / 2], sharing_level))
+        clicks.append(ftmb_click(ch_len, chain_pos, thrds, mb[chain_pos // 2], sharing_level))
 
     return clicks
 

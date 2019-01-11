@@ -6,7 +6,15 @@
 
 CLICK_DECLS
 
+#define MS2US 1000
+#define US2NS 1000
+#define MS2NS 1000000
+
 class FTMBOutputLogger : public Element {
+private:
+    long _per_packet_latency; // In micro-seconds
+    long _loop_count;
+
 public:
     FTMBOutputLogger ();
 
@@ -21,22 +29,6 @@ public:
     const char *processing() const { return AGNOSTIC; }
 
     Packet *simple_action(Packet *p);
-
-private:
-    int16_t _queue;
-    PacketAccessLog _last_pal;
-    VectorOfClocks _last_vor;
-
-    inline void _process_vor(Packet*);
-    inline void _process_pal(Packet*);
 };
-
-void _process_vor(Packet* p) {
-    std::memcpy(_last_vor, CAST_PACKET_TO_VOR(p), sizeof(VectorOfClocks));
-}
-
-void _process_pal(Packet* p) {
-    std::memcpy(_last_pal, CAST_PACKET_TO_PAL(p), sizeof(PacketAccessLog));
-}
 
 CLICK_ENDDECLS

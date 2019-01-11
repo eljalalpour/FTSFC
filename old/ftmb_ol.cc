@@ -3,7 +3,6 @@
 #include <click/router.hh>
 #include <click/args.hh>
 #include "ftmb_ol.hh"
-#include "ftmb_shared_state.hh"
 
 CLICK_DECLS
 
@@ -12,13 +11,21 @@ FTMBOutputLogger::FTMBOutputLogger () { };
 FTMBOutputLogger::~FTMBOutputLogger() { };
 
 int FTMBOutputLogger::configure(Vector<String> &conf, ErrorHandler *errh) {
-    // set queue param
+    // set index param
     if (Args(conf, this, errh)
-                .read("QUEUE", _queue)
+                .read("PER_PACKET", _per_packet_latency)
                 .complete() < 0)
         return -1;
 
-    LOG("FTMBOutputLogger queue is %d", _queue);
+    LOG("FTMBOutputLogger per packet latency is %d us!\n",
+        _per_packet_latency);
+
+    // parameters are in mili/micro-seconds,
+    // convert them to nano-seconds
+    _per_packet_latency *= US2NS;
+    _loop_count = Util::find_dummy_loop_count(_per_packet_latency);
+
+    LOG("Loop count found: %d", _loop_count);
 
     return 0;
 }
@@ -27,16 +34,8 @@ Packet *FTMBOutputLogger::simple_action(Packet *p) {
     DEBUG("--------------------");
     DEBUG("Begin FTMBOutputLogger");
 
-    if (p->length() == PAL_PKT_SIZE) {
-        _process_pal(p);
-        p->kill();
-        return 0;
-    }//if
-    else if (p->length() == VOR_PKT_SIZE) {
-        _process_vor(p);
-        p->kill();
-        return 0;
-    }//else if
+    // Artificial latency
+    Util::dummy_loop(_loop_count);
 
     DEBUG("End FTMBOutputLogger");
     DEBUG("--------------------");

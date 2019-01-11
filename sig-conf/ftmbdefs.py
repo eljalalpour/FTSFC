@@ -58,16 +58,20 @@ LINK_FORMAT_STR = """// Queue {QUEUE}
 -> {TO_DATA_DEVICE_NAME};
 """
 SHARED_STATE_FORMAT_STR = "shared_locks::SharedLocks(LOCKS {LOCKS});" \
-                          "\nshared_state::FTMBSharedState(SHARED_LOCKS shared_locks, QUEUES {QUEUES});"
+                          "\nshared_state::FTMBSharedState(SHARED_LOCKS shared_locks, QUEUES {QUEUES}" \
+                          ", SRCETH {DATA_SRC_MAC}, DSTETH {DATA_DST_MAC});"
 
 
 SHARED_STATE_COUNTER_FORMAT_STR = "shared_locks::SharedLocks(LOCKS {LOCKS});" \
                                   "\nshared_state::FTMBSharedStateCounter" \
-                                  "(SHARED_LOCKS shared_locks, QUEUES {QUEUES}, SHARING_LEVEL {SHARING_LEVEL});"
+                                  "(SHARED_LOCKS shared_locks, QUEUES {QUEUES}" \
+                                  ", SRCETH {DATA_SRC_MAC}, DSTETH {DATA_DST_MAC}" \
+                                  ", SHARING_LEVEL {SHARING_LEVEL});"
 
 SHARED_STATE_NAT_FORMAT_STR = "shared_locks::SharedLocks(LOCKS {LOCKS});" \
                               "\nshared_state::FTMBSharedStateAddrRewriter" \
-                              "(SHARED_LOCKS shared_locks, QUEUES {QUEUES});"
+                              "(SHARED_LOCKS shared_locks, QUEUES {QUEUES}" \
+                              ", SRCETH {DATA_SRC_MAC}, DSTETH {DATA_DST_MAC});"
 
 FROM_DEVICE_NAME_FORMAT_STR = "fd{QUEUE}"
 THREAD_SCHED_FORMAT_STR = "StaticThreadSched({});"

@@ -3,6 +3,7 @@
 #include <deque>
 #include <cstring>
 #include <click/packet_anno.hh>
+#include <clicknet/ether.h>
 #include <clicknet/ip.h>
 #include <clicknet/udp.h>
 #include "shared_state_base.hh"
@@ -32,6 +33,8 @@ public:
 
     int configure(Vector<String> &, ErrorHandler *);
 
+    int initialize(ErrorHandler *);
+
     inline Locker* preprocess(int16_t, int16_t);
 
     inline void postprocess(int16_t, Locker*, Packet*, const Element::Port*);
@@ -53,6 +56,11 @@ private:
     inline void _transfer(int16_t, VectorOfClocks, Packet*, const Element::Port*);
 
     inline void _fix_header(Packet*);
+
+    Packet *_pal_pkt;
+    Packet *_vor_pkt;
+
+
 };
 
 Locker* FTMBSharedState::preprocess(int16_t var_id, int16_t queue) {

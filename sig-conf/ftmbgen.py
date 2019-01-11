@@ -47,23 +47,32 @@ def shared_state_declare(chain_pos, thrds, mb, sharing_level):
     if chain_pos % 2 == 1:  # No need for shared state for output loggers
         return '// No shared state'
 
+    dst_index = chain_pos + 1
+    data_dev = '40'
+
     if mb == COUNTER:
         return SHARED_STATE_COUNTER_FORMAT_STR.format(**{
             LOCKS: 8,
             QUEUES: thrds,
             SHARING_LEVEL: sharing_level,
+            DATA_SRC_MAC: dev_mac(chain_pos, data_dev),
+            DATA_DST_MAC: dev_mac(dst_index, data_dev),
         })
 
     elif mb == NAT:
         return SHARED_STATE_NAT_FORMAT_STR.format(**{
             LOCKS: 32768,
             QUEUES: thrds,
+            DATA_SRC_MAC: dev_mac(chain_pos, data_dev),
+            DATA_DST_MAC: dev_mac(dst_index, data_dev),
         })
 
     elif mb == LB:
         return SHARED_STATE_FORMAT_STR.format(**{
             LOCKS: 1,
             QUEUES: thrds,
+            DATA_SRC_MAC: dev_mac(chain_pos, data_dev),
+            DATA_DST_MAC: dev_mac(dst_index, data_dev),
         })
 
     return None

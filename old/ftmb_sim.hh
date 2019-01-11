@@ -1,10 +1,10 @@
 #pragma once
 
-#include "defs.hh"
+#include "../defs.hh"
 #include <click/config.h>
 #include <click/element.hh>
 #include <click/timestamp.hh>
-#include "shared_state.hh"
+#include "../shared_state.hh"
 
 CLICK_DECLS
 

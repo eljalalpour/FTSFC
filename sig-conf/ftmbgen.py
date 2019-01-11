@@ -384,14 +384,22 @@ def ftmb_block_def(ch_len, thrds, chain_pos, mb):
     """
     data_dev = '40'
 
+    if chain_pos == -1 or chain_pos == (ch_len - 1):
+        dst_index = -FIRST_AQUA_MACHINE_IN_CHAIN
+        src_ip_filter_index = ch_len - 2
+
+    else:
+        dst_index = chain_pos + 1
+        src_ip_filter_index = chain_pos - 1
+
     if chain_pos % 2 == 1:
         return FTMB_SLAVE_BLOCK.format(**{
-            SRC_IP_FILTER: src_ip_filter(chain_pos - 1),
+            SRC_IP_FILTER: src_ip_filter(src_ip_filter_index),
             DATA_SRC_MAC: dev_mac(chain_pos, data_dev),
-            DATA_DST_MAC: dev_mac(chain_pos + 1, data_dev),
-            DATA_DST_IP: dev_ip(chain_pos + 1, data_dev),
+            DATA_DST_MAC: dev_mac(dst_index, data_dev),
+            DATA_DST_IP: dev_ip(dst_index, data_dev),
             DATA_SRC_NAME: dev_name(chain_pos),
-            DATA_DST_NAME: dev_name(chain_pos + 1),
+            DATA_DST_NAME: dev_name(dst_index),
         })
 
     if mb == COUNTER:
@@ -407,14 +415,6 @@ def ftmb_block_def(ch_len, thrds, chain_pos, mb):
     if mb_params is not None and len(mb_params) > 0:
         mb_params_str = ', ' + ', '.join(mb_params)
 
-    if chain_pos == -1 or chain_pos == (ch_len - 1):
-        dst_index = -FIRST_AQUA_MACHINE_IN_CHAIN
-        src_ip_filter_index = ch_len - 2
-
-    else:
-        dst_index = chain_pos + 1
-        src_ip_filter_index = chain_pos - 1
-
     return FTMB_MASTER_BLOCK.format(**{
             SRC_IP_FILTER: src_ip_filter(src_ip_filter_index),
 
@@ -425,7 +425,7 @@ def ftmb_block_def(ch_len, thrds, chain_pos, mb):
             DATA_DST_MAC: dev_mac(dst_index, data_dev),
             DATA_DST_IP: dev_ip(dst_index, data_dev),
             DATA_SRC_NAME: dev_name(chain_pos),
-            DATA_DST_NAME: dev_name(chain_pos + 1),
+            DATA_DST_NAME: dev_name(dst_index),
         })
 
 

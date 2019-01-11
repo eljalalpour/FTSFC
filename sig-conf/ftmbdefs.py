@@ -1,5 +1,5 @@
 FTMB = """
-// Shared state
+// Shared locks and state
 {SHARED_STATE_DECLARE}
 
 // FTMB Block definition

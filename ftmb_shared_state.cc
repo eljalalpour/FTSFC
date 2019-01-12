@@ -40,7 +40,7 @@ int FTMBSharedState::configure(Vector <String> &conf, ErrorHandler *errh) {
     return result;
 }
 
-void FTMBSharedState::create_packet(int pkt_size, Packet** _pkt_ptr) {
+void FTMBSharedState::_create_packet(int pkt_size, Packet** _pkt_ptr) {
     WritablePacket *q = Packet::make(pkt_size);
     *_pkt_ptr = q;
     memcpy(q->data(), &_ethh, MAC_HEAD_SIZE);

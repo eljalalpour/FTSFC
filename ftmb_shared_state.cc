@@ -60,8 +60,8 @@ void FTMBSharedState::_create_packet(int pkt_size, Packet** _pkt_ptr) {
     ip->ip_ttl = 250;
     ip->ip_sum = 0;
     ip->ip_sum = click_in_cksum((unsigned char *)ip, sizeof(click_ip));
-    _packet->set_dst_ip_anno(IPAddress(_dipaddr));
-    _packet->set_ip_header(ip, sizeof(click_ip));
+    (*_pkt_ptr)->set_dst_ip_anno(IPAddress(_dipaddr));
+    (*_pkt_ptr)->set_ip_header(ip, sizeof(click_ip));
 
     // set up UDP header
     udp->uh_sport = htons(10000);
@@ -69,11 +69,7 @@ void FTMBSharedState::_create_packet(int pkt_size, Packet** _pkt_ptr) {
     udp->uh_sum = 0;
     unsigned short len = pkt_size - MAC_HEAD_SIZE - sizeof(click_ip);
     udp->uh_ulen = htons(len);
-    if (_cksum) {
-        unsigned csum = click_in_cksum((uint8_t *)udp, len);
-        udp->uh_sum = click_in_cksum_pseudohdr(csum, ip, len);
-    } else
-        udp->uh_sum = 0;
+    udp->uh_sum = 0;
 }
 
 int FTMBSharedState::initialize(ErrorHandler *) {

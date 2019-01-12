@@ -86,7 +86,14 @@ add_executable(FTSFC
         ft_shared_state_addrrewriter.hh
         ft_addrrewriter.cc
         ft_addrrewriter.hh
-        ftmb_shared_state.cc ftmb_shared_state.hh ftmb_counter.cc ftmb_counter.hh ftmb_shared_state_counter.cc ftmb_shared_state_counter.hh)
+        ftmb_shared_state.cc
+        ftmb_shared_state.hh
+        ftmb_counter.cc
+        ftmb_counter.hh
+        ftmb_shared_state_counter.cc
+        ftmb_shared_state_counter.hh
+        udpgen.cc
+        udpgen.hh)
 
 target_link_libraries(FTSFC ${PROTOBUF_LIB})
 

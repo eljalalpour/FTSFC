@@ -23,6 +23,8 @@ int FTMBSharedStateCounter::configure(Vector<String> &conf, ErrorHandler *errh) 
            _sharing_level == ThreadSharing4 ||
            _sharing_level == ThreadSharing8);
 
+    LOG("FTMBSharedStateCounter sharing level: %d", _sharing_level);
+
     return FTMBSharedState::configure(conf, errh);
 }
 

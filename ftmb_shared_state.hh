@@ -100,8 +100,7 @@ void FTMBSharedState::_transfer(int16_t queue, Packet* p, const Element::Port* o
 
 void FTMBSharedState::postprocess(int16_t queue, Locker* locker, Packet* p, const Element::Port* output_port) {
     /// create vector of clocks
-    VectorOfClocks vor;
-    _read_vor(vor);
+    _read_vor();
 
     /// release the lock
     UNLOCK(locker);

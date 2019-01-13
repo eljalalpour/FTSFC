@@ -42,6 +42,7 @@ public:
 protected:
     int _queues;
     int _batch;
+    bool _pal_generated;
     VectorOfClocks _maxs; /// MAX in FTMB's definition
 //    Locker _maxs_lockers[MAX_QUEUES]; /// Locks for _maxs
     std::deque<FTMBSeqNumber> _counters; /// s_ij in FTMB's definition, must be equal to the number of
@@ -75,6 +76,7 @@ Locker* FTMBSharedState::preprocess(int16_t var_id, int16_t queue) {
 
     /// store PAL
     _pals[queue].set(var_id, _maxs[queue]++);
+    _pal_generated = true;
 
     return locker;
 }
@@ -88,9 +90,13 @@ void FTMBSharedState::_transfer(int16_t queue, Packet* p, const Element::Port* o
     /// PAL packet
 //    auto pal_pkt = _pal_pkt->clone();
     // Zero copy packet creation
-    auto pal_pkt = Packet::make(CAST_AWAY_PACKET_DATA(_pal_pkt), _pal_pkt->length(), Util::no_op_pkt_destructor);
-    std::memcpy(CAST_AWAY_PACKET_DATA(pal_pkt) + DEFAULT_OFFSET, &_pals[queue], sizeof(PacketAccessLog));
-    output_port->push(pal_pkt);
+    if (_pal_generated) {
+        auto pal_pkt = Packet::make(CAST_AWAY_PACKET_DATA(_pal_pkt), _pal_pkt->length(), Util::no_op_pkt_destructor);
+        std::memcpy(CAST_AWAY_PACKET_DATA(pal_pkt) + DEFAULT_OFFSET, &_pals[queue], sizeof(PacketAccessLog));
+        output_port->push(pal_pkt);
+
+        _pal_generated = false;
+    }//if
 
     output_port->push(p);
 

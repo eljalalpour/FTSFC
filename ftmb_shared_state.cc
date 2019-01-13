@@ -10,7 +10,7 @@
 
 CLICK_DECLS
 
-FTMBSharedState::FTMBSharedState() { };
+FTMBSharedState::FTMBSharedState() : _pal_generated(false) { };
 
 FTMBSharedState::~FTMBSharedState() { };
 

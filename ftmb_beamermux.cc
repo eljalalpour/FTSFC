@@ -108,7 +108,8 @@ Packet *FTMBBeamerMux::simple_action(Packet *p) {
 
     p->set_ip_header(ip, sizeof(click_ip));
 
-    _shared_state->postprocess(_queue, nullptr, p, output(0));
+    /// Since there is no state, there is no need to call preprocess.
+    _shared_state->postprocess(_queue, nullptr, p, &output(0));
 
     return 0;
 }

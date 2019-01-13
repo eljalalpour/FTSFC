@@ -16,6 +16,7 @@ using std::deque;
 #define PAD          0
 #define VOR_PKT_SIZE DEFAULT_OFFSET + sizeof(VectorOfClocks) + PAD
 #define PAL_PKT_SIZE DEFAULT_OFFSET + sizeof(PacketAccessLog) + PAD
+#define EXTRA_PKT_SIZE DEFAULT_OFFSET + sizeof(PacketAccessLog) + sizeof(VectorOfClocks) + PAD
 
 enum FTMBOperation {
     AccessSharedVariable,

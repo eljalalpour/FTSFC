@@ -96,8 +96,8 @@ typedef struct PacketAccessLog { /// We ignore p_i in FTMB's definition
 } PacketAccessLog;
 
 #define CAST_PACKET_TO_PAL(p) reinterpret_cast<PacketAccessLog*>(CAST_AWAY_PACKET_DATA(p) + DEFAULT_OFFSET)
-#define CAST_PACKET_TO_VOR(p) reinterpret_cast<VectorOfClocks*>(CAST_AWAY_PACKET_DATA(p) + DEFAULT_OFFSET)
-
+//#define CAST_PACKET_TO_VOR(p) reinterpret_cast<VectorOfClocks*>(CAST_AWAY_PACKET_DATA(p) + DEFAULT_OFFSET)
+#define CAST_PACKET_TO_VOR(p) reinterpret_cast<VectorOfClocks*>(CAST_AWAY_PACKET_DATA(p) + DEFAULT_OFFSET + sizeof(PacketAccessLog))
 
 /// Some useful IP related defs
 #define MAC_HEAD_SIZE    14

@@ -98,7 +98,8 @@ void FTMBSharedState::_transfer(int16_t queue, Packet* p, const Element::Port* o
         _pal_generated = false;
     }//if
 
-    output_port->push(p);
+    if (p)
+        output_port->push(p);
 
     /// VOR packet, the content is already read into _vor_pkt
 //    auto vor_pkt = _vor_pkt->clone();

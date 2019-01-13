@@ -18,6 +18,7 @@ int FTMBSharedState::configure(Vector <String> &conf, ErrorHandler *errh) {
     // set id and f params
     if (Args(conf, this, errh)
                 .read("QUEUES", _queues)
+                .read("BATCH", _batch)
                 .read_mp("SRCETH", EtherAddressArg(), _ethh.ether_shost)
                 .read_mp("DSTETH", EtherAddressArg(), _ethh.ether_dhost)
                 .read_mp("SRCIP", _sipaddr)

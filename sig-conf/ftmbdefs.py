@@ -58,21 +58,22 @@ LINK_FORMAT_STR = """// Queue {QUEUE}
 -> {TO_DATA_DEVICE_NAME};
 """
 SHARED_STATE_FORMAT_STR = "shared_locks::SharedLocks(LOCKS {LOCKS});" \
-                          "\nshared_state::FTMBSharedState(SHARED_LOCKS shared_locks, QUEUES {QUEUES},\n" \
+                          "\nshared_state::FTMBSharedState" \
+                          "(SHARED_LOCKS shared_locks, BATCH {BATCH}, QUEUES {QUEUES},\n" \
                           "\tSRCIP 0.0.0.0, DSTIP {DATA_DST_IP},\n" \
                           "\tSRCETH {DATA_SRC_MAC}, DSTETH {DATA_DST_MAC});"
 
 
 SHARED_STATE_COUNTER_FORMAT_STR = "shared_locks::SharedLocks(LOCKS {LOCKS});" \
                                   "\nshared_state::FTMBSharedStateCounter" \
-                                  "(SHARED_LOCKS shared_locks, QUEUES {QUEUES},\n" \
+                                  "(SHARED_LOCKS shared_locks, BATCH {BATCH},‌ QUEUES {QUEUES},\n" \
                                   "\tSRCIP 0.0.0.0, DSTIP {DATA_DST_IP},\n" \
                                   "\tSRCETH {DATA_SRC_MAC}, DSTETH {DATA_DST_MAC},\n" \
                                   "\tSHARING_LEVEL {SHARING_LEVEL});"
 
 SHARED_STATE_NAT_FORMAT_STR = "shared_locks::SharedLocks(LOCKS {LOCKS});" \
                               "\nshared_state::FTMBSharedStateAddrRewriter" \
-                              "(SHARED_LOCKS shared_locks, QUEUES {QUEUES},\n" \
+                              "(SHARED_LOCKS shared_locks, BATCH {BATCH}, QUEUES {QUEUES},\n" \
                               "\tSRCIP 0.0.0.0, DSTIP {DATA_DST_IP},\n" \
                               "\tSRCETH {DATA_SRC_MAC}, DSTETH {DATA_DST_MAC});"
 
@@ -133,6 +134,8 @@ NAT_MB = 'FTMBAddrRewriter(pattern $ip_min-$ip_max - 0 0, ' \
          'SHARED_STATE shared_state, ' \
          'QUEUE $queue)'
 NAT_MB_PARAMS = ['$ip_min', '$ip_max']
+
+BATCH = 'BATCH'
 
 BEAMER_MUX_MB = 'BeamerMux(RING_SIZE 200000, MAX_STATES 800)'
 BEAMER_MUX_MB_PARAMS = []

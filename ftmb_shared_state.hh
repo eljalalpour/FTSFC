@@ -41,6 +41,7 @@ public:
 
 protected:
     int _queues;
+    int _batch;
     VectorOfClocks _maxs; /// MAX in FTMB's definition
 //    Locker _maxs_lockers[MAX_QUEUES]; /// Locks for _maxs
     std::deque<FTMBSeqNumber> _counters; /// s_ij in FTMB's definition, must be equal to the number of
@@ -96,13 +97,17 @@ void FTMBSharedState::_transfer(int16_t queue, Packet* p, const Element::Port* o
     /// VOR packet, the content is already read into _vor_pkt
 //    auto vor_pkt = _vor_pkt->clone();
     // Zero copy packet creation
-    auto vor_pkt = Packet::make(CAST_AWAY_PACKET_DATA(_vor_pkt), _vor_pkt->length(), Util::no_op_pkt_destructor);
-    output_port->push(vor_pkt);
+    if (_maxs[queue] % _batch == 0) {
+        auto vor_pkt = Packet::make(CAST_AWAY_PACKET_DATA(_vor_pkt), _vor_pkt->length(), Util::no_op_pkt_destructor);
+        output_port->push(vor_pkt);
+    }//if
 }
 
 void FTMBSharedState::postprocess(int16_t queue, Locker* locker, Packet* p, const Element::Port* output_port) {
-    /// create vector of clocks
-    _read_vor();
+    if (_maxs[queue] % _batch == 0) {
+        /// create vector of clocks
+        _read_vor();
+    }//if
 
     /// release the lock
     UNLOCK(locker);

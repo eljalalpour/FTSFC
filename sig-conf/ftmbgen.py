@@ -42,7 +42,7 @@ def divide_ip_space(thrds, chain_pos):
     return ll
 
 
-def shared_state_declare(chain_pos, thrds, mb, sharing_level):
+def shared_state_declare(chain_pos, thrds, mb, sharing_level, batch):
 
     if chain_pos % 2 == 1:  # No need for shared state for output loggers
         return '// No shared state'
@@ -53,6 +53,7 @@ def shared_state_declare(chain_pos, thrds, mb, sharing_level):
     if mb == COUNTER:
         return SHARED_STATE_COUNTER_FORMAT_STR.format(**{
             LOCKS: 8,
+            BATCH: batch,
             QUEUES: thrds,
             SHARING_LEVEL: sharing_level,
             DATA_SRC_MAC: dev_mac(chain_pos, data_dev),
@@ -63,6 +64,7 @@ def shared_state_declare(chain_pos, thrds, mb, sharing_level):
     elif mb == NAT:
         return SHARED_STATE_NAT_FORMAT_STR.format(**{
             LOCKS: 32768,
+            BATCH: batch,
             QUEUES: thrds,
             DATA_SRC_MAC: dev_mac(chain_pos, data_dev),
             DATA_DST_MAC: dev_mac(dst_index, data_dev),
@@ -72,6 +74,7 @@ def shared_state_declare(chain_pos, thrds, mb, sharing_level):
     elif mb == LB:
         return SHARED_STATE_FORMAT_STR.format(**{
             LOCKS: 1,
+            BATCH: batch,
             QUEUES: thrds,
             DATA_SRC_MAC: dev_mac(chain_pos, data_dev),
             DATA_DST_MAC: dev_mac(dst_index, data_dev),
@@ -441,7 +444,7 @@ def ftmb_block_def(ch_len, thrds, chain_pos, mb):
         })
 
 
-def ftmb_click(ch_len, chain_pos, thrds, mb, sharing_level):
+def ftmb_click(ch_len, chain_pos, thrds, mb, sharing_level, batch):
     """
     Click code for FTMB
     :return: Click code in string
@@ -450,7 +453,8 @@ def ftmb_click(ch_len, chain_pos, thrds, mb, sharing_level):
         SHARED_STATE_DECLARE: shared_state_declare(chain_pos,
                                                    thrds,
                                                    mb,
-                                                   sharing_level),
+                                                   sharing_level,
+                                                   batch),
 
         FTMB_BLOCK_DEF: ftmb_block_def(ch_len,
                                        thrds,
@@ -479,7 +483,7 @@ def ftmb_click(ch_len, chain_pos, thrds, mb, sharing_level):
     return FTMB.format(**string_map)
 
 
-def generate(ch_len, thrds, mb, sharing_level):
+def generate(ch_len, thrds, mb, sharing_level, batch):
     clicks = []
     ch_len *= 2
     if len(mb) == 1:
@@ -488,7 +492,7 @@ def generate(ch_len, thrds, mb, sharing_level):
         raise ValueError("The number of middleboxes must be either 1 or equal to chain length!")
 
     for chain_pos in range(ch_len):
-        clicks.append(ftmb_click(ch_len, chain_pos, thrds, mb[chain_pos // 2], sharing_level))
+        clicks.append(ftmb_click(ch_len, chain_pos, thrds, mb[chain_pos // 2], sharing_level, batch))
 
     return clicks
 

@@ -231,7 +231,7 @@ FTAddrRewriter::push(int port, Packet *p_in)
         mf->change_expiry_by_timeout(_heap, click_jiffies(), _timeouts);
 
         /// Capture state
-        _shared_state->construct_piggyback_message(p, last_lock_index);
+        _shared_state->construct_piggyback_message(p, _queue);
 
         /// A, B, C - WRITER UNLOCK
         /// unlock the corresponding writer lock

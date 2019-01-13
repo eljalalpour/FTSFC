@@ -91,6 +91,8 @@ void FTAddrRewriter::_init_shared() {
     Router *r = this->router();
     _shared_locks = (SharedLocks *)(r->find(_shared_locks_element_name));
     _shared_state = (FTSharedStateAddrRewriter *)(r->find(_shared_state_element_name));
+
+    _shared_state->register_addr_rewriter(_queue, &last_lock_index);
 }
 
 int
@@ -206,6 +208,9 @@ FTAddrRewriter::push(int port, Packet *p_in)
 
             }//if
             if (!m) {
+                /// Capture state
+                _shared_state->construct_piggyback_message(p, last_lock_index);
+
                 /// C - UNLOCK
                 _shared_locks->unlock(last_lock_index);
                 checked_output_push(result, p);

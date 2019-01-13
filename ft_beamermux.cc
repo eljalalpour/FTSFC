@@ -49,7 +49,7 @@ FTBeamerMux::FTBeamerMux() {}
 
 FTBeamerMux::~FTBeamerMux() { }
 
-void FTCounter::_init_shared_state() {
+void FTBeamerMux::_init_shared_state() {
     Router *r = this->router();
     _shared_state = (FTSharedStateBeamer *)(r->find(_shared_state_element_name));
 }

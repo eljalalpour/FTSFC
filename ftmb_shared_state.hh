@@ -16,7 +16,6 @@ using std::deque;
 #define PAD          0
 #define VOR_PKT_SIZE DEFAULT_OFFSET + sizeof(VectorOfClocks) + PAD
 #define PAL_PKT_SIZE DEFAULT_OFFSET + sizeof(PacketAccessLog) + PAD
-#define EXTRA_PKT_SIZE DEFAULT_OFFSET + sizeof(PacketAccessLog) + sizeof(VectorOfClocks) + PAD
 
 enum FTMBOperation {
     AccessSharedVariable,
@@ -56,9 +55,8 @@ private:
 
     inline void _transfer(int16_t, VectorOfClocks, Packet*, const Element::Port*);
 
-//    Packet *_pal_pkt;
-//    Packet *_vor_pkt;
-    Packet *_pkt;
+    Packet *_pal_pkt;
+    Packet *_vor_pkt;
 
     click_ether _ethh;
     struct in_addr _sipaddr;
@@ -86,20 +84,15 @@ void FTMBSharedState::_read_vor(VectorOfClocks vor) {
 }
 
 void FTMBSharedState::_transfer(int16_t queue, VectorOfClocks vor, Packet* p, const Element::Port* output_port) {
-//    /// PAL packet
-//    auto pal_pkt = _pal_pkt->clone();
-//    std::memcpy(CAST_AWAY_PACKET_DATA(pal_pkt) + DEFAULT_OFFSET, &_pals[queue], sizeof(PacketAccessLog));
-//    output_port->push(pal_pkt);
-//
-//    /// VOR packet
-//    auto vor_pkt = _vor_pkt->clone();
-//    std::memcpy(CAST_AWAY_PACKET_DATA(vor_pkt) + DEFAULT_OFFSET, vor, sizeof(VectorOfClocks));
-//    output_port->push(vor_pkt);
+    /// PAL packet
+    auto pal_pkt = _pal_pkt->clone();
+    std::memcpy(CAST_AWAY_PACKET_DATA(pal_pkt) + DEFAULT_OFFSET, &_pals[queue], sizeof(PacketAccessLog));
+    output_port->push(pal_pkt);
 
-    auto pkt = _pkt->clone();
-    std::memcpy(CAST_AWAY_PACKET_DATA(pkt) + DEFAULT_OFFSET, &_pals[queue], sizeof(PacketAccessLog));
-    std::memcpy(CAST_AWAY_PACKET_DATA(pkt) + DEFAULT_OFFSET + sizeof(PacketAccessLog), vor, sizeof(VectorOfClocks));
-    output_port->push(pkt);
+    /// VOR packet
+    auto vor_pkt = _vor_pkt->clone();
+    std::memcpy(CAST_AWAY_PACKET_DATA(vor_pkt) + DEFAULT_OFFSET, vor, sizeof(VectorOfClocks));
+    output_port->push(vor_pkt);
 }
 
 void FTMBSharedState::postprocess(int16_t queue, Locker* locker, Packet* p, const Element::Port* output_port) {

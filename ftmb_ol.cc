@@ -15,20 +15,16 @@ Packet *FTMBOutputLogger::simple_action(Packet *p) {
     DEBUG("--------------------");
     DEBUG("Begin FTMBOutputLogger");
 
-//    if (p->length() == PAL_PKT_SIZE) {
-//        _process_pal(p);
-//        p->kill();
-//        return 0;
-//    }//if
-//    else if (p->length() == VOR_PKT_SIZE) {
-//        _process_vor(p);
-//        p->kill();
-//        return 0;
-//    }//else if
-
-    if (p->length() == EXTRA_PKT_SIZE) {
-        _process_extra(p);
+    if (p->length() == PAL_PKT_SIZE) {
+        _process_pal(p);
+        p->kill();
+        return 0;
     }//if
+    else if (p->length() == VOR_PKT_SIZE) {
+        _process_vor(p);
+        p->kill();
+        return 0;
+    }//else if
 
     DEBUG("End FTMBOutputLogger");
     DEBUG("--------------------");

@@ -49,7 +49,7 @@ int SharedStateBase::read(size_t index) {
     return _state[index];
 }
 
-Locker* SharedStateBase::get_locker(int index) {
+Locker* SharedStateBase::get_locker(size_t index) {
     return _shared_locks->locker_ptr(index);
 }
 

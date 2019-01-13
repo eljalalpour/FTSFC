@@ -39,7 +39,7 @@ size_t FTSharedStateCounter::_lock_index(size_t index) {
     return index % (_cached_lockers_size / _sharing_level);
 }
 
-Locker* FTSharedState::get_locker(size_t index) {
+Locker* FTSharedStateCounter::get_locker(size_t index) {
     return get_locker(index, Operation::PacketTransaction);
 }
 

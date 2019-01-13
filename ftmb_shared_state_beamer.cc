@@ -21,5 +21,5 @@ Packet *FTMBSharedStateBeamer::simple_action(Packet *p) {
 }
 
 CLICK_ENDDECLS
-ELEMENT_REQUIRES(FTSharedState)
+ELEMENT_REQUIRES(FTMBSharedState)
 EXPORT_ELEMENT(FTMBSharedStateBeamer)

@@ -28,7 +28,6 @@ $queue, $src_ip{MB_PARAM}|
     -> IPFilter(allow udp && src {SRC_IP_FILTER}/16)
     -> PMProcess(QUEUE $queue, SHARED_STATE shared_state)
     -> {MB}
-    -> PMConstruct(QUEUE $queue, SHARED_STATE shared_state)
     -> MarkIPHeader(14)
     -> StoreEtherAddress({DATA_SRC_MAC}, src) // {DATA_SRC_NAME}
     -> StoreEtherAddress({DATA_DST_MAC}, dst) // {DATA_DST_NAME}
@@ -44,7 +43,6 @@ $queue, $src_ip{MB_PARAM}|
     -> MarkIPHeader(14)
     -> IPFilter(allow udp && src 1.0.0.0/16)
     -> {MB}
-    -> PMConstruct(QUEUE $queue, SHARED_STATE shared_state)
     -> MarkIPHeader(14)
     -> StoreEtherAddress({DATA_SRC_MAC}, src) // {DATA_SRC_NAME}
     -> StoreEtherAddress({DATA_DST_MAC}, dst) // {DATA_DST_NAME}
@@ -86,7 +84,6 @@ $queue, $src_ip{MB_PARAM} |
     -> forwarder
     -> PMProcess(QUEUE $queue, SHARED_STATE shared_state)
     -> {MB}
-    -> PMConstruct(QUEUE $queue, SHARED_STATE shared_state)
     -> MarkIPHeader(14)
     -> StoreIPAddress($src_ip, src) // {DATA_SRC_NAME}
     -> StoreEtherAddress({DATA_SRC_MAC}, src) // {DATA_SRC_NAME}
@@ -105,7 +102,6 @@ $queue, $DATA_SRC_IP, $STATE_SRC_IP{MB_PARAM} |
     -> IPFilter(allow udp && src {SRC_IP_FILTER}/16)
     -> PMProcess(QUEUE $queue, SHARED_STATE shared_state)
     -> {MB}
-    -> PMConstruct(QUEUE $queue, SHARED_STATE shared_state)
     -> buffer;
 
     // Data channel
@@ -231,7 +227,7 @@ NAT_MB = 'FTAddrRewriter(pattern $ip_min-$ip_max - 0 0, ' \
          'QUEUE $queue)'
 NAT_MB_PARAMS = ['$ip_min', '$ip_max']
 
-BEAMER_MUX_MB = 'BeamerMux(RING_SIZE 200000, MAX_STATES 800)'
+BEAMER_MUX_MB = 'FTBeamerMux(RING_SIZE 200000, MAX_STATES 800, SHARED_STATE shared_state, QUEUE $queue)'
 BEAMER_MUX_MB_PARAMS = []
 
 SHARING_LEVEL = "SHARING_LEVEL"

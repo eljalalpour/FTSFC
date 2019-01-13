@@ -91,6 +91,8 @@ void FTMBSharedState::_transfer(int16_t queue, Packet* p, const Element::Port* o
     std::memcpy(CAST_AWAY_PACKET_DATA(pal_pkt) + DEFAULT_OFFSET, &_pals[queue], sizeof(PacketAccessLog));
     output_port->push(pal_pkt);
 
+    output_port->push(p);
+
     /// VOR packet, the content is already read into _vor_pkt
 //    auto vor_pkt = _vor_pkt->clone();
     // Zero copy packet creation

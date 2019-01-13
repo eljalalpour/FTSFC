@@ -40,7 +40,8 @@ Packet *FTMBCounter::simple_action(Packet *p) {
     DEBUG("End FTMBCounter %d:", _index);
     DEBUG("--------------------");
 
-    return p;
+//    return p;
+    return 0;
 }
 
 CLICK_ENDDECLS

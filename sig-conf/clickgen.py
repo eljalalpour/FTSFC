@@ -109,7 +109,7 @@ def gen_store(opts):
         nfgen.store(opts['o'], clicks)
 
     elif apr == FTMB:
-        clicks = ftmbgen.generate(opts['c'], opts['t'], opts['m'], opts['l'])
+        clicks = ftmbgen.generate(opts['c'], opts['t'], opts['m'], opts['l'], opts['b'])
         ftmbgen.store(opts['o'], clicks)
 
     else:

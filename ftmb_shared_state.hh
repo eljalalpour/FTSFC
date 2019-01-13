@@ -106,7 +106,7 @@ void FTMBSharedState::postprocess(int16_t queue, Locker* locker, Packet* p, cons
     UNLOCK(locker);
 
     /// transfer vor and pals
-    _transfer(queue, vor, p, output_port);
+    _transfer(queue, p, output_port);
 }
 
 Locker* FTMBSharedState::get_locker(int16_t var_id, int16_t queue, FTMBOperation op) {

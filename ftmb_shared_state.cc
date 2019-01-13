@@ -73,8 +73,9 @@ void FTMBSharedState::_create_packet(int pkt_size, Packet** _pkt_ptr) {
 }
 
 int FTMBSharedState::initialize(ErrorHandler *) {
-    _create_packet(PAL_PKT_SIZE, &_pal_pkt);
-    _create_packet(VOR_PKT_SIZE, &_vor_pkt);
+//    _create_packet(PAL_PKT_SIZE, &_pal_pkt);
+//    _create_packet(VOR_PKT_SIZE, &_vor_pkt);
+    _create_packet(PAL_PKT_SIZE + VOR_PKT_SIZE, &_pkt);
 
     return 0;
 }

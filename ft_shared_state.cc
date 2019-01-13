@@ -47,14 +47,14 @@ void FTSharedState::process_piggyback_message(Packet *p, PiggybackMessage& log_t
     msg[_id]->last_commit = cmt_ts;
 }
 
-void FTSharedState::_capture_inoperation_state(Packet *p, int queue) {
+void FTSharedState::capture_inoperation_state(Packet *p, int queue) {
     DEBUG("Capture _inoperation state");
     PiggybackMessage *msg = CAST_PACKET_TO_PIGGY_BACK_MESSAGE(p);
 
-    Locker* locker = get_locker((size_t)queue, Operation::CaptureInOperationState);
-    LOCK(locker);
+//    Locker* locker = get_locker((size_t)queue, Operation::CaptureInOperationState);
+//    LOCK(locker);
     _util.copy(msg[_id]->state, _inoperation);
-    UNLOCK(locker);
+//    UNLOCK(locker);
 
     msg[_id]->timestamp = click_jiffies();
 }
@@ -64,7 +64,7 @@ void FTSharedState::construct_piggyback_message(Packet *p, int queue) {
 
     // The secondary state list and that of other middleboxes are already properly updated in
     // process_piggyback_message
-    _capture_inoperation_state(p, queue);
+    capture_inoperation_state(p, queue);
 }
 
 int FTSharedState::configure(Vector <String> &conf, ErrorHandler *errh) {

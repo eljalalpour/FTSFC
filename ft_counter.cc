@@ -33,7 +33,13 @@ Packet *FTCounter::simple_action(Packet *p) {
     DEBUG("--------------------");
     DEBUG("Begin FTCounter with index %d:", _index);
 
+    Locker* _locker = _shared_state->get_locker(_index);
+    LOCK(_locker);
+
     _shared_state->increment(_index);
+    _shared_state->construct_piggyback_message(p, _index);
+
+    UNLOCK(_locker);
 
     DEBUG("End FTCounter %d:", _index);
     DEBUG("--------------------");

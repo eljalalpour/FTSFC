@@ -5,7 +5,7 @@
 
 CLICK_DECLS
 
-FTSharedStateAddrRewriter::FTSharedStateAddrRewriter() : _registered(0) { }
+FTSharedStateAddrRewriter::FTSharedStateAddrRewriter() { }
 
 FTSharedStateAddrRewriter::~FTSharedStateAddrRewriter() { }
 
@@ -15,11 +15,6 @@ int FTSharedStateAddrRewriter::configure(Vector<String> &conf, ErrorHandler *err
 
 Packet *FTSharedStateAddrRewriter::simple_action(Packet *p) {
     return p;
-}
-
-void FTSharedStateAddrRewriter::register_addr_rewriter(int queue, uint32_t* last_lock) {
-    _registered++;
-    _reg_last_locks[queue] = last_lock;
 }
 
 CLICK_ENDDECLS

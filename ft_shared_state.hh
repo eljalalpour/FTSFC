@@ -23,10 +23,10 @@ CLICK_DECLS
 
 enum Operation {
     ProcessPiggybackMessage,
-    CaptureInOperationState,
     PacketTransaction,
-    Increment,
-    Read
+//    CaptureInOperationState,
+//    Increment,
+//    Read
 };
 
 class FTSharedState : public SharedStateBase {
@@ -50,7 +50,7 @@ private:
     std::mutex _commit_mtxes[STATE_LEN];
 #endif
 
-inline void _capture_inoperation_state(Packet *, int=0);
+inline void capture_inoperation_state(Packet *, int= 0);
 
 public:
     FTSharedState ();
@@ -74,6 +74,8 @@ public:
     inline int read(size_t);
 
     inline void increment(size_t);
+
+    virtual inline Locker* get_locker(size_t);
 
 protected:
     virtual inline Locker* get_locker(size_t, Operation);
@@ -101,22 +103,22 @@ void FTSharedState::set_commit_timestamp(int queue, int64_t val) {
 }
 
 int FTSharedState::read(size_t index) {
-    Locker* locker = get_locker(index, Operation::Read);
-    LOCK(locker);
-    auto val = _inoperation[index];
-    UNLOCK(locker);
-
-    return val;
+//    Locker* locker = get_locker(index, Operation::Read);
+//    LOCK(locker);
+//    auto val = _inoperation[index];
+//    UNLOCK(locker);
+//
+//    return val;
+    return _inoperation[index];
 }
 
 void FTSharedState::increment(size_t index) {
-    Locker* locker = get_locker(index, Operation::Increment);
-
-    LOCK(locker);
     ++_inoperation[index];
-    UNLOCK(locker);
 }
 
+Locker* FTSharedState::get_locker(size_t index) {
+    return get_locker(index, Operation::PacketTransaction);
+}
 
 Locker* FTSharedState::get_locker(size_t index_or_queue, Operation op) {
     Locker* locker = nullptr;
@@ -141,9 +143,10 @@ Locker* FTSharedState::get_locker(size_t index_or_queue, Operation op) {
             locker = &_commit_mtxes[index_or_queue];
             break;
 
-        case Operation::CaptureInOperationState:
-        case Operation::Increment:
-        case Operation::Read:
+//        case Operation::CaptureInOperationState:
+//        case Operation::Increment:
+//        case Operation::Read:
+        case PacketTransaction:
             locker = &_inop_mtxes[index_or_queue];
             break;
     }//switch

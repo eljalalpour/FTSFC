@@ -27,6 +27,8 @@ public:
 
     const char *class_name() const { return "FTSharedStateCounter"; }
 
+    virtual inline Locker* get_locker(size_t);
+
 protected:
     int _sharing_level;
     inline size_t _lock_index(size_t index);
@@ -35,6 +37,10 @@ protected:
 
 size_t FTSharedStateCounter::_lock_index(size_t index) {
     return index % (_cached_lockers_size / _sharing_level);
+}
+
+Locker* FTSharedState::get_locker(size_t index) {
+    return get_locker(index, Operation::PacketTransaction);
 }
 
 Locker* FTSharedStateCounter::get_locker(size_t index_or_queue, Operation op) {
@@ -48,9 +54,11 @@ Locker* FTSharedStateCounter::get_locker(size_t index_or_queue, Operation op) {
             locker = FTSharedState::get_locker(index_or_queue, op);
             break;
 
-        case Operation::CaptureInOperationState:
-        case Operation::Increment:
-        case Operation::Read:
+//        case Operation::CaptureInOperationState:
+//        case Operation::Increment:
+//        case Operation::Read:
+//        case Operation::Increment:
+        case Operation::PacketTransaction:
             auto lock_index = _lock_index(index_or_queue);
             locker = _shared_locks->locker_ptr(lock_index);
             break;

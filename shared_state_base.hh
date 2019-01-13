@@ -28,6 +28,8 @@ public:
 
     virtual inline int read(size_t);
 
+    virtual inline Locker* get_locker(size_t);
+
 protected:
     State _state;
     String _shared_locks_element_name;
@@ -45,6 +47,10 @@ void SharedStateBase::increment(size_t index) {
 
 int SharedStateBase::read(size_t index) {
     return _state[index];
+}
+
+Locker* SharedStateBase::get_locker(int index) {
+    return _shared_locks->locker_ptr(index);
 }
 
 CLICK_ENDDECLS

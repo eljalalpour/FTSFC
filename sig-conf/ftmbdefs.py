@@ -66,7 +66,7 @@ SHARED_STATE_FORMAT_STR = "shared_locks::SharedLocks(LOCKS {LOCKS});" \
 
 SHARED_STATE_COUNTER_FORMAT_STR = "shared_locks::SharedLocks(LOCKS {LOCKS});" \
                                   "\nshared_state::FTMBSharedStateCounter" \
-                                  "(SHARED_LOCKS shared_locks, BATCH {BATCH},‌ QUEUES {QUEUES},\n" \
+                                  "(SHARED_LOCKS shared_locks, BATCH {BATCH}, QUEUES {QUEUES},\n" \
                                   "\tSRCIP 0.0.0.0, DSTIP {DATA_DST_IP},\n" \
                                   "\tSRCETH {DATA_SRC_MAC}, DSTETH {DATA_DST_MAC},\n" \
                                   "\tSHARING_LEVEL {SHARING_LEVEL});"

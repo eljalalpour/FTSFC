@@ -84,7 +84,7 @@ FTAddrRewriter::cast(const char *n)
     else if (strcmp(n, "FTAddrRewriter") == 0)
         return (FTAddrRewriter *)this;
     else
-    return 0;
+        return 0;
 }
 
 void FTAddrRewriter::_init_shared() {

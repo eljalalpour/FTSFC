@@ -95,7 +95,7 @@ void FTMBSharedState::_transfer(int16_t queue, VectorOfClocks vor, Packet* p, co
 //    std::memcpy(CAST_AWAY_PACKET_DATA(vor_pkt) + DEFAULT_OFFSET, vor, sizeof(VectorOfClocks));
 //    output_port->push(vor_pkt);
 
-    pkt = _pkt->clone();
+    auto pkt = _pkt->clone();
     std::memcpy(CAST_AWAY_PACKET_DATA(pkt) + DEFAULT_OFFSET, &_pals[queue], sizeof(PacketAccessLog));
     std::memcpy(CAST_AWAY_PACKET_DATA(pkt) + DEFAULT_OFFSET + sizeof(PacketAccessLog), vor, sizeof(VectorOfClocks));
     output_port->push(pkt);

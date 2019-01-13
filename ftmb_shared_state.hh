@@ -51,9 +51,9 @@ protected:
     virtual inline Locker* get_locker(int16_t, int16_t, FTMBOperation);
 
 private:
-    inline void _read_vor(VectorOfClocks);
+    inline void _read_vor();
 
-    inline void _transfer(int16_t, VectorOfClocks, Packet*, const Element::Port*);
+    inline void _transfer(int16_t, Packet*, const Element::Port*);
 
     Packet *_pal_pkt;
     Packet *_vor_pkt;
@@ -78,20 +78,23 @@ Locker* FTMBSharedState::preprocess(int16_t var_id, int16_t queue) {
     return locker;
 }
 
-void FTMBSharedState::_read_vor(VectorOfClocks vor) {
+void FTMBSharedState::_read_vor() {
     //TODO: check if locking is required or not
-    std::memcpy(vor, _maxs, sizeof(VectorOfClocks));
+    std::memcpy(CAST_AWAY_PACKET_DATA(_vor_pkt) + DEFAULT_OFFSET, _maxs, sizeof(VectorOfClocks));
 }
 
-void FTMBSharedState::_transfer(int16_t queue, VectorOfClocks vor, Packet* p, const Element::Port* output_port) {
+void FTMBSharedState::_transfer(int16_t queue, Packet* p, const Element::Port* output_port) {
     /// PAL packet
-    auto pal_pkt = _pal_pkt->clone();
+//    auto pal_pkt = _pal_pkt->clone();
+    // Zero copy packet creation
+    auto pal_pkt = Packet::make(CAST_AWAY_PACKET_DATA(_pal_pkt), _pal_pkt->length(), Util::no_op_pkt_destructor);
     std::memcpy(CAST_AWAY_PACKET_DATA(pal_pkt) + DEFAULT_OFFSET, &_pals[queue], sizeof(PacketAccessLog));
     output_port->push(pal_pkt);
 
-    /// VOR packet
-    auto vor_pkt = _vor_pkt->clone();
-    std::memcpy(CAST_AWAY_PACKET_DATA(vor_pkt) + DEFAULT_OFFSET, vor, sizeof(VectorOfClocks));
+    /// VOR packet, the content is already read into _vor_pkt
+//    auto vor_pkt = _vor_pkt->clone();
+    // Zero copy packet creation
+    auto vor_pkt = Packet::make(CAST_AWAY_PACKET_DATA(_vor_pkt), _vor_pkt->length(), Util::no_op_pkt_destructor);
     output_port->push(vor_pkt);
 }
 

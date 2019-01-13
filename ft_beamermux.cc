@@ -1,5 +1,6 @@
 #include "ft_beamermux.hh"
 #include <click/args.hh>
+#include <click/router.hh>
 #include <clicknet/tcp.h>
 #include <clicknet/udp.h>
 #include <click/error.hh>

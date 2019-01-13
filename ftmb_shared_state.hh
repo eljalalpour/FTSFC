@@ -103,7 +103,7 @@ void FTMBSharedState::_transfer(int16_t queue, Packet* p, const Element::Port* o
     /// VOR packet, the content is already read into _vor_pkt
 //    auto vor_pkt = _vor_pkt->clone();
     // Zero copy packet creation
-    if (_maxs[queue] % _batch == 0) {
+    if (_pal_generated && _maxs[queue] % _batch == 0) {
         auto vor_pkt = Packet::make(CAST_AWAY_PACKET_DATA(_vor_pkt), _vor_pkt->length(), Util::no_op_pkt_destructor);
         output_port->push(vor_pkt);
     }//if

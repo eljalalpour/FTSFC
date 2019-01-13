@@ -28,7 +28,7 @@ int FTMBSharedState::configure(Vector <String> &conf, ErrorHandler *errh) {
 
     _ethh.ether_type = htons(0x0800);
 
-    LOG("FTMB Shared state, queues: %d", _queues);
+    LOG("FTMB Shared state, queues: %d, batch: %d", _queues, _batch);
 
     //TODO: initialize packets for PALs, for VOR to be sent,
 

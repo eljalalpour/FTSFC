@@ -109,7 +109,7 @@ Packet *FTBeamerMux::simple_action(Packet *p) {
     p->set_ip_header(ip, sizeof(click_ip));
 
     // TODO: No need to call below. If buffer releases correctly
-    _shared_state->construct_piggyback_message(p, _queue);
+    //_shared_state->construct_piggyback_message(p, _queue);
 
     return p;
 }

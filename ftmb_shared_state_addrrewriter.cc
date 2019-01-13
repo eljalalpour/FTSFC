@@ -1,5 +1,5 @@
 #include <click/config.h>
-#include "ftmb_shared_state_rewriter.hh"
+#include "ftmb_shared_state_addrrewriter.hh"
 #include <click/handlercall.hh>
 #include <click/args.hh>
 #include <cstring>

@@ -33,9 +33,11 @@ int FTMBSharedState::configure(Vector <String> &conf, ErrorHandler *errh) {
     //TODO: initialize packets for PALs, for VOR to be sent,
 
     auto result = SharedStateBase::configure(conf, errh);
+    memset(_maxs, 0, sizeof(_maxs));
+
     if (result != -1) {
         /// init counters, one per shared variable
-        _counters = std::deque<FTMBSeqNumber>(_shared_locks->size());
+        _counters = std::deque<FTMBSeqNumber>(_shared_locks->size(), 0);
     }//if
 
     return result;

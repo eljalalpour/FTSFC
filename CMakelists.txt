@@ -41,10 +41,6 @@ add_executable(FTSFC
         monitor.hh
         nat.cc
         nat.hh
-        tf_monitor.cc
-        tf_monitor.hh
-        tf_nat.cc
-        tf_nat.hh
         ftmb_master.hh
         ftmb_master.cc
         beamermux.cc

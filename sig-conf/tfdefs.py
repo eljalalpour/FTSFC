@@ -50,7 +50,7 @@ SHARED_STATE_FORMAT_STR = "shared_locks::SharedLocks(LOCKS {LOCKS});" \
 SHARED_STATE_COUNTER_FORMAT_STR = "shared_locks::SharedLocks(LOCKS {LOCKS});" \
                                   "\ntrans::Transmitter(QUEUES {QUEUES}, {REPLICAS});" \
                                   "\nshared_state::TFSharedStateCounter" \
-                                  "(SHARED_LOCKS shared_locks, TRANSMITTER trans, BATCH {BATCH}, QUEUES {QUEUES},\n" \
+                                  "(SHARED_LOCKS shared_locks, TRANSMITTER trans, BATCH {BATCH}, QUEUES {QUEUES}," \
                                   "\n\tSHARING_LEVEL {SHARING_LEVEL});"
 
 SHARED_STATE_NAT_FORMAT_STR = "shared_locks::SharedLocks(LOCKS {LOCKS});" \
@@ -65,8 +65,8 @@ FROM_DEVICE_FORMAT_STR = "fd{QUEUE}::FromDPDKDevice({DEVICE}, {QUEUE});"
 TO_DEVICE_NAME_FORMAT_STR = "td{QUEUE}"
 TO_DEVICE_FORMAT_STR = "td{QUEUE}::ToDPDKDevice({DEVICE}, {QUEUE});"
 
-TF_BLOCK_NAME_FORMAT_STR = "TF{}"
-TF_BLOCK_FORMAT_STR = "TF{QUEUE}::TFBlock({QUEUE}, {DATA_SRC_IP}{MB_PARAMS});"
+TF_BLOCK_NAME_FORMAT_STR = "tf{}"
+TF_BLOCK_FORMAT_STR = "tf{QUEUE}::TFBlock({QUEUE}, {DATA_SRC_IP}{MB_PARAMS});"
 
 MB = "MB"
 MB_PARAM = 'MB_PARAM'
@@ -114,4 +114,4 @@ BEAMER_MUX_MB = 'TFBeamerMux(QUEUE $queue, SHARED_STATE shared_state, RING_SIZE 
 BEAMER_MUX_MB_PARAMS = []
 
 SHARING_LEVEL = "SHARING_LEVEL"
-TF_OUTPUT_NAME_FORMAT_STR = 'TF-{}.click'
+TF_OUTPUT_NAME_FORMAT_STR = 'tf-{}.click'

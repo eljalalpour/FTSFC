@@ -45,8 +45,9 @@ def divide_ip_space(thrds, chain_pos):
 def replicas_ips(f):
     result = []
     for i in range(f):
-        result.append(NIC_10G_MAC_LIST[i + FIRST_AQUA_MACHINE_FOR_REPLICAS])
-    return ', '.format(result)
+        result.append(NIC_10G_IP_LIST[i + FIRST_AQUA_MACHINE_FOR_REPLICAS])
+
+    return ', '.join(result)
 
 
 def shared_state_declare(thrds, mb, sharing_level, batch, f):

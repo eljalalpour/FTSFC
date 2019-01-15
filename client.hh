@@ -7,6 +7,7 @@
 #include <condition_variable>
 #include <arpa/inet.h>
 #include <netinet/tcp.h>
+#include <unistd.h>
 #include <thread>
 #include "defs.hh"
 

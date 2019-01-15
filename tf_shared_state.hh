@@ -19,7 +19,7 @@ using std::deque;
 #define PAL_PKT_SIZE DEFAULT_OFFSET + sizeof(PacketAccessLog) + PAD
 
 enum TFOperation {
-    AccessSharedVariable,
+    TFAccessSharedVariable,
 };
 
 class TFSharedState: public SharedStateBase {
@@ -49,18 +49,39 @@ protected:
     vector<Packet*> _queued_packets[MAX_QUEUES];
     int _queued_packets_count[MAX_QUEUES];
 
-    virtual inline Locker* get_locker(int16_t, int16_t, TFOperation);
-
+    virtual inline Locker* get_locker(int16_t, int16_t, TFOperation = TFOperation::TFAccessSharedVariable);
 };
 
 Locker* TFSharedState::get_locker(int16_t var_id, int16_t queue, TFOperation op) {
     Locker* locker = nullptr;
 
     switch (op) {
-        case TFOperation::AccessSharedVariable:
+        case TFOperation::TFAccessSharedVariable:
             locker = _shared_locks->locker_ptr(var_id);
             break;
     }//switch
 
     return locker;
+}
+
+Locker* TFSharedState::preprocess(int16_t var_id, int16_t queue) {
+    return get_locker(var_id, queue);
+}
+
+void TFSharedState::postprocess(int16_t queue, Locker* locker, Packet* p, const Element::Port* output_port) {
+    _queued_packets[queue][_queued_packets_count[queue]++] = p;
+    UNLOCK(locker);
+
+    if (_queued_packets_count[queue] < _batch) {
+        return;
+    }//if
+
+    _trans->send(queue);
+
+    for (int i = 0; i < _queued_packets_count[queue]; ++i) {
+        output_port->push(_queued_packets[queue][i]);
+        _queued_packets[queue][i] = 0;
+    }//for
+
+    _queued_packets_count[queue] = 0;
 }

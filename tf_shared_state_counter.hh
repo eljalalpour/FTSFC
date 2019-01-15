@@ -3,12 +3,11 @@
 #include "defs.hh"
 #include <click/config.h>
 #include <click/element.hh>
-#include <mutex>
 #include "tf_shared_state.hh"
 
 CLICK_DECLS
 
-class TFSharedStateCounter : public FTSharedState {
+class TFSharedStateCounter: public TFSharedState {
 public:
     enum {
         ThreadSharing1 = 1, // no sharing
@@ -27,20 +26,14 @@ public:
 
     const char *class_name() const { return "TFSharedStateCounter"; }
 
-    virtual inline Locker* get_locker(size_t);
-
 protected:
     int _sharing_level;
-    inline size_t _lock_index(size_t index);
-    virtual inline Locker* get_locker(size_t, TFOperation = TFOperation::AccessSharedVariable);
+    inline size_t _lock_index(int16_t index);
+    virtual inline Locker* get_locker(int16_t, int16_t, TFOperation = TFOperation::TFAccessSharedVariable);
 };
 
-size_t TFSharedStateCounter::_lock_index(size_t index) {
+size_t TFSharedStateCounter::_lock_index(int16_t index) {
     return index % (_cached_lockers_size / _sharing_level);
-}
-
-Locker* TFSharedStateCounter::get_locker(size_t index) {
-    return get_locker(index, TFOperation::AccessSharedVariable);
 }
 
 Locker* TFSharedStateCounter::get_locker(int16_t var_id, int16_t queue, TFOperation op) {
@@ -50,7 +43,7 @@ Locker* TFSharedStateCounter::get_locker(int16_t var_id, int16_t queue, TFOperat
     Locker* locker = nullptr;
 
     switch (op) {
-        case TFOperation::AccessSharedVariable:
+        case TFOperation::TFAccessSharedVariable:
             locker = _shared_locks->locker_ptr(_lock_index(var_id));
             break;
     }//switch

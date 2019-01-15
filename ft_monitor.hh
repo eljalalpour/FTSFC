@@ -3,24 +3,24 @@
 #include "defs.hh"
 #include <click/config.h>
 #include <click/element.hh>
-#include "tf_shared_state_counter.hh"
+#include "ft_shared_state.hh"
 
 CLICK_DECLS
 
-class TFCounter : public Element {
+class FTMonitor : public Element {
 private:
-    int16_t _index;
-    TFSharedStateCounter* _shared_state;
-    size_t _counter;
-    String _shared_state_element_name;
+    FTSharedState* _shared_state;
+    int _index;
+    int _for_count;
+
     inline void _init_shared_state();
 
 public:
-    TFCounter ();
+    FTMonitor ();
 
-    ~TFCounter();
+    ~FTMonitor();
 
-    const char *class_name() const { return "TFCounter"; }
+    const char *class_name() const { return "FTMonitor"; }
 
     const char *port_count() const { return PORTS_1_1; }
 

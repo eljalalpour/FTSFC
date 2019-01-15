@@ -89,7 +89,14 @@ add_executable(FTSFC
         ftmb_shared_state_counter.cc
         ftmb_shared_state_counter.hh
         udpgen.cc
-        udpgen.hh)
+        udpgen.hh
+        tf_shared_state.cc
+        tf_shared_state.hh
+        tf_shared_state_counter.cc
+        tf_shared_state_counter.hh
+        tf_counter.cc
+        tf_counter.hh
+        )
 
 target_link_libraries(FTSFC ${PROTOBUF_LIB})
 

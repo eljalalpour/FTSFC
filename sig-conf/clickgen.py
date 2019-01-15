@@ -6,15 +6,18 @@ from defs import *
 import ftcgen
 import nfgen
 import ftmbgen
+import tfgen
 
 NF = "nf"
 FTC = "ftc"
 FTMB = "ftmb"
+TF = "tf"
 
 APPROACHES = [
     NF,
     FTC,
     FTMB,
+    TF,
 ]
 
 DEFAULT_FAILS = 1
@@ -111,6 +114,10 @@ def gen_store(opts):
     elif apr == FTMB:
         clicks = ftmbgen.generate(opts['c'], opts['t'], opts['m'], opts['l'], opts['b'])
         ftmbgen.store(opts['o'], clicks)
+
+    elif apr == TF:
+        clicks = tfgen.generate(opts['c'], opts['t'], opts['m'], opts['l'], opts['f'], opts['b'])
+        tfgen.store(opts['o'], clicks)
 
     else:
         print("Invalid approach '{}'!".format(apr))

@@ -13,10 +13,14 @@ Transmitter::Transmitter() {
 
 Transmitter::~Transmitter() { };
 
-void Transmitter::_print_ip_port_list(vector<string>& ips, vector<uint16_t>& ports) {
-    for (size_t i = 0; i < ips.size(); ++i) {
-        LOG("%s:%u", ips[i].c_str(), ports[i]);
+void Transmitter::_print_ip_port_list() {
+#ifndef DEBUG
+    return;
+#else
+    for (size_t i = 0; i < _ips.size(); ++i) {
+        DEBUG("%s:%u", _ips[i].c_str(), _ports[i]);
     }//for
+#endif
 }
 
 void Transmitter::_split(string& str, char dlm, vector<string>& tokens) {
@@ -38,39 +42,32 @@ void Transmitter::_split(string& str, char dlm, vector<string>& tokens) {
 }
 
 int Transmitter::configure(Vector<String> &conf, ErrorHandler *) {
-    if (Args(conf, this, errh)
-                .read("QUEUES", _queues)
-                .consume() < 0)
-        return -1;
 
     BoundedIntArg b_int(0, 0xFFFF);
-
-    /// Read ips
     for (int i = 0; i < conf.size(); ++i) {
-        _ips.emplace_back(conf[i].c_str());
+        string line(conf[i].c_str());
+        vector<string> strs;
+        _split(line, ':', strs);
+        string ip = strs[0];
+        uint16_t port;
+        b_int.parse(String(strs[1].c_str()), port);
+
+        _ips.push_back(ip);
+        _ports.push_back(port);
     }//for
-
-    /// For each queue, we need a client
-    /// communicating with the same port number across all given replica IPs.
-    for (int i = 0; i < _queues; ++i) {
-        vector<uint_16> _ports(_ips.size(), MIN_PORT + i);
-
-        LOG("For queue %d", queue);
-        _print_ip_port_list(_ips, _ports);
-
-        _clients[i].set_ip_ports(_ips, _ports);
-    }//for
+    _client.set_ip_ports(_ips, _ports);
+    _print_ip_port_list();
 
     return 0;
 }
+
 
 Packet *Transmitter::simple_action(Packet *p) {
     return p;
 }
 
-void Transmitter::send(int16_t _queue) {
-    // TODO: only send the state changed by this queue
-    _client[_queue].send(inoperation);
+void Transmitter::send() {
+    _client.send(inoperation);
 }
 
 CLICK_ENDDECLS

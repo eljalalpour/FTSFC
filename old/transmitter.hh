@@ -12,15 +12,14 @@ using std::string;
 
 CLICK_DECLS
 
-#define MIN_PORT 10000
-
 class Transmitter : public Element {
 private:
-    vector<Client> _clients; /// one client per queue
-    vector<string> _ips;    /// one IP per replication factor
-    int16_t _queues;
+    Client _client;
+    vector<string> _ips;
+    vector<uint16_t> _ports;
 
-    void _print_ip_port_list(vector<string>&, vector<uint16_t>&);
+    void _print_ip_port_list();
+    void _split(string& str, char dlm, vector<string>& tokens);
 
 public:
     State inoperation;
@@ -37,7 +36,7 @@ public:
 
     Packet *simple_action(Packet *p);
 
-    void send(int16_t);
+    void send();
 
     int configure(Vector<String> &conf, ErrorHandler *errh);
 };

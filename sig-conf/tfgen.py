@@ -113,7 +113,7 @@ def fd_data_names_list(thrds):
     :param thrds: a number denoting the number of threads
     :return: list of names
     """
-    return dev_name_list('from', DATA_DEVICE_ID, thrds)
+    return dev_name_list('from', TF_DATA_DEVICE_ID, thrds)
 
 
 def fd_state_names_list(thrds):
@@ -144,7 +144,7 @@ def td_data_names_list(thrds):
     :param thrds: a number denoting the number of threads
     :return: list of names
     """
-    return dev_name_list('to', DATA_DEVICE_ID, thrds)
+    return dev_name_list('to', TF_DATA_DEVICE_ID, thrds)
 
 
 def td_names_list(thrds):
@@ -194,7 +194,7 @@ def dev_declares(from_or_to, chain_pos, thrds):
     else:
         dev_format_str = TO_DEVICE_FORMAT_STR
 
-    devs = inner_dev_list(dev_format_str, DATA_DEVICE_ID, thrds)
+    devs = inner_dev_list(dev_format_str, TF_DATA_DEVICE_ID, thrds)
 
     return '\n'.join(devs)
 

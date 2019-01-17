@@ -115,7 +115,7 @@ def parse_args(parser):
 
 def gen_store(opts):
     apr = opts['a'].lower()
-    print("Generating for approach '{}' for metric '{}'".format(apr, opts['p']))
+    print("Generating for approach '{}' for metric '{}' for MB(s) '{}'".format(apr, opts['p'], opts['m']))
 
     if apr == FTC:
         clicks = ftcgen.generate(opts['c'], opts['t'], opts['m'], opts['l'], opts['f'], opts['b'], opts['p'])

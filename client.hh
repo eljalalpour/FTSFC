@@ -10,12 +10,11 @@
 #include <unistd.h>
 #include <thread>
 #include <fcntl.h>
-//#include <sys/socket.h>
-//#include <sys/types.h>
+
 #include "defs.hh"
 
-#define TF_CHUNK_SIZE 74
-typedef State TFStates[TF_CHUNK_SIZE];
+#define MAX_TF_CHUNK_SIZE 74
+typedef State TFStates[MAX_TF_CHUNK_SIZE];
 
 using std::string;
 using std::thread;
@@ -48,19 +47,21 @@ private:
     std::condition_variable _pending_workers_cv;
     std::mutex _pending_workers_mtx;
 
-//    State* _state_to_be_sent;
     TFStates* _states;
+    int _state_size;
 
     void _send(ServerConn& scp, TFStates& _state_to_be_sent) {
-	while(true) {
-	        // Send state
-        	auto status = write(scp.socket, CAST_TO_BYTES(_state_to_be_sent), sizeof(TFStates));
-	        if (status == -1) {
-			LOG("Error occured during send!");
-  		}//if
-	        char c;
-        	read(scp.socket, &c, sizeof(char));
-	}
+        while(true) {
+            // Send state
+            auto status = write(scp.socket, CAST_TO_BYTES(_state_to_be_sent), _state_size * sizeof(State));
+            if (status == -1) {
+                LOG("Error occured during send!");
+            }//if
+
+            // Receive ack
+            char c;
+            read(scp.socket, &c, sizeof(char));
+        }//while
     }
 
     void _send_for_ever(int _id) {
@@ -127,12 +128,6 @@ private:
             perror("connect failed. Error");
             return 0;
         }//if
-	
-	int flags = fcntl(sock, F_GETFL, 0);
-	if (fcntl(sock, F_SETFL, flags | O_NONBLOCK) < 0) {
-	    perror("set to non-blocking socket failed!");
-	    return 0;
-	}//if
 
         return sock;
     }
@@ -174,38 +169,39 @@ public:
     Client() {
         _ready = 0;
         _pending_workers = 0;
-	_conns.reserve(MAX_QUEUES);
+	    _conns.reserve(MAX_QUEUES);
     }
 
     ~Client() {
         _close_sockets();
     }
 
-    Client(std::vector<string>& ips, std::vector<uint16_t>& ports) {
-        set_ip_ports(ips, ports);
+    Client(std::vector<string>& ips, std::vector<uint16_t>& ports, int size) {
+        set_ip_ports(ips, ports, size);
     }
 
     void send(TFStates& states) {
         if (_conns.size() > 1) {
-            _multi_send(states);
+            _multi_send(states, size);
         }//if
         else {
-            _send(_conns[0], states);
+            _send(_conns[0], states, size);
         }//else
     }
 
     // This function must be called only once
-    void set_ip_ports(std::vector<string>& ips, std::vector<uint16_t>& ports) {
+    void set_ip_ports(std::vector<string>& ips, std::vector<uint16_t>& ports, int state_size) {
+        this->_state_size = state_size;
+
         for (size_t i = 0; i < ips.size(); ++i) {
             ServerConn conn;
             conn.ip = ips[i];
             conn.port = ports[i];
             _conns.push_back(conn);
-//            _conns.emplace_back(ips[i], ports[i]);
         }//for
         _pending_workers = _conns.size();
         _ready = 0;
         _connect_sockets();
-//        _create_threads();
+        _create_threads();
     }
 };

@@ -22,6 +22,7 @@ void Transmitter::_print_ip_port_list(vector<string>& ips, vector<uint16_t>& por
 int Transmitter::configure(Vector<String> &conf, ErrorHandler * errh) {
     if (Args(conf, this, errh)
                 .read("QUEUES", _queues)
+                .read("BATCH", _batch)
                 .consume() < 0)
         return -1;
     LOG("Queues: %d", _queues);
@@ -30,7 +31,8 @@ int Transmitter::configure(Vector<String> &conf, ErrorHandler * errh) {
     IPAddress ip;
     for (int i = 0; i < conf.size(); ++i) {
         if (!IPAddressArg::parse(conf[i], ip))
-	    continue;
+	        continue;
+
         _ips.emplace_back(conf[i].c_str());
     }//for
 
@@ -41,7 +43,7 @@ int Transmitter::configure(Vector<String> &conf, ErrorHandler * errh) {
 
         LOG("For queue %d", i);
         _print_ip_port_list(_ips, ports);
-        _clients[i].set_ip_ports(_ips, ports);
+        _clients[i].set_ip_ports(_ips, ports, _batch);
     }//for
     
     return 0;

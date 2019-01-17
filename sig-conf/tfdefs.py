@@ -42,21 +42,21 @@ LINK_FORMAT_STR = """// Queue {QUEUE}
 -> {TO_DATA_DEVICE_NAME};
 """
 SHARED_STATE_FORMAT_STR = "shared_locks::SharedLocks(LOCKS {LOCKS});" \
-                          "\ntrans::Transmitter(QUEUES {QUEUES}, {REPLICAS});" \
+                          "\ntransmitter::Transmitter(QUEUES {QUEUES}, BATCH {BATCH}, {REPLICAS});" \
                           "\nshared_state::TFSharedState" \
-                          "(SHARED_LOCKS shared_locks, TRANSMITTER trans, BATCH {BATCH}, QUEUES {QUEUES});"
+                          "(SHARED_LOCKS shared_locks, TRANSMITTER transmitter, BATCH {BATCH}, QUEUES {QUEUES});"
 
 
 SHARED_STATE_COUNTER_FORMAT_STR = "shared_locks::SharedLocks(LOCKS {LOCKS});" \
-                                  "\ntrans::Transmitter(QUEUES {QUEUES}, {REPLICAS});" \
+                                  "\ntransmitter::Transmitter(QUEUES {QUEUES}, BATCH {BATCH}, {REPLICAS});" \
                                   "\nshared_state::TFSharedStateCounter" \
-                                  "(SHARED_LOCKS shared_locks, TRANSMITTER trans, BATCH {BATCH}, QUEUES {QUEUES}," \
+                                  "(SHARED_LOCKS shared_locks, TRANSMITTER transmitter, BATCH {BATCH}, QUEUES {QUEUES}," \
                                   "\n\tSHARING_LEVEL {SHARING_LEVEL});"
 
 SHARED_STATE_NAT_FORMAT_STR = "shared_locks::SharedLocks(LOCKS {LOCKS});" \
-                                  "\ntrans::Transmitter(QUEUES {QUEUES}, {REPLICAS});" \
+                                  "\ntransmitter::Transmitter(QUEUES {QUEUES}, BATCH {BATCH}, {REPLICAS});" \
                                   "\nshared_state::TFSharedStateAddrRewriter" \
-                                  "(SHARED_LOCKS shared_locks, TRANSMITTER trans, BATCH {BATCH}, QUEUES {QUEUES});"
+                                  "(SHARED_LOCKS shared_locks, TRANSMITTER transmitter, BATCH {BATCH}, QUEUES {QUEUES});"
 
 FROM_DEVICE_NAME_FORMAT_STR = "fd{QUEUE}"
 THREAD_SCHED_FORMAT_STR = "StaticThreadSched({});"

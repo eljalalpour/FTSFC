@@ -20,6 +20,7 @@ private:
     Client _clients[MAX_CLIENTS]; /// one client per queue
     vector<string> _ips;    /// one IP per replication factor
     int16_t _queues;
+    int _batch;
 
     void _print_ip_port_list(vector<string>&, vector<uint16_t>&);
 

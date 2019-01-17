@@ -1,0 +1,20 @@
+[1;33m[WARN]  malloc() allocates objects >= 1 MiB from LuaJIT memory space.[0m
+[1;33m[WARN]  Install libjemalloc if you encounter out of memory errors.[0m
+[1;37m[INFO]  Initializing DPDK. This will take a few seconds...[0m
+EAL: Probing VFIO support...
+EAL: PCI device 0000:03:00.0 on NUMA socket 0
+EAL:   probe driver: 8086:15ad net_ixgbe
+EAL: PCI device 0000:03:00.1 on NUMA socket 0
+EAL:   probe driver: 8086:15ad net_ixgbe
+EAL: PCI device 0000:05:00.0 on NUMA socket 0
+EAL:   probe driver: 8086:1521 net_e1000_igb
+EAL: PCI device 0000:05:00.1 on NUMA socket 0
+EAL:   probe driver: 8086:1521 net_e1000_igb
+[1;37m[INFO]  Found 1 usable devices:[0m
+   Device 0: 0C:C4:7A:73:FA:72 ([0;32mIntel Corporation Ethernet Connection X552/X557-AT 10GBASE-T[0m)
+PMD: ixgbe_dev_link_status_print():  Port 0: Link Down
+[1;37m[INFO]  Waiting for devices to come up...[0m
+[1;37m[INFO]  Device 0 (0C:C4:7A:73:FA:72) is up: 10000 MBit/s[0m
+[1;37m[INFO]  [0;32m1 device is up.[0m[0m
+Samples: 146, Average: 45716.4 ns, StdDev: 7585.7 ns, Quartiles: 43812.0/44537.0/45425.0 ns
+[1;37m[INFO]  Saving histogram to '../FTSFC/results/sig19/lat-ftmb-nat-t-8.csv'[0m

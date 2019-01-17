@@ -9,15 +9,27 @@
 #include <netinet/tcp.h>
 #include <unistd.h>
 #include <thread>
+#include <fcntl.h>
+//#include <sys/socket.h>
+//#include <sys/types.h>
 #include "defs.hh"
+
+#define TF_CHUNK_SIZE 74
+typedef State TFStates[TF_CHUNK_SIZE];
 
 using std::string;
 using std::thread;
 
-typedef struct {
+typedef struct ServerConn {
     string ip;
     uint16_t port;
     int socket;
+    
+    ServerConn(string ip = "", uint16_t port = 0, int socket = 0) {
+        this->ip = ip;
+        this->port = port;
+        this->socket = socket;
+    }
 } ServerConn;
 
 class Client {
@@ -36,14 +48,19 @@ private:
     std::condition_variable _pending_workers_cv;
     std::mutex _pending_workers_mtx;
 
-    State* _state_to_be_sent;
+//    State* _state_to_be_sent;
+    TFStates* _states;
 
-    void _send(ServerConn& scp, State& _state_to_be_sent) {
-        // Send state
-        write(scp.socket, CAST_TO_BYTES(_state_to_be_sent), sizeof(State));
-
-        char c;
-        read(scp.socket, &c, sizeof(char));
+    void _send(ServerConn& scp, TFStates& _state_to_be_sent) {
+	while(true) {
+	        // Send state
+        	auto status = write(scp.socket, CAST_TO_BYTES(_state_to_be_sent), sizeof(TFStates));
+	        if (status == -1) {
+			LOG("Error occured during send!");
+  		}//if
+	        char c;
+        	read(scp.socket, &c, sizeof(char));
+	}
     }
 
     void _send_for_ever(int _id) {
@@ -55,7 +72,7 @@ private:
             }//{
 
             // Send state to be replicated
-            _send(_conns[_id], *_state_to_be_sent);
+            _send(_conns[_id], *_states);
 
             {// Let the Client know that this process has finished its task
                 std::lock_guard<std::mutex> lock_guard(_pending_workers_mtx);
@@ -105,12 +122,17 @@ private:
             perror("\n inet_pton error occured\n");
             return 0;
         }//if
-
         // Connect to server
         if (connect(sock, (struct sockaddr *)&server, sizeof(server)) < 0) {
             perror("connect failed. Error");
             return 0;
         }//if
+	
+	int flags = fcntl(sock, F_GETFL, 0);
+	if (fcntl(sock, F_SETFL, flags | O_NONBLOCK) < 0) {
+	    perror("set to non-blocking socket failed!");
+	    return 0;
+	}//if
 
         return sock;
     }
@@ -132,9 +154,9 @@ private:
         }//for
     }
 
-    void _multi_send(State &state) {
+    void _multi_send(TFStates &states) {
         {// Produce the state and notify the senders
-            _state_to_be_sent = &state;
+            _states = &states;
             _pending_workers = _conns.size();
 
             std::unique_lock<std::mutex> lock(_ready_mtx);
@@ -152,6 +174,7 @@ public:
     Client() {
         _ready = 0;
         _pending_workers = 0;
+	_conns.reserve(MAX_QUEUES);
     }
 
     ~Client() {
@@ -162,12 +185,12 @@ public:
         set_ip_ports(ips, ports);
     }
 
-    void send(State& state) {
+    void send(TFStates& states) {
         if (_conns.size() > 1) {
-            _multi_send(state);
+            _multi_send(states);
         }//if
         else {
-            _send(_conns[0], state);
+            _send(_conns[0], states);
         }//else
     }
 
@@ -178,12 +201,11 @@ public:
             conn.ip = ips[i];
             conn.port = ports[i];
             _conns.push_back(conn);
+//            _conns.emplace_back(ips[i], ports[i]);
         }//for
-
         _pending_workers = _conns.size();
         _ready = 0;
-
         _connect_sockets();
-        _create_threads();
+//        _create_threads();
     }
 };

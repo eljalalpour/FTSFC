@@ -2,13 +2,13 @@
 #include <click/router.hh>
 #include <clicknet/tcp.h>
 #include <click/args.hh>
+#include <click/ipaddress.hh>
 #include "transmitter.hh"
 
 CLICK_DECLS
 
 Transmitter::Transmitter() {
-    Util _util;
-    _util.init(inoperation);
+    memset(inoperations, 0, sizeof(TFStates));
 };
 
 Transmitter::~Transmitter() { };
@@ -24,11 +24,13 @@ int Transmitter::configure(Vector<String> &conf, ErrorHandler * errh) {
                 .read("QUEUES", _queues)
                 .consume() < 0)
         return -1;
-
-    BoundedIntArg b_int(0, 0xFFFF);
-
+    LOG("Queues: %d", _queues);
+    
     /// Read ips
+    IPAddress ip;
     for (int i = 0; i < conf.size(); ++i) {
+        if (!IPAddressArg::parse(conf[i], ip))
+	    continue;
         _ips.emplace_back(conf[i].c_str());
     }//for
 
@@ -39,10 +41,9 @@ int Transmitter::configure(Vector<String> &conf, ErrorHandler * errh) {
 
         LOG("For queue %d", i);
         _print_ip_port_list(_ips, ports);
-
         _clients[i].set_ip_ports(_ips, ports);
     }//for
-
+    
     return 0;
 }
 
@@ -51,8 +52,8 @@ Packet *Transmitter::simple_action(Packet *p) {
 }
 
 void Transmitter::send(int16_t _queue) {
-    // TODO: only send the state changed by this queue
-    _clients[_queue].send(inoperation);
+    // TODO: only send the state changed by this queuei
+    _clients[_queue].send(inoperations);
 }
 
 CLICK_ENDDECLS

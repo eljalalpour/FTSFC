@@ -33,7 +33,8 @@ protected:
 };
 
 size_t TFSharedStateCounter::_lock_index(int16_t index) {
-    return index % (_cached_lockers_size / _sharing_level);
+    auto re = index % (_shared_locks->size() / _sharing_level);
+    return re;
 }
 
 Locker* TFSharedStateCounter::get_locker(int16_t var_id, int16_t queue, TFOperation op) {

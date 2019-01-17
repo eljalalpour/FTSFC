@@ -17,8 +17,10 @@ int SharedLocks::configure(Vector <String> &conf, ErrorHandler *errh) {
                 .read("LOCKS", _locks)
                 .complete() < 0)
         return -1;
-
+    
     extend(_locks);
+
+    LOG("Number of locks: %d", size());
 
     return 0;
 }

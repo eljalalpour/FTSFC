@@ -6,24 +6,25 @@
 #include <click/element.hh>
 #include <fstream>
 #include <vector>
-
+#include <deque>
 using std::vector;
 using std::string;
 
 CLICK_DECLS
 
 #define MIN_PORT 10000
+#define MAX_CLIENTS MAX_QUEUES
 
 class Transmitter : public Element {
 private:
-    vector<Client> _clients; /// one client per queue
+    Client _clients[MAX_CLIENTS]; /// one client per queue
     vector<string> _ips;    /// one IP per replication factor
     int16_t _queues;
 
     void _print_ip_port_list(vector<string>&, vector<uint16_t>&);
 
 public:
-    State inoperation;
+    TFStates inoperations;
 
     Transmitter();
 

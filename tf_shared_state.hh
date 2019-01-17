@@ -70,14 +70,15 @@ Locker* TFSharedState::preprocess(int16_t var_id, int16_t queue) {
 
 void TFSharedState::postprocess(int16_t queue, Locker* locker, Packet* p, const Element::Port* output_port) {
     _queued_packets[queue][_queued_packets_count[queue]++] = p;
-    UNLOCK(locker);
 
     if (_queued_packets_count[queue] < _batch) {
+        UNLOCK(locker);
         return;
     }//if
 
     _trans->send(queue);
-
+    UNLOCK(locker);
+    
     for (int i = 0; i < _queued_packets_count[queue]; ++i) {
         output_port->push(_queued_packets[queue][i]);
         _queued_packets[queue][i] = 0;

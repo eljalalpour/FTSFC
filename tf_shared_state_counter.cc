@@ -20,7 +20,10 @@ int TFSharedStateCounter::configure(Vector<String> &conf, ErrorHandler *errh) {
            _sharing_level == ThreadSharing4 ||
            _sharing_level == ThreadSharing8);
 
-    return TFSharedState::configure(conf, errh);
+    LOG("FTSharedStateCounter, sharing level: %d", _sharing_level);
+
+    auto re = TFSharedState::configure(conf, errh);
+    return re;
 }
 
 Packet *TFSharedStateCounter::simple_action(Packet *p) {

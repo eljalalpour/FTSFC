@@ -13,9 +13,6 @@
 
 #include "defs.hh"
 
-#define MAX_TF_CHUNK_SIZE 74
-typedef State TFStates[MAX_TF_CHUNK_SIZE];
-
 using std::string;
 using std::thread;
 
@@ -51,17 +48,16 @@ private:
     int _state_size;
 
     void _send(ServerConn& scp, TFStates& _state_to_be_sent) {
-        while(true) {
-            // Send state
-            auto status = write(scp.socket, CAST_TO_BYTES(_state_to_be_sent), _state_size * sizeof(State));
-            if (status == -1) {
-                LOG("Error occured during send!");
-            }//if
+        // Send state
+        auto status = write(scp.socket, CAST_TO_BYTES(_state_to_be_sent),
+                min(_state_size * sizeof(State), sizeof(TFStates)));
+        if (status == -1) {
+            LOG("Error occured during send!");
+        }//if
 
-            // Receive ack
-            char c;
-            read(scp.socket, &c, sizeof(char));
-        }//while
+//        // Receive ack
+//        char c;
+//        read(scp.socket, &c, sizeof(char));
     }
 
     void _send_for_ever(int _id) {

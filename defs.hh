@@ -95,6 +95,10 @@ typedef struct PacketAccessLog { /// We ignore p_i in FTMB's definition
     }
 } PacketAccessLog;
 
+/// TF definitions
+#define MAX_TF_CHUNK_SIZE 50
+typedef TimestampState TFStates[MAX_TF_CHUNK_SIZE];
+
 #define CAST_PACKET_TO_PAL(p) reinterpret_cast<PacketAccessLog*>(CAST_AWAY_PACKET_DATA(p) + DEFAULT_OFFSET)
 //#define CAST_PACKET_TO_VOR(p) reinterpret_cast<VectorOfClocks*>(CAST_AWAY_PACKET_DATA(p) + DEFAULT_OFFSET)
 #define CAST_PACKET_TO_VOR(p) reinterpret_cast<VectorOfClocks*>(CAST_AWAY_PACKET_DATA(p) + DEFAULT_OFFSET + sizeof(PacketAccessLog))

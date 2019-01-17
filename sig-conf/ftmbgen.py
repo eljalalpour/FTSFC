@@ -326,7 +326,7 @@ def gen_mb_params_str(thrds, chain_pos, thrd, mb):
     return thrd
 
 
-def ft_blocks_declares(chain_pos, ch_len, thrds, mb):
+def ftmb_blocks_declares(chain_pos, ch_len, thrds, mb):
     """
     format ft block declares based on the position of middlebox in the chain, number of threads, and
     mb parameters
@@ -489,10 +489,10 @@ def ftmb_click(ch_len, chain_pos, thrds, mb, sharing_level, batch, perf_met):
         THREAD_SCHEDULES: thread_sched_declare(fd_names_list(chain_pos,
                                                              thrds)),
 
-        FTMB_BLOCKS_DECLARES: ft_blocks_declares(chain_pos,
-                                                 ch_len,
-                                                 thrds,
-                                                 mb),
+        FTMB_BLOCKS_DECLARES: ftmb_blocks_declares(chain_pos,
+                                                   ch_len,
+                                                   thrds,
+                                                   mb),
 
         LINKS: links(ch_len,
                      chain_pos,

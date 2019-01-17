@@ -12,16 +12,20 @@ local log    = require "log"
 -- set addresses here
 local SRC_MAC  = "0c:c4:7a:73:fa:72"
 local DST_MAC  = "0c:c4:7a:73:fa:54"
-local SRC_IPS  = {
-    "1.0.1.1",
-    "1.0.2.2",
-    "1.0.3.3",
-    "1.0.4.4",
-    "1.0.5.5",
-    "1.0.6.6",
-    "1.0.7.7",
-    "1.0.8.8",
-}
+local SRC_IP_FORMAT_STR = '1.0.%d.%d'
+local SRC_IPS  = { }
+
+local IP_BEG = 0
+local IP_END = 255
+
+local index = 0
+for i = IP_BEG, IP_END do
+    for j = IP_BEG, IP_END do
+        SRC_IPS[index] = SRC_IP_FORMAT_STR:format(i, j)
+        index = index + 1
+    end
+end
+
 local SRC_IP_INDEX = 0
 local DST_IP   = "192.168.1.107"
 local SRC_PORT = 1234

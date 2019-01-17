@@ -182,10 +182,10 @@ public:
 
     void send(TFStates& states) {
         if (_conns.size() > 1) {
-            _multi_send(states, size);
+            _multi_send(states);
         }//if
         else {
-            _send(_conns[0], states, size);
+            _send(_conns[0], states);
         }//else
     }
 

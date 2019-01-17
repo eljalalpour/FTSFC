@@ -55,7 +55,7 @@ def shared_state_declare(thrds, mb, sharing_level, batch, f):
 
     if mb == COUNTER:
         return SHARED_STATE_COUNTER_FORMAT_STR.format(**{
-            LOCKS: 8,
+            LOCKS: COUNTER_LOCKS,
             REPLICAS: rips,
             BATCH: batch,
             QUEUES: thrds,
@@ -64,7 +64,7 @@ def shared_state_declare(thrds, mb, sharing_level, batch, f):
 
     elif mb == NAT:
         return SHARED_STATE_NAT_FORMAT_STR.format(**{
-            LOCKS: 32768,
+            LOCKS: NAT_LOCKS,
             REPLICAS: rips,
             BATCH: batch,
             QUEUES: thrds,
@@ -72,7 +72,7 @@ def shared_state_declare(thrds, mb, sharing_level, batch, f):
 
     elif mb == LB:
         return SHARED_STATE_FORMAT_STR.format(**{
-            LOCKS: 1,
+            LOCKS: LB_LOCKS,
             REPLICAS: rips,
             BATCH: batch,
             QUEUES: thrds,
@@ -159,7 +159,7 @@ def td_names_list(thrds):
     return name_list
 
 
-def dev_declares(from_or_to, chain_pos, thrds):
+def dev_declares(from_or_to, chain_pos, thrds, perf_met):
     """
     format device declares based on the position of middlebox in the chain
     and the number of threads
@@ -189,17 +189,21 @@ def dev_declares(from_or_to, chain_pos, thrds):
     # If the middlebox at the beginning of the chain, then
     # it receives traffic from two NICs
 
+    data_dev_id = None
+    if perf_met == LATENCY_METRIC or perf_met == THROUGHPUT_METRIC:  # I know it's stupid
+        data_dev_id = TF_DATA_DEVICE_ID
+
     if from_or_to == 'from':
         dev_format_str = FROM_DEVICE_FORMAT_STR
     else:
         dev_format_str = TO_DEVICE_FORMAT_STR
 
-    devs = inner_dev_list(dev_format_str, TF_DATA_DEVICE_ID, thrds)
+    devs = inner_dev_list(dev_format_str, data_dev_id, thrds)
 
     return '\n'.join(devs)
 
 
-def from_dev_declares(chain_pos, thrds):
+def from_dev_declares(chain_pos, thrds, perf_met):
     """
     format from device declares based on the position of middlebox in the chain
     and the number of threads
@@ -207,10 +211,10 @@ def from_dev_declares(chain_pos, thrds):
     :param thrds: a number denoting the number of threads
     :return: formatted string of from device declares
     """
-    return dev_declares('from', chain_pos, thrds)
+    return dev_declares('from', chain_pos, thrds, perf_met)
 
 
-def to_dev_declares(chain_pos, thrds):
+def to_dev_declares(chain_pos, thrds, perf_met):
     """
     format to device declares based on the position of middlebox in the chain
     and the number of threads
@@ -218,7 +222,7 @@ def to_dev_declares(chain_pos, thrds):
     :param thrds: a number denoting the number of threads
     :return: formatted string of the to device declares
     """
-    return dev_declares('to', chain_pos, thrds)
+    return dev_declares('to', chain_pos, thrds, perf_met)
 
 
 def thread_sched_declare(from_devs_list):
@@ -383,13 +387,17 @@ def middlebox_declare(mb):
     return result
 
 
-def tf_block_def(ch_len, thrds, chain_pos, mb):
+def tf_block_def(ch_len, thrds, chain_pos, mb, perf_met):
     """
     format a block declare
     :param chain_pos: a number denoting the position of middlebox in the chain
     :return: formatted string of ft block
     """
-    data_dev = '40'
+    data_dev = None
+    if perf_met == THROUGHPUT_METRIC:
+        data_dev = '40'
+    elif perf_met == LATENCY_METRIC:
+        data_dev = '10'
 
     if chain_pos == -1 or chain_pos == (ch_len - 1):
         dst_index = -FIRST_AQUA_MACHINE_IN_CHAIN
@@ -426,7 +434,7 @@ def tf_block_def(ch_len, thrds, chain_pos, mb):
         })
 
 
-def tf_click(ch_len, chain_pos, thrds, mb, sharing_level, f, batch):
+def tf_click(ch_len, chain_pos, thrds, mb, sharing_level, f, batch, perf_met):
     """
     Click code for TF
     :return: Click code in string
@@ -441,13 +449,16 @@ def tf_click(ch_len, chain_pos, thrds, mb, sharing_level, f, batch):
         TF_BLOCK_DEF: tf_block_def(ch_len,
                                    thrds,
                                    chain_pos,
-                                   mb),
+                                   mb,
+                                   perf_met),
 
         FROM_DEVICE_DECLARES: from_dev_declares(chain_pos,
-                                                thrds),
+                                                thrds,
+                                                perf_met),
 
         TO_DEVICE_DECLARES: to_dev_declares(chain_pos,
-                                            thrds),
+                                            thrds,
+                                            perf_met),
 
         THREAD_SCHEDULES: thread_sched_declare(fd_names_list(chain_pos,
                                                              thrds)),
@@ -465,7 +476,7 @@ def tf_click(ch_len, chain_pos, thrds, mb, sharing_level, f, batch):
     return TF.format(**string_map)
 
 
-def generate(ch_len, thrds, mb, sharing_level, f, batch):
+def generate(ch_len, thrds, mb, sharing_level, f, batch, perf_met):
     clicks = []
     if len(mb) == 1:
         mb *= ch_len
@@ -473,7 +484,14 @@ def generate(ch_len, thrds, mb, sharing_level, f, batch):
         raise ValueError("The number of middleboxes must be either 1 or equal to chain length!")
 
     for chain_pos in range(ch_len):
-        clicks.append(tf_click(ch_len, chain_pos, thrds, mb[chain_pos], sharing_level, f, batch))
+        clicks.append(tf_click(ch_len,
+                               chain_pos,
+                               thrds,
+                               mb[chain_pos],
+                               sharing_level,
+                               f,
+                               batch,
+                               perf_met))
 
     return clicks
 

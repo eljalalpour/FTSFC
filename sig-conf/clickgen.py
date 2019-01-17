@@ -25,6 +25,12 @@ DEFAULT_THREADS = 1
 DEFAULT_BATCH = 5
 DEFAULT_SHARING_LEVEL = 1  # no sharing
 
+PERFORMANCE_METRICS = [
+    THROUGHPUT_METRIC,
+    LATENCY_METRIC
+]
+DEFAULT_PERF_METRIC = THROUGHPUT_METRIC
+
 DEFAULT_MB = COUNTER
 
 
@@ -80,6 +86,14 @@ def def_parser():
                         type=int,
                         default=DEFAULT_SHARING_LEVEL)
 
+    parser.add_argument('-p',
+                        '--perf',
+                        dest='p',
+                        help='What performance metric to measure -- select among ' + ', '.join(PERFORMANCE_METRICS) +
+                             ' -- default {}'.format(DEFAULT_PERF_METRIC),
+                        type=str,
+                        default=DEFAULT_PERF_METRIC)
+
     parser.add_argument('-o',
                         '--output',
                         dest='o',
@@ -101,22 +115,22 @@ def parse_args(parser):
 
 def gen_store(opts):
     apr = opts['a'].lower()
-    print("Generating for {}".format(apr))
+    print("Generating for approach '{}' for metric '{}'".format(apr, opts['p']))
 
     if apr == FTC:
-        clicks = ftcgen.generate(opts['c'], opts['t'], opts['m'], opts['l'], opts['f'], opts['b'])
+        clicks = ftcgen.generate(opts['c'], opts['t'], opts['m'], opts['l'], opts['f'], opts['b'], opts['p'])
         ftcgen.store(opts['o'], clicks)
 
     elif apr == NF:
-        clicks = nfgen.generate(opts['c'], opts['t'], opts['m'], opts['l'])
+        clicks = nfgen.generate(opts['c'], opts['t'], opts['m'], opts['l'], opts['p'])
         nfgen.store(opts['o'], clicks)
 
     elif apr == FTMB:
-        clicks = ftmbgen.generate(opts['c'], opts['t'], opts['m'], opts['l'], opts['b'])
+        clicks = ftmbgen.generate(opts['c'], opts['t'], opts['m'], opts['l'], opts['b'], opts['p'])
         ftmbgen.store(opts['o'], clicks)
 
     elif apr == TF:
-        clicks = tfgen.generate(opts['c'], opts['t'], opts['m'], opts['l'], opts['f'], opts['b'])
+        clicks = tfgen.generate(opts['c'], opts['t'], opts['m'], opts['l'], opts['f'], opts['b'], opts['p'])
         tfgen.store(opts['o'], clicks)
 
     else:

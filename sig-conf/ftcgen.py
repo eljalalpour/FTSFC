@@ -52,12 +52,12 @@ def shared_state_declare(ch_len, chain_pos, f, mb, sharing_level):
             ID: chain_pos,
             F: f,
             SHARING_LEVEL: sharing_level,
-            LOCKS: 8,
+            LOCKS: COUNTER_LOCKS,
         })
 
     elif mb == NAT:
         return SHARED_STATE_NAT_FORMAT_STR.format(**{
-            LOCKS: 32768,
+            LOCKS: NAT_LOCKS,
             CHAIN: ch_len,
             ID: chain_pos,
             F: f,
@@ -68,7 +68,7 @@ def shared_state_declare(ch_len, chain_pos, f, mb, sharing_level):
             CHAIN: ch_len,
             ID: chain_pos,
             F: f,
-            LOCKS: 1,
+            LOCKS: LB_LOCKS,
         })
 
     return None
@@ -169,13 +169,14 @@ def td_names_list(chain_pos, thrds):
     return name_list
 
 
-def dev_declares(ch_len, from_or_to, chain_pos, thrds):
+def dev_declares(ch_len, from_or_to, chain_pos, thrds, perf_met):
     """
     format device declares based on the position of middlebox in the chain
     and the number of threads
     :param from_or_to: FromDevice or ToDevice
     :param chain_pos: a number denoting the position of middlebox in the chain
     :param thrds: a number denoting the number of threads
+    :param perf_met: The performance metric
     :return: formatted string of device declares
     """
     def inner_dev_list(dev_format_str, device, thrds, channel):
@@ -205,17 +206,26 @@ def dev_declares(ch_len, from_or_to, chain_pos, thrds):
     else:
         dev_format_str = TO_DEVICE_FORMAT_STR
 
-    devs = inner_dev_list(dev_format_str, DATA_DEVICE_ID, thrds, DATA)
+    data_dev_id = None
+    state_dev_id = None
+    if perf_met == LATENCY_METRIC:
+        data_dev_id = LATENCY_DATA_DEVICE_ID
+        state_dev_id = LATENCY_STATE_DEVICE_ID
+    elif perf_met == THROUGHPUT_METRIC:
+        data_dev_id = THROUGHPUT_DATA_DEVICE_ID
+        state_dev_id = THROUGHPUT_STATE_DEVICE_ID
+
+    devs = inner_dev_list(dev_format_str, data_dev_id, thrds, DATA)
 
     if (ch_len > 1) and (
             (chain_pos == 0 and from_or_to == 'from') or
             (chain_pos == -1 and from_or_to == 'to')):
-        devs.extend(inner_dev_list(dev_format_str, STATE_DEVICE_ID, thrds, STATE))
+        devs.extend(inner_dev_list(dev_format_str, state_dev_id, thrds, STATE))
 
     return '\n'.join(devs)
 
 
-def from_dev_declares(ch_len, chain_pos, thrds):
+def from_dev_declares(ch_len, chain_pos, thrds, perf_met):
     """
     format from device declares based on the position of middlebox in the chain
     and the number of threads
@@ -223,10 +233,10 @@ def from_dev_declares(ch_len, chain_pos, thrds):
     :param thrds: a number denoting the number of threads
     :return: formatted string of from device declares
     """
-    return dev_declares(ch_len, 'from', chain_pos, thrds)
+    return dev_declares(ch_len, 'from', chain_pos, thrds, perf_met)
 
 
-def to_dev_declares(ch_len, chain_pos, thrds):
+def to_dev_declares(ch_len, chain_pos, thrds, perf_met):
     """
     format to device declares based on the position of middlebox in the chain
     and the number of threads
@@ -234,7 +244,7 @@ def to_dev_declares(ch_len, chain_pos, thrds):
     :param thrds: a number denoting the number of threads
     :return: formatted string of the to device declares
     """
-    return dev_declares(ch_len, 'to', chain_pos, thrds)
+    return dev_declares(ch_len, 'to', chain_pos, thrds, perf_met)
 
 
 def thread_sched_declare(from_devs_list):
@@ -421,15 +431,22 @@ def middlebox_declare(mb):
     return result
 
 
-def ft_block_def(ch_len, thrds, chain_pos, mb, batch):
+def ft_block_def(ch_len, thrds, chain_pos, mb, batch, perf_met):
     """
     format a block declare
     :param chain_pos: a number denoting the position of middlebox in the chain
     :param mb_params: the list of parameter lists for MB's threads
     :return: formatted string of ft block
     """
-    data_dev = '40'
-    state_dev = '10'
+    data_dev = None
+    state_dev = None
+
+    if perf_met == THROUGHPUT_METRIC:
+        data_dev = '40'
+        state_dev = '10'
+    elif perf_met == LATENCY_METRIC:
+        data_dev = '10'
+        state_dev = '40'
 
     mb_params = []
     if mb == COUNTER:
@@ -522,7 +539,7 @@ def ft_block_def(ch_len, thrds, chain_pos, mb, batch):
     return result
 
 
-def ftc_click(ch_len, chain_pos, thrds, mb, sharing_level, f, batch):
+def ftc_click(ch_len, chain_pos, thrds, mb, sharing_level, f, batch, perf_met):
     """
     Click code for FTC
     :return: Click code in string
@@ -538,15 +555,18 @@ def ftc_click(ch_len, chain_pos, thrds, mb, sharing_level, f, batch):
                                     thrds,
                                     chain_pos,
                                     mb,
-                                    batch),
+                                    batch,
+                                    perf_met),
 
         FROM_DEVICE_DECLARES: from_dev_declares(ch_len,
                                                 chain_pos,
-                                                thrds),
+                                                thrds,
+                                                perf_met),
 
         TO_DEVICE_DECLARES: to_dev_declares(ch_len,
                                             chain_pos,
-                                            thrds),
+                                            thrds,
+                                            perf_met),
 
         THREAD_SCHEDULES: thread_sched_declare(fd_names_list(ch_len,
                                                              chain_pos,
@@ -565,7 +585,7 @@ def ftc_click(ch_len, chain_pos, thrds, mb, sharing_level, f, batch):
     return FTC.format(**string_map)
 
 
-def generate(ch_len, thrds, mb, sharing_level, f, batch):
+def generate(ch_len, thrds, mb, sharing_level, f, batch, perf_met):
     clicks = []
     if len(mb) == 1:
         mb *= ch_len
@@ -576,9 +596,9 @@ def generate(ch_len, thrds, mb, sharing_level, f, batch):
     if ch_len == 1:
         for_loop = 1
     for chain_pos in range(for_loop):
-        clicks.append(ftc_click(ch_len, chain_pos, thrds, mb[chain_pos], sharing_level, f, batch))
+        clicks.append(ftc_click(ch_len, chain_pos, thrds, mb[chain_pos], sharing_level, f, batch, perf_met))
 
-    clicks.append(ftc_click(ch_len, -1, thrds, mb[-1], sharing_level, f, batch))
+    clicks.append(ftc_click(ch_len, -1, thrds, mb[-1], sharing_level, f, batch, perf_met))
 
     return clicks
 

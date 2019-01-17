@@ -46,8 +46,8 @@ def shared_state_declare(mb, thrds, chain_pos, sharing_level):
     result = ''
     if mb == COUNTER:
         result = SHARED_STATE_FORMAT_STR.format(**{
-            'LOCKS': 8,
-            'SHARING_LEVEL': sharing_level,
+            LOCKS: COUNTER_LOCKS,
+            SHARING_LEVEL: sharing_level,
         })
 
     elif mb == LB:
@@ -55,7 +55,7 @@ def shared_state_declare(mb, thrds, chain_pos, sharing_level):
 
     elif mb == NAT:
         result = NAT_SHARED_STATE_FORMAT_STR.format(**{
-            'LOCKS': 32768,
+            LOCKS: NAT_LOCKS,
         })
 
     return result
@@ -139,7 +139,7 @@ def td_names_list(thrds):
     return name_list
 
 
-def dev_declares(from_or_to, chain_pos, thrds):
+def dev_declares(from_or_to, chain_pos, thrds, perf_met):
     """
     format device declares based on the position of middlebox in the chain
     and the number of threads
@@ -169,17 +169,23 @@ def dev_declares(from_or_to, chain_pos, thrds):
     # If the middlebox at the beginning of the chain, then
     # it receives traffic from two NICs
 
+    data_dev_id = None
+    if perf_met == LATENCY_METRIC:
+        data_dev_id = LATENCY_DATA_DEVICE_ID
+    elif perf_met == THROUGHPUT_METRIC:
+        data_dev_id = THROUGHPUT_DATA_DEVICE_ID
+
     if from_or_to == 'from':
         dev_format_str = FROM_DEVICE_FORMAT_STR
     else:
         dev_format_str = TO_DEVICE_FORMAT_STR
 
-    devs = inner_dev_list(dev_format_str, DATA_DEVICE_ID, thrds)
+    devs = inner_dev_list(dev_format_str, data_dev_id, thrds)
 
     return '\n'.join(devs)
 
 
-def from_dev_declares(chain_pos, thrds):
+def from_dev_declares(chain_pos, thrds, perf_met):
     """
     format from device declares based on the position of middlebox in the chain
     and the number of threads
@@ -187,10 +193,10 @@ def from_dev_declares(chain_pos, thrds):
     :param thrds: a number denoting the number of threads
     :return: formatted string of from device declares
     """
-    return dev_declares('from', chain_pos, thrds)
+    return dev_declares('from', chain_pos, thrds, perf_met)
 
 
-def to_dev_declares(chain_pos, thrds):
+def to_dev_declares(chain_pos, thrds, perf_met):
     """
     format to device declares based on the position of middlebox in the chain
     and the number of threads
@@ -198,7 +204,7 @@ def to_dev_declares(chain_pos, thrds):
     :param thrds: a number denoting the number of threads
     :return: formatted string of the to device declares
     """
-    return dev_declares('to', chain_pos, thrds)
+    return dev_declares('to', chain_pos, thrds, perf_met)
 
 
 def thread_sched_declare(from_devs_list):
@@ -365,12 +371,16 @@ def middlebox_declare(mb):
     return result
 
 
-def nf_block_def(ch_len, thrds, chain_pos, mb):
+def nf_block_def(ch_len, thrds, chain_pos, mb, perf_met):
     """
     format a block declare
     :return: formatted string of ft block
     """
-    data_dev = '40'
+    data_dev = None
+    if perf_met == THROUGHPUT_METRIC:
+        data_dev = '40'
+    elif perf_met == LATENCY_METRIC:
+        data_dev = '10'
 
     if mb == COUNTER:
         mb_params = COUNTER_MB_PARAMS
@@ -409,22 +419,31 @@ def nf_block_def(ch_len, thrds, chain_pos, mb):
     return result
 
 
-def nf_click(ch_len, chain_pos, thrds, mb, sharing_level):
+def nf_click(ch_len, chain_pos, thrds, mb, sharing_level, perf_met):
     """
     Click code for FTC
     :return: Click code in string
     """
 
     string_map = {
-        SHARED_STATE_DECLARE: shared_state_declare(mb, thrds, chain_pos, sharing_level),
+        SHARED_STATE_DECLARE: shared_state_declare(mb,
+                                                   thrds,
+                                                   chain_pos,
+                                                   sharing_level),
 
-        NF_BLOCK_DEF: nf_block_def(ch_len, thrds, chain_pos, mb),
+        NF_BLOCK_DEF: nf_block_def(ch_len,
+                                   thrds,
+                                   chain_pos,
+                                   mb,
+                                   perf_met),
 
         FROM_DEVICE_DECLARES: from_dev_declares(chain_pos,
-                                                thrds),
+                                                thrds,
+                                                perf_met),
 
         TO_DEVICE_DECLARES: to_dev_declares(chain_pos,
-                                            thrds),
+                                            thrds,
+                                            perf_met),
 
         THREAD_SCHEDULES: thread_sched_declare(fd_names_list(chain_pos,
                                                              thrds)),
@@ -433,13 +452,14 @@ def nf_click(ch_len, chain_pos, thrds, mb, sharing_level):
                                                thrds,
                                                mb),
 
-        LINKS: links(thrds, mb),
+        LINKS: links(thrds,
+                     mb),
     }
 
     return NF.format(**string_map)
 
 
-def generate(ch_len, thrds, mb, sharing_level):
+def generate(ch_len, thrds, mb, sharing_level, perf_met):
     clicks = []
     if len(mb) == 1:
         mb *= ch_len
@@ -447,7 +467,7 @@ def generate(ch_len, thrds, mb, sharing_level):
         raise ValueError("The number of middleboxes list must be either 1 or equal to chain length!")
 
     for chain_pos in range(ch_len):
-        clicks.append(nf_click(ch_len, chain_pos, thrds, mb[chain_pos], sharing_level))
+        clicks.append(nf_click(ch_len, chain_pos, thrds, mb[chain_pos], sharing_level, perf_met))
 
     return clicks
 

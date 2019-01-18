@@ -1,6 +1,7 @@
-AQUA_MACHINES = ["aqua{:02d}".format(s) for s in range(1, 13)]
-NIC_10G_IP_LIST = ["192.168.1.1{:02d}".format(s) for s in range(1, 13)]
+AQUA_MACHINES = ["aqua{:02d}".format(s) for s in range(0, 13)]
+NIC_10G_IP_LIST = ["192.168.1.1{:02d}".format(s) for s in range(0, 13)]
 NIC_10G_MAC_LIST = [
+    '',  # Aqua00 does not have any 10Gbps NIC
     '0c:c4:7a:73:fa:72',
     '0c:c4:7a:73:fa:dc',
     '0c:c4:7a:73:fa:26',
@@ -15,8 +16,10 @@ NIC_10G_MAC_LIST = [
     '0c:c4:7a:73:fa:9e',
 ]
 
-NIC_40G_IP_LIST = ["10.70.0.{}".format(s) for s in range(1, 13)]
+NIC_40G_IP_LIST = ["10.70.0.100"]
+NIC_40G_IP_LIST.extend(["10.70.0.{}".format(s) for s in range(1, 13)])
 NIC_40G_MAC_LIST = [
+    'e4:1d:2d:13:9f:d0',
     'f4:52:14:69:a5:20',
     'e4:1d:2d:13:9c:30',
     'e4:1d:2d:13:9f:80',
@@ -40,8 +43,8 @@ LATENCY_DATA_DEVICE_ID = 0
 THROUGHPUT_STATE_DEVICE_ID = 0
 THROUGHPUT_DATA_DEVICE_ID = 1
 
-FIRST_AQUA_MACHINE_IN_CHAIN = 6
-FIRST_AQUA_MACHINE_FOR_REPLICAS = 1
+FIRST_AQUA_MACHINE_IN_CHAIN = 7
+FIRST_AQUA_MACHINE_FOR_REPLICAS = 2
 CPUS = 8
 
 COUNTER = 'counter'

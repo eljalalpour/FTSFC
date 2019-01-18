@@ -377,7 +377,7 @@ def ft_blocks_declares(chain_pos, ch_len, thrds, mb):
     return '\n'.join(declares)
 
 
-def links(ch_len, chain_pos, thrds):
+def links(ch_len, chain_pos, thrds, debug):
     """
     format link strings, each link is 'FromDevice... -> FTBlock -> ...ToDevice'
     :param chain_pos: a number denoting the position of middlebox in the chain
@@ -403,9 +403,14 @@ def links(ch_len, chain_pos, thrds):
         params = {
             QUEUE: i,
             'FROM_DATA_DEVICE_NAME': fd_data_names[i],
-            'FTC_BLOCK_NAME': ft_block_names[i],
             'TO_DATA_DEVICE_NAME': td_data_names[i],
         }
+
+        if debug:
+            params['FTC_BLOCK_NAME'] = ft_block_names[i] + DEBUG_COUNTER.format(i)
+        else:
+            params['FTC_BLOCK_NAME'] = ft_block_names[i]
+
         if ch_len > 1:
             if chain_pos == 0:
                 params['FROM_STATE_DEVICE_NAME'] = fd_state_names[i]
@@ -539,7 +544,7 @@ def ft_block_def(ch_len, thrds, chain_pos, mb, batch, perf_met):
     return result
 
 
-def ftc_click(ch_len, chain_pos, thrds, mb, sharing_level, f, batch, perf_met):
+def ftc_click(ch_len, chain_pos, thrds, mb, sharing_level, f, batch, perf_met, debug):
     """
     Click code for FTC
     :return: Click code in string
@@ -579,13 +584,14 @@ def ftc_click(ch_len, chain_pos, thrds, mb, sharing_level, f, batch, perf_met):
 
         LINKS: links(ch_len,
                      chain_pos,
-                     thrds),
+                     thrds,
+                     debug),
     }
 
     return FTC.format(**string_map)
 
 
-def generate(ch_len, thrds, mb, sharing_level, f, batch, perf_met):
+def generate(ch_len, thrds, mb, sharing_level, f, batch, perf_met, debug=False):
     clicks = []
     if len(mb) == 1:
         mb *= ch_len
@@ -596,9 +602,9 @@ def generate(ch_len, thrds, mb, sharing_level, f, batch, perf_met):
     if ch_len == 1:
         for_loop = 1
     for chain_pos in range(for_loop):
-        clicks.append(ftc_click(ch_len, chain_pos, thrds, mb[chain_pos], sharing_level, f, batch, perf_met))
+        clicks.append(ftc_click(ch_len, chain_pos, thrds, mb[chain_pos], sharing_level, f, batch, perf_met, debug))
 
-    clicks.append(ftc_click(ch_len, -1, thrds, mb[-1], sharing_level, f, batch, perf_met))
+    clicks.append(ftc_click(ch_len, -1, thrds, mb[-1], sharing_level, f, batch, perf_met, debug))
 
     return clicks
 

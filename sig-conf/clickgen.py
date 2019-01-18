@@ -30,7 +30,7 @@ PERFORMANCE_METRICS = [
     LATENCY_METRIC
 ]
 DEFAULT_PERF_METRIC = THROUGHPUT_METRIC
-
+DEFAULT_DEBUG = False
 DEFAULT_MB = COUNTER
 
 
@@ -94,6 +94,13 @@ def def_parser():
                         type=str,
                         default=DEFAULT_PERF_METRIC)
 
+    parser.add_argument('-d',
+                        '--debug',
+                        dest='d',
+                        help='Debug mode -- default False',
+                        type=bool,
+                        default=DEFAULT_DEBUG)
+
     parser.add_argument('-o',
                         '--output',
                         dest='o',
@@ -118,19 +125,19 @@ def gen_store(opts):
     print("Generating for approach '{}' for metric '{}' for MB(s) '{}'".format(apr, opts['p'], opts['m']))
 
     if apr == FTC:
-        clicks = ftcgen.generate(opts['c'], opts['t'], opts['m'], opts['l'], opts['f'], opts['b'], opts['p'])
+        clicks = ftcgen.generate(opts['c'], opts['t'], opts['m'], opts['l'], opts['f'], opts['b'], opts['p'], opts['d'])
         ftcgen.store(opts['o'], clicks)
 
     elif apr == NF:
-        clicks = nfgen.generate(opts['c'], opts['t'], opts['m'], opts['l'], opts['p'])
+        clicks = nfgen.generate(opts['c'], opts['t'], opts['m'], opts['l'], opts['p'], opts['d'])
         nfgen.store(opts['o'], clicks)
 
     elif apr == FTMB:
-        clicks = ftmbgen.generate(opts['c'], opts['t'], opts['m'], opts['l'], opts['b'], opts['p'])
+        clicks = ftmbgen.generate(opts['c'], opts['t'], opts['m'], opts['l'], opts['b'], opts['p'], opts['d'])
         ftmbgen.store(opts['o'], clicks)
 
     elif apr == TF:
-        clicks = tfgen.generate(opts['c'], opts['t'], opts['m'], opts['l'], opts['f'], opts['b'], opts['p'])
+        clicks = tfgen.generate(opts['c'], opts['t'], opts['m'], opts['l'], opts['f'], opts['b'], opts['p'], opts['d'])
         tfgen.store(opts['o'], clicks)
 
     else:

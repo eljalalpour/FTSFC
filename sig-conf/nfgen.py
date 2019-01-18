@@ -336,7 +336,7 @@ def nf_blocks_declares(chain_pos, thrds, mb):
     return '\n'.join(declares)
 
 
-def links(thrds, mb):
+def links(thrds, mb, debug):
     """
     format link strings, each link is 'FromDevice... -> FTBlock -> ...ToDevice'
     :param thrds: a number denoting the number of threads
@@ -348,12 +348,18 @@ def links(thrds, mb):
 
     ll = []
     for i in range(thrds):
-        ll.append(LINK_FORMAT_STR.format(**{
+        params = {
             QUEUE: i,
             'FROM_DATA_DEVICE_NAME': fd_data_names[i],
-            'NF_BLOCK_NAME': nf_block_names[i],
             'TO_DATA_DEVICE_NAME': td_data_names[i],
-        }))
+        }
+
+        if debug:
+            params['NF_BLOCK_NAME'] = nf_block_names[i] + DEBUG_COUNTER.format(i)
+        else:
+            params['NF_BLOCK_NAME'] = nf_block_names[i]
+
+        ll.append(LINK_FORMAT_STR.format(**params))
 
     return '\n'.join(ll)
 
@@ -419,7 +425,7 @@ def nf_block_def(ch_len, thrds, chain_pos, mb, perf_met):
     return result
 
 
-def nf_click(ch_len, chain_pos, thrds, mb, sharing_level, perf_met):
+def nf_click(ch_len, chain_pos, thrds, mb, sharing_level, perf_met, debug):
     """
     Click code for FTC
     :return: Click code in string
@@ -453,13 +459,14 @@ def nf_click(ch_len, chain_pos, thrds, mb, sharing_level, perf_met):
                                                mb),
 
         LINKS: links(thrds,
-                     mb),
+                     mb,
+                     debug),
     }
 
     return NF.format(**string_map)
 
 
-def generate(ch_len, thrds, mb, sharing_level, perf_met):
+def generate(ch_len, thrds, mb, sharing_level, perf_met, debug=False):
     clicks = []
     if len(mb) == 1:
         mb *= ch_len
@@ -467,7 +474,7 @@ def generate(ch_len, thrds, mb, sharing_level, perf_met):
         raise ValueError("The number of middleboxes list must be either 1 or equal to chain length!")
 
     for chain_pos in range(ch_len):
-        clicks.append(nf_click(ch_len, chain_pos, thrds, mb[chain_pos], sharing_level, perf_met))
+        clicks.append(nf_click(ch_len, chain_pos, thrds, mb[chain_pos], sharing_level, perf_met, debug))
 
     return clicks
 

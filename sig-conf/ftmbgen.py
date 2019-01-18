@@ -364,7 +364,7 @@ def ftmb_blocks_declares(chain_pos, ch_len, thrds, mb):
     return '\n'.join(declares)
 
 
-def links(ch_len, chain_pos, thrds):
+def links(ch_len, chain_pos, thrds, debug):
     """
     format link strings, each link is 'FromDevice... -> FTBlock -> ...ToDevice'
     :param chain_pos: a number denoting the position of middlebox in the chain
@@ -378,12 +378,18 @@ def links(ch_len, chain_pos, thrds):
 
     ll = []
     for i in range(thrds):
-        ll.append(LINK_FORMAT_STR.format(**{
+        params = {
             QUEUE: i,
             'FROM_DATA_DEVICE_NAME': fd_data_names[i],
-            'FTMB_BLOCK_NAME': ft_block_names[i],
             'TO_DATA_DEVICE_NAME': td_data_names[i],
-        }))
+        }
+
+        if debug:
+            params['FTMB_BLOCK_NAME'] = ft_block_names[i] + DEBUG_COUNTER.format(i)
+        else:
+            params['FTMB_BLOCK_NAME'] = ft_block_names[i]
+
+        ll.append(LINK_FORMAT_STR.format(**params))
 
     return '\n'.join(ll)
 
@@ -459,7 +465,7 @@ def ftmb_block_def(ch_len, thrds, chain_pos, mb, perf_met):
         })
 
 
-def ftmb_click(ch_len, chain_pos, thrds, mb, sharing_level, batch, perf_met):
+def ftmb_click(ch_len, chain_pos, thrds, mb, sharing_level, batch, perf_met, debug):
     """
     Click code for FTMB
     :return: Click code in string
@@ -496,13 +502,14 @@ def ftmb_click(ch_len, chain_pos, thrds, mb, sharing_level, batch, perf_met):
 
         LINKS: links(ch_len,
                      chain_pos,
-                     thrds),
+                     thrds,
+                     debug),
     }
 
     return FTMB.format(**string_map)
 
 
-def generate(ch_len, thrds, mb, sharing_level, batch, perf_met):
+def generate(ch_len, thrds, mb, sharing_level, batch, perf_met, debug=False):
     clicks = []
     ch_len *= 2
     if len(mb) == 1:
@@ -511,7 +518,7 @@ def generate(ch_len, thrds, mb, sharing_level, batch, perf_met):
         raise ValueError("The number of middleboxes must be either 1 or equal to chain length!")
 
     for chain_pos in range(ch_len):
-        clicks.append(ftmb_click(ch_len, chain_pos, thrds, mb[chain_pos // 2], sharing_level, batch, perf_met))
+        clicks.append(ftmb_click(ch_len, chain_pos, thrds, mb[chain_pos // 2], sharing_level, batch, perf_met, debug))
 
     return clicks
 

@@ -66,3 +66,5 @@ LATENCY_METRIC = 'lat'
 
 SHARING_LEVEL = "SHARING_LEVEL"
 LOCKS = 'LOCKS'
+
+DEBUG_COUNTER = '\n-> c{}::Counter()'

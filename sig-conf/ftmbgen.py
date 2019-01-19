@@ -257,13 +257,26 @@ def ft_block_names_list(thrds):
     return [FTMB_BLOCK_NAME_FORMAT_STR.format(i) for i in range(thrds)]
 
 
+def fix_chain_pos(chain_pos):
+    """
+    Fix the chain pos to the correct index
+    :param chain_pos: a number denoting the position of middlebox in the chain
+    :return: the fixed index
+    """
+    pos = chain_pos
+    if chain_pos > 6:
+        pos += 2  # We need to skip aqua00 and aqua01, because it is used for traffic generation
+
+    return (pos + FIRST_AQUA_MACHINE_IN_CHAIN) % len(AQUA_MACHINES)
+
+
 def dev_name(chain_pos):
     """
     The name of the server based on the given position of middlebox in the chain
     :param chain_pos: a number denoting the position of middlebox in the chain
     :return: server name
     """
-    return AQUA_MACHINES[chain_pos + FIRST_AQUA_MACHINE_IN_CHAIN]
+    return AQUA_MACHINES[fix_chain_pos(chain_pos)]
 
 
 def dev_ip(chain_pos, _40_or_10):
@@ -275,9 +288,9 @@ def dev_ip(chain_pos, _40_or_10):
     """
     result = ''
     if _40_or_10 == '40':
-        result = NIC_40G_IP_LIST[chain_pos + FIRST_AQUA_MACHINE_IN_CHAIN]
+        result = NIC_40G_IP_LIST[fix_chain_pos(chain_pos)]
     elif _40_or_10 == '10':
-        result = NIC_10G_IP_LIST[chain_pos + FIRST_AQUA_MACHINE_IN_CHAIN]
+        result = NIC_10G_IP_LIST[fix_chain_pos(chain_pos)]
 
     return result
 
@@ -291,9 +304,9 @@ def dev_mac(chain_pos, _40_or_10):
     """
     result = ''
     if _40_or_10 == '40':
-        result = NIC_40G_MAC_LIST[chain_pos + FIRST_AQUA_MACHINE_IN_CHAIN]
+        result = NIC_40G_MAC_LIST[fix_chain_pos(chain_pos)]
     elif _40_or_10 == '10':
-        result = NIC_10G_MAC_LIST[chain_pos + FIRST_AQUA_MACHINE_IN_CHAIN]
+        result = NIC_10G_MAC_LIST[fix_chain_pos(chain_pos)]
 
     return result
 

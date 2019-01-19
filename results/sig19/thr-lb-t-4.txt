@@ -1,0 +1,223 @@
+[1;r[100;1H
+Copyright (c) <2010-2017>, Intel Corporation. All rights reserved. Powered by DPDK
+EAL: Probing VFIO support...
+EAL: PCI device 0000:02:00.0 on NUMA socket 0
+EAL:   probe driver: 15b3:1003 net_mlx4
+PMD: net_mlx4: PCI information matches, using device "mlx4_0" (VF: false)
+PMD: net_mlx4: 1 port(s) detected
+PMD: net_mlx4: port 1 MAC address is e4:1d:2d:13:9f:d0
+EAL: PCI device 0000:04:00.0 on NUMA socket 0
+EAL:   probe driver: 8086:1521 net_e1000_igb
+EAL: PCI device 0000:04:00.1 on NUMA socket 0
+EAL:   probe driver: 8086:1521 net_e1000_igb
+EAL: PCI device 0000:81:00.0 on NUMA socket 1
+EAL:   probe driver: 15b3:1003 net_mlx4
+PMD: net_mlx4: PCI information matches, using device "mlx4_1" (VF: false)
+PMD: net_mlx4: 1 port(s) detected
+PMD: net_mlx4: port 1 MAC address is f4:52:14:5a:93:80
+[0;39;49mLua 5.3.4  Copyright (C) 1994-2017 Lua.org, PUC-Rio
+[0;39;49m   Copyright (c) <2010-2017>, Intel Corporation. All rights reserved.
+   Pktgen created by: Keith Wiles -- >>> Powered by DPDK <<<
+
+>>> Packet Burst 64, RX Desc 1024, TX Desc 2048, mbufs/port 16384, mbuf cache 2048
+
+=== port to lcore mapping table (# lcores 20) ===
+   lcore:    0       1       2       3       4       5       6       7       8       9      10      11      12      13      14      15      16      17      18      19      Total
+port   0: ( D: T) ( 1: 0) ( 1: 0) ( 1: 0) ( 1: 0) ( 1: 0) ( 1: 0) ( 1: 0) ( 1: 0) ( 1: 0) ( 0: 1) ( 0: 1) ( 0: 1) ( 0: 1) ( 0: 1) ( 0: 1) ( 0: 1) ( 0: 1) ( 0: 1) ( 0: 1) = ( 9:10)
+Total   : ( 0: 0) ( 1: 0) ( 1: 0) ( 1: 0) ( 1: 0) ( 1: 0) ( 1: 0) ( 1: 0) ( 1: 0) ( 1: 0) ( 0: 1) ( 0: 1) ( 0: 1) ( 0: 1) ( 0: 1) ( 0: 1) ( 0: 1) ( 0: 1) ( 0: 1) ( 0: 1)
+  Display and Timer on lcore 0, rx:tx counts per port/lcore
+
+Configuring 2 ports, MBUF Size 2176, MBUF Cache Size 2048
+Lcore:
+    1, RX-Only
+                RX_cnt( 1): (pid= 0:qid= 0) 
+    2, RX-Only
+                RX_cnt( 1): (pid= 0:qid= 1) 
+    3, RX-Only
+                RX_cnt( 1): (pid= 0:qid= 2) 
+    4, RX-Only
+                RX_cnt( 1): (pid= 0:qid= 3) 
+    5, RX-Only
+                RX_cnt( 1): (pid= 0:qid= 4) 
+    6, RX-Only
+                RX_cnt( 1): (pid= 0:qid= 5) 
+    7, RX-Only
+                RX_cnt( 1): (pid= 0:qid= 6) 
+    8, RX-Only
+                RX_cnt( 1): (pid= 0:qid= 7) 
+    9, RX-Only
+                RX_cnt( 1): (pid= 0:qid= 8) 
+   10, TX-Only
+                TX_cnt( 1): (pid= 0:qid= 0) 
+   11, TX-Only
+                TX_cnt( 1): (pid= 0:qid= 1) 
+   12, TX-Only
+                TX_cnt( 1): (pid= 0:qid= 2) 
+   13, TX-Only
+                TX_cnt( 1): (pid= 0:qid= 3) 
+   14, TX-Only
+                TX_cnt( 1): (pid= 0:qid= 4) 
+   15, TX-Only
+                TX_cnt( 1): (pid= 0:qid= 5) 
+   16, TX-Only
+                TX_cnt( 1): (pid= 0:qid= 6) 
+   17, TX-Only
+                TX_cnt( 1): (pid= 0:qid= 7) 
+   18, TX-Only
+                TX_cnt( 1): (pid= 0:qid= 8) 
+   19, TX-Only
+                TX_cnt( 1): (pid= 0:qid= 9) 
+
+Port :
+    0, nb_lcores 19, private 0xa22360, lcores:  1  2  3  4  5  6  7  8  9 10 11 12 13 14 15 16 17 18 19 
+
+
+
+** Default Info (mlx4_0 port 1, if_index:4) **
+   max_rx_queues  :65408, max_tx_queues     :65408
+   max_mac_addrs  : 127, max_hash_mac_addrs:   0, max_vmdq_pools:     0
+   rx_offload_capa:   0, tx_offload_capa   :   0, reta_size     :     0, flow_type_rss_offloads:0000000000000000
+   vmdq_queue_base:   0, vmdq_queue_num    :   0, vmdq_pool_base:     0
+** RX Conf **
+   pthresh        :   0, hthresh          :   0, wthresh        :     0
+   Free Thresh    :   0, Drop Enable      :   0, Deferred Start :     0
+** TX Conf **
+   pthresh        :   0, hthresh          :   0, wthresh        :     0
+   Free Thresh    :   0, RS Thresh        :   0, Deferred Start :     0, TXQ Flags:00000000
+
+PMD: net_mlx4: 0xa8c640: TX queues number update: 0 -> 10
+PMD: net_mlx4: 0xa8c640: number of RX queues must be a power of 2: 8 queues among 9 will be active
+PMD: net_mlx4: 0xa8c640: RX queues number update: 0 -> 9
+    Create: Default RX  0:0  - Memory used (MBUFs 16384 x (size 2176 + Hdr 128)) + 192 =  36865 KB headroom 128 2176
+      Set RX queue stats mapping pid 0, q 0, lcore 1
+
+    Create: Default RX  0:1  - Memory used (MBUFs 16384 x (size 2176 + Hdr 128)) + 192 =  36865 KB headroom 128 2176
+      Set RX queue stats mapping pid 0, q 1, lcore 2
+
+    Create: Default RX  0:2  - Memory used (MBUFs 16384 x (size 2176 + Hdr 128)) + 192 =  36865 KB headroom 128 2176
+      Set RX queue stats mapping pid 0, q 2, lcore 3
+
+    Create: Default RX  0:3  - Memory used (MBUFs 16384 x (size 2176 + Hdr 128)) + 192 =  36865 KB headroom 128 2176
+      Set RX queue stats mapping pid 0, q 3, lcore 4
+
+    Create: Default RX  0:4  - Memory used (MBUFs 16384 x (size 2176 + Hdr 128)) + 192 =  36865 KB headroom 128 2176
+      Set RX queue stats mapping pid 0, q 4, lcore 5
+
+    Create: Default RX  0:5  - Memory used (MBUFs 16384 x (size 2176 + Hdr 128)) + 192 =  36865 KB headroom 128 2176
+      Set RX queue stats mapping pid 0, q 5, lcore 6
+
+    Create: Default RX  0:6  - Memory used (MBUFs 16384 x (size 2176 + Hdr 128)) + 192 =  36865 KB headroom 128 2176
+      Set RX queue stats mapping pid 0, q 6, lcore 7
+
+    Create: Default RX  0:7  - Memory used (MBUFs 16384 x (size 2176 + Hdr 128)) + 192 =  36865 KB headroom 128 2176
+      Set RX queue stats mapping pid 0, q 7, lcore 8
+
+    Create: Default RX  0:8  - Memory used (MBUFs 16384 x (size 2176 + Hdr 128)) + 192 =  36865 KB headroom 128 2176
+      Set RX queue stats mapping pid 0, q 8, lcore 9
+
+
+    Create: Default TX  0:0  - Memory used (MBUFs 16384 x (size 2176 + Hdr 128)) + 192 =  36865 KB headroom 128 2176
+    Create: Range TX    0:0  - Memory used (MBUFs 16384 x (size 2176 + Hdr 128)) + 192 =  36865 KB headroom 128 2176
+    Create: Sequence TX 0:0  - Memory used (MBUFs 16384 x (size 2176 + Hdr 128)) + 192 =  36865 KB headroom 128 2176
+    Create: Special TX  0:0  - Memory used (MBUFs    64 x (size 2176 + Hdr 128)) + 192 =    145 KB headroom 128 2176
+
+    Create: Default TX  0:1  - Memory used (MBUFs 16384 x (size 2176 + Hdr 128)) + 192 =  36865 KB headroom 128 2176
+    Create: Range TX    0:1  - Memory used (MBUFs 16384 x (size 2176 + Hdr 128)) + 192 =  36865 KB headroom 128 2176
+    Create: Sequence TX 0:1  - Memory used (MBUFs 16384 x (size 2176 + Hdr 128)) + 192 =  36865 KB headroom 128 2176
+    Create: Special TX  0:1  - Memory used (MBUFs    64 x (size 2176 + Hdr 128)) + 192 =    145 KB headroom 128 2176
+
+    Create: Default TX  0:2  - Memory used (MBUFs 16384 x (size 2176 + Hdr 128)) + 192 =  36865 KB headroom 128 2176
+    Create: Range TX    0:2  - Memory used (MBUFs 16384 x (size 2176 + Hdr 128)) + 192 =  36865 KB headroom 128 2176
+    Create: Sequence TX 0:2  - Memory used (MBUFs 16384 x (size 2176 + Hdr 128)) + 192 =  36865 KB headroom 128 2176
+    Create: Special TX  0:2  - Memory used (MBUFs    64 x (size 2176 + Hdr 128)) + 192 =    145 KB headroom 128 2176
+
+    Create: Default TX  0:3  - Memory used (MBUFs 16384 x (size 2176 + Hdr 128)) + 192 =  36865 KB headroom 128 2176
+    Create: Range TX    0:3  - Memory used (MBUFs 16384 x (size 2176 + Hdr 128)) + 192 =  36865 KB headroom 128 2176
+    Create: Sequence TX 0:3  - Memory used (MBUFs 16384 x (size 2176 + Hdr 128)) + 192 =  36865 KB headroom 128 2176
+    Create: Special TX  0:3  - Memory used (MBUFs    64 x (size 2176 + Hdr 128)) + 192 =    145 KB headroom 128 2176
+
+    Create: Default TX  0:4  - Memory used (MBUFs 16384 x (size 2176 + Hdr 128)) + 192 =  36865 KB headroom 128 2176
+    Create: Range TX    0:4  - Memory used (MBUFs 16384 x (size 2176 + Hdr 128)) + 192 =  36865 KB headroom 128 2176
+    Create: Sequence TX 0:4  - Memory used (MBUFs 16384 x (size 2176 + Hdr 128)) + 192 =  36865 KB headroom 128 2176
+    Create: Special TX  0:4  - Memory used (MBUFs    64 x (size 2176 + Hdr 128)) + 192 =    145 KB headroom 128 2176
+
+    Create: Default TX  0:5  - Memory used (MBUFs 16384 x (size 2176 + Hdr 128)) + 192 =  36865 KB headroom 128 2176
+    Create: Range TX    0:5  - Memory used (MBUFs 16384 x (size 2176 + Hdr 128)) + 192 =  36865 KB headroom 128 2176
+    Create: Sequence TX 0:5  - Memory used (MBUFs 16384 x (size 2176 + Hdr 128)) + 192 =  36865 KB headroom 128 2176
+    Create: Special TX  0:5  - Memory used (MBUFs    64 x (size 2176 + Hdr 128)) + 192 =    145 KB headroom 128 2176
+
+    Create: Default TX  0:6  - Memory used (MBUFs 16384 x (size 2176 + Hdr 128)) + 192 =  36865 KB headroom 128 2176
+    Create: Range TX    0:6  - Memory used (MBUFs 16384 x (size 2176 + Hdr 128)) + 192 =  36865 KB headroom 128 2176
+    Create: Sequence TX 0:6  - Memory used (MBUFs 16384 x (size 2176 + Hdr 128)) + 192 =  36865 KB headroom 128 2176
+    Create: Special TX  0:6  - Memory used (MBUFs    64 x (size 2176 + Hdr 128)) + 192 =    145 KB headroom 128 2176
+
+    Create: Default TX  0:7  - Memory used (MBUFs 16384 x (size 2176 + Hdr 128)) + 192 =  36865 KB headroom 128 2176
+    Create: Range TX    0:7  - Memory used (MBUFs 16384 x (size 2176 + Hdr 128)) + 192 =  36865 KB headroom 128 2176
+    Create: Sequence TX 0:7  - Memory used (MBUFs 16384 x (size 2176 + Hdr 128)) + 192 =  36865 KB headroom 128 2176
+    Create: Special TX  0:7  - Memory used (MBUFs    64 x (size 2176 + Hdr 128)) + 192 =    145 KB headroom 128 2176
+
+    Create: Default TX  0:8  - Memory used (MBUFs 16384 x (size 2176 + Hdr 128)) + 192 =  36865 KB headroom 128 2176
+    Create: Range TX    0:8  - Memory used (MBUFs 16384 x (size 2176 + Hdr 128)) + 192 =  36865 KB headroom 128 2176
+    Create: Sequence TX 0:8  - Memory used (MBUFs 16384 x (size 2176 + Hdr 128)) + 192 =  36865 KB headroom 128 2176
+    Create: Special TX  0:8  - Memory used (MBUFs    64 x (size 2176 + Hdr 128)) + 192 =    145 KB headroom 128 2176
+
+    Create: Default TX  0:9  - Memory used (MBUFs 16384 x (size 2176 + Hdr 128)) + 192 =  36865 KB headroom 128 2176
+    Create: Range TX    0:9  - Memory used (MBUFs 16384 x (size 2176 + Hdr 128)) + 192 =  36865 KB headroom 128 2176
+    Create: Sequence TX 0:9  - Memory used (MBUFs 16384 x (size 2176 + Hdr 128)) + 192 =  36865 KB headroom 128 2176
+    Create: Special TX  0:9  - Memory used (MBUFs    64 x (size 2176 + Hdr 128)) + 192 =    145 KB headroom 128 2176
+
+                                                                       Port memory used = 1439146 KB
+Initialize Port 0 -- TxQ 10, RxQ 9,  Src MAC e4:1d:2d:13:9f:d0
+                                                                      Total memory used = 1439146 KB
+Port  0: Link Up - speed 40000 Mbps - full-duplex
+
+
+=== Display processing on lcore 0
+  RX processing lcore:   1 rx:  1 tx:  0
+For RX found 1 port(s) for lcore 1
+  RX processing lcore:   2 rx:  1 tx:  0
+For RX found 1 port(s) for lcore 2
+  RX processing lcore:   3 rx:  1 tx:  0
+For RX found 1 port(s) for lcore 3
+  RX processing lcore:   4 rx:  1 tx:  0
+For RX found 1 port(s) for lcore 4
+  RX processing lcore:   5 rx:  1 tx:  0
+For RX found 1 port(s) for lcore 5
+  RX processing lcore:   6 rx:  1 tx:  0
+For RX found 1 port(s) for lcore 6
+  RX processing lcore:   7 rx:  1 tx:  0
+For RX found 1 port(s) for lcore 7
+  RX processing lcore:   8 rx:  1 tx:  0
+For RX found 1 port(s) for lcore 8
+  RX processing lcore:   9 rx:  1 tx:  0
+For RX found 1 port(s) for lcore 9
+  TX processing lcore:  10 rx:  0 tx:  1
+For TX found 1 port(s) for lcore 10
+  TX processing lcore:  11 rx:  0 tx:  1
+For TX found 1 port(s) for lcore 11
+  TX processing lcore:  12 rx:  0 tx:  1
+For TX found 1 port(s) for lcore 12
+  TX processing lcore:  13 rx:  0 tx:  1
+For TX found 1 port(s) for lcore 13
+  TX processing lcore:  14 rx:  0 tx:  1
+For TX found 1 port(s) for lcore 14
+  TX processing lcore:  15 rx:  0 tx:  1
+For TX found 1 port(s) for lcore 15
+  TX processing lcore:  16 rx:  0 tx:  1
+For TX found 1 port(s) for lcore 16
+  TX processing lcore:  17 rx:  0 tx:  1
+For TX found 1 port(s) for lcore 17
+  TX processing lcore:  18 rx:  0 tx:  1
+For TX found 1 port(s) for lcore 18
+  TX processing lcore:  19 rx:  0 tx:  1
+For TX found 1 port(s) for lcore 19
+[1;r[61;1H[2J[100;1H7[1;36m[1;1H-[0;39;49m[1;37m[1;20H<Main Page>[0;33m  Copyright (c) <2010-2017>, Intel Corporation[0;39;49m[1;32m[1;3HPorts 0-1 of 2[1;34m[2;1H  Flags:Port        [0;33m[3;1HLink State          [4;1HPkts/s Max/Rx       [5;1H       Max/Tx       [6;1HMBits/s Rx/Tx       [7;1HBroadcast           [8;1HMulticast           [9;1H  64 Bytes          [10;1H  65-127            [11;1H  128-255           [12;1H  256-511           [13;1H  512-1023          [14;1H  1024-1518         [15;1HRunts/Jumbos        [16;1HErrors Rx/Tx        [17;1HTotal Rx Pkts       [18;1H      Tx Pkts       [19;1H      Rx MBs        [20;1H      Tx MBs        [21;1HARP/ICMP Pkts       [0;35m[23;1HPattern Type        [24;1HTx Count/% Rate     [25;1HPktSize/Tx Burst    [26;1HSrc/Dest Port       [27;1HPkt Type:VLAN ID    [28;1H802.1p CoS          [29;1HToS Value:          [30;1H  - DSCP value      [31;1H  - IPP  value      [32;1HDst  IP Address     [33;1HSrc  IP Address     [34;1HDst MAC Address     [35;1HSrc MAC Address     [36;1HVendID/PCI Addr     [39;r[38;1H[0;34m-------------------------------------------------------------------------------[0;37m[38;3H Pktgen Ver: 3.5.0 (DPDK 17.05.2) [1;34m Powered by DPDK [0;39;49m[1;34m[2;19H:[3;19H:[4;19H:[5;19H:[6;19H:[7;19H:[8;19H:[9;19H:[10;19H:[11;19H:[12;19H:[13;19H:[14;19H:[15;19H:[16;19H:[17;19H:[18;19H:[19;19H:[20;19H:[21;19H:[22;19H:[23;19H:[24;19H:[25;19H:[26;19H:[27;19H:[28;19H:[29;19H:[30;19H:[31;19H:[32;19H:[33;19H:[34;19H:[35;19H:[36;19H:[1;37m[23;20H             abcd...[24;20H       Forever /100%[25;20H           64 /   64[26;20H         1234 / 5678[27;20H     IPv4 / TCP:0001[28;20H                   0[29;20H                   0[30;20H                   0[31;20H                   0[32;20H         192.168.1.1[33;20H      192.168.0.1/24[34;20H   00:00:00:00:00:00[35;20H   e4:1d:2d:13:9f:d0[36;20H   15b3:1003/02:00.0[1;31m[3;40H     ----TotalRate----[K[0;39;49m[1;34m[2;20H   ---------------:0[0;39;49m[1;33m[3;20H       <UP-40000-FD>[0;39;49m[0;37m[4;20H                 0/0[5;20H                 0/0[6;20H                 0/0[7;20H                   0[8;20H                   0[9;20H                   0[10;20H                   0[11;20H                   0[12;20H                   0[13;20H                   0[14;20H                   0[15;20H                 0/0[16;20H                 0/0[17;20H                   0[18;20H                   0[19;20H                   0[20;20H                   0[21;20H                 0/0[0;39;49m[1;31m[4;40H                   0/0[K[5;40H                   0/0[K[6;40H                   0/0[K[0;39;49m8
+** Version: DPDK 17.05.2, Command Line Interface with timers
+Pktgen:/> Throughput test...
+Running at rate 55 percent and packet-size 256 for 10 seconds!
+7[1;36m[1;1H\[0;39;49m[1;37m[1;20H<Main Page>[0;33m  Copyright (c) <2010-2017>, Intel Corporation[0;39;49m[1;32m[1;3HPorts 0-1 of 2[1;34m[2;1H  Flags:Port        [0;33m[3;1HLink State          [4;1HPkts/s Max/Rx       [5;1H       Max/Tx       [6;1HMBits/s Rx/Tx       [7;1HBroadcast           [8;1HMulticast           [9;1H  64 Bytes          [10;1H  65-127            [11;1H  128-255           [12;1H  256-511           [13;1H  512-1023          [14;1H  1024-1518         [15;1HRunts/Jumbos        [16;1HErrors Rx/Tx        [17;1HTotal Rx Pkts       [18;1H      Tx Pkts       [19;1H      Rx MBs        [20;1H      Tx MBs        [21;1HARP/ICMP Pkts       [0;35m[23;1HPattern Type        [24;1HTx Count/% Rate     [25;1HPktSize/Tx Burst    [26;1HSrc/Dest Port       [27;1HPkt Type:VLAN ID    [28;1H802.1p CoS          [29;1HToS Value:          [30;1H  - DSCP value      [31;1H  - IPP  value      [32;1HDst  IP Address     [33;1HSrc  IP Address     [34;1HDst MAC Address     [35;1HSrc MAC Address     [36;1HVendID/PCI Addr     [39;r[38;1H[0;34m-------------------------------------------------------------------------------[0;37m[38;3H Pktgen Ver: 3.5.0 (DPDK 17.05.2) [1;34m Powered by DPDK [0;39;49m[1;34m[2;19H:[3;19H:[4;19H:[5;19H:[6;19H:[7;19H:[8;19H:[9;19H:[10;19H:[11;19H:[12;19H:[13;19H:[14;19H:[15;19H:[16;19H:[17;19H:[18;19H:[19;19H:[20;19H:[21;19H:[22;19H:[23;19H:[24;19H:[25;19H:[26;19H:[27;19H:[28;19H:[29;19H:[30;19H:[31;19H:[32;19H:[33;19H:[34;19H:[35;19H:[36;19H:[1;37m[23;20H             abcd...[24;20H        Forever /55%[25;20H          256 /   64[26;20H         1234 / 5678[27;20H     IPv4 / UDP:0001[28;20H                   0[29;20H                   0[30;20H                   0[31;20H                   0[32;20H           10.70.0.7[33;20H          1.0.1.1/16[34;20H   e4:1d:2d:13:9e:d0[35;20H   e4:1d:2d:13:9f:d0[36;20H   15b3:1003/02:00.0[1;31m[3;40H     ----TotalRate----[K[0;39;49m[1;34m[2;20H   ------RI-------:0[0;39;49m[1;33m[3;20H       <UP-40000-FD>[0;39;49m[0;37m[4;20H                 0/0[5;20H                 0/0[6;20H                 0/0[7;20H                   0[8;20H                   0[9;20H                   0[10;20H                   0[11;20H                   0[12;20H                   0[13;20H                   0[14;20H                   0[15;20H                 0/0[16;20H                 0/0[17;20H                   0[18;20H                   0[19;20H                   0[20;20H                   0[21;20H                 0/0[0;39;49m[1;31m[4;40H                   0/0[K[5;40H                   0/0[K[6;40H                   0/0[K[0;39;49m8787878787878787[1;36m[1;1H|[0;39;49m[1;34m[2;20H   ------RI-------:0[0;39;49m[1;33m[3;20H       <UP-40000-FD>[0;39;49m[0;37m[4;20H                 0/0[5;20H                 0/0[6;20H                 0/0[7;20H                   0[8;20H                   0[9;20H                   0[10;20H                   0[11;20H                   0[12;20H                   0[13;20H                   0[14;20H                   0[15;20H                 0/0[16;20H                 0/0[17;20H                   0[18;20H                   0[19;20H                   0[20;20H                   0[21;20H                 0/0[0;39;49m[1;31m[4;40H                   0/0[K[5;40H                   0/0[K[6;40H                   0/0[K[0;39;49m8787878787878Report results in file "throughput.csv"!
+Waiting for device to come up!
+7[1;36m[1;1H/[0;39;49m[1;37m[1;20H<Main Page>[0;33m  Copyright (c) <2010-2017>, Intel Corporation[0;39;49m[1;32m[1;3HPorts 0-1 of 2[1;34m[2;1H  Flags:Port        [0;33m[3;1HLink State          [4;1HPkts/s Max/Rx       [5;1H       Max/Tx       [6;1HMBits/s Rx/Tx       [7;1HBroadcast           [8;1HMulticast           [9;1H  64 Bytes          [10;1H  65-127            [11;1H  128-255           [12;1H  256-511           [13;1H  512-1023          [14;1H  1024-1518         [15;1HRunts/Jumbos        [16;1HErrors Rx/Tx        [17;1HTotal Rx Pkts       [18;1H      Tx Pkts       [19;1H      Rx MBs        [20;1H      Tx MBs        [21;1HARP/ICMP Pkts       [0;35m[23;1HPattern Type        [24;1HTx Count/% Rate     [25;1HPktSize/Tx Burst    [26;1HSrc/Dest Port       [27;1HPkt Type:VLAN ID    [28;1H802.1p CoS          [29;1HToS Value:          [30;1H  - DSCP value      [31;1H  - IPP  value      [32;1HDst  IP Address     [33;1HSrc  IP Address     [34;1HDst MAC Address     [35;1HSrc MAC Address     [36;1HVendID/PCI Addr     [39;r[38;1H[0;34m-------------------------------------------------------------------------------[0;37m[38;3H Pktgen Ver: 3.5.0 (DPDK 17.05.2) [1;34m Powered by DPDK [0;39;49m[1;34m[2;19H:[3;19H:[4;19H:[5;19H:[6;19H:[7;19H:[8;19H:[9;19H:[10;19H:[11;19H:[12;19H:[13;19H:[14;19H:[15;19H:[16;19H:[17;19H:[18;19H:[19;19H:[20;19H:[21;19H:[22;19H:[23;19H:[24;19H:[25;19H:[26;19H:[27;19H:[28;19H:[29;19H:[30;19H:[31;19H:[32;19H:[33;19H:[34;19H:[35;19H:[36;19H:[1;37m[23;20H             abcd...[24;20H        Forever /55%[25;20H          256 /   64[26;20H         1234 / 5678[27;20H     IPv4 / UDP:0001[28;20H                   0[29;20H                   0[30;20H                   0[31;20H                   0[32;20H           10.70.0.7[33;20H          1.0.1.1/16[34;20H   e4:1d:2d:13:9e:d0[35;20H   e4:1d:2d:13:9f:d0[36;20H   15b3:1003/02:00.0[1;31m[3;40H     ----TotalRate----[K[0;39;49m[1;34m[2;20H   ------RI-------:0[0;39;49m[1;33m[3;20H       <UP-40000-FD>[0;39;49m[0;37m[4;20H                 0/0[5;20H                 0/0[6;20H                 0/0[7;20H                   0[8;20H                   0[9;20H                   0[10;20H                   0[11;20H                   0[12;20H                   0[13;20H                   0[14;20H                   0[15;20H                 0/0[16;20H                 0/0[17;20H                   0[18;20H                   0[19;20H                   0[20;20H                   0[21;20H                 0/0[0;39;49m[1;31m[4;40H                   0/0[K[5;40H                   0/0[K[6;40H                   0/0[K[0;39;49m8787878787878787[1;36m[1;1H-[0;39;49m[1;34m[2;20H   ------RI-------:0[0;39;49m[1;33m[3;20H       <UP-40000-FD>[0;39;49m[0;37m[4;20H                 0/0[5;20H                 0/0[6;20H                 0/0[7;20H                   0[8;20H                   0[9;20H                   0[10;20H                   0[11;20H             3862989[12;20H                   0[13;20H                   0[14;20H                   0[15;20H                 0/0[16;20H                 0/0[17;20H                   0[18;20H                   0[19;20H                   0[20;20H                   0[21;20H                 0/0[0;39;49m[1;31m[4;40H                   0/0[K[5;40H                   0/0[K[6;40H                   0/0[K[0;39;49m878787878787878Sending traffic...
+7[1;36m[1;1H\[0;39;49m[1;34m[2;20H   ------RI-------:0[0;39;49m[1;33m[3;20H       <UP-40000-FD>[0;39;49m[0;37m[4;20H     7257638/7257638[5;20H     8484800/8484800[6;20H         16024/18734[7;20H                   0[8;20H                   0[9;20H                   0[10;20H                   0[11;20H             8419028[12;20H                   0[13;20H                   0[14;20H                   0[15;20H                 0/0[16;20H                 0/0[17;20H             7257638[18;20H             8484800[19;20H               16024[20;20H               18734[21;20H                 0/0[0;39;49m[1;31m[4;40H       7257638/7257638[K[5;40H       8484800/8484800[K[6;40H           16024/18734[K[0;39;49m8787878787878787[1;36m[1;1H|[0;39;49m[1;34m[2;20H   ------RI-------:0[0;39;49m[1;33m[3;20H       <UP-40000-FD>[0;39;49m[0;37m[4;20H     8662346/8662346[5;20H   10004288/10004288[6;20H         19126/22089[7;20H                   0[8;20H                   0[9;20H                   0[10;20H                   0[11;20H            12910075[12;20H                   0[13;20H                   0[14;20H                   0[15;20H                 0/0[16;20H                 0/0[17;20H            15919984[18;20H            18489088[19;20H               35151[20;20H               40823[21;20H                 0/0[0;39;49m[1;31m[4;40H       8662346/8662346[K[5;40H     10004288/10004288[K[6;40H           19126/22089[K[0;39;49m8787878787878787[1;36m[1;1H/[0;39;49m[1;34m[2;20H   ------RI-------:0[0;39;49m[1;33m[3;20H       <UP-40000-FD>[0;39;49m[0;37m[4;20H     8662346/8526087[5;20H   10006912/10006912[6;20H         18825/22095[7;20H                   0[8;20H                   0[9;20H                   0[10;20H                   0[11;20H            17420845[12;20H                   0[13;20H                   0[14;20H                   0[15;20H                 0/0[16;20H                 0/0[17;20H            24446071[18;20H            28496000[19;20H               53976[20;20H               62919[21;20H                 0/0[0;39;49m[1;31m[4;40H       8662346/8526087[K[5;40H     10006912/10006912[K[6;40H           18825/22095[K[0;39;49m8787878787878787[1;36m[1;1H-[0;39;49m[1;34m[2;20H   ------RI-------:0[0;39;49m[1;33m[3;20H       <UP-40000-FD>[0;39;49m[0;37m[4;20H     8662346/8542799[5;20H   10006912/10004352[6;20H         18862/22089[7;20H                   0[8;20H                   0[9;20H                   0[10;20H                   0[11;20H            21962990[12;20H                   0[13;20H                   0[14;20H                   0[15;20H                 0/0[16;20H                 0/0[17;20H            32988870[18;20H            38500352[19;20H               72839[20;20H               85008[21;20H                 0/0[0;39;49m[1;31m[4;40H       8662346/8542799[K[5;40H     10006912/10004352[K[6;40H           18862/22089[K[0;39;49m8787878787878787[1;36m[1;1H\[0;39;49m[1;34m[2;20H   ------RI-------:0[0;39;49m[1;33m[3;20H       <UP-40000-FD>[0;39;49m[0;37m[4;20H     8662346/8654613[5;20H   10006912/10004352[6;20H         19109/22089[7;20H                   0[8;20H                   0[9;20H                   0[10;20H                   0[11;20H            26532799[12;20H                   0[13;20H                   0[14;20H                   0[15;20H                 0/0[16;20H                 0/0[17;20H            41643483[18;20H            48504704[19;20H               91948[20;20H              107098[21;20H                 0/0[0;39;49m[1;31m[4;40H       8662346/8654613[K[5;40H     10006912/10004352[K[6;40H           19109/22089[K[0;39;49m8787878787878787[1;36m[1;1H|[0;39;49m[1;34m[2;20H   ------RI-------:0[0;39;49m[1;33m[3;20H       <UP-40000-FD>[0;39;49m[0;37m[4;20H     8721540/8721540[5;20H   10006912/10004160[6;20H         19257/22089[7;20H                   0[8;20H                   0[9;20H                   0[10;20H                   0[11;20H            31061133[12;20H                   0[13;20H                   0[14;20H                   0[15;20H                 0/0[16;20H                 0/0[17;20H            50365023[18;20H            58508864[19;20H              111205[20;20H              129187[21;20H                 0/0[0;39;49m[1;31m[4;40H       8721540/8721540[K[5;40H     10006912/10004160[K[6;40H           19257/22089[K[0;39;49m8787878787878787[1;36m[1;1H/[0;39;49m[1;34m[2;20H   ------RI-------:0[0;39;49m[1;33m[3;20H       <UP-40000-FD>[0;39;49m[0;37m[4;20H     8721540/8598685[5;20H   10006912/10003840[6;20H         18985/22088[7;20H                   0[8;20H                   0[9;20H                   0[10;20H                   0[11;20H            35630157[12;20H                   0[13;20H                   0[14;20H                   0[15;20H                 0/0[16;20H                 0/0[17;20H            58963708[18;20H            68512704[19;20H              130191[20;20H              151276[21;20H                 0/0[0;39;49m[1;31m[4;40H       8721540/8598685[K[5;40H     10006912/10003840[K[6;40H           18985/22088[K[0;39;49m8787878787878787[1;36m[1;1H-[0;39;49m[1;34m[2;20H   ------RI-------:0[0;39;49m[1;33m[3;20H       <UP-40000-FD>[0;39;49m[0;37m[4;20H     8721540/8682672[5;20H   10006912/10003648[6;20H         19171/22087[7;20H                   0[8;20H                   0[9;20H                   0[10;20H                   0[11;20H            40243978[12;20H                   0[13;20H                   0[14;20H                   0[15;20H                 0/0[16;20H                 0/0[17;20H            67646380[18;20H            78516352[19;20H              149363[20;20H              173364[21;20H                 0/0[0;39;49m[1;31m[4;40H       8721540/8682672[K[5;40H     10006912/10003648[K[6;40H           19171/22087[K[0;39;49m8787878787878787[1;36m[1;1H\[0;39;49m[1;34m[2;20H   ------RI-------:0[0;39;49m[1;33m[3;20H       <UP-40000-FD>[0;39;49m[0;37m[4;20H     8795432/8795432[5;20H   10006912/10004032[6;20H         19420/22088[7;20H                   0[8;20H                   0[9;20H                   0[10;20H                   0[11;20H            44847550[12;20H                   0[13;20H                   0[14;20H                   0[15;20H                 0/0[16;20H                 0/0[17;20H            76441812[18;20H            88520384[19;20H              168783[20;20H              195453[21;20H                 0/0[0;39;49m[1;31m[4;40H       8795432/8795432[K[5;40H     10006912/10004032[K[6;40H           19420/22088[K[0;39;49m8787878787878787[1;36m[1;1H|[0;39;49m[1;34m[2;20H   ------RI-------:0[0;39;49m[1;33m[3;20H       <UP-40000-FD>[0;39;49m[0;37m[4;20H     8795432/8792162[5;20H   10006912/10004544[6;20H         19413/22089[7;20H                   0[8;20H                   0[9;20H                   0[10;20H                   0[11;20H            49437046[12;20H                   0[13;20H                   0[14;20H                   0[15;20H                 0/0[16;20H                 0/0[17;20H            85233974[18;20H            98524928[19;20H              188196[20;20H              217543[21;20H                 0/0[0;39;49m[1;31m[4;40H       8795432/8792162[K[5;40H     10006912/10004544[K[6;40H           19413/22089[K[0;39;49m8787878787878787[1;36m[1;1H/[0;39;49m[1;34m[2;20H   ------RI-------:0[0;39;49m[1;33m[3;20H       <UP-40000-FD>[0;39;49m[0;37m[4;20H     8795432/8753735[5;20H   10006912/10004032[6;20H         19328/22088[7;20H                   0[8;20H                   0[9;20H                   0[10;20H                   0[11;20H            54034854[12;20H                   0[13;20H                   0[14;20H                   0[15;20H                 0/0[16;20H                 0/0[17;20H            93987709[18;20H           108528960[19;20H              207524[20;20H              239632[21;20H                 0/0[0;39;49m[1;31m[4;40H       8795432/8753735[K[5;40H     10006912/10004032[K[6;40H           19328/22088[K[0;39;49m8787878787878787[1;36m[1;1H-[0;39;49m[1;34m[2;20H   ------RI-------:0[0;39;49m[1;33m[3;20H       <UP-40000-FD>[0;39;49m[0;37m[4;20H     8795432/8774165[5;20H   10006912/10004032[6;20H         19373/22088[7;20H                   0[8;20H                   0[9;20H                   0[10;20H                   0[11;20H            58636335[12;20H                   0[13;20H                   0[14;20H                   0[15;20H                 0/0[16;20H                 0/0[17;20H           102761874[18;20H           118532992[19;20H              226898[20;20H              261720[21;20H                 0/0[0;39;49m[1;31m[4;40H       8795432/8774165[K[5;40H     10006912/10004032[K[6;40H           19373/22088[K[0;39;49m8787878787878787[1;36m[1;1H\[0;39;49m[1;34m[2;20H   ------RI-------:0[0;39;49m[1;33m[3;20H       <UP-40000-FD>[0;39;49m[0;37m[4;20H     8795432/8790025[5;20H   10006912/10003840[6;20H         19408/22088[7;20H                   0[8;20H                   0[9;20H                   0[10;20H                   0[11;20H            63207658[12;20H                   0[13;20H                   0[14;20H                   0[15;20H                 0/0[16;20H                 0/0[17;20H           111551899[18;20H           128536832[19;20H              246306[20;20H              283809[21;20H                 0/0[0;39;49m[1;31m[4;40H       8795432/8790025[K[5;40H     10006912/10003840[K[6;40H           19408/22088[K[0;39;49m8Done!
+787878787878787[1;36m[1;1H|[0;39;49m[1;34m[2;20H   ------RI-------:0[0;39;49m[1;33m[3;20H       <UP-40000-FD>[0;39;49m[0;37m[4;20H     8795432/8740448[5;20H    10006912/9904000[6;20H         19298/21868[7;20H                   0[8;20H                   0[9;20H                   0[10;20H                   0[11;20H            63256901[12;20H                   0[13;20H                   0[14;20H                   0[15;20H                 0/0[16;20H                 0/0[17;20H           120292347[18;20H           138440832[19;20H              265605[20;20H              305677[21;20H                 0/0[0;39;49m[1;31m[4;40H       8795432/8740448[K[5;40H      10006912/9904000[K[6;40H           19298/21868[K[0;39;49m8787878787878787[1;36m[1;1H/[0;39;49m[1;34m[2;20H   ------RI-------:0[0;39;49m[1;33m[3;20H       <UP-40000-FD>[0;39;49m[0;37m[4;20H       8795432/93871[5;20H     10006912/103872[6;20H             207/229[7;20H                   0[8;20H                   0[9;20H                   0[10;20H                   0[11;20H            63256901[12;20H                   0[13;20H                   0[14;20H                   0[15;20H                 0/0[16;20H                 0/0[17;20H           120386218[18;20H           138544704[19;20H              265812[20;20H              305906[21;20H                 0/0[0;39;49m[1;31m[4;40H         8795432/93871[K[5;40H       10006912/103872[K[6;40H               207/229[K[0;39;49m8
+[1;r[100;1H

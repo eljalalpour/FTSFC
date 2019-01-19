@@ -264,7 +264,7 @@ def fix_chain_pos(chain_pos):
     :return: the fixed index
     """
     pos = chain_pos
-    if chain_pos > 6:
+    if chain_pos >= 6:
         pos += 2  # We need to skip aqua00 and aqua01, because it is used for traffic generation
 
     return (pos + FIRST_AQUA_MACHINE_IN_CHAIN) % len(AQUA_MACHINES)
@@ -434,7 +434,7 @@ def ftmb_block_def(ch_len, thrds, chain_pos, mb, perf_met):
         data_dev = '10'
 
     if chain_pos == -1 or chain_pos == (ch_len - 1):
-        dst_index = -FIRST_AQUA_MACHINE_IN_CHAIN
+        dst_index = -FIRST_AQUA_MACHINE_IN_CHAIN + 1
         src_ip_filter_index = ch_len - 2
 
     else:

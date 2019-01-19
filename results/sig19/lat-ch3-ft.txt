@@ -16,5 +16,5 @@ PMD: ixgbe_dev_link_status_print():  Port 0: Link Down
 [1;37m[INFO]  Waiting for devices to come up...[0m
 [1;37m[INFO]  Device 0 (0C:C4:7A:73:FA:72) is up: 10000 MBit/s[0m
 [1;37m[INFO]  [0;32m1 device is up.[0m[0m
-Samples: 1180, Average: 59948.2 ns, StdDev: 1504.2 ns, Quartiles: 59187.0/59875.0/60638.0 ns
+Samples: 4724, Average: 59975.7 ns, StdDev: 1165.0 ns, Quartiles: 59250.0/59963.0/60675.0 ns
 [1;37m[INFO]  Saving histogram to '../FTSFC/results/sig19/lat-ch3-ft.csv'[0m

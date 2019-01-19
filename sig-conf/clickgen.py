@@ -142,7 +142,10 @@ def gen_store(opts):
         tfgen.store(opts['o'], clicks)
 
     else:
+        clicks = None
         print("Invalid approach '{}'!".format(apr))
+
+    print("{} click scripts were generated!".format(len(clicks)))
 
 
 def main():

@@ -50,7 +50,7 @@ private:
     void _send(ServerConn& scp, TFStates& _state_to_be_sent) {
         // Send state
         auto status = write(scp.socket, CAST_TO_BYTES(_state_to_be_sent),
-                min(_state_size * sizeof(State), sizeof(TFStates)));
+                std::min(_state_size * sizeof(State), sizeof(TFStates)));
         if (status == -1) {
             LOG("Error occured during send!");
         }//if

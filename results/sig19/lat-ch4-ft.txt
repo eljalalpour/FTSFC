@@ -14,7 +14,9 @@ EAL:   probe driver: 8086:1521 net_e1000_igb
    Device 0: 0C:C4:7A:73:FA:72 ([0;32mIntel Corporation Ethernet Connection X552/X557-AT 10GBASE-T[0m)
 PMD: ixgbe_dev_link_status_print():  Port 0: Link Down
 [1;37m[INFO]  Waiting for devices to come up...[0m
+PMD: ixgbe_dev_link_status_print():  Port 0: Link Down
 [1;37m[INFO]  Device 0 (0C:C4:7A:73:FA:72) is up: 10000 MBit/s[0m
 [1;37m[INFO]  [0;32m1 device is up.[0m[0m
-Samples: 1179, Average: 76637.3 ns, StdDev: 1936.4 ns, Quartiles: 75750.0/76600.0/77438.0 ns
+PMD: ixgbe_dev_link_status_print(): Port 0: Link Up - speed 10000 Mbps - full-duplex
+Samples: 4722, Average: 76740.3 ns, StdDev: 1372.8 ns, Quartiles: 75887.0/76713.0/77563.0 ns
 [1;37m[INFO]  Saving histogram to '../FTSFC/results/sig19/lat-ch4-ft.csv'[0m

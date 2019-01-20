@@ -111,7 +111,7 @@ void FTMBSharedState::_transfer(int16_t queue, Packet* p, const Element::Port* o
 }
 
 void FTMBSharedState::postprocess(int16_t queue, Locker* locker, Packet* p, const Element::Port* output_port) {
-    if (_maxs[queue] % _batch == 0) {
+    if (_pal_generated && _maxs[queue] % _batch == 0) {
         /// create vector of clocks
         _read_vor();
     }//if

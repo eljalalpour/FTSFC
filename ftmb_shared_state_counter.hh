@@ -34,7 +34,7 @@ protected:
     virtual inline Locker* get_locker(SharedVarID, int16_t, FTMBOperation);
 };
 
-int16_t FTMBSharedStateCounter::_lock_index(SharedVarID var_id) {
+SharedVarID FTMBSharedStateCounter::_lock_index(SharedVarID var_id) {
     return var_id % (_cached_lockers_size / _sharing_level);
 }
 

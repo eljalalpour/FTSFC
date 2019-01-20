@@ -173,11 +173,6 @@ private:
 
     void _init_shared();
 
-    uint32_t last_lock_index;
-
-    String _shared_locks_element_name;
-    SharedLocks *_shared_locks;
-
     String _shared_state_element_name;
     FTMBSharedStateAddrRewriter *_shared_state;
 

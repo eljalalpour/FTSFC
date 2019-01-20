@@ -130,7 +130,6 @@ COUNTER_MB_PARAMS = ["$index"]
 
 NAT = 'nat'
 NAT_MB = 'FTMBAddrRewriter(pattern $ip_min-$ip_max - 0 0, ' \
-         'SHARED_LOCKS shared_locks, ' \
          'SHARED_STATE shared_state, ' \
          'QUEUE $queue)'
 NAT_MB_PARAMS = ['$ip_min', '$ip_max']

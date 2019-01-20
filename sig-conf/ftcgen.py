@@ -477,7 +477,7 @@ def ft_block_def(ch_len, thrds, chain_pos, mb, batch, perf_met):
         })
 
     elif ch_len == 1 and chain_pos == -1:
-        dst_index = -FIRST_AQUA_MACHINE_IN_CHAIN + 1
+        dst_index = GEN_SERVER_INDEX
         result = FTC_BLOCK_SINGLE2.format(**{
             DATA_SRC_MAC: dev_mac(ch_len, data_dev),
             DATA_DST_MAC: dev_mac(dst_index, data_dev),
@@ -502,7 +502,7 @@ def ft_block_def(ch_len, thrds, chain_pos, mb, batch, perf_met):
         })
 
     elif chain_pos == -1 or chain_pos == (ch_len - 1):
-        dst_index = -FIRST_AQUA_MACHINE_IN_CHAIN + 1
+        dst_index = GEN_SERVER_INDEX
         result = FTC_BLOCK_WITH_BUFFER.format(**{
             BATCH: batch,
             CHAIN: ch_len,

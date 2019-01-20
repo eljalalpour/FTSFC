@@ -477,12 +477,13 @@ def ft_block_def(ch_len, thrds, chain_pos, mb, batch, perf_met):
         })
 
     elif ch_len == 1 and chain_pos == -1:
+        dst_index = -FIRST_AQUA_MACHINE_IN_CHAIN + 1
         result = FTC_BLOCK_SINGLE2.format(**{
             DATA_SRC_MAC: dev_mac(ch_len, data_dev),
-            DATA_DST_MAC: dev_mac(-FIRST_AQUA_MACHINE_IN_CHAIN, data_dev),
-            DATA_DST_IP: dev_ip(-FIRST_AQUA_MACHINE_IN_CHAIN, data_dev),
+            DATA_DST_MAC: dev_mac(dst_index, data_dev),
+            DATA_DST_IP: dev_ip(dst_index, data_dev),
             DATA_SRC_NAME: dev_name(ch_len),
-            DATA_DST_NAME: dev_name(-FIRST_AQUA_MACHINE_IN_CHAIN),
+            DATA_DST_NAME: dev_name(dst_index),
             SRC_IP_FILTER: src_ip_filter(0),
         })
 

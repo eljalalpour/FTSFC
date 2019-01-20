@@ -21,10 +21,10 @@ public:
     const char *class_name() const { return "FTMBSharedStateBeamer"; }
 
 protected:
-    virtual inline Locker* get_locker(int16_t, int16_t, FTMBOperation);
+    virtual inline Locker* get_locker(SharedVarID, int16_t, FTMBOperation);
 };
 
-Locker* FTMBSharedStateBeamer::get_locker(int16_t var_id, int16_t queue, FTMBOperation op) {
+Locker* FTMBSharedStateBeamer::get_locker(SharedVarID var_id, int16_t queue, FTMBOperation op) {
     // Since there is no state sharing, no locking is required!
     return nullptr;
 }

@@ -30,15 +30,15 @@ public:
 protected:
     int _sharing_level;
 
-    inline int16_t _lock_index(int16_t index);
-    virtual inline Locker* get_locker(int16_t, int16_t, FTMBOperation);
+    inline SharedVarID _lock_index(SharedVarID);
+    virtual inline Locker* get_locker(SharedVarID, int16_t, FTMBOperation);
 };
 
-int16_t FTMBSharedStateCounter::_lock_index(int16_t index) {
-    return index % (_cached_lockers_size / _sharing_level);
+int16_t FTMBSharedStateCounter::_lock_index(SharedVarID var_id) {
+    return var_id % (_cached_lockers_size / _sharing_level);
 }
 
-Locker* FTMBSharedStateCounter::get_locker(int16_t var_id, int16_t queue, FTMBOperation op) {
+Locker* FTMBSharedStateCounter::get_locker(SharedVarID var_id, int16_t queue, FTMBOperation op) {
     if (_sharing_level == ThreadSharing1)
         return nullptr;
 

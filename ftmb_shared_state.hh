@@ -35,7 +35,7 @@ public:
 
     int initialize(ErrorHandler *);
 
-    inline Locker* preprocess(int16_t, int16_t);
+    inline Locker* preprocess(SharedVarID, int16_t);
 
     inline void postprocess(int16_t, Locker*, Packet*, const Element::Port*);
 
@@ -50,7 +50,7 @@ protected:
 
     PacketAccessLog _pals[MAX_QUEUES];
 
-    virtual inline Locker* get_locker(int16_t, int16_t, FTMBOperation);
+    virtual inline Locker* get_locker(SharedVarID, int16_t, FTMBOperation);
 
 private:
     inline void _read_vor();
@@ -67,7 +67,7 @@ private:
     void _create_packet(int, Packet**);
 };
 
-Locker* FTMBSharedState::preprocess(int16_t var_id, int16_t queue) {
+Locker* FTMBSharedState::preprocess(SharedVarID var_id, int16_t queue) {
     Locker* locker = get_locker(var_id, queue, FTMBOperation::AccessSharedVariable);
     LOCK(locker);
 
@@ -123,7 +123,7 @@ void FTMBSharedState::postprocess(int16_t queue, Locker* locker, Packet* p, cons
     _transfer(queue, p, output_port);
 }
 
-Locker* FTMBSharedState::get_locker(int16_t var_id, int16_t queue, FTMBOperation op) {
+Locker* FTMBSharedState::get_locker(SharedVarID var_id, int16_t queue, FTMBOperation op) {
     Locker* locker = nullptr;
 
     switch (op) {

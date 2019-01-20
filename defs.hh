@@ -81,15 +81,15 @@ typedef PiggybackState PiggybackMessage[MAX_CHAIN_LEN];
 #define COPY_PIGGYBACK_MESSAGE(y, x) memcpy(y, x, sizeof(PiggybackMessage))
 
 /// FTMB definitions
-typedef int16_t SharedVarID;
+typedef int32_t SharedVarID;
 typedef int64_t FTMBSeqNumber;
 typedef FTMBSeqNumber VectorOfClocks[MAX_QUEUES];
 
 typedef struct PacketAccessLog { /// We ignore p_i in FTMB's definition
-    int16_t var_id;    /// v_j in FTMB's definition
+    SharedVarID var_id;    /// v_j in FTMB's definition
     FTMBSeqNumber seq_num;       /// s_ij in FTMB's definition
 
-    inline void set(int16_t var_id, FTMBSeqNumber seq_num) {
+    inline void set(SharedVarID var_id, FTMBSeqNumber seq_num) {
         this->var_id = var_id;
         this->seq_num = seq_num;
     }

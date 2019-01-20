@@ -46,7 +46,7 @@ static inline uint32_t beamerHash(const click_ip *ipHeader, const click_udp *udp
 #endif
 }
 
-FTMBBeamerMux::FTMBBeamerMux() {}
+FTMBBeamerMux::FTMBBeamerMux() : _pal_generated(false) {}
 
 FTMBBeamerMux::~FTMBBeamerMux() { }
 

@@ -98,7 +98,7 @@ def def_parser():
                         '--debug',
                         dest='d',
                         help='Debug mode -- default False',
-                        type=bool,
+                        action='store_true',
                         default=DEFAULT_DEBUG)
 
     parser.add_argument('-o',

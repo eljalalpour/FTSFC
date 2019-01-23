@@ -4,6 +4,7 @@ local device = require "device"
 local ts     = require "timestamping"
 local stats  = require "stats"
 local hist   = require "histogram"
+local timer  = require "timer"
 
 -- set addresses here
 local SRC_MAC = "0c:c4:7a:73:fa:72"
@@ -45,6 +46,7 @@ function configure(parser)
     parser:option("-d --dev", "Device to transmit/receive from."):default(0):convert(tonumber)
     parser:option("-r --rate", "Transmit rate in Mbit/s."):default(10000):convert(tonumber)
     parser:option("-o --out", "Filename of the latency histogram."):default("histogram.csv")
+    parser:option("-s --size", "Packet size."):default(1000):convert(tonumber)
     parser:option("-d --duration", "Experiment duration (in seconds)"):default(10):convert(tonumber)
 end
 

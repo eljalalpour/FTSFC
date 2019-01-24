@@ -31,12 +31,15 @@ local DST_IP   = "192.168.1.107"
 local SRC_PORT = 1234
 local DST_PORT = 4321
 
+local RATE_LIMIT_TIMER = 0.001
+
 function configure(parser)
     parser:description("Generates UDP traffic and measure latencies. Edit the source to modify constants like IPs.")
     parser:option("-d --dev", "Device to transmit/receive from."):default(0):convert(tonumber)
     parser:option("-r --rate", "Transmit rate in Mbit/s."):default(10000):convert(tonumber)
     parser:option("-s --size", "Packet size."):default(1000):convert(tonumber)
     parser:option("-o --out", "Filename of the latency histogram."):default("latency.csv")
+    parser:option("-l --lat", "Filename of the latency over time."):default("latency-overtime.csv")
     parser:option("-d --duration", "Experiment duration (in seconds)"):default(10):convert(tonumber)
 end
 
@@ -56,7 +59,8 @@ function master(args)
             dev:getRxQueue(1),
             args.size,
             args.duration,
-            args.out)
+            args.out,
+            args.lat)
 
     mg.waitForTasks()
     mg.stop()
@@ -75,23 +79,39 @@ local function fillUdpPacket(buf, len)
     }
 end
 
-function timerSlave(txQueue, rxQueue, size, duration, out)
+local function store_latency_over_time(lat_over_time, file_path)
+    local myfile = io.open(file_path, "w")
+
+    for i=1, #lat_over_time do
+        myfile:write(tostring(lat_over_time[i])..',')
+    end
+
+    myfile:close()
+end
+
+function timerSlave(txQueue, rxQueue, size, duration, hist_out, overtime_out)
     local timestamper = ts:newUdpTimestamper(txQueue, rxQueue)
     local hist = hist:new()
-    local rateLimit = timer:new(0.001)
+    local rateLimit = timer:new(RATE_LIMIT_TIMER)
+
+    local lat_over_time = {}
 
     mg.sleepMillis(5000) -- ensure that the load task is running
     local durTimeout = timer:new(duration)
 
     while mg.running() and durTimeout:running() do
-        hist:update(timestamper:measureLatency(size, function(buf)
-            fillUdpPacket(buf, size)
-        end))
+        local lat = timestamper:measureLatency(size,
+            function(buf)
+                fillUdpPacket(buf, size)
+            end)
+        hist:update(lat)
+        lat_over_time[#lat_over_time + 1] = lat
         rateLimit:busyWait()
         rateLimit:reset()
     end
     -- print the latency stats after all the other stuff
     mg.sleepMillis(300)
     hist:print()
-    hist:save(out)
+    hist:save(hist_out)
+    store_latency_over_time(lat_over_time, overtime_out)
 end

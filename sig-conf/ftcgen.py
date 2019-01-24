@@ -477,12 +477,13 @@ def ft_block_def(ch_len, thrds, chain_pos, mb, batch, perf_met):
         })
 
     elif ch_len == 1 and chain_pos == -1:
+        dst_index = GEN_SERVER_INDEX
         result = FTC_BLOCK_SINGLE2.format(**{
             DATA_SRC_MAC: dev_mac(ch_len, data_dev),
-            DATA_DST_MAC: dev_mac(-FIRST_AQUA_MACHINE_IN_CHAIN, data_dev),
-            DATA_DST_IP: dev_ip(-FIRST_AQUA_MACHINE_IN_CHAIN, data_dev),
+            DATA_DST_MAC: dev_mac(dst_index, data_dev),
+            DATA_DST_IP: dev_ip(dst_index, data_dev),
             DATA_SRC_NAME: dev_name(ch_len),
-            DATA_DST_NAME: dev_name(-FIRST_AQUA_MACHINE_IN_CHAIN),
+            DATA_DST_NAME: dev_name(dst_index),
             SRC_IP_FILTER: src_ip_filter(0),
         })
 
@@ -501,6 +502,7 @@ def ft_block_def(ch_len, thrds, chain_pos, mb, batch, perf_met):
         })
 
     elif chain_pos == -1 or chain_pos == (ch_len - 1):
+        dst_index = GEN_SERVER_INDEX
         result = FTC_BLOCK_WITH_BUFFER.format(**{
             BATCH: batch,
             CHAIN: ch_len,
@@ -511,9 +513,9 @@ def ft_block_def(ch_len, thrds, chain_pos, mb, batch, perf_met):
             SRC_IP_FILTER: src_ip_filter(ch_len - 2),
 
             DATA_SRC_MAC: dev_mac(ch_len - 1, data_dev),
-            DATA_DST_MAC: dev_mac(-FIRST_AQUA_MACHINE_IN_CHAIN, data_dev),
+            DATA_DST_MAC: dev_mac(dst_index, data_dev),
             DATA_SRC_IP: dev_ip(ch_len - 1, data_dev),
-            DATA_DST_IP: dev_ip(-FIRST_AQUA_MACHINE_IN_CHAIN, data_dev),
+            DATA_DST_IP: dev_ip(dst_index, data_dev),
 
             STATE_SRC_MAC: dev_mac(ch_len - 1, state_dev),
             STATE_DST_MAC: dev_mac(0, state_dev),
@@ -521,7 +523,7 @@ def ft_block_def(ch_len, thrds, chain_pos, mb, batch, perf_met):
             STATE_DST_IP: dev_ip(0, state_dev),
 
             DATA_SRC_NAME: dev_name(ch_len - 1),
-            DATA_DST_NAME: dev_name(-FIRST_AQUA_MACHINE_IN_CHAIN),
+            DATA_DST_NAME: dev_name(dst_index),
 
             STATE_SRC_NAME: dev_name(ch_len - 1),
             STATE_DST_NAME: dev_name(0),

@@ -89,7 +89,6 @@ FTMBAddrRewriter::cast(const char *n)
 
 void FTMBAddrRewriter::_init_shared() {
     Router *r = this->router();
-    _shared_locks = (SharedLocks *)(r->find(_shared_locks_element_name));
     _shared_state = (FTMBSharedStateAddrRewriter *)(r->find(_shared_state_element_name));
 }
 
@@ -102,7 +101,6 @@ FTMBAddrRewriter::configure(Vector<String> &conf, ErrorHandler *errh)
 
     if (Args(this, errh).bind(conf)
                 .read("REPLY_ANNO", has_reply_anno, AnnoArg(1), reply_anno)
-                .read("SHARED_LOCKS", _shared_locks_element_name)
                 .read("SHARED_STATE", _shared_state_element_name)
                 .read("QUEUE", _queue)
                 .consume() < 0)
@@ -166,8 +164,8 @@ FTMBAddrRewriter::push(int port, Packet *p_in)
     {/// Critical section
         /// A - LOCK
         /// lock the corresponding reader lock
-        last_lock_index = _map.bucket(flowid);
-        locker = _shared_state->preprocess(last_lock_index, _queue);
+        auto bucket = _map.bucket(flowid);
+        locker = _shared_state->preprocess(bucket, _queue);
 
         m = _map.get(flowid);
 
@@ -180,8 +178,8 @@ FTMBAddrRewriter::push(int port, Packet *p_in)
 
             /// B - LOCK
             /// lock the corresponding reader lock
-            last_lock_index = _map.bucket(rflowid);
-            locker = _shared_state->preprocess(last_lock_index, _queue);
+            bucket = _map.bucket(rflowid);
+            locker = _shared_state->preprocess(bucket, _queue);
 
             /// Read shared state
             m = _map.get(rflowid);
@@ -199,12 +197,10 @@ FTMBAddrRewriter::push(int port, Packet *p_in)
 
                 /// C - LOCK
                 /// lock the corresponding lock
-                last_lock_index = _map.bucket(rewritten_flowid);
-                locker = _shared_state->preprocess(last_lock_index, _queue);
+                bucket = _map.bucket(rewritten_flowid);
+                locker = _shared_state->preprocess(bucket, _queue);
 
                 m = FTMBAddrRewriter::add_flow(0, flowid, rewritten_flowid, port);
-//                _shared_locks->extend_size(_map.bucket_count());
-
             }//if
             if (!m) {
                 /// C - UNLOCK

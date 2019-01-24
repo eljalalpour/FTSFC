@@ -402,7 +402,7 @@ def nf_block_def(ch_len, thrds, chain_pos, mb, perf_met):
         mb_params_str = ', ' + ', '.join(mb_params)
 
     if chain_pos == -1 or chain_pos == (ch_len - 1):
-        dst_index = -FIRST_AQUA_MACHINE_IN_CHAIN
+        dst_index = GEN_SERVER_INDEX
         src_ip_filter_index = ch_len - 2
 
     else:

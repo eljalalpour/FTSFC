@@ -99,7 +99,7 @@ def def_parser():
                         '--debug',
                         dest='d',
                         help='Debug mode -- default False',
-                        type=bool,
+                        action='store_true',
                         default=DEFAULT_DEBUG)
 
     parser.add_argument('-o',
@@ -123,7 +123,8 @@ def parse_args(parser):
 
 def gen_store(opts):
     apr = opts['a'].lower()
-    print("Generating for approach '{}' for metric '{}' for MB(s) '{}'".format(apr, opts['p'], opts['m']))
+    print("Generating for approach '{}', metric '{}', chain size {}, and MB(s) '{}'".format(
+        apr, opts['p'], opts['c'], opts['m']))
 
     if apr == FTC:
         clicks = ftcgen.generate(opts['c'], opts['t'], opts['m'], opts['l'], opts['f'], opts['b'], opts['p'], opts['d'])
@@ -142,7 +143,10 @@ def gen_store(opts):
     #     tfgen.store(opts['o'], clicks)
 
     else:
+        clicks = None
         print("Invalid approach '{}'!".format(apr))
+
+    print("{} click scripts were generated!".format(len(clicks)))
 
 
 def main():

@@ -96,7 +96,7 @@ function timerSlave(txQueue, rxQueue, size, duration, hist_out, overtime_out)
 
     local lat_over_time = {}
 
-    mg.sleepMillis(2000) -- ensure that the load task is running
+    mg.sleepMillis(5000) -- ensure that the load task is running
     local durTimeout = timer:new(duration)
 
     while mg.running() and durTimeout:running() do

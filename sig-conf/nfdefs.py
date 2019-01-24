@@ -91,6 +91,9 @@ COUNTER_MB_PARAMS = ["$index"]
 BEAMER_MUX_MB = 'BeamerMux(RING_SIZE 200000, MAX_STATES 800)'
 BEAMER_MUX_MB_PARAMS = []
 
+MONITOR_MB = 'IPRateMonitor(PACKETS, 0.5, 1000, 600);'
+MONITOR_MB_PARAMS = []
+
 # NAT_MB_DEF = 'nat::AddrRewriter({})'
 # NAT_MB = '[$port]nat[$port]'
 NAT_MB = 'AddrRewriter(pattern $ip_min-$ip_max - 0 0, SHARED_LOCKS shared_locks)'

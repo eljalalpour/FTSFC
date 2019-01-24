@@ -11,13 +11,13 @@ import tfgen
 NF = "nf"
 FTC = "ftc"
 FTMB = "ftmb"
-TF = "tf"
+# TF = "tf"
 
 APPROACHES = [
     NF,
     FTC,
     FTMB,
-    TF,
+    # TF,
 ]
 
 DEFAULT_FAILS = 1
@@ -53,7 +53,8 @@ def def_parser():
     parser.add_argument('-m',
                         '--middlebox',
                         dest='m',
-                        help='Middlebox -- select among counter, lb, nat -- default {}'.format(COUNTER),
+                        help='Middlebox -- select among ' + ', '.join(MBS) +
+                             ' -- default {}'.format(DEFAULT_MB),
                         nargs='+',
                         type=str,
                         default=[COUNTER])
@@ -136,9 +137,9 @@ def gen_store(opts):
         clicks = ftmbgen.generate(opts['c'], opts['t'], opts['m'], opts['l'], opts['b'], opts['p'], opts['d'])
         ftmbgen.store(opts['o'], clicks)
 
-    elif apr == TF:
-        clicks = tfgen.generate(opts['c'], opts['t'], opts['m'], opts['l'], opts['f'], opts['b'], opts['p'], opts['d'])
-        tfgen.store(opts['o'], clicks)
+    # elif apr == TF:
+    #     clicks = tfgen.generate(opts['c'], opts['t'], opts['m'], opts['l'], opts['f'], opts['b'], opts['p'])
+    #     tfgen.store(opts['o'], clicks)
 
     else:
         print("Invalid approach '{}'!".format(apr))

@@ -50,6 +50,15 @@ CPUS = 8
 COUNTER = 'counter'
 LB = 'lb'
 NAT = 'nat'
+MONITOR = 'monitor'
+
+MBS = [
+    COUNTER,
+    LB,
+    NAT,
+    MONITOR,
+]
+
 
 IN_TR_SRC_IP_MIN = "1.0.0.0"
 IN_TR_SRC_IP_MAX = "1.0.255.255"

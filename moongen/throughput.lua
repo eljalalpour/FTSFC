@@ -82,7 +82,7 @@ function loadSlave(queue, rxDev, size, duration)
     local txCtr = stats:newDevTxCounter(queue, "plain")
     local rxCtr = stats:newDevRxCounter(rxDev, "plain")
 
-    mg.sleepMillis(5000) -- ensure that the load task is running
+    mg.sleepMillis(2000) -- ensure that the load task is running
 
     --local thr_hist = hist:new()
     local dur_timeout = timer:new(duration)

@@ -8,10 +8,11 @@ fi
 MB=$1
 APPR=$2
 THRD=$3
+
 START=1
-STEP=1
-END=20
-LIMIT=9999
+END=8
+RATE_STEP=32
+MAX_LIMIT=9999
 
 SAVE_PATH='/home/eghaznavi/Milad/evaluate/sig19'
 
@@ -24,15 +25,15 @@ DURATION=10
 RED='\033[0;31m'
 NC='\033[0m' # No Color
 
-for rate in $(seq $START $STEP $END);
+for rate in $(seq $START $END);
 do
-        mbps=$(( rate * PKT_SIZE ))
-        if [[ ${mbps} -gt ${LIMIT} ]]
+        mbps=$(( rate * RATE_STEP ))
+        if [[ ${mbps} -gt ${MAX_LIMIT} ]]
         then break; fi
 
-        echo -e "${RED}===========================================${NC}"
-        echo -e "${RED}   Running for rate ${mbps} Mbps...${NC}"
-        echo -e "${RED}===========================================${NC}"
+        echo -e "${RED}===============================================================${NC}"
+        echo -e "${RED} ${rate} out of ${END} - Running for rate ${mbps} Mbps...${NC}"
+        echo -e "${RED}===============================================================${NC}"
 
         PRE_NAME="$SAVE_PATH/lat-${MB}-${APPR}-t-${THRD}-r-${mbps}-p-${PKT_SIZE}"
 

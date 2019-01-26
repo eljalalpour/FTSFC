@@ -51,12 +51,14 @@ COUNTER = 'counter'
 LB = 'lb'
 NAT = 'nat'
 MONITOR = 'monitor'
+STATE_GEN = 'state'
 
 MBS = [
     COUNTER,
     LB,
     NAT,
     MONITOR,
+    STATE_GEN
 ]
 
 

@@ -71,6 +71,14 @@ def shared_state_declare(ch_len, chain_pos, f, mb, sharing_level):
             LOCKS: LB_LOCKS,
         })
 
+    elif mb == STATE_GEN:
+        return SHARED_STATE_FORMAT_STR.format(**{
+            CHAIN: ch_len,
+            ID: chain_pos,
+            F: f,
+            LOCKS: LB_LOCKS,
+        })
+
     return None
 
 
@@ -334,6 +342,9 @@ def gen_mb_params_str(thrds, chain_pos, thrd, mb):
     elif mb == LB:
         return ''
 
+    elif mb == STATE_GEN:
+        return ''
+
     return thrd
 
 
@@ -433,6 +444,9 @@ def middlebox_declare(mb):
     elif mb == LB:
         result = BEAMER_MUX_MB
 
+    elif mb == STATE_GEN:
+        result = STATE_GEN_MB
+
     return result
 
 
@@ -460,6 +474,9 @@ def ft_block_def(ch_len, thrds, chain_pos, mb, batch, perf_met):
         mb_params = NAT_MB_PARAMS
     elif mb == LB:
         mb_params = BEAMER_MUX_MB_PARAMS
+
+    elif mb == STATE_GEN:
+        mb_params = STATE_GEN_MB_PARAMS
 
     mb_params_str = ''
     if mb_params is not None and len(mb_params) > 0:

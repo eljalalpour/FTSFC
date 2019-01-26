@@ -118,6 +118,9 @@ def parse_args(parser):
     if not os.path.isdir(opts['o']):
         raise ValueError("Output folder '{}' does not exist!".format(opts['i']))
 
+    if opts['m'] == STATE_GEN and opts['a'] != FTC:
+        raise ValueError("{} is only supported for {}".format(STATE_GEN, FTC))
+
     return opts
 
 

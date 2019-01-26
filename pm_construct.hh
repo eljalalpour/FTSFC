@@ -3,7 +3,7 @@
 #include "defs.hh"
 #include <click/config.h>
 #include <click/element.hh>
-#include "../ft_shared_state.hh"
+#include "ft_shared_state.hh"
 
 CLICK_DECLS
 

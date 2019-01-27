@@ -28,7 +28,7 @@ int NFStateGen::configure(Vector<String> &conf, ErrorHandler *errh) {
                 .complete() < 0)
         return -1;
 
-    DEBUG("NFStateGen state size is %d!\n", _state_size);
+    LOG("NFStateGen state size is %d!\n", _state_size);
 
     _init_state();
 

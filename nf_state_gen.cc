@@ -12,12 +12,12 @@ NFStateGen::NFStateGen () { };
 NFStateGen::~NFStateGen() { };
 
 void NFStateGen::_init_state() {
-    vect1.reserve(_state_size);
-    vect2.reserve(_state_size);
+    _vect1.reserve(_state_size);
+    _vect2.reserve(_state_size);
 
     for (int i = 0; i < _state_size; ++i) {
-        vect1.emplace_back(1);
-        vect2.emplace_back(2);
+        _vect1.emplace_back(1);
+        _vect2.emplace_back(2);
     }//for
 }
 
@@ -36,7 +36,7 @@ int NFStateGen::configure(Vector<String> &conf, ErrorHandler *errh) {
 }
 
 Packet *NFStateGen::simple_action(Packet *p) {
-    std::memcpy(const_cast<int*>(vect2.data()), vect1.data(), vect2.size()*sizeof(int));
+    std::memcpy(const_cast<int*>(_vect2.data()), _vect1.data(), _vect2.size()*sizeof(int));
 
     return p;
 }

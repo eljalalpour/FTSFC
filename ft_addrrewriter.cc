@@ -212,7 +212,8 @@ FTAddrRewriter::push(int port, Packet *p_in)
             }//if
             if (!m) {
                 /// Capture state
-                _shared_state->construct_piggyback_message(p, _queue);
+                if (new_flow)
+                    _shared_state->construct_piggyback_message(p, _queue);
 
                 /// C - UNLOCK
                 _shared_locks->unlock(last_lock_index);

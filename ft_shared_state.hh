@@ -21,6 +21,8 @@ CLICK_DECLS
 //#define ENABLE_SINGLE_LOCK
 #define ENABLE_MULTI_LOCKS
 
+#define DEFAULT_PRE_MB_IS_STATELESS false
+
 enum Operation {
     ProcessPiggybackMessage,
     PacketTransaction,
@@ -34,6 +36,11 @@ private:
     int _id;
     int _failure_count;
     int _chain_len;
+
+    // This shows if the previous middlebox M is stateless, there is no need to process M's state
+    // Can be changed to get a list of stateless middleboxes
+    bool _pre_mb_is_stateless;
+
     std::vector<int> _to_copy_indices;
     State _inoperation;
     Util _util;

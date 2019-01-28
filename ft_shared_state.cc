@@ -9,6 +9,7 @@ CLICK_DECLS
 
 FTSharedState::FTSharedState() {
     _util.init(_inoperation);
+    _pre_mb_is_stateless = DEFAULT_PRE_MB_IS_STATELESS;
 
 #ifdef ENABLE_SINGLE_LOCK
     _commit_timestamp = 0;
@@ -26,7 +27,8 @@ void FTSharedState::process_piggyback_message(Packet *p, PiggybackMessage& log_t
 
     // Processing the secondary state set
     //COPY_PIGGYBACK_MESSAGE(&log_table, msg);
-    for (int i = 0; i < _failure_count; ++i) {
+    int start = (_pre_mb_is_stateless) ? 1 : 0;
+    for (int i = start; i < _failure_count; ++i) {
         log_table[_to_copy_indices[i]] = (*msg[_to_copy_indices[i]]);
     }//for
 
@@ -73,6 +75,7 @@ int FTSharedState::configure(Vector <String> &conf, ErrorHandler *errh) {
                 .read("CHAIN", _chain_len)
                 .read("ID", _id)
                 .read("F", _failure_count)
+                .read_or_set("PREV_MB_IS_STATELESS", _pre_mb_is_stateless, DEFAULT_PRE_MB_IS_STATELESS)
                 .consume() < 0)
         return -1;
 

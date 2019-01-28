@@ -172,6 +172,8 @@ FTAddrRewriter::push(int port, Packet *p_in)
 
         m = _map.get(flowid);
 
+        bool new_flow = false;
+
         if (!m) {
             /// A - UNLOCK
             /// unlock the corresponding reader lock
@@ -206,6 +208,7 @@ FTAddrRewriter::push(int port, Packet *p_in)
                 m = FTAddrRewriter::add_flow(0, flowid, rewritten_flowid, port);
 //                _shared_locks->extend_size(_map.bucket_count());
 
+                new_flow = true;
             }//if
             if (!m) {
                 /// Capture state
@@ -231,7 +234,8 @@ FTAddrRewriter::push(int port, Packet *p_in)
         mf->change_expiry_by_timeout(_heap, click_jiffies(), _timeouts);
 
         /// Capture state
-        _shared_state->construct_piggyback_message(p, _queue);
+        if (new_flow)
+            _shared_state->construct_piggyback_message(p, _queue);
 
         /// A, B, C - WRITER UNLOCK
         /// unlock the corresponding writer lock

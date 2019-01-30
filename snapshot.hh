@@ -4,7 +4,6 @@
 #include <click/config.h>
 #include <click/element.hh>
 #include <click/timestamp.hh>
-#include "shared_state.hh"
 
 CLICK_DECLS
 
@@ -16,12 +15,8 @@ class Snapshot : public Element {
 private:
     long _period; // In mili-seconds
     long _delay; // In mili-seconds
-    long _per_packet_latency; // In micro-seconds
     long _loop_count;
     bool _first_packet_seen;
-
-    SharedState* _shared_state;
-    inline void _init_shared_state();
 
     std::chrono::time_point<std::chrono::high_resolution_clock> _last_snapshot_timestamp;
 

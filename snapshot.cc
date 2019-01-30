@@ -1,4 +1,3 @@
-#include "shared_state.hh"
 #include <click/config.h>
 #include <click/router.hh>
 #include <click/args.hh>
@@ -29,15 +28,7 @@ int Snapshot::configure(Vector<String> &conf, ErrorHandler *errh) {
     _per_packet_latency *= US2NS;
     _first_packet_seen = false;
 
-    _loop_count = Util::find_dummy_loop_count(_per_packet_latency);
-    _init_shared_state();
-
     return 0;
-}
-
-void Snapshot::_init_shared_state() {
-    Router *r = this->router();
-    _shared_state = (SharedState *)(r->find("array"));
 }
 
 Packet *Snapshot::simple_action(Packet *p) {
@@ -53,8 +44,6 @@ Packet *Snapshot::simple_action(Packet *p) {
         Util::nsleep(_delay);
         _last_snapshot_timestamp = CLOCK_NOW;
     }//if
-
-    Util::dummy_loop(_loop_count);
 
     DEBUG("End Snapshot");
     DEBUG("--------------------");

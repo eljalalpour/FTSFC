@@ -32,7 +32,8 @@ PERFORMANCE_METRICS = [
 DEFAULT_PERF_METRIC = THROUGHPUT_METRIC
 DEFAULT_DEBUG = False
 DEFAULT_MB = COUNTER
-
+DEFAULT_PERIOD = 200
+DEFAULT_DELAY = 6
 
 def def_parser():
     parser = argparse.ArgumentParser(description="Generating click configurations")
@@ -95,6 +96,20 @@ def def_parser():
                         type=str,
                         default=DEFAULT_PERF_METRIC)
 
+    parser.add_argument('-q',
+                        '--perid',
+                        dest='q',
+                        help='period for snapshot MB -- default {}'.format(DEFAULT_PERIOD),
+                        type=int,
+                        default=DEFAULT_PERIOD)
+
+    parser.add_argument('-e',
+                        '--delay',
+                        dest='e',
+                        help='delay for snapshot -- default {}'.format(DEFAULT_DELAY),
+                        type=int,
+                        default=DEFAULT_DELAY)
+
     parser.add_argument('-d',
                         '--debug',
                         dest='d',
@@ -137,7 +152,7 @@ def gen_store(opts):
         ftcgen.store(opts['o'], clicks)
 
     elif apr == NF:
-        clicks = nfgen.generate(opts['c'], opts['t'], opts['m'], opts['l'], opts['p'], opts['d'])
+        clicks = nfgen.generate(opts['c'], opts['t'], opts['m'], opts['l'], opts['p'], opts['q'], opts['e'], opts['d'])
         nfgen.store(opts['o'], clicks)
 
     elif apr == FTMB:

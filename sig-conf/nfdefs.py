@@ -101,7 +101,10 @@ NAT_MB_PARAMS = ['$ip_min', '$ip_max']
 # NAT_MB_PARAMS_FORMAT = 'pattern {IP_MIN}-{IP_MAX} - {PORT} {PORT}'
 # NAT_MB_PARAMS_FORMAT = 'pattern {IP_MIN}-{IP_MAX} - 0 0'
 
-SNAPSHOT_MB = 'Snapshot(PERIOD 200, DELAY 6)'
+SNAPSHOT_MB = 'Snapshot(PERIOD {PERIOD}, DELAY {DELAY})'
 SNAPSHOT_MB_PARAMS = []
+
+PERIOD = 'PERIOD'
+DELAY = 'DELAY'
 
 NF_OUTPUT_NAME_FORMAT_STR = 'nf-{}.click'

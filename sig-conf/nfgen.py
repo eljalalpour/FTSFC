@@ -364,7 +364,7 @@ def links(thrds, mb, debug):
     return '\n'.join(ll)
 
 
-def middlebox_declare(mb):
+def middlebox_declare(mb, period, delay):
     result = None
     if mb == NAT:
         result = NAT_MB
@@ -375,12 +375,15 @@ def middlebox_declare(mb):
         result = COUNTER_MB
 
     elif mb == SNAPSHOT:
-        result = SNAPSHOT_MB
+        result = SNAPSHOT_MB.format(**{
+            PERIOD: period,
+            DELAY: delay
+        })
 
     return result
 
 
-def nf_block_def(ch_len, thrds, chain_pos, mb, perf_met):
+def nf_block_def(ch_len, thrds, chain_pos, mb, perf_met, period, delay):
     """
     format a block declare
     :return: formatted string of ft block
@@ -418,7 +421,7 @@ def nf_block_def(ch_len, thrds, chain_pos, mb, perf_met):
     result = NF_BLOCK.format(**{
         SRC_IP_FILTER: src_ip_filter(src_ip_filter_index),
 
-        MB: middlebox_declare(mb),
+        MB: middlebox_declare(mb, period, delay),
         MB_PARAM: mb_params_str,
 
         DATA_SRC_MAC: dev_mac(chain_pos, data_dev),
@@ -431,7 +434,7 @@ def nf_block_def(ch_len, thrds, chain_pos, mb, perf_met):
     return result
 
 
-def nf_click(ch_len, chain_pos, thrds, mb, sharing_level, perf_met, debug):
+def nf_click(ch_len, chain_pos, thrds, mb, sharing_level, perf_met, period, delay, debug):
     """
     Click code for FTC
     :return: Click code in string
@@ -447,7 +450,9 @@ def nf_click(ch_len, chain_pos, thrds, mb, sharing_level, perf_met, debug):
                                    thrds,
                                    chain_pos,
                                    mb,
-                                   perf_met),
+                                   perf_met,
+                                   period,
+                                   delay),
 
         FROM_DEVICE_DECLARES: from_dev_declares(chain_pos,
                                                 thrds,
@@ -472,7 +477,7 @@ def nf_click(ch_len, chain_pos, thrds, mb, sharing_level, perf_met, debug):
     return NF.format(**string_map)
 
 
-def generate(ch_len, thrds, mb, sharing_level, perf_met, debug=False):
+def generate(ch_len, thrds, mb, sharing_level, perf_met, period, delay, debug=False):
     clicks = []
     if len(mb) == 1:
         mb *= ch_len
@@ -480,7 +485,7 @@ def generate(ch_len, thrds, mb, sharing_level, perf_met, debug=False):
         raise ValueError("The number of middleboxes list must be either 1 or equal to chain length!")
 
     for chain_pos in range(ch_len):
-        clicks.append(nf_click(ch_len, chain_pos, thrds, mb[chain_pos], sharing_level, perf_met, debug))
+        clicks.append(nf_click(ch_len, chain_pos, thrds, mb[chain_pos], sharing_level, perf_met, period, delay, debug))
 
     return clicks
 

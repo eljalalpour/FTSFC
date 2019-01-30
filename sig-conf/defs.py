@@ -53,12 +53,15 @@ NAT = 'nat'
 MONITOR = 'monitor'
 STATE_GEN = 'state'
 
+SNAPSHOT = 'snapshot'
+
 MBS = [
     COUNTER,
     LB,
     NAT,
     MONITOR,
-    STATE_GEN
+    STATE_GEN,
+    SNAPSHOT
 ]
 
 

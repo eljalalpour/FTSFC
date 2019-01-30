@@ -121,6 +121,9 @@ def parse_args(parser):
     if opts['m'] == STATE_GEN and opts['a'] != FTC:
         raise ValueError("{} is only supported for {}".format(STATE_GEN, FTC))
 
+    if opts['m'] == SNAPSHOT and opts['a'] != NF:
+        raise ValueError("{} is only supported for {}".format(SNAPSHOT, NF))
+
     return opts
 
 

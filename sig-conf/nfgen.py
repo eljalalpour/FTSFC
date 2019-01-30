@@ -374,6 +374,9 @@ def middlebox_declare(mb):
     elif mb == COUNTER:
         result = COUNTER_MB
 
+    elif mb == SNAPSHOT:
+        result = SNAPSHOT_MB
+
     return result
 
 
@@ -396,6 +399,9 @@ def nf_block_def(ch_len, thrds, chain_pos, mb, perf_met):
 
     elif mb == NAT:
         mb_params = NAT_MB_PARAMS
+
+    elif mb == SNAPSHOT:
+        mb_params = SNAPSHOT_MB_PARAMS
 
     mb_params_str = ''
     if mb_params is not None and len(mb_params) > 0:

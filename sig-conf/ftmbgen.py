@@ -480,7 +480,7 @@ def ftmb_block_def(ch_len, thrds, chain_pos, mb, perf_met, period, delay):
     elif mb == LB:
         mb_params = BEAMER_MUX_MB_PARAMS
 
-    elif mb == COUNTER:
+    elif mb == SNAPSHOT:
         mb_params = SNAPSHOT_MB_PARAMS
 
     else:

@@ -104,7 +104,4 @@ NAT_MB_PARAMS = ['$ip_min', '$ip_max']
 SNAPSHOT_MB = 'Snapshot(PERIOD {PERIOD}, DELAY {DELAY})'
 SNAPSHOT_MB_PARAMS = []
 
-PERIOD = 'PERIOD'
-DELAY = 'DELAY'
-
 NF_OUTPUT_NAME_FORMAT_STR = 'nf-{}.click'

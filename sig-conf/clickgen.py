@@ -131,13 +131,13 @@ def parse_args(parser):
     opts = vars(parser.parse_args(sys.argv[1:]))
 
     if not os.path.isdir(opts['o']):
-        raise ValueError("Output folder '{}' does not exist!".format(opts['i']))
+        raise ValueError("Output folder '{}' does not exist!".format(opts['o']))
 
     if opts['m'] == STATE_GEN and opts['a'] != FTC:
         raise ValueError("{} is only supported for {}".format(STATE_GEN, FTC))
 
-    if opts['m'] == SNAPSHOT and opts['a'] != NF:
-        raise ValueError("{} is only supported for {}".format(SNAPSHOT, NF))
+    if opts['m'] == SNAPSHOT and (opts['a'] != NF or opts['a'] != FTMB):
+        raise ValueError("{} is only supported for {} and {}".format(SNAPSHOT, NF, FTMB))
 
     return opts
 
@@ -156,7 +156,7 @@ def gen_store(opts):
         nfgen.store(opts['o'], clicks)
 
     elif apr == FTMB:
-        clicks = ftmbgen.generate(opts['c'], opts['t'], opts['m'], opts['l'], opts['b'], opts['p'], opts['d'])
+        clicks = ftmbgen.generate(opts['c'], opts['t'], opts['m'], opts['l'], opts['b'], opts['p'], opts['q'], opts['e'], opts['d'])
         ftmbgen.store(opts['o'], clicks)
 
     # elif apr == TF:

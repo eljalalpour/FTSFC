@@ -86,6 +86,17 @@ def shared_state_declare(chain_pos, thrds, mb, sharing_level, batch, perf_met):
             DATA_DST_IP: dev_ip(dst_index, data_dev),
         })
 
+    elif mb == SNAPSHOT:
+        return SHARED_STATE_COUNTER_FORMAT_STR.format(**{
+            LOCKS: COUNTER_LOCKS,
+            BATCH: batch,
+            QUEUES: thrds,
+            SHARING_LEVEL: sharing_level,
+            DATA_SRC_MAC: dev_mac(chain_pos, data_dev),
+            DATA_DST_MAC: dev_mac(dst_index, data_dev),
+            DATA_DST_IP: dev_ip(dst_index, data_dev),
+        })
+
     return None
 
 
@@ -336,6 +347,9 @@ def gen_mb_params_str(thrds, chain_pos, thrd, mb):
     elif mb == LB:
         return ''
 
+    elif mb == SNAPSHOT:
+        return thrd
+
     return thrd
 
 
@@ -407,7 +421,7 @@ def links(ch_len, chain_pos, thrds, debug):
     return '\n'.join(ll)
 
 
-def middlebox_declare(mb):
+def middlebox_declare(mb, period, delay):
     result = None
     if mb == NAT:
         result = NAT_MB
@@ -418,10 +432,16 @@ def middlebox_declare(mb):
     elif mb == LB:
         result = BEAMER_MUX_MB
 
+    elif mb == SNAPSHOT:
+        result = SNAPSHOT_MB.format(**{
+            PERIOD: period,
+            DELAY: delay
+        })
+
     return result
 
 
-def ftmb_block_def(ch_len, thrds, chain_pos, mb, perf_met):
+def ftmb_block_def(ch_len, thrds, chain_pos, mb, perf_met, period, delay):
     """
     format a block declare
     :param chain_pos: a number denoting the position of middlebox in the chain
@@ -460,6 +480,12 @@ def ftmb_block_def(ch_len, thrds, chain_pos, mb, perf_met):
     elif mb == LB:
         mb_params = BEAMER_MUX_MB_PARAMS
 
+    elif mb == COUNTER:
+        mb_params = SNAPSHOT_MB_PARAMS
+
+    else:
+        mb_params = None
+
     mb_params_str = ''
     if mb_params is not None and len(mb_params) > 0:
         mb_params_str = ', ' + ', '.join(mb_params)
@@ -467,7 +493,7 @@ def ftmb_block_def(ch_len, thrds, chain_pos, mb, perf_met):
     return FTMB_MASTER_BLOCK.format(**{
             SRC_IP_FILTER: src_ip_filter(src_ip_filter_index),
 
-            MB: middlebox_declare(mb),
+            MB: middlebox_declare(mb, period, delay),
             MB_PARAM: mb_params_str,
 
             DATA_SRC_MAC: dev_mac(chain_pos, data_dev),
@@ -478,7 +504,7 @@ def ftmb_block_def(ch_len, thrds, chain_pos, mb, perf_met):
         })
 
 
-def ftmb_click(ch_len, chain_pos, thrds, mb, sharing_level, batch, perf_met, debug):
+def ftmb_click(ch_len, chain_pos, thrds, mb, sharing_level, batch, perf_met, period, delay, debug):
     """
     Click code for FTMB
     :return: Click code in string
@@ -495,7 +521,9 @@ def ftmb_click(ch_len, chain_pos, thrds, mb, sharing_level, batch, perf_met, deb
                                        thrds,
                                        chain_pos,
                                        mb,
-                                       perf_met),
+                                       perf_met,
+                                       period,
+                                       delay),
 
         FROM_DEVICE_DECLARES: from_dev_declares(chain_pos,
                                                 thrds,
@@ -522,7 +550,7 @@ def ftmb_click(ch_len, chain_pos, thrds, mb, sharing_level, batch, perf_met, deb
     return FTMB.format(**string_map)
 
 
-def generate(ch_len, thrds, mb, sharing_level, batch, perf_met, debug=False):
+def generate(ch_len, thrds, mb, sharing_level, batch, perf_met, period, delay, debug=False):
     clicks = []
     ch_len *= 2
     if len(mb) == 1:
@@ -531,7 +559,7 @@ def generate(ch_len, thrds, mb, sharing_level, batch, perf_met, debug=False):
         raise ValueError("The number of middleboxes must be either 1 or equal to chain length!")
 
     for chain_pos in range(ch_len):
-        clicks.append(ftmb_click(ch_len, chain_pos, thrds, mb[chain_pos // 2], sharing_level, batch, perf_met, debug))
+        clicks.append(ftmb_click(ch_len, chain_pos, thrds, mb[chain_pos // 2], sharing_level, batch, perf_met, period, delay, debug))
 
     return clicks
 

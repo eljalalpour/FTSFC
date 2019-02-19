@@ -111,9 +111,12 @@ void PacketDrainer::push(int, Packet* p) {
     for (int i = 0; i < _packets; ++i) {
         output(0).push(_gen_packets[i]);
     }//for
-    auto diff = CLOCK_NOW - before;
+    auto diff = (CLOCK_NOW - before).count();
 
-    _measured.push_back(diff.count());
+    auto before2 = CLOCK_NOW;
+    auto diff2 = (CLOCK_NOW - before2).count();
+
+    _measured.push_back(diff - diff2);
 
     p->kill();
 }

@@ -1,6 +1,14 @@
 #include <click/config.h>
 #include <click/router.hh>
 #include <click/args.hh>
+#include <fstream>
+#include <click/packet_anno.hh>
+#include <click/standard/alignmentinfo.hh>
+#include <click/etheraddress.hh>
+#include <clicknet/ether.h>
+#include <clicknet/ip.h>
+#include <clicknet/udp.h>
+#include <click/straccum.hh>
 #include "packet_drainer.hh"
 
 CLICK_DECLS
@@ -21,15 +29,15 @@ PacketDrainer::PacketDrainer () {
 PacketDrainer::~PacketDrainer() { };
 
 void PacketDrainer::_setup_packet() {
-    _packet = Packet::make(pkt_size);
-    memcpy(_packet->data(), &_ethh, MAC_HEAD_SIZE);
-    click_ip *ip = reinterpret_cast<click_ip *>(_packet->data() + MAC_HEAD_SIZE);
+    _packet = Packet::make(_packet_size);
+    memcpy(CAST_AWAY_PACKET_DATA(_packet), &_ethh, MAC_HEAD_SIZE);
+    click_ip *ip = reinterpret_cast<click_ip *>(CAST_AWAY_PACKET_DATA(_packet) + MAC_HEAD_SIZE);
     click_udp *udp = reinterpret_cast<click_udp *>(ip + UDP_HEAD_OFFSET_AFTER_MAC_HEAD);
 
     // set up IP header
     ip->ip_v = 4;
     ip->ip_hl = sizeof(click_ip) >> 2;
-    ip->ip_len = htons(pkt_size - MAC_HEAD_SIZE);
+    ip->ip_len = htons(_packet_size - MAC_HEAD_SIZE);
     ip->ip_id = 0;
     ip->ip_p = IP_PROTO_UDP;
     ip->ip_src = _sipaddr;
@@ -50,14 +58,14 @@ void PacketDrainer::_setup_packet() {
     udp->uh_ulen = htons(len);
     udp->uh_sum = 0;
 
-    auto payload_offset = MAC_HEAD_SIZE + UDP_HEAD_OFFSET_AFTER_MAC_HEAD + sizeof(*click_udp);
+    auto payload_offset = MAC_HEAD_SIZE + UDP_HEAD_OFFSET_AFTER_MAC_HEAD + sizeof(click_udp);
 
     String _data = "Random bullshit in a packet, at least 64 bytes long. Well, now it is.";
     StringAccum sa;
     while (sa.length() < _packet_size - payload_offset)
         sa << _data;
 
-    memcpy(_packet->data() + payload_offset, sa.data(), len);
+    memcpy(CAST_AWAY_PACKET_DATA(_packet) + payload_offset, sa.data(), len);
 }
 
 int PacketDrainer::configure(Vector<String> &conf, ErrorHandler *errh) {
@@ -79,7 +87,7 @@ int PacketDrainer::configure(Vector<String> &conf, ErrorHandler *errh) {
     return 0;
 }
 
-void PacketDrainer::_write_to_file() {
+void PacketDrainer::write_to_file() {
     std::ofstream ofs(_path.c_str(), std::ofstream::out);
     for (int i = 0; i < _measured.size(); ++i) {
         ofs << _measured[i] << std::endl;
@@ -90,19 +98,19 @@ void PacketDrainer::_write_to_file() {
 }
 
 void PacketDrainer::push(int, Packet*) {
-    Packet** _packets = new *Packet[_packets];
+    Vector<Packet *> _gen_packets;
 
     for (int i = 0; i < _packets; ++i) {
-        _packets.push(_packet->clone());
+        _gen_packets.push_back(_packet->clone());
     }//for
 
     auto before = CLOCK_NOW;
     for (int i = 0; i < _packets; ++i) {
-        output(0).push(_packets[i]);
+        output(0).push(_gen_packets[i]);
     }//for
     auto diff = CLOCK_NOW - before;
 
-    _measured.push_back(diff);
+    _measured.push_back(diff.count());
 }
 
 void PacketDrainer::cleanup(CleanupStage) {

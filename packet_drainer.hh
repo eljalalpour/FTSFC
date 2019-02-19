@@ -23,15 +23,13 @@ public:
 
     const char *processing() const { return AGNOSTIC; }
 
-    int configure(Vector<String> &, ErrorHandler *);
-
-    Packet *pull(int);
+    void push(int, Packet*);
 
     int configure(Vector<String> &, ErrorHandler *);
-
-    int initialize(ErrorHandler *);
 
     void cleanup(CleanupStage) CLICK_COLD;
+
+    void write_to_file();
 
 private:
     int _packets;
@@ -46,6 +44,4 @@ private:
     Vector<int64_t> _measured;
 
     void _setup_packet();
-
-    void _write_to_file();
 };

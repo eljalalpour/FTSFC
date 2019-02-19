@@ -1,7 +1,6 @@
 #pragma once
 
 #include "defs.hh"
-#include <deque>
 #include <cstring>
 #include <csignal>
 #include <click/config.h>
@@ -19,7 +18,7 @@ public:
 
     const char *class_name() const { return "PacketDrainer"; }
 
-    const char *port_count() const { return PORTS_0_1; }
+    const char *port_count() const { return PORTS_1_1; }
 
     const char *processing() const { return AGNOSTIC; }
 

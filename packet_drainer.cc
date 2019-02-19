@@ -80,9 +80,12 @@ int PacketDrainer::configure(Vector<String> &conf, ErrorHandler *errh) {
                 .complete() < 0)
         return -1;
 
-    LOG("PacketDrainer: Number of packets is %d, and the packet size is $d!\n", _packets, _packet_size);
+    LOG("PacketDrainer: Number of packets is %d, and the packet size is %d!\n", _packets, _packet_size);
 
     _setup_packet();
+
+    signal(SIGINT, signal_handler);
+    signal(SIGTERM, signal_handler);
 
     return 0;
 }
@@ -97,7 +100,7 @@ void PacketDrainer::write_to_file() {
     LOG("Wrote stats into '%s'!", _path.c_str());
 }
 
-void PacketDrainer::push(int, Packet*) {
+void PacketDrainer::push(int, Packet* p) {
     Vector<Packet *> _gen_packets;
 
     for (int i = 0; i < _packets; ++i) {
@@ -111,6 +114,8 @@ void PacketDrainer::push(int, Packet*) {
     auto diff = CLOCK_NOW - before;
 
     _measured.push_back(diff.count());
+
+    p->kill();
 }
 
 void PacketDrainer::cleanup(CleanupStage) {

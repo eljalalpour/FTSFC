@@ -7,7 +7,9 @@ packet_drainer::PacketDrainer(
 	SRCETH e4:1d:2d:13:9e:d0,
 	DSTETH f4:52:14:69:a5:20);
 
+fd::FromDPDKDevice(1);
 td::ToDPDKDevice(1);
 
-packet_drainer
+fd
+-> packet_drainer
 -> td;

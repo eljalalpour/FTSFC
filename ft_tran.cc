@@ -22,6 +22,9 @@ void FTTran::_init_shared_state() {
 void FTTran::_init_times(int conflict_prob) {
     _lock_time = TOTAL_TIME * conflict_prob * 10;
     _processing_time = TOTAL_TIME * (100 - conflict_prob) * 10;
+
+    DEBUG("FTTran lock time is %d!\n", _lock_time);
+    DEBUG("FTTran processing time is %d!\n", _processing_time);
 }
 
 int FTTran::configure(Vector<String> &conf, ErrorHandler *errh) {

@@ -15,7 +15,8 @@ class FTTran : public Element {
 private:
     FTSharedState* _shared_state;
     SharedLocks *_shared_locks;
-    int _index; // Must be 0 or 1
+
+    int _index;
     inline void _init_shared_state();
     inline void _init_times(int conflict_prob);
 

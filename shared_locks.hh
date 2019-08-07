@@ -54,6 +54,8 @@ public:
 
     inline void unlock(size_t);
 
+    inline bool try_lock(size_t);
+
     inline Locker* locker_ptr(size_t);
 
     inline size_t size();
@@ -77,6 +79,14 @@ void SharedLocks::lock(size_t index) {
 
 void SharedLocks::unlock(size_t index) {
     _lockers[index].unlock();
+}
+
+bool try_lock(size_t index) {
+#ifdef ENABLE_MULTI_THREADING_USING_MUTEX
+    return _lockers[index].try_lock();
+#else
+    return false;
+#endif
 }
 
 Locker* SharedLocks::locker_ptr(size_t index) {

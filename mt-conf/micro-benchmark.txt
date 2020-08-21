@@ -1,4 +1,0 @@
-Traffic load: 3358Mbps
-Throughput: 3000Mpbs
-Per experiment time: 10 second
-# experiments: 10
